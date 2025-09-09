@@ -1,103 +1,508 @@
-import Image from "next/image";
+import Script from "next/script";
+import MainSlider from "./ui/front/minis/mainSlider";
+import CheckVehicleArea from "./ui/front/CheckVehicleArea";
+import PopularVehicleBlock from "./ui/front/PopularVehicleBlock";
 
-export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+const Home = () => {
+	return (
+		<>
+			<MainSlider />
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
-}
+			{/* Divider */}
+			<div className="vehicle-section-divider night-rider">
+				<div className="contoiner-fluid">
+					<div className="row">
+						<div className="col-md-12">
+							<div className="section-divider-content">
+								<div className="vehicle-border">
+									<img src="/assets/images/block-car01.png" alt="car-item" />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			{/* fim do divider */}
+			<CheckVehicleArea />
+
+			{/* <!-- /.vehicle-multi-border --> */}
+			<div className="vehicle-multi-border yellow-black"></div>
+
+			<PopularVehicleBlock />
+		</>
+	);
+};
+
+export default Home;
+
+// import Script from "next/script";
+
+// const Home = () => {
+// 	return (
+// 		<>
+// 			<div className="slider-block">
+// 				<div className="rev_slider_wrapper">
+// 					<div className="rev_slider carrent-slider">
+// 						<ul>
+// 							{/* <!-- slide 1 -->  */}
+// 							<li
+// 								data-transition="fade"
+// 								data-slotamount="default"
+// 								data-easein="Power4.easeInOut"
+// 								data-easeout="Power4.easeInOut"
+// 								data-masterspeed="2000"
+// 								data-rotate="0"
+// 								data-fstransition="fade"
+// 								data-fsmasterspeed="1500"
+// 								data-fsslotamount="7"
+// 								data-saveperformance="off"
+// 								data-title="materialize Material"
+// 								data-description=""
+// 							>
+// 								{/* <!-- main image --> */}
+// 								<img
+// 									src="/assets/images/slider-car/slider-bg.jpg"
+// 									alt=""
+// 									data-bgposition="center center"
+// 									data-bgfit="cover"
+// 									data-bgrepeat="no-repeat"
+// 									className="rev-slidebg"
+// 									data-no-retina
+// 								/>
+
+// 								{/* <!-- layer no 1 --> */}
+// 								<div
+// 									className="tp-caption tp-resizeme rev-subheading"
+// 									data-type="text"
+// 									data-x="['left','left','left','center']"
+// 									data-hoffset="['105','105','75','-85']"
+// 									data-y="['middle']"
+// 									data-voffset="['-163','-163','-130','-130']"
+// 									data-fontsize="['22','22','22','22']"
+// 									data-lineheight="['30','30','30','30']"
+// 									data-width="none"
+// 									data-height="none"
+// 									data-whitespace="nowrap"
+// 									data-transform_idle="o:1;"
+// 									data-transform_in="y:[100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;opacity:0;s:600;e:Power4.easeInOut;"
+// 									data-transform_out="y:[100%];s:1000;e:Power2.easeInOut;s:1000;e:Power2.easeInOut;"
+// 									data-mask_in="x:0px;y:[100%];s:inherit;e:inherit;"
+// 									data-mask_out="x:inherit;y:inherit;s:inherit;e:inherit;"
+// 									data-start="800"
+// 									data-splitin="none"
+// 									data-splitout="none"
+// 									data-responsive_offset="on"
+// 									style={{
+// 										zIndex: 5,
+// 										color: "#464646",
+// 										fontWeight: 600,
+// 										fontFamily: "inherit",
+// 									}}
+// 								>
+// 									Todos os descontos só para você
+// 								</div>
+
+// 								{/* <!-- layer no 2 --> */}
+// 								<div
+// 									className="tp-caption tp-resizeme rev-subheading"
+// 									data-type="text"
+// 									data-x="['left','left','left','center']"
+// 									data-hoffset="['102','102','75','-75']"
+// 									data-y="['middle']"
+// 									data-voffset="['-110','-110','-90','-90']"
+// 									data-whitespace="nowrap"
+// 									data-transform_idle="o:1;"
+// 									data-fontsize="['60','60','45','45']"
+// 									data-lineheight="['60','60','60','60']"
+// 									data-transform_in="y:[100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;opacity:0;s:600;e:Power4.easeInOut;"
+// 									data-transform_out="y:[100%];s:1000;e:Power2.easeInOut;s:1000;e:Power2.easeInOut;"
+// 									data-mask_in="x:0px;y:[100%];s:inherit;e:inherit;"
+// 									data-mask_out="x:inherit;y:inherit;s:inherit;e:inherit;"
+// 									data-start="1000"
+// 									data-splitin="none"
+// 									data-splitout="none"
+// 									data-responsive_offset="on"
+// 									style={{
+// 										zIndex: 6,
+// 										color: "#e91e22",
+// 										fontFamily: "exo, sans-serif",
+// 										fontWeight: 800,
+// 									}}
+// 								>
+// 									Precisa ir a algum lado?
+// 								</div>
+
+// 								{/* <!-- layer no 3 --> */}
+// 								<div
+// 									className="tp-caption tp-resizeme NotGeneric-Title"
+// 									data-type="text"
+// 									data-x="['left','left','left','center']"
+// 									data-hoffset="['103','103','75','0']"
+// 									data-y="['middle']"
+// 									data-voffset="['0']"
+// 									data-whitespace="nowrap"
+// 									data-transform_idle="o:1;"
+// 									data-fontsize="['60','60','45','45']"
+// 									data-lineheight="['75','75','60','60']"
+// 									data-transform_in="y:[100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;opacity:0;s:600;e:Power4.easeInOut;"
+// 									data-transform_out="y:[100%];s:1000;e:Power2.easeInOut;s:1000;e:Power2.easeInOut;"
+// 									data-mask_in="x:0px;y:[100%];s:inherit;e:inherit;"
+// 									data-mask_out="x:inherit;y:inherit;s:inherit;e:inherit;"
+// 									data-start="1000"
+// 									data-splitin="none"
+// 									data-splitout="none"
+// 									data-responsive_offset="on"
+// 									style={{
+// 										zIndex: 7,
+// 										color: "#000000",
+// 										fontFamily: "exo, sans-serif",
+// 										fontWeight: 900,
+// 										textTransform: "uppercase",
+// 									}}
+// 								>
+// 									Escolha o mais
+// 									<br /> comfortavel para si
+// 								</div>
+
+// 								{/* <!-- layer no 4 --> */}
+// 								<div
+// 									className="tp-caption rev-subheading tp-resizeme"
+// 									data-type="text"
+// 									data-x="['left','left','left','center']"
+// 									data-hoffset="['105','105','75','-28']"
+// 									data-y="['middle']"
+// 									data-voffset="['95','95','75','75']"
+// 									data-fontsize="['24']"
+// 									data-lineheight="['20']"
+// 									data-width="none"
+// 									data-height="none"
+// 									data-whitespace="nowrap"
+// 									data-transform_idle="o:1;"
+// 									data-transform_in="y:[100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;opacity:0;s:600;e:Power4.easeInOut;"
+// 									data-transform_out="y:[100%];s:1000;e:Power2.easeInOut;s:1000;e:Power2.easeInOut;"
+// 									data-mask_in="x:0px;y:[100%];s:inherit;e:inherit;"
+// 									data-mask_out="x:inherit;y:inherit;s:inherit;e:inherit;"
+// 									data-start="800"
+// 									data-splitin="none"
+// 									data-splitout="none"
+// 									data-responsive_offset="on"
+// 									style={{
+// 										zIndex: 5,
+// 										color: "#464646",
+// 										fontWeight: 600,
+// 										fontFamily: "inherit",
+// 									}}
+// 								>
+// 									Melhor oferta de Cabo Verde!!!!!
+// 								</div>
+
+// 								{/* <!-- layer no 5 --> */}
+// 								<div
+// 									className="tp-caption tp-resizeme"
+// 									data-x="['left','left','left','center']"
+// 									data-hoffset="['105','105','75','-105']"
+// 									data-y="['middle']"
+// 									data-voffset="['150','150','135','120']"
+// 									data-fontsize="['22']"
+// 									data-lineheight="['45']"
+// 									data-width="none"
+// 									data-height="none"
+// 									data-whitespace="nowrap"
+// 									data-transform_idle="o:1;"
+// 									data-style_hover="cursor:default;"
+// 									data-transform_in="y:[100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;opacity:0;s:600;e:Power4.easeInOut;"
+// 									data-transform_out="y:[100%];s:600;e:Power2.easeInOut;s:600;e:Power2.easeInOut;"
+// 									data-mask_in="x:0px;y:[100%];s:inherit;e:inherit;"
+// 									data-mask_out="x:inherit;y:inherit;s:inherit;e:inherit;"
+// 									data-start="1200"
+// 									data-splitin="none"
+// 									data-splitout="none"
+// 									data-responsive_offset="on"
+// 									style={{
+// 										zIndex: 7,
+// 										fontWeight: "bold",
+// 										fontFamily: "exo, sans-serif",
+// 									}}
+// 								>
+// 									<a
+// 										href="#"
+// 										className="button black-button slider-button"
+// 										data-fontsize="['22','22','22','22']"
+// 									>
+// 										Contate agora
+// 									</a>
+// 								</div>
+
+// 								{/* <!-- layer no 6 --> */}
+// 								<div
+// 									className="tp-caption tp-resizeme"
+// 									data-x="['right','right','right','center']"
+// 									data-hoffset="['0','-15','30','-10']"
+// 									data-y="['middle','middle','middle','bottom']"
+// 									data-voffset="['15','15','0','0']"
+// 									data-transform_idle="o:1;"
+// 									data-visibility="['on','on','on','off']"
+// 									data-transform_in="z:0;rX:0;rY:0;rZ:0;sX:0.9;sY:0.9;skX:0;skY:0;opacity:0;s:300;e:Power3.easeInOut;"
+// 									data-transform_out="auto:auto;s:600;"
+// 									data-splitin="none"
+// 									data-start="1500"
+// 									data-type="image"
+// 									data-responsive_offset="on"
+// 									data-width="none"
+// 									data-height="none"
+// 									data-no-retina
+// 								>
+// 									<img
+// 										src="/assets/images/dummy.png"
+// 										alt=""
+// 										data-lazyload="/assets/images/slider-car/slider-car-01.png"
+// 										data-ww="['805','805','500','350']"
+// 										data-hh="['auto']"
+// 									/>
+// 								</div>
+// 							</li>
+// 							{/* <!-- /.slide 1 --> */}
+// 							{/* <!-- slide 1 -->  */}
+// 							<li
+// 								data-transition="fade"
+// 								data-slotamount="default"
+// 								data-easein="Power4.easeInOut"
+// 								data-easeout="Power4.easeInOut"
+// 								data-masterspeed="2000"
+// 								data-rotate="0"
+// 								data-fstransition="fade"
+// 								data-fsmasterspeed="1500"
+// 								data-fsslotamount="7"
+// 								data-saveperformance="off"
+// 								data-title="materialize Material"
+// 								data-description=""
+// 							>
+// 								{/* <!-- main image --> */}
+// 								<img
+// 									src="/assets/images/slider-car/slider-bg.jpg"
+// 									alt=""
+// 									data-bgposition="center center"
+// 									data-bgfit="cover"
+// 									data-bgrepeat="no-repeat"
+// 									className="rev-slidebg"
+// 									data-no-retina
+// 								/>
+
+// 								{/* <!-- layer no 1 --> */}
+// 								<div
+// 									className="tp-caption tp-resizeme rev-subheading"
+// 									data-type="text"
+// 									data-x="['left','left','left','center']"
+// 									data-hoffset="['105','105','75','-85']"
+// 									data-y="['middle']"
+// 									data-voffset="['-163','-163','-130','-130']"
+// 									data-fontsize="['22','22','22','22']"
+// 									data-lineheight="['30','30','30','30']"
+// 									data-width="none"
+// 									data-height="none"
+// 									data-whitespace="nowrap"
+// 									data-transform_idle="o:1;"
+// 									data-transform_in="y:[100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;opacity:0;s:600;e:Power4.easeInOut;"
+// 									data-transform_out="y:[100%];s:1000;e:Power2.easeInOut;s:1000;e:Power2.easeInOut;"
+// 									data-mask_in="x:0px;y:[100%];s:inherit;e:inherit;"
+// 									data-mask_out="x:inherit;y:inherit;s:inherit;e:inherit;"
+// 									data-start="800"
+// 									data-splitin="none"
+// 									data-splitout="none"
+// 									data-responsive_offset="on"
+// 									style={{
+// 										zIndex: 5,
+// 										color: "#464646",
+// 										fontWeight: 600,
+// 										fontFamily: "inherit",
+// 									}}
+// 								>
+// 									Todos os descontos para si
+// 								</div>
+
+// 								{/* <!-- layer no 2 --> */}
+// 								<div
+// 									className="tp-caption tp-resizeme rev-subheading"
+// 									data-type="text"
+// 									data-x="['left','left','left','center']"
+// 									data-hoffset="['102','102','75','-75']"
+// 									data-y="['middle']"
+// 									data-voffset="['-110','-110','-90','-90']"
+// 									data-whitespace="nowrap"
+// 									data-transform_idle="o:1;"
+// 									data-fontsize="['60','60','45','45']"
+// 									data-lineheight="['60','60','60','60']"
+// 									data-transform_in="y:[100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;opacity:0;s:600;e:Power4.easeInOut;"
+// 									data-transform_out="y:[100%];s:1000;e:Power2.easeInOut;s:1000;e:Power2.easeInOut;"
+// 									data-mask_in="x:0px;y:[100%];s:inherit;e:inherit;"
+// 									data-mask_out="x:inherit;y:inherit;s:inherit;e:inherit;"
+// 									data-start="1000"
+// 									data-splitin="none"
+// 									data-splitout="none"
+// 									data-responsive_offset="on"
+// 									style={{
+// 										zIndex: 6,
+// 										color: "#e91e22",
+// 										fontFamily: "exo, sans-serif",
+// 										fontWeight: 800,
+// 									}}
+// 								>
+// 									Precisa de um transporte?
+// 								</div>
+
+// 								{/* <!-- layer no 3 --> */}
+// 								<div
+// 									className="tp-caption tp-resizeme NotGeneric-Title"
+// 									data-type="text"
+// 									data-x="['left','left','left','center']"
+// 									data-hoffset="['103','103','75','0']"
+// 									data-y="['middle']"
+// 									data-voffset="['0']"
+// 									data-whitespace="nowrap"
+// 									data-transform_idle="o:1;"
+// 									data-fontsize="['60','60','45','45']"
+// 									data-lineheight="['75','75','60','60']"
+// 									data-transform_in="y:[100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;opacity:0;s:600;e:Power4.easeInOut;"
+// 									data-transform_out="y:[100%];s:1000;e:Power2.easeInOut;s:1000;e:Power2.easeInOut;"
+// 									data-mask_in="x:0px;y:[100%];s:inherit;e:inherit;"
+// 									data-mask_out="x:inherit;y:inherit;s:inherit;e:inherit;"
+// 									data-start="1000"
+// 									data-splitin="none"
+// 									data-splitout="none"
+// 									data-responsive_offset="on"
+// 									style={{
+// 										zIndex: 7,
+// 										color: "#000000",
+// 										fontFamily: "exo, sans-serif",
+// 										fontWeight: 900,
+// 										textTransform: "uppercase",
+// 									}}
+// 								>
+// 									Escolha o mais
+// 									<br /> comfortavel para si
+// 								</div>
+
+// 								{/* <!-- layer no 4 --> */}
+// 								<div
+// 									className="tp-caption rev-subheading tp-resizeme"
+// 									data-type="text"
+// 									data-x="['left','left','left','center']"
+// 									data-hoffset="['105','105','75','-28']"
+// 									data-y="['middle']"
+// 									data-voffset="['95','95','75','75']"
+// 									data-fontsize="['24']"
+// 									data-lineheight="['20']"
+// 									data-width="none"
+// 									data-height="none"
+// 									data-whitespace="nowrap"
+// 									data-transform_idle="o:1;"
+// 									data-transform_in="y:[100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;opacity:0;s:600;e:Power4.easeInOut;"
+// 									data-transform_out="y:[100%];s:1000;e:Power2.easeInOut;s:1000;e:Power2.easeInOut;"
+// 									data-mask_in="x:0px;y:[100%];s:inherit;e:inherit;"
+// 									data-mask_out="x:inherit;y:inherit;s:inherit;e:inherit;"
+// 									data-start="800"
+// 									data-splitin="none"
+// 									data-splitout="none"
+// 									data-responsive_offset="on"
+// 									style={{
+// 										zIndex: 5,
+// 										color: "#464646",
+// 										fontWeight: 600,
+// 										fontFamily: "inherit",
+// 									}}
+// 								>
+// 									Melhor oferta de Cabo Verde!!!!!
+// 								</div>
+
+// 								{/* <!-- layer no 5 --> */}
+// 								<div
+// 									className="tp-caption tp-resizeme"
+// 									data-x="['left','left','left','center']"
+// 									data-hoffset="['105','105','75','-105']"
+// 									data-y="['middle']"
+// 									data-voffset="['150','150','135','120']"
+// 									data-fontsize="['22']"
+// 									data-lineheight="['45']"
+// 									data-width="none"
+// 									data-height="none"
+// 									data-whitespace="nowrap"
+// 									data-transform_idle="o:1;"
+// 									data-style_hover="cursor:default;"
+// 									data-transform_in="y:[100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;opacity:0;s:600;e:Power4.easeInOut;"
+// 									data-transform_out="y:[100%];s:600;e:Power2.easeInOut;s:600;e:Power2.easeInOut;"
+// 									data-mask_in="x:0px;y:[100%];s:inherit;e:inherit;"
+// 									data-mask_out="x:inherit;y:inherit;s:inherit;e:inherit;"
+// 									data-start="1200"
+// 									data-splitin="none"
+// 									data-splitout="none"
+// 									data-responsive_offset="on"
+// 									style={{
+// 										zIndex: 7,
+// 										fontWeight: "bold",
+// 										fontFamily: "Exo, sans-serif",
+// 									}}
+// 								>
+// 									<a
+// 										href="#"
+// 										className="button black-button slider-button"
+// 										data-fontsize="['22','22','22','22']"
+// 									>
+// 										Contact Now
+// 									</a>
+// 								</div>
+
+// 								{/* <!-- layer no 6 --> */}
+// 								<div
+// 									className="tp-caption tp-resizeme"
+// 									data-x="['right','right','right','center']"
+// 									data-hoffset="['0','-15','30','-10']"
+// 									data-y="['middle','middle','middle','bottom']"
+// 									data-voffset="['15','15','0','0']"
+// 									data-transform_idle="o:1;"
+// 									data-visibility="['on','on','on','off']"
+// 									data-transform_in="z:0;rX:0;rY:0;rZ:0;sX:0.9;sY:0.9;skX:0;skY:0;opacity:0;s:300;e:Power3.easeInOut;"
+// 									data-transform_out="auto:auto;s:600;"
+// 									data-splitin="none"
+// 									data-start="1500"
+// 									data-type="image"
+// 									data-responsive_offset="on"
+// 									data-width="none"
+// 									data-height="none"
+// 									data-no-retina
+// 								>
+// 									<img
+// 										src="/assets/images/dummy.png"
+// 										alt=""
+// 										data-lazyload="/assets/images/slider-car/slider-car-01.png"
+// 										data-ww="['805','805','500','350']"
+// 										data-hh="['auto']"
+// 									/>
+// 								</div>
+// 							</li>
+// 							{/* <!--<!-- /.slide 1 -->*/}
+// 						</ul>
+// 					</div>
+// 					{/* <!--<!-- /.revolution slider -->*/}
+// 				</div>
+// 				{/* <!--<!-- /.slider wrapper -->*/}
+// 			</div>
+// 			{/* <!-- ====== Section divider ====== -->  */}
+// 			<div className="vehicle-section-divider night-rider">
+// 				<div className="contoiner-fluid">
+// 					<div className="row">
+// 						<div className="col-md-12">
+// 							<div className="section-divider-content">
+// 								<div className="vehicle-border">
+// 									<img src="/assets/images/block-car01.png" alt="car-item" />
+// 								</div>
+// 							</div>
+// 						</div>
+// 					</div>
+// 				</div>
+// 			</div>
+// 		</>
+// 	);
+// };
+
+// export default Home;
