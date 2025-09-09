@@ -7,8 +7,8 @@ const PopularVehicleBlock = () => {
 				<div className="row tb default-margin-bottom yellow-theme">
 					<div className="col-md-9 col-sm-8 block-title-area tb-cell">
 						<div className="heading-content style-one border">
-							<h3 className="subtitle">Popular Rental Servises</h3>
-							<h2 className="title">Popular Taxi</h2>
+							<h3 className="subtitle">Alugueres mais populares</h3>
+							<h2 className="title">Viaturas populares</h2>
 						</div>
 					</div>
 
