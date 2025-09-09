@@ -11,7 +11,7 @@ const Navbar = () => {
 		items: [
 			{
 				label: "Home",
-				href: "#",
+				href: "/",
 				submenu: [
 					{ label: "Home Layout One", href: "index.html" },
 					{ label: "Home Layout Two", href: "index02.html" },
