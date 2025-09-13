@@ -3,7 +3,7 @@
 import { Bell, UserCircle } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import logo from "@/public/logo_b.svg";
+import logo from "@/public/logo_b.png";
 import {
 	DropdownMenu,
 	DropdownMenuTrigger,
