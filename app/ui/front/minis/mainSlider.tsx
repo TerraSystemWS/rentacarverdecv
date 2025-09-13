@@ -14,7 +14,7 @@ interface LayerStyle {
 		| "full-width"
 		| "full-size-kana";
 	zIndex?: number;
-	[key: string]: any;
+	[key: string]: string | number | undefined;
 }
 
 interface LayerData {
