@@ -2,10 +2,16 @@ import Script from "next/script";
 import MainSlider from "./ui/front/minis/mainSlider";
 import CheckVehicleArea from "./ui/front/CheckVehicleArea";
 import PopularVehicleBlock from "./ui/front/PopularVehicleBlock";
+import Headi from "./ui/front/head";
 
 const Home = () => {
 	return (
 		<>
+			<Headi
+				title="Terra"
+				description="Alugue o seu carro ideal em Cabo Verde com a Rent a car Verde. Frota moderna e serviço de alta qualidade."
+				keywords="aluguer de carro, cabo verde, rent a car, turismo"
+			/>
 			<MainSlider />
 
 			{/* Divider */}

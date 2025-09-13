@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
-import Headi from "./ui/front/head";
-import Navbar from "./ui/front/navbar";
+import Header from "./ui/front/minis/Header";
 import Footer from "./ui/front/footer";
 
 const geistSans = Geist({
@@ -23,17 +22,34 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
 	children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: {
+	children: React.ReactNode;
+}) {
 	return (
 		<html lang="pt">
 			<head>
-				<Headi />
+				{/* Fontes personalizadas */}
+				<link
+					href="https://fonts.googleapis.com/css?family=Exo:400,400i,500,500i,600,600i,700,700i,800,800i,900,900i%7cRoboto+Slab:400,700"
+					rel="stylesheet"
+				/>
+
+				{/* CSS principal */}
+				<link rel="stylesheet" href="/assets/css/plugins.min.css" />
+				<link rel="stylesheet" href="/assets/css/icons.min.css" />
+				<link rel="stylesheet" href="/assets/css/style.css" />
+				<link rel="stylesheet" href="/assets/css/color-schemer.css" />
+
+				{/* Revolution Slider CSS */}
+				<link rel="stylesheet" href="/assets/revolution/css/settings.css" />
+				<link rel="stylesheet" href="/assets/revolution/css/layers.css" />
+				<link rel="stylesheet" href="/assets/revolution/css/navigation.css" />
 			</head>
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
-				<Navbar />
-				{children}
+				<Header />
+				<main>{children}</main>
 				<Footer />
 
 				{/* jQuery primeiro */}
@@ -86,30 +102,49 @@ export default function RootLayout({
 					strategy="afterInteractive"
 				/>
 
-				{/* Inicialização */}
-				<Script id="rev-init" strategy="afterInteractive">
-					{`
-                        jQuery(document).ready(function() {
-                        var $sliderSelector = jQuery(".carrent-slider");
-                        if ($sliderSelector.revolution === undefined) {
-                            console.error("Revolution Slider não carregou.");
-                        } else {
-                            $sliderSelector.revolution({
-                            sliderType: "standard",
-                            sliderLayout: "fullwidth",
-                            delay: 9000,
-                            navigation: {
-                                arrows: { style: "gyges", enable: true }
-                            },
-                            responsiveLevels:[1400,1368,992,480],
-                            gridwidth:[1400,1368,992,480],
-                            gridheight:[600,600,500,380],
-                            disableProgressBar:"on"
-                            });
-                        }
-                        });
-                    `}
-				</Script>
+				{/* Inicialização do Revolution Slider */}
+				<Script
+					id="revolution-init"
+					strategy="afterInteractive"
+					dangerouslySetInnerHTML={{
+						__html: `
+              (function() {
+                function initRevolution() {
+                  if (typeof jQuery !== 'undefined' && typeof jQuery.fn.revolution !== 'undefined') {
+                    var $sliderSelector = jQuery(".carrent-slider");
+                    if ($sliderSelector.length) {
+                      $sliderSelector.revolution({
+                        sliderType: "standard",
+                        sliderLayout: "fullwidth",
+                        delay: 9000,
+                        navigation: { 
+                          arrows: { 
+                            style: "gyges", 
+                            enable: true 
+                          } 
+                        },
+                        responsiveLevels: [1400,1368,992,480],
+                        gridwidth: [1400,1368,992,480],
+                        gridheight: [600,600,500,380],
+                        disableProgressBar: "on"
+                      });
+                    }
+                  } else {
+                    // Tenta novamente após um breve delay se os scripts não carregaram
+                    setTimeout(initRevolution, 100);
+                  }
+                }
+
+                // Inicia quando o documento estiver pronto
+                if (document.readyState === 'loading') {
+                  document.addEventListener('DOMContentLoaded', initRevolution);
+                } else {
+                  initRevolution();
+                }
+              })();
+            `,
+					}}
+				/>
 			</body>
 		</html>
 	);
