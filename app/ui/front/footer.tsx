@@ -71,8 +71,8 @@ const Footer = () => {
 											</Link>
 										</li>
 										<li>
-											<Link href="tel:00000000000000">
-												<i className="fa fa-phone"></i>(+000)00000000
+											<Link href="tel:0002385810945">
+												<i className="fa fa-phone"></i>(+238) 5810945
 											</Link>
 										</li>
 										<li>

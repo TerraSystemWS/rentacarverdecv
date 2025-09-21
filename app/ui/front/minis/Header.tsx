@@ -68,13 +68,16 @@ const Header: React.FC = () => {
 									<li>
 										<a href="#" className="top-left-menu">
 											<i className="fa fa-phone"></i>
-											<span>Call Us - 01623 030020</span>
+											<span>Chamar - 01623 030020</span>
 										</a>
 									</li>
 									<li>
-										<a href="#" className="top-left-menu">
+										<a
+											href="mailto:reservas@rentacarverde.cv"
+											className="top-left-menu"
+										>
 											<i className="fa fa-envelope"></i>
-											<span>example@domain.com</span>
+											<span>reservas@rentacarverde.cv</span>
 										</a>
 									</li>
 								</ul>
@@ -87,7 +90,7 @@ const Header: React.FC = () => {
 									<li>
 										<a href="#" className="language">
 											<i className="fa fa-language"></i>
-											<span>Language</span>
+											<span>Linguas</span>
 										</a>
 										<ul className="sub-menu">
 											<li>
@@ -145,7 +148,7 @@ const Header: React.FC = () => {
 								/>
 							</div>
 							<button className="btn text-uppercase search-button">
-								Search
+								Pesquisar
 							</button>
 						</form>
 					</div>
@@ -226,7 +229,7 @@ const Header: React.FC = () => {
 					<div className="row">
 						<div className="col-md-3 col-sm-10 col-xs-10">
 							<div className="site-logo">
-								<a href="index.html">
+								<a href="/">
 									<img src="/logo_b.png" alt="logo" />
 								</a>
 							</div>
@@ -237,8 +240,8 @@ const Header: React.FC = () => {
 									<div className="menu-content">
 										<ul className="menu-list">
 											<li>
-												<a href="#">Home</a>
-												<ul className="sub-menu">
+												<a href="/">Home</a>
+												{/* <ul className="sub-menu">
 													<li>
 														<a href="index.html">Home Layout One</a>
 													</li>
@@ -269,14 +272,14 @@ const Header: React.FC = () => {
 													<li>
 														<a href="index10.html">Home Layout Ten</a>
 													</li>
-												</ul>
+												</ul> */}
 											</li>
+											{/* <li>
+												<a href="/booking">Reservar</a>
+											</li> */}
 											<li>
-												<a href="car-single-page.html">Booking</a>
-											</li>
-											<li>
-												<a href="#">Car-rent</a>
-												<ul className="sub-menu">
+												<a href="/cars">Viaturas</a>
+												{/* <ul className="sub-menu">
 													<li>
 														<a href="car-category.html">Car Category 01</a>
 													</li>
@@ -291,9 +294,9 @@ const Header: React.FC = () => {
 													<li>
 														<a href="car-single-page.html">Car Single Page</a>
 													</li>
-												</ul>
+												</ul> */}
 											</li>
-											<li>
+											{/* <li>
 												<a href="#">Pages</a>
 												<ul className="sub-menu">
 													<li>
@@ -303,23 +306,23 @@ const Header: React.FC = () => {
 														<a href="404.html">404</a>
 													</li>
 												</ul>
+											</li> */}
+											<li>
+												<a href="/about">Sobre Nós</a>
 											</li>
 											<li>
-												<a href="about.html">About</a>
-											</li>
-											<li>
-												<a href="#">Blog</a>
-												<ul className="sub-menu">
+												<a href="#">Novidades</a>
+												{/* <ul className="sub-menu">
 													<li>
 														<a href="blog.html">Blog</a>
 													</li>
 													<li>
 														<a href="blog-single.html">Single Post</a>
 													</li>
-												</ul>
+												</ul> */}
 											</li>
 											<li>
-												<a href="contact.html">Contact</a>
+												<a href="/contact">Contato</a>
 											</li>
 										</ul>
 									</div>

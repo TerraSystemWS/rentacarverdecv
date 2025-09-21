@@ -36,8 +36,9 @@ const Contact = () => {
 										<i className="fa fa-map-marker"></i> Morada
 									</h4>
 									<p>
-										112/B - Rua 08/A Melbourne <br />
-										Austrália
+										Cidadela - Rua da Independência, em frente ao 4° paragem de
+										autocarro,
+										<br /> a 40 m de Direção Geral Dos Transportes Rodoviário
 									</p>
 								</div>
 
@@ -45,19 +46,14 @@ const Contact = () => {
 									<h4>
 										<i className="fa fa-phone"></i> Telefone
 									</h4>
-									<p>
-										+88 0215469875 <br />
-										666 35874692050
-									</p>
+									<p>+238 5810945</p>
 								</div>
 
 								<div className="contact">
 									<h4>
 										<i className="fa fa-envelope"></i> Email
 									</h4>
-									<p>
-										exemplo@dominio.com <br /> exemplomail@dominio.com
-									</p>
+									<p>reservas@rentacarverde.cv</p>
 								</div>
 
 								<div className="contact">
@@ -147,7 +143,7 @@ const Contact = () => {
 							<div className="header-map-content">
 								<iframe
 									height="550"
-									src="https://www.google.com/maps/embed/v1/place?key=AIzaSyC871wKM6aoCLSV_pT3xBVsYzNGXaDh7Pw&q=121+King+St,Melbourne+VIC+3000,Australia"
+									src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5108.505257123504!2d-23.541741246858468!3d14.910647058540935!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x935993ef308ba19%3A0xc205e3171f9678ea!2sRent%20A%20Car%20Verde!5e1!3m2!1spt-PT!2spt!4v1758321179322!5m2!1spt-PT!2spt"
 									allowFullScreen
 								></iframe>
 							</div>

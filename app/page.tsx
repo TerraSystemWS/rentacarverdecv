@@ -1,8 +1,50 @@
-import Script from "next/script";
 import MainSlider from "./ui/front/minis/mainSlider";
 import CheckVehicleArea from "./ui/front/CheckVehicleArea";
 import PopularVehicleBlock from "./ui/front/PopularVehicleBlock";
 import Headi from "./ui/front/head";
+
+const vehiclesData = [
+	{
+		id: 1,
+		title: "Economy Sedan",
+		image: "/assets/images/popular/popular-01.png",
+		rentPerDay: "$50",
+		rentPerKm: "$0.50",
+		link: "/vehicles/economy-sedan",
+	},
+	{
+		id: 2,
+		title: "Luxury SUV",
+		image: "/assets/images/popular/popular-02.png",
+		rentPerDay: "$120",
+		rentPerKm: "$1.20",
+		link: "/vehicles/luxury-suv",
+	},
+	{
+		id: 3,
+		title: "Minivan",
+		image: "/assets/images/popular/popular-03.png",
+		rentPerDay: "$80",
+		rentPerKm: "$0.80",
+		link: "/vehicles/minivan",
+	},
+	{
+		id: 4,
+		title: "Sports Car",
+		image: "/assets/images/popular/popular-04.png",
+		rentPerDay: "$150",
+		rentPerKm: "$1.50",
+		link: "/vehicles/sports-car",
+	},
+	{
+		id: 5,
+		title: "Compact Car",
+		image: "/assets/images/popular/popular-05.png",
+		rentPerDay: "$40",
+		rentPerKm: "$0.40",
+		link: "/vehicles/compact-car",
+	},
+];
 
 const Home = () => {
 	return (
@@ -13,7 +55,6 @@ const Home = () => {
 				keywords="aluguer de carro, cabo verde, rent a car, turismo"
 			/>
 			<MainSlider />
-
 			{/* Divider */}
 			<div className="vehicle-section-divider night-rider">
 				<div className="contoiner-fluid">
@@ -28,14 +69,12 @@ const Home = () => {
 					</div>
 				</div>
 			</div>
-
 			{/* fim do divider */}
 			<CheckVehicleArea />
-
 			{/* <!-- /.vehicle-multi-border --> */}
 			<div className="vehicle-multi-border yellow-black"></div>
-
 			<PopularVehicleBlock />
+			{/* <PopularVehicleBlock vehicles={vehiclesData} /> */}
 		</>
 	);
 };
