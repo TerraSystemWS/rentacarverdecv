@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
+import Link from "next/link";
 
 const Header: React.FC = () => {
 	useEffect(() => {
@@ -66,19 +67,19 @@ const Header: React.FC = () => {
 							<div className="header-content-left">
 								<ul className="header-top-menu">
 									<li>
-										<a href="#" className="top-left-menu">
+										<Link href="#" className="top-left-menu">
 											<i className="fa fa-phone"></i>
 											<span>Chamar - 01623 030020</span>
-										</a>
+										</Link>
 									</li>
 									<li>
-										<a
+										<Link
 											href="mailto:reservas@rentacarverde.cv"
 											className="top-left-menu"
 										>
 											<i className="fa fa-envelope"></i>
 											<span>reservas@rentacarverde.cv</span>
-										</a>
+										</Link>
 									</li>
 								</ul>
 							</div>
@@ -88,36 +89,36 @@ const Header: React.FC = () => {
 							<div className="header-content-right">
 								<ul className="header-top-menu">
 									<li>
-										<a href="#" className="language">
+										<Link href="#" className="language">
 											<i className="fa fa-language"></i>
 											<span>Linguas</span>
-										</a>
+										</Link>
 										<ul className="sub-menu">
 											<li>
-												<a href="#">English</a>
+												<Link href="#">English</Link>
 											</li>
 											<li>
-												<a href="#">Español</a>
+												<Link href="#">Español</Link>
 											</li>
 											<li>
-												<a href="#">Français</a>
+												<Link href="#">Français</Link>
 											</li>
 											<li>
-												<a href="#">Português</a>
+												<Link href="#">Português</Link>
 											</li>
 										</ul>
 									</li>
 								</ul>
 								<ul className="header-top-menu">
 									<li>
-										<a href="#" className="search-open">
+										<Link href="#" className="search-open">
 											<i className="fa fa-search"></i>
-										</a>
+										</Link>
 									</li>
 									<li>
-										<a href="#" className="trigger-overlay">
+										<Link href="#" className="trigger-overlay">
 											<i className="fa fa-bars"></i>
-										</a>
+										</Link>
 									</li>
 								</ul>
 							</div>
@@ -156,9 +157,9 @@ const Header: React.FC = () => {
 
 				<div className="overlay-sidebar">
 					<div className="author-area">
-						<a href="#" className="closebtn">
+						<Link href="#" className="closebtn">
 							&times;
-						</a>
+						</Link>
 						<div className="author-area-content">
 							<div className="login-author">
 								<div className="author-info">
@@ -176,44 +177,44 @@ const Header: React.FC = () => {
 								<div className="author-menu">
 									<ul className="yellow-color">
 										<li>
-											<a href="">
+											<Link href="">
 												<i className="fa fa-user-circle-o"></i>Author Dashboard
-											</a>
+											</Link>
 										</li>
 										<li>
-											<a href="">
+											<Link href="">
 												<i className="fa fa-envelope-open"></i>Your Inbox
-											</a>
+											</Link>
 										</li>
 										<li>
-											<a href="">
+											<Link href="">
 												<i className="fa fa-location-arrow"></i>Track your texi
-											</a>
+											</Link>
 										</li>
 										<li>
-											<a href="">
+											<Link href="">
 												<i className="fa fa-area-chart"></i>Your Bookings Status
-											</a>
+											</Link>
 										</li>
 										<li>
-											<a href="">
+											<Link href="">
 												<i className="fa fa-automobile"></i>New Bookings
-											</a>
+											</Link>
 										</li>
 										<li>
-											<a href="">
+											<Link href="">
 												<i className="fa fa-archive"></i>Your Bookings
-											</a>
+											</Link>
 										</li>
 										<li>
-											<a href="">
+											<Link href="">
 												<i className="fa fa-money"></i>Your Deposit - $150.00
-											</a>
+											</Link>
 										</li>
 										<li>
-											<a href="">
+											<Link href="">
 												<i className="fa fa-sign-out"></i>Sign Out
-											</a>
+											</Link>
 										</li>
 									</ul>
 								</div>
@@ -229,9 +230,9 @@ const Header: React.FC = () => {
 					<div className="row">
 						<div className="col-md-3 col-sm-10 col-xs-10">
 							<div className="site-logo">
-								<a href="/">
+								<Link href="/">
 									<img src="/logo_b.png" alt="logo" />
-								</a>
+								</Link>
 							</div>
 						</div>
 						<div className="col-md-9 col-sm-2 col-xs-2 pd-right-0">
@@ -240,7 +241,7 @@ const Header: React.FC = () => {
 									<div className="menu-content">
 										<ul className="menu-list">
 											<li>
-												<a href="/">Home</a>
+												<Link href="/">Home</Link>
 												{/* <ul className="sub-menu">
 													<li>
 														<a href="index.html">Home Layout One</a>
@@ -278,7 +279,7 @@ const Header: React.FC = () => {
 												<a href="/booking">Reservar</a>
 											</li> */}
 											<li>
-												<a href="/cars">Viaturas</a>
+												<Link href="/cars">Viaturas</Link>
 												{/* <ul className="sub-menu">
 													<li>
 														<a href="car-category.html">Car Category 01</a>
@@ -308,10 +309,10 @@ const Header: React.FC = () => {
 												</ul>
 											</li> */}
 											<li>
-												<a href="/about">Sobre Nós</a>
+												<Link href="/about">Sobre Nós</Link>
 											</li>
 											<li>
-												<a href="#">Novidades</a>
+												<Link href="#">Novidades</Link>
 												{/* <ul className="sub-menu">
 													<li>
 														<a href="blog.html">Blog</a>
@@ -322,7 +323,7 @@ const Header: React.FC = () => {
 												</ul> */}
 											</li>
 											<li>
-												<a href="/contact">Contato</a>
+												<Link href="/contact">Contato</Link>
 											</li>
 										</ul>
 									</div>
@@ -333,12 +334,13 @@ const Header: React.FC = () => {
 							<div className="mobile-menu-main hidden-md hidden-lg">
 								<div className="menucontent overlaybg"> </div>
 								<div className="menuexpandermain slideRight">
-									<a
+									<Link
+										href={""}
 										id="navtoggole-main"
 										className="animated-arrow slideLeft menuclose"
 									>
 										<span></span>
-									</a>
+									</Link>
 								</div>
 
 								<div id="mobile-main-nav" className="mb-navigation slideLeft">

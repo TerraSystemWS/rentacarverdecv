@@ -98,12 +98,12 @@ export default function PopularVehicleBlock() {
 					<div className="col-md-3 col-sm-4 hidden-xs block-navigation-area tb-cell">
 						<div className="pull-right">
 							<div className="item-navigation hidden-xs">
-								<a href="" className="previous-item">
+								<Link href="" className="previous-item">
 									<i className="fa fa-angle-left"></i>
-								</a>
-								<a href="" className="next-item">
+								</Link>
+								<Link href="" className="next-item">
 									<i className="fa fa-angle-right"></i>
-								</a>
+								</Link>
 							</div>
 
 							<div className="view-all-item">
@@ -135,17 +135,17 @@ export default function PopularVehicleBlock() {
 						<SwiperSlide key={vehicle.id}>
 							<div className="vehicle-content bg-yellow-100 rounded-lg overflow-hidden shadow hover:shadow-lg transition">
 								<div className="vehicle-thumbnail">
-									<a href="#">
+									<Link href="#">
 										<img
 											src={vehicle.image}
 											alt={vehicle.name}
 											className="w-full h-48 object-cover"
 										/>
-									</a>
+									</Link>
 								</div>
 								<div className="vehicle-bottom-content p-4">
 									<h3 className="vehicle-title text-xl font-semibold">
-										<a href="#">{vehicle.name}</a>
+										<Link href="#">{vehicle.name}</Link>
 									</h3>
 									<div className="vehicle-meta text-gray-700 mt-2">
 										<span>
@@ -160,12 +160,12 @@ export default function PopularVehicleBlock() {
 
 				{/* Mobile "View all" */}
 				<div className="block mt-6 md:hidden text-center">
-					<a
+					<Link
 						href="#"
 						className="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 transition"
 					>
 						Ver Todas
-					</a>
+					</Link>
 				</div>
 			</div>
 		</section>
