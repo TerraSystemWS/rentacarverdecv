@@ -312,7 +312,7 @@ const Header: React.FC = () => {
 												<Link href="/about">Sobre Nós</Link>
 											</li>
 											<li>
-												<Link href="#">Novidades</Link>
+												<Link href="/posts">Novidades</Link>
 												{/* <ul className="sub-menu">
 													<li>
 														<a href="blog.html">Blog</a>

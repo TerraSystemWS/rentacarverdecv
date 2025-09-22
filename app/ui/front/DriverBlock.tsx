@@ -63,7 +63,7 @@ const DriverBlock: React.FC = () => {
 					<div className="col-md-9 block-title-area tb-cell">
 						<div className="heading-content style-one border">
 							<h3 className="subtitle">Tempo Integral e Parcial</h3>
-							<h2 className="title">Motoristas Connosco</h2>
+							<h2 className="title">Nossos Motoristas</h2>
 						</div>
 					</div>
 

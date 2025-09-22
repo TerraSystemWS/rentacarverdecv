@@ -14,7 +14,7 @@ export default function AppBlock() {
 								<h4 className="top-subtitle">Todos os descontos só para si</h4>
 								<h2 className="title red-color">A Nossa App Gratuita</h2>
 								<h3 className="subtitle">
-									Procure TaxiCab na App Store &amp; Google Play
+									Procure Rentacarverde na App Store &amp; Google Play
 								</h3>
 								<div className="app-location-link">
 									<a href="#">
