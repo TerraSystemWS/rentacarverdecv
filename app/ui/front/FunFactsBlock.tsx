@@ -11,10 +11,10 @@ interface FunFact {
 }
 
 const funFacts: FunFact[] = [
-	{ id: 1, count: 250, label: "Caros na frota" },
-	{ id: 2, count: 25845, label: "Clientes Satisfeitos" },
-	{ id: 3, count: 245, label: "Condutores" },
-	{ id: 4, count: 525, label: "Dias Na Atividade" },
+	{ id: 1, count: 0, label: "Caros na frota" },
+	{ id: 2, count: 0, label: "Clientes Satisfeitos" },
+	{ id: 3, count: 0, label: "Condutores" },
+	{ id: 4, count: 0, label: "Dias Na Atividade" },
 ];
 
 const FunFactsBlock: React.FC = () => {

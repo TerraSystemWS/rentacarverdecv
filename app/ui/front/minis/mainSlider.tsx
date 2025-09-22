@@ -57,7 +57,7 @@ const MainSlider = () => {
 				{
 					type: "text",
 					className: "tp-caption tp-resizeme rev-subheading",
-					content: "All discount just for you",
+					content: "Muitos Discontos para si",
 					data: {
 						x: "['left','left','left','center']",
 						hoffset: "['105','105','75','-85']",
@@ -71,7 +71,7 @@ const MainSlider = () => {
 				{
 					type: "text",
 					className: "tp-caption tp-resizeme rev-subheading",
-					content: "Need A Ride?",
+					content: "Vair a algum lado?",
 					data: {
 						x: "['left','left','left','center']",
 						hoffset: "['102','102','75','-75']",
@@ -90,7 +90,7 @@ const MainSlider = () => {
 				{
 					type: "text",
 					className: "tp-caption tp-resizeme NotGeneric-Title",
-					content: "Choose your<br> Comfortable Taxi",
+					content: "Escolha o seu<br> Carro",
 					data: {
 						x: "['left','left','left','center']",
 						hoffset: "['103','103','75','0']",
@@ -110,7 +110,7 @@ const MainSlider = () => {
 				{
 					type: "text",
 					className: "tp-caption rev-subheading tp-resizeme",
-					content: "Best worldwide car hire deals!!!!!",
+					content: "Melhores ofertas de Cabo Verde!!!!!",
 					data: {
 						x: "['left','left','left','center']",
 						hoffset: "['105','105','75','-28']",
@@ -125,7 +125,7 @@ const MainSlider = () => {
 					type: "button",
 					className: "tp-caption tp-resizeme",
 					content:
-						'<a href=\'#\' class=\'button black-button slider-button\' data-fontsize=\'["22","22","22","22"]\'>Contact Now</a>',
+						'<a href=\'contact\' class=\'button black-button slider-button\' data-fontsize=\'["22","22","22","22"]\'>Contatar Agora</a>',
 					data: {
 						x: "['left','left','left','center']",
 						hoffset: "['105','105','75','-105']",
