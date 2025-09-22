@@ -77,7 +77,8 @@ const Footer = () => {
 										</li>
 										<li>
 											<Link href="#">
-												<i className="fa fa-map-marker"></i>rua cabo verde
+												<i className="fa fa-map-marker"></i>Cidadela - Rua da
+												Independência
 											</Link>
 										</li>
 									</ul>

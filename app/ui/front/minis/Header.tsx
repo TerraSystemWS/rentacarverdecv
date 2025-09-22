@@ -67,9 +67,9 @@ const Header: React.FC = () => {
 							<div className="header-content-left">
 								<ul className="header-top-menu">
 									<li>
-										<Link href="#" className="top-left-menu">
+										<Link href="tel:02385810945" className="top-left-menu">
 											<i className="fa fa-phone"></i>
-											<span>Chamar - 01623 030020</span>
+											<span>Chamar - 5810945</span>
 										</Link>
 									</li>
 									<li>
