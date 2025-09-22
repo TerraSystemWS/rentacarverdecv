@@ -2,6 +2,12 @@ import MainSlider from "./ui/front/minis/mainSlider";
 import CheckVehicleArea from "./ui/front/CheckVehicleArea";
 import PopularVehicleBlock from "./ui/front/PopularVehicleBlock";
 import Headi from "./ui/front/head";
+import RegularVehicleBlock from "./ui/front/RegularVehicleBlock";
+import FunFactsBlock from "./ui/front/FunFactsBlock";
+import DriverBlock from "./ui/front/DriverBlock";
+import AppBlock from "./ui/front/AppBlock";
+import CompanyBrandBlock from "./ui/front/CompanyBrandBlock";
+import BlogArea from "./ui/front/BlogArea";
 
 const vehiclesData = [
 	{
@@ -75,6 +81,18 @@ const Home = () => {
 			<div className="vehicle-multi-border yellow-black"></div>
 			<PopularVehicleBlock />
 			{/* <PopularVehicleBlock vehicles={vehiclesData} /> */}
+			{/* RegularVehicleBlock */}
+			<RegularVehicleBlock />
+			{/* fun facts block */}
+			<FunFactsBlock />
+			{/* motoristas */}
+			<DriverBlock />
+			{/* mobile app */}
+			<AppBlock />
+			{/* parceiros */}
+			<CompanyBrandBlock />
+			{/* Blog Area */}
+			<BlogArea />
 		</>
 	);
 };

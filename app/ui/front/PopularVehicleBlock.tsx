@@ -119,8 +119,8 @@ export default function PopularVehicleBlock() {
 				<Swiper
 					modules={[Navigation]}
 					navigation={{
-						nextEl: ".previous-item",
-						prevEl: ".next-item",
+						nextEl: ".next-item",
+						prevEl: ".previous-item",
 					}}
 					spaceBetween={24}
 					slidesPerView={1}
