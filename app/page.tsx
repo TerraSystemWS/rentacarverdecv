@@ -1,7 +1,7 @@
 import MainSlider from "./ui/front/minis/mainSlider";
 import CheckVehicleArea from "./ui/front/CheckVehicleArea";
 import PopularVehicleBlock from "./ui/front/PopularVehicleBlock";
-import Headi from "./ui/front/head";
+// import Headi from "./ui/front/head";
 import RegularVehicleBlock from "./ui/front/RegularVehicleBlock";
 import FunFactsBlock from "./ui/front/FunFactsBlock";
 import DriverBlock from "./ui/front/DriverBlock";
@@ -52,14 +52,15 @@ const vehiclesData = [
 	},
 ];
 
+// app/page.tsx (Home)
+export const metadata = {
+	title: "Página Inicial", // vai gerar: "Página Inicial — Rent a Car Verde"
+	description: "Alugue o seu carro em Cabo Verde de forma fácil e rápida",
+};
+
 const Home = () => {
 	return (
 		<>
-			<Headi
-				title="Terra"
-				description="Alugue o seu carro ideal em Cabo Verde com a Rent a car Verde. Frota moderna e serviço de alta qualidade."
-				keywords="aluguer de carro, cabo verde, rent a car, turismo"
-			/>
 			<MainSlider />
 			{/* Divider */}
 			<div className="vehicle-section-divider night-rider">
