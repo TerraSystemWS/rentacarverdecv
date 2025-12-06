@@ -17,13 +17,13 @@ const Carro: React.FC<CarroProps> = ({ car }) => {
 	return (
 		<div className="vehicle-content theme-yellow">
 			<div className="vehicle-thumbnail">
-				<a href={car.link || "#"}>
+				<a href={`/cars/${car.link || car?.id}`}>
 					<img src={car.imagem} alt="car-item" />
 				</a>
 			</div>
 			<div className="vehicle-bottom-content">
 				<h2 className="vehicle-title">
-					<a href={car.link || "#"}>{car.modelo}</a>
+					<a href={`/cars/${car.link || car?.id}`}>{car.modelo}</a>
 				</h2>
 				<div className="vehicle-meta">
 					<div className="meta-item">
