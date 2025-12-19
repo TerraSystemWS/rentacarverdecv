@@ -1,8 +1,8 @@
 import React from "react";
-import PageHeader from "../ui/front/PageHeader";
-import Carro from "../ui/front/veiculos/carro";
-import { carros } from "../lib/cars";
-import SideSearch from "../ui/front/veiculos/sideSearch";
+import PageHeader from "../../ui/front/PageHeader";
+import Carro from "../../ui/front/veiculos/carro";
+import { carros } from "../../lib/cars";
+import SideSearch from "../../ui/front/veiculos/sideSearch";
 
 export default function CarsPage() {
 	return (

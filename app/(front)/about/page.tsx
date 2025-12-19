@@ -1,6 +1,6 @@
-import PageHeader from "../ui/front/PageHeader";
-import DriverBlock from "../ui/front/DriverBlock";
-import AboutMainContent from "../ui/front/about/AboutMainContent";
+import PageHeader from "../../ui/front/PageHeader";
+import DriverBlock from "../../ui/front/DriverBlock";
+import AboutMainContent from "../../ui/front/about/AboutMainContent";
 
 const About = () => {
 	return (

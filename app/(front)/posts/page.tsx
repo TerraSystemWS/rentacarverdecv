@@ -1,9 +1,9 @@
 import { use } from "react";
-import PageHeader from "../ui/front/PageHeader";
-import BlogGrid from "../ui/front/blog/BlogGrid";
-import { posts } from "../lib/posts";
-import BlogSidebar from "../ui/front/blog/postSidebar";
-import { postSidebarData } from "../lib/postSidebar";
+import PageHeader from "../../ui/front/PageHeader";
+import BlogGrid from "../../ui/front/blog/BlogGrid";
+import { posts } from "../../lib/posts";
+import BlogSidebar from "../../ui/front/blog/postSidebar";
+import { postSidebarData } from "../../lib/postSidebar";
 
 const Post = ({ params }: { params: Promise<{ slug: string }> }) => {
 	const { slug } = use(params);
