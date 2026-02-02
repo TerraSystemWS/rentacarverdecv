@@ -98,14 +98,9 @@ export default function FrontLayout({
 }) {
 	return (
 		<>
-			{/* <body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-			> */}
 			<Header />
 			<main>{children}</main>
 			<Footer />
-
-			{/* </body> */}
 		</>
 	);
 }

@@ -120,3 +120,40 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+/* Default buttons: black */
+button  {
+  
+  color: #000 !important;
+  border: 1px solid #000;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+button:hover {
+  opacity: 0.92;
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+button:disabled,
+button[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Focus ring acessível */
+button:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 2px;
+}
+
+a {
+  color: #000
+ }
