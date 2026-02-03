@@ -45,13 +45,13 @@ const Footer = () => {
 											<Link href="/">Home</Link>
 										</li>
 										<li>
-											<Link href="/reservar"> Reservar</Link>
+											<Link href="/#reservar"> Reservar</Link>
 										</li>
 										<li>
 											<Link href="/cars">Our car</Link>
 										</li>
 										<li>
-											<Link href="contact">Contato</Link>
+											<Link href="/contact">Contato</Link>
 										</li>
 										<li>
 											<Link href="/">Reviews</Link>
