@@ -1,10 +1,16 @@
 // components/dashboard/DataTable.tsx
+export type Column<T> = {
+	key: string;
+	label: string;
+	render?: (row: T) => React.ReactNode;
+};
+
 export default function DataTable<T extends Record<string, any>>({
 	columns,
 	rows,
 	emptyText = "Sem dados.",
 }: {
-	columns: { key: keyof T; label: string }[];
+	columns: Column<T>[];
 	rows: T[];
 	emptyText?: string;
 }) {
@@ -15,7 +21,7 @@ export default function DataTable<T extends Record<string, any>>({
 					<tr>
 						{columns.map((c) => (
 							<th
-								key={String(c.key)}
+								key={c.key}
 								className="px-4 py-3 text-left font-medium"
 							>
 								{c.label}
@@ -32,10 +38,10 @@ export default function DataTable<T extends Record<string, any>>({
 						</tr>
 					) : (
 						rows.map((r, idx) => (
-							<tr key={idx} className="border-b last:border-b-0">
+							<tr key={idx} className="border-b last:border-b-0 hover:bg-gray-50/50">
 								{columns.map((c) => (
-									<td key={String(c.key)} className="px-4 py-3">
-										{String(r[c.key] ?? "")}
+									<td key={c.key} className="px-4 py-3">
+										{c.render ? c.render(r) : String(r[c.key as keyof T] ?? "")}
 									</td>
 								))}
 							</tr>
@@ -46,3 +52,4 @@ export default function DataTable<T extends Record<string, any>>({
 		</div>
 	);
 }
+

@@ -14,6 +14,10 @@ export const endpoints = {
 	},
 	vehicles: {
 		list: (limit = 100) => `/vehicles?limit=${limit}`,
+		get: (id: number) => `/vehicles/${id}`,
+		create: "/vehicles",
+		update: (id: number) => `/vehicles/${id}`,
+		delete: (id: number) => `/vehicles/${id}`,
 	},
 	bookings: {
 		list: (limit = 100) => `/bookings?limit=${limit}`,
