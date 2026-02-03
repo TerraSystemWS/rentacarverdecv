@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Plus, Trash2, Upload, X } from "lucide-react";
-import { Vehicle, VehicleImage, PriceDetail, OverviewItem, Feature } from "@/lib/api/types";
+import { useState } from "react";
+import { Vehicle } from "@/lib/api/types";
+import { Upload, X } from "lucide-react";
 
 interface VehicleFormProps {
-    initialData?: Vehicle;
+    initialData?: Partial<Vehicle>;
     onSubmit: (data: Vehicle) => void;
     onCancel: () => void;
     isSubmitting?: boolean;
@@ -17,108 +17,41 @@ export default function VehicleForm({
     onCancel,
     isSubmitting = false,
 }: VehicleFormProps) {
-    // Initialize state with default values or existing data
     const [formData, setFormData] = useState<Vehicle>({
-        title: "",
-        rent_per_day: 0,
-        rent_currency: "CVE",
-        rent_text: "",
-        description: "",
-        images: [],
-        priceDetails: [],
-        overviewItems: [],
-        features: [],
-        ...initialData,
+        id: initialData?.id || 0,
+        make: initialData?.make || "",
+        model: initialData?.model || "",
+        year: initialData?.year || new Date().getFullYear(),
+        licensePlate: initialData?.licensePlate || "",
+        pricePerDay: initialData?.pricePerDay || 0,
+        available: initialData?.available ?? true,
+        imageUrl: initialData?.imageUrl || "",
     });
 
-    // Handle basic field changes
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value, type } = e.target;
+
+        let val: any = value;
+        if (type === "number") {
+            val = parseFloat(value) || 0;
+        } else if (type === "checkbox") {
+            // TS safe cast if we were using checkbox input
+            val = (e.target as HTMLInputElement).checked;
+        }
+
         setFormData((prev) => ({
             ...prev,
-            [name]: name === "rent_per_day" ? parseFloat(value) || 0 : value,
+            [name]: val,
         }));
     };
 
-    // --- Dynamic List Handlers ---
-
-    // Images
-    const addImage = () => {
-        // Mock upload: in a real app, this would trigger a file picker and upload to server
-        const mockUrl = `https://placehold.co/600x400?text=New+Car+Image+${formData.images?.length || 0}`;
-        const newImage: VehicleImage = { url: mockUrl, is_main: formData.images?.length === 0 };
-        setFormData((prev) => ({ ...prev, images: [...(prev.images || []), newImage] }));
-    };
-
-    const removeImage = (index: number) => {
+    const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, checked } = e.target;
         setFormData((prev) => ({
             ...prev,
-            images: prev.images?.filter((_, i) => i !== index),
+            [name]: checked,
         }));
-    };
-
-    // Prices
-    const addPrice = () => {
-        setFormData((prev) => ({
-            ...prev,
-            priceDetails: [...(prev.priceDetails || []), { condition_text: "", price: 0 }],
-        }));
-    };
-
-    const updatePrice = (index: number, field: keyof PriceDetail, value: any) => {
-        const newPrices = [...(formData.priceDetails || [])];
-        newPrices[index] = { ...newPrices[index], [field]: value };
-        setFormData({ ...formData, priceDetails: newPrices });
-    };
-
-    const removePrice = (index: number) => {
-        setFormData((prev) => ({
-            ...prev,
-            priceDetails: prev.priceDetails?.filter((_, i) => i !== index),
-        }));
-    };
-
-    // Features
-    const addFeature = () => {
-        setFormData((prev) => ({
-            ...prev,
-            features: [...(prev.features || []), { name: "", available: true }],
-        }));
-    };
-
-    const updateFeature = (index: number, field: keyof Feature, value: any) => {
-        const newFeatures = [...(formData.features || [])];
-        newFeatures[index] = { ...newFeatures[index], [field]: value };
-        setFormData({ ...formData, features: newFeatures });
-    };
-
-    const removeFeature = (index: number) => {
-        setFormData((prev) => ({
-            ...prev,
-            features: prev.features?.filter((_, i) => i !== index),
-        }));
-    };
-
-    // Overview Items
-    const addOverview = () => {
-        setFormData((prev) => ({
-            ...prev,
-            overviewItems: [...(prev.overviewItems || []), { text: "" }],
-        }));
-    };
-
-    const updateOverview = (index: number, value: string) => {
-        const newItems = [...(formData.overviewItems || [])];
-        newItems[index] = { ...newItems[index], text: value };
-        setFormData({ ...formData, overviewItems: newItems });
-    };
-
-    const removeOverview = (index: number) => {
-        setFormData((prev) => ({
-            ...prev,
-            overviewItems: prev.overviewItems?.filter((_, i) => i !== index),
-        }));
-    };
+    }
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -127,200 +60,129 @@ export default function VehicleForm({
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Basic Info */}
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                {/* Make */}
                 <div className="space-y-2">
-                    <label className="text-sm font-medium">Title</label>
+                    <label className="text-sm font-medium text-gray-700">Make</label>
                     <input
-                        name="title"
-                        value={formData.title}
+                        name="make"
+                        value={formData.make}
                         onChange={handleChange}
                         required
-                        className="w-full rounded-lg border p-2 focus:ring-2 focus:ring-blue-500"
-                        placeholder="Toyota Yaris 2023"
+                        className="w-full rounded-lg border border-gray-300 p-2.5 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
+                        placeholder="Toyota"
                     />
                 </div>
-                <div className="flex gap-4">
-                    <div className="space-y-2 flex-1">
-                        <label className="text-sm font-medium">Rent Per Day</label>
+
+                {/* Model */}
+                <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Model</label>
+                    <input
+                        name="model"
+                        value={formData.model}
+                        onChange={handleChange}
+                        required
+                        className="w-full rounded-lg border border-gray-300 p-2.5 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
+                        placeholder="Hilux"
+                    />
+                </div>
+
+                {/* Year */}
+                <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Year</label>
+                    <input
+                        name="year"
+                        type="number"
+                        value={formData.year}
+                        onChange={handleChange}
+                        required
+                        min="1990"
+                        max={new Date().getFullYear() + 1}
+                        className="w-full rounded-lg border border-gray-300 p-2.5 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
+                    />
+                </div>
+
+                {/* License Plate */}
+                <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">License Plate</label>
+                    <input
+                        name="licensePlate"
+                        value={formData.licensePlate}
+                        onChange={handleChange}
+                        required
+                        className="w-full rounded-lg border border-gray-300 p-2.5 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all uppercase placeholder:normal-case font-mono"
+                        placeholder="CV-00-AA"
+                    />
+                </div>
+
+                {/* Price Per Day */}
+                <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Price Per Day (CVE)</label>
+                    <div className="relative">
+                        <span className="absolute left-3 top-2.5 text-gray-500 font-medium">Wait...</span>
                         <input
-                            name="rent_per_day"
+                            name="pricePerDay"
                             type="number"
-                            value={formData.rent_per_day}
+                            value={formData.pricePerDay}
                             onChange={handleChange}
                             required
-                            className="w-full rounded-lg border p-2 focus:ring-2 focus:ring-blue-500"
+                            min="0"
+                            className="w-full rounded-lg border border-gray-300 p-2.5 pl-4 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
                         />
                     </div>
-                    <div className="space-y-2 w-24">
-                        <label className="text-sm font-medium">Currency</label>
-                        <select
-                            name="rent_currency"
-                            value={formData.rent_currency}
-                            onChange={handleChange}
-                            className="w-full rounded-lg border p-2 focus:ring-2 focus:ring-blue-500"
-                        >
-                            <option value="CVE">CVE</option>
-                            <option value="EUR">EUR</option>
-                            <option value="USD">USD</option>
-                        </select>
-                    </div>
                 </div>
-                <div className="md:col-span-2 space-y-2">
-                    <label className="text-sm font-medium">Description</label>
-                    <textarea
-                        name="description"
-                        value={formData.description || ""}
-                        onChange={handleChange}
-                        rows={3}
-                        className="w-full rounded-lg border p-2 focus:ring-2 focus:ring-blue-500"
-                        placeholder="Comfortable and economic city car..."
-                    />
-                </div>
-            </div>
 
-            <hr />
-
-            {/* Images Section */}
-            <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold">Images</h3>
-                    <button
-                        type="button"
-                        onClick={addImage}
-                        className="flex items-center gap-2 rounded-md bg-gray-100 px-3 py-1.5 text-sm hover:bg-gray-200"
-                    >
-                        <Upload size={16} /> Add Image
-                    </button>
-                </div>
-                <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                    {formData.images?.map((img, idx) => (
-                        <div key={idx} className="relative group aspect-video rounded-lg border bg-gray-50 overflow-hidden">
-                            <img src={img.url} alt="Vehicle" className="h-full w-full object-cover" />
-                            <button
-                                type="button"
-                                onClick={() => removeImage(idx)}
-                                className="absolute top-1 right-1 rounded-full bg-red-500 p-1 text-white opacity-0 group-hover:opacity-100 transition-opacity"
-                            >
-                                <X size={14} />
-                            </button>
+                {/* Availability */}
+                <div className="space-y-2 md:pt-8">
+                    <label className="flex items-center gap-3 cursor-pointer group">
+                        <div className="relative">
+                            <input
+                                type="checkbox"
+                                name="available"
+                                checked={formData.available}
+                                onChange={handleCheckboxChange}
+                                className="peer sr-only"
+                            />
+                            <div className="h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300"></div>
                         </div>
-                    ))}
-                    {(!formData.images || formData.images.length === 0) && (
-                        <div className="col-span-full py-8 text-center text-gray-400 border-2 border-dashed rounded-lg">
-                            No images added
+                        <span className="text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors">Available for rent</span>
+                    </label>
+                </div>
+
+                {/* Image URL */}
+                <div className="md:col-span-2 space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Image URL</label>
+                    <div className="flex gap-2">
+                        <input
+                            name="imageUrl"
+                            value={formData.imageUrl}
+                            onChange={handleChange}
+                            required
+                            className="flex-1 rounded-lg border border-gray-300 p-2.5 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
+                            placeholder="https://..."
+                        />
+                    </div>
+                    {formData.imageUrl && (
+                        <div className="mt-2 relative aspect-video w-full md:w-1/2 overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
+                            <img src={formData.imageUrl} alt="Preview" className="h-full w-full object-cover" />
                         </div>
                     )}
                 </div>
             </div>
 
-            <hr />
-
-            {/* Pricing Details */}
-            <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold">Price Rules</h3>
-                    <button
-                        type="button"
-                        onClick={addPrice}
-                        className="flex items-center gap-2 rounded-md bg-gray-100 px-3 py-1.5 text-sm hover:bg-gray-200"
-                    >
-                        <Plus size={16} /> Add Rule
-                    </button>
-                </div>
-                <div className="space-y-2">
-                    {formData.priceDetails?.map((price, idx) => (
-                        <div key={idx} className="flex gap-2 items-center">
-                            <input
-                                placeholder="Condition (e.g. > 3 days)"
-                                value={price.condition_text}
-                                onChange={(e) => updatePrice(idx, "condition_text", e.target.value)}
-                                className="flex-1 rounded-md border p-2 text-sm"
-                            />
-                            <input
-                                type="number"
-                                placeholder="Price"
-                                value={price.price}
-                                onChange={(e) => updatePrice(idx, "price", parseFloat(e.target.value) || 0)}
-                                className="w-24 rounded-md border p-2 text-sm"
-                            />
-                            <button type="button" onClick={() => removePrice(idx)} className="text-red-500 p-2 hover:bg-red-50 rounded"><Trash2 size={16} /></button>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            <hr />
-
-            {/* Features & Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                        <h3 className="text-lg font-semibold">Features</h3>
-                        <button
-                            type="button"
-                            onClick={addFeature}
-                            className="flex items-center gap-2 rounded-md bg-gray-100 px-3 py-1.5 text-sm hover:bg-gray-200"
-                        >
-                            <Plus size={16} /> Add
-                        </button>
-                    </div>
-                    <div className="space-y-2">
-                        {formData.features?.map((feat, idx) => (
-                            <div key={idx} className="flex gap-2 items-center">
-                                <input
-                                    placeholder="Feature name"
-                                    value={feat.name}
-                                    onChange={(e) => updateFeature(idx, "name", e.target.value)}
-                                    className="flex-1 rounded-md border p-2 text-sm"
-                                />
-                                <button type="button" onClick={() => removeFeature(idx)} className="text-red-500 p-2 hover:bg-red-50 rounded"><Trash2 size={16} /></button>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                        <h3 className="text-lg font-semibold">Overview</h3>
-                        <button
-                            type="button"
-                            onClick={addOverview}
-                            className="flex items-center gap-2 rounded-md bg-gray-100 px-3 py-1.5 text-sm hover:bg-gray-200"
-                        >
-                            <Plus size={16} /> Add
-                        </button>
-                    </div>
-                    <div className="space-y-2">
-                        {formData.overviewItems?.map((item, idx) => (
-                            <div key={idx} className="flex gap-2 items-center">
-                                <input
-                                    placeholder="Detail (e.g. 5 Seats)"
-                                    value={item.text}
-                                    onChange={(e) => updateOverview(idx, e.target.value)}
-                                    className="flex-1 rounded-md border p-2 text-sm"
-                                />
-                                <button type="button" onClick={() => removeOverview(idx)} className="text-red-500 p-2 hover:bg-red-50 rounded"><Trash2 size={16} /></button>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
-
-            {/* Actions */}
-            <div className="flex justify-end gap-3 pt-4 border-t">
+            <div className="flex justify-end gap-3 pt-6 border-t border-gray-100">
                 <button
                     type="button"
                     onClick={onCancel}
                     disabled={isSubmitting}
-                    className="rounded-lg px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100"
+                    className="rounded-lg px-5 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
                 >
                     Cancel
                 </button>
                 <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+                    className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700 hover:shadow-lg disabled:opacity-50 disabled:shadow-none transition-all"
                 >
                     {isSubmitting ? "Saving..." : "Save Vehicle"}
                 </button>

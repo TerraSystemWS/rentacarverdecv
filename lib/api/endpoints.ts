@@ -10,19 +10,19 @@ export const endpoints = {
 		summary: "/dashboard/summary",
 	},
 	users: {
-		list: (limit = 100) => `/users?limit=${limit}`,
+		list: (limit = 100) => `/dashboard/users?limit=${limit}`,
 	},
 	vehicles: {
-		list: (limit = 100) => `/vehicles?limit=${limit}`,
-		get: (id: number) => `/vehicles/${id}`,
-		create: "/vehicles",
-		update: (id: number) => `/vehicles/${id}`,
-		delete: (id: number) => `/vehicles/${id}`,
+		list: (limit = 100) => `/public/vehicles?limit=${limit}`,
+		get: (id: number) => `/public/vehicles/${id}`,
+		create: "/dashboard/vehicles",
+		update: (id: number) => `/dashboard/vehicles/${id}`,
+		delete: (id: number) => `/dashboard/vehicles/${id}`,
 	},
 	bookings: {
-		list: (limit = 100) => `/bookings?limit=${limit}`,
+		list: (limit = 100) => `/dashboard/bookings?limit=${limit}`,
 	},
 	messages: {
-		list: (limit = 100) => `/messages?limit=${limit}`,
+		list: (limit = 100) => `/dashboard/messages?limit=${limit}`,
 	},
 };
