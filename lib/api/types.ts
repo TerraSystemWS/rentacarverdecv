@@ -38,12 +38,13 @@ export type DashboardSummary = {
 };
 
 export type UserRow = {
-	id: number;
+	id: string; // UUID in backend
 	full_name: string;
 	email: string | null;
-	phone: string | null;
+	phone?: string | null;
 	is_active: boolean;
 	created_at: string;
+	roles?: string[];
 };
 
 export type VehicleRow = {
