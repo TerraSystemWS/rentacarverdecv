@@ -48,4 +48,23 @@ export const endpoints = {
 		update: (id: number) => `/dashboard/posts/${id}`,
 		delete: (id: number) => `/dashboard/posts/${id}`,
 	},
+	gallery: {
+		list: "/public/gallery",
+		dashboard: "/dashboard/gallery",
+		create: "/dashboard/gallery",
+		update: (id: number) => `/dashboard/gallery/${id}`,
+		delete: (id: number) => `/dashboard/gallery/${id}`,
+	},
+	ads: {
+		list: "/public/ads",
+		dashboard: "/dashboard/ads",
+		create: "/dashboard/ads",
+		update: (id: number) => `/dashboard/ads/${id}`,
+		delete: (id: number) => `/dashboard/ads/${id}`,
+	},
+	content: {
+		public: "/public/content",
+		dashboard: "/dashboard/content",
+		update: "/dashboard/content",
+	},
 };

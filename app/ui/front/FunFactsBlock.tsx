@@ -4,20 +4,30 @@
 import React from "react";
 import CountUp from "react-countup";
 
-interface FunFact {
-	id: number;
-	count: number;
-	label: string;
+interface FunFactsBlockProps {
+	content?: {
+		f1: string;
+		f2: string;
+		f3: string;
+		f4: string;
+	};
 }
 
-const funFacts: FunFact[] = [
-	{ id: 1, count: 0, label: "Caros na frota" },
-	{ id: 2, count: 0, label: "Clientes Satisfeitos" },
-	{ id: 3, count: 0, label: "Condutores" },
-	{ id: 4, count: 0, label: "Dias Na Atividade" },
-];
+const FunFactsBlock: React.FC<FunFactsBlockProps> = ({ content }) => {
+	const labels = content || {
+		f1: "Caros na frota",
+		f2: "Clientes Satisfeitos",
+		f3: "Condutores",
+		f4: "Dias Na Atividade",
+	};
 
-const FunFactsBlock: React.FC = () => {
+	const funFacts = [
+		{ id: 1, count: 50, label: labels.f1 },
+		{ id: 2, count: 1200, label: labels.f2 },
+		{ id: 3, count: 2500, label: labels.f3 },
+		{ id: 4, count: 365, label: labels.f4 },
+	];
+
 	return (
 		<section
 			className="fun-facts-block relative bg-cover bg-center py-24 fun-facts-block background-overlay"

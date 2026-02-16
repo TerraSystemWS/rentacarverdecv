@@ -3,7 +3,21 @@
 
 import React from "react";
 
-export default function AppBlock() {
+interface AppBlockProps {
+	content?: {
+		topSubtitle: string;
+		title: string;
+		subtitle: string;
+	};
+}
+
+export default function AppBlock({ content }: AppBlockProps) {
+	const data = content || {
+		topSubtitle: "Todos os descontos só para si",
+		title: "A Nossa App Gratuita",
+		subtitle: "Procure Rentacarverde na App Store & Google Play",
+	};
+
 	return (
 		<div className="app-block bg-gray-color mr-top-35 mr-btm-5">
 			<div className="container-large-device">
@@ -11,10 +25,10 @@ export default function AppBlock() {
 					<div className="row tb">
 						<div className="col-md-6 tb-cell">
 							<div className="mobile-app-details">
-								<h4 className="top-subtitle">Todos os descontos só para si</h4>
-								<h2 className="title red-color">A Nossa App Gratuita</h2>
+								<h4 className="top-subtitle">{data.topSubtitle}</h4>
+								<h2 className="title red-color">{data.title}</h2>
 								<h3 className="subtitle">
-									Procure Rentacarverde na App Store &amp; Google Play
+									{data.subtitle}
 								</h3>
 								<div className="app-location-link">
 									<a href="#">

@@ -11,7 +11,9 @@ import {
 	ChevronRight,
 	TrendingUp,
 	Handshake,
-	FileText
+	FileText,
+	Image,
+	Megaphone
 } from "lucide-react";
 
 const items = [
@@ -20,8 +22,11 @@ const items = [
 	{ label: "Veículos", href: "/dashboard/vehicles", icon: Car },
 	{ label: "Blog", href: "/dashboard/posts", icon: FileText },
 	{ label: "Parceiros", href: "/dashboard/partners", icon: Handshake },
+	{ label: "Galeria", href: "/dashboard/gallery", icon: Image },
+	{ label: "Publicidade", href: "/dashboard/ads", icon: Megaphone },
 	{ label: "Utilizadores", href: "/dashboard/users", icon: Users },
 	{ label: "Mensagens", href: "/dashboard/messages", icon: MessageSquare },
+	{ label: "Definições", href: "/dashboard/settings", icon: LayoutDashboard },
 ];
 
 export default function SideNav() {

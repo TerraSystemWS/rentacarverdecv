@@ -130,3 +130,24 @@ export type Post = {
 	createdAt?: string;
 	updatedAt?: string;
 };
+
+export type GalleryItem = {
+	id?: number;
+	title?: string;
+	imageUrl: string;
+	category?: string;
+	description?: string;
+	createdAt?: string;
+};
+
+export type Advertisement = {
+	id?: number;
+	title: string;
+	imageUrl: string;
+	linkUrl?: string;
+	placement: "BANNER" | "SIDEBAR" | "POPUP";
+	active: boolean;
+	priority: number;
+	createdAt?: string;
+	updatedAt?: string;
+};

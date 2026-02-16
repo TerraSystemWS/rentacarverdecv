@@ -1,18 +1,20 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Advertisement } from "@/lib/api/types";
+import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
 
 interface LayerStyle {
 	color?: string;
 	fontFamily?: string;
 	fontWeight?: string | number;
 	textTransform?:
-		| "none"
-		| "capitalize"
-		| "uppercase"
-		| "lowercase"
-		| "full-width"
-		| "full-size-kana";
+	| "none"
+	| "capitalize"
+	| "uppercase"
+	| "lowercase"
+	| "full-width"
+	| "full-size-kana";
 	zIndex?: number;
 	[key: string]: string | number | undefined;
 }
@@ -44,12 +46,34 @@ interface Slide {
 
 const MainSlider = () => {
 	const sliderRef = useRef<HTMLDivElement>(null);
+	const [ads, setAds] = useState<Advertisement[]>([]);
 
 	useEffect(() => {
+		const fetchAds = async () => {
+			try {
+				const res = await fetch(`${API_BASE_URL}${endpoints.ads.list}?placement=BANNER`);
+				if (res.ok) {
+					const data = await res.json();
+					setAds(data);
+				}
+			} catch (error) {
+				console.error("Error fetching banners:", error);
+			}
+		};
+		fetchAds();
 		// Inicialização do Revolution Slider será feita pelo script global
 	}, []);
 
-	const slides: Slide[] = [
+	const getImageSrc = (url: string) => {
+		if (!url) return "";
+		if (url.startsWith('blob:') || url.startsWith('data:')) return url;
+		if (url.startsWith('/uploads')) {
+			return `${API_BASE_URL}${url}`;
+		}
+		return url;
+	};
+
+	const defaultSlides: Slide[] = [
 		{
 			id: 1,
 			bgImage: "/assets/images/slider-car/slider-bg.jpg",
@@ -156,14 +180,57 @@ const MainSlider = () => {
 				},
 			],
 		},
-		{
-			id: 2,
-			bgImage: "/assets/images/slider-car/slider-bg.jpg",
-			layers: [
-				// Adicione as camadas para o segundo slide aqui
-			],
-		},
 	];
+
+	const slides: Slide[] = ads.length > 0
+		? ads.map((ad: Advertisement) => ({
+			id: ad.id!,
+			bgImage: getImageSrc(ad.imageUrl),
+			layers: [
+				{
+					type: "text",
+					className: "tp-caption tp-resizeme NotGeneric-Title",
+					content: ad.title.replace("\n", "<br>"),
+					data: {
+						x: "['center']",
+						hoffset: "['0']",
+						y: "['middle']",
+						voffset: "['-50']",
+						fontsize: "['60','60','45','40']",
+						lineheight: "['75','75','60','50']",
+						start: "1000",
+					},
+					style: {
+						color: "#ffffff",
+						fontFamily: "'Exo', sans-serif",
+						fontWeight: 900,
+						textTransform: "uppercase" as const,
+						textAlign: "center",
+					},
+				},
+				ad.linkUrl
+					? {
+						type: "button",
+						className: "tp-caption tp-resizeme",
+						content: `<a href='${ad.linkUrl}' class='button yellow-button slider-button'>Ver Mais</a>`,
+						data: {
+							x: "['center']",
+							hoffset: "['0']",
+							y: "['middle']",
+							voffset: "['50']",
+							fontsize: "['22']",
+							lineheight: "['45']",
+							start: "1200",
+						},
+						style: {
+							fontWeight: "bold",
+							fontFamily: "'Exo', sans-serif",
+						},
+					}
+					: null,
+			].filter(Boolean) as Layer[],
+		}))
+		: defaultSlides;
 
 	return (
 		<div className="slider-block">

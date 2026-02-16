@@ -1,4 +1,22 @@
+"use client";
+
+import { useContent } from "@/app/context/ContentContext";
+
 const Contact = () => {
+	const { content } = useContent();
+
+	const data = content?.contact || {
+		headerTitle: "Contacto",
+		headerSubtitle: "Fale connosco",
+		directTitle: "Contacte-nos em direto",
+		address: "Cidadela - Rua da Independência, em frente ao 4° paragem de autocarro, a 40 m de Direção Geral Dos Transportes Rodoviário",
+		phone: "+238 5810945",
+		email: "reservas@rentacarverde.cv",
+		mapTitle: "Mapa & Direções",
+		mapSubtitle: "Encontre a nossa localização",
+		mapDesc: "Descubra como chegar até nós a partir da sua localização atual",
+	};
+
 	return (
 		<>
 			{/* ====== Cabeçalho da Página ====== */}
@@ -6,8 +24,8 @@ const Contact = () => {
 				<div className="container">
 					<div className="row">
 						<div className="col-md-12">
-							<h2 className="page-title">Contacto</h2>
-							<p className="page-description yellow-color">Fale connosco</p>
+							<h2 className="page-title">{data.headerTitle}</h2>
+							<p className="page-description yellow-color">{data.headerSubtitle}</p>
 						</div>
 					</div>
 				</div>
@@ -19,9 +37,7 @@ const Contact = () => {
 					<div className="row">
 						<div className="col-md-12">
 							<div className="heading-content-three">
-								<h2 className="title">
-									Contacte-nos
-									<br /> em direto
+								<h2 className="title" dangerouslySetInnerHTML={{ __html: data.directTitle.replace(/\n/g, '<br />') }}>
 								</h2>
 							</div>
 						</div>
@@ -35,25 +51,21 @@ const Contact = () => {
 									<h4>
 										<i className="fa fa-map-marker"></i> Morada
 									</h4>
-									<p>
-										Cidadela - Rua da Independência, em frente ao 4° paragem de
-										autocarro,
-										<br /> a 40 m de Direção Geral Dos Transportes Rodoviário
-									</p>
+									<p>{data.address}</p>
 								</div>
 
 								<div className="contact">
 									<h4>
 										<i className="fa fa-phone"></i> Telefone
 									</h4>
-									<p>+238 5810945</p>
+									<p>{data.phone}</p>
 								</div>
 
 								<div className="contact">
 									<h4>
 										<i className="fa fa-envelope"></i> Email
 									</h4>
-									<p>reservas@rentacarverde.cv</p>
+									<p>{data.email}</p>
 								</div>
 
 								<div className="contact">
@@ -137,8 +149,8 @@ const Contact = () => {
 					<div className="row">
 						<div className="col-md-12">
 							<div className="heading-content style-two">
-								<h3 className="subtitle">Encontre a nossa localização</h3>
-								<h2 className="title color-nevy">Mapa &amp; Direções</h2>
+								<h3 className="subtitle">{data.mapSubtitle}</h3>
+								<h2 className="title color-nevy">{data.mapTitle}</h2>
 							</div>
 							<div className="header-map-content">
 								<iframe
@@ -148,7 +160,7 @@ const Contact = () => {
 								></iframe>
 							</div>
 							<p>
-								Descubra como chegar até nós a partir da sua localização atual
+								{data.mapDesc}
 							</p>
 						</div>
 					</div>

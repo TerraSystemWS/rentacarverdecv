@@ -1,21 +1,19 @@
+"use client";
+
 import MainSlider from "../ui/front/minis/mainSlider";
 import CheckVehicleArea from "../ui/front/CheckVehicleArea";
 import PopularVehicleBlock from "../ui/front/PopularVehicleBlock";
-// import Headi from "./ui/front/head";
 import RegularVehicleBlock from "../ui/front/RegularVehicleBlock";
 import FunFactsBlock from "../ui/front/FunFactsBlock";
 import DriverBlock from "../ui/front/DriverBlock";
 import AppBlock from "../ui/front/AppBlock";
 import CompanyBrandBlock from "../ui/front/CompanyBrandBlock";
 import BlogArea from "../ui/front/BlogArea";
-
-// app/page.tsx (Home)
-export const metadata = {
-	title: "Página Inicial", // vai gerar: "Página Inicial — Rent a Car Verde"
-	description: "Alugue o seu carro em Cabo Verde de forma fácil e rápida",
-};
+import { useContent } from "../context/ContentContext";
 
 const Home = () => {
+	const { content } = useContent();
+
 	return (
 		<>
 			<MainSlider />
@@ -38,18 +36,11 @@ const Home = () => {
 			{/* <!-- /.vehicle-multi-border --> */}
 			<div className="vehicle-multi-border yellow-black"></div>
 			<PopularVehicleBlock />
-			{/* <PopularVehicleBlock vehicles={vehiclesData} /> */}
-			{/* RegularVehicleBlock */}
 			<RegularVehicleBlock />
-			{/* fun facts block */}
-			<FunFactsBlock />
-			{/* motoristas */}
+			<FunFactsBlock content={content?.home.funFacts} />
 			<DriverBlock />
-			{/* mobile app */}
-			<AppBlock />
-			{/* parceiros */}
+			<AppBlock content={content?.home.app} />
 			<CompanyBrandBlock />
-			{/* Blog Area */}
 			<BlogArea />
 		</>
 	);
