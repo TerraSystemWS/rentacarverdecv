@@ -41,7 +41,7 @@ export default function DataTable<T extends Record<string, any>>({
 										key={col.key as string}
 										className={`px-6 py-4 text-sm font-medium text-zinc-600 dark:text-zinc-400 ${col.key === "actions" ? "text-right" : "text-left"}`}
 									>
-										{row[col.key] as React.ReactNode}
+										{col.render ? col.render(row) : (row[col.key] as React.ReactNode)}
 									</td>
 								))}
 							</tr>

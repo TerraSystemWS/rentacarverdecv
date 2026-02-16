@@ -1,12 +1,21 @@
-import { use } from "react";
+import React from "react";
 import PageHeader from "../../ui/front/PageHeader";
 import BlogGrid from "../../ui/front/blog/BlogGrid";
-import { posts } from "../../lib/posts";
 import BlogSidebar from "../../ui/front/blog/postSidebar";
 import { postSidebarData } from "../../lib/postSidebar";
+import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
+import { Post } from "@/lib/api/types";
 
-const Post = ({ params }: { params: Promise<{ slug: string }> }) => {
-	const { slug } = use(params);
+const PostPage = async () => {
+	let posts: Post[] = [];
+	try {
+		const res = await fetch(`${API_BASE_URL}${endpoints.posts.list}`, { cache: 'no-store' });
+		if (res.ok) {
+			posts = await res.json();
+		}
+	} catch (error) {
+		console.error("Error fetching posts:", error);
+	}
 
 	return (
 		<>
@@ -58,7 +67,13 @@ const Post = ({ params }: { params: Promise<{ slug: string }> }) => {
 									</ul>
 								</div>
 							</div>
-							<BlogGrid posts={posts} />
+							{posts.length > 0 ? (
+								<BlogGrid posts={posts} />
+							) : (
+								<div className="text-center py-10">
+									<p className="text-muted">Nenhuma novidade encontrada no momento.</p>
+								</div>
+							)}
 						</div>
 						<BlogSidebar
 							popularPosts={postSidebarData.popularPosts}
@@ -66,7 +81,6 @@ const Post = ({ params }: { params: Promise<{ slug: string }> }) => {
 							tags={postSidebarData.tags}
 							adImage={postSidebarData.adImage}
 						/>
-						;
 					</div>
 				</div>
 			</div>
@@ -74,4 +88,4 @@ const Post = ({ params }: { params: Promise<{ slug: string }> }) => {
 	);
 };
 
-export default Post;
+export default PostPage;

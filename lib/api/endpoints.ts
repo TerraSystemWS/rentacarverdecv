@@ -1,4 +1,6 @@
 // lib/api/endpoints.ts
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8090";
+
 export const endpoints = {
 	auth: {
 		login: "/auth/login",
@@ -22,8 +24,28 @@ export const endpoints = {
 	},
 	bookings: {
 		list: (limit = 100) => `/dashboard/bookings?limit=${limit}`,
+		create: "/dashboard/bookings",
+		update: (id: number) => `/dashboard/bookings/${id}`,
+		updateStatus: (id: number) => `/dashboard/bookings/${id}/status`,
+		delete: (id: number) => `/dashboard/bookings/${id}`,
+		createPublic: "/public/bookings",
 	},
 	messages: {
 		list: (limit = 100) => `/dashboard/messages?limit=${limit}`,
+	},
+	partners: {
+		list: "/public/partners",
+		dashboard: "/dashboard/partners",
+		create: "/dashboard/partners",
+		update: (id: number) => `/dashboard/partners/${id}`,
+		delete: (id: number) => `/dashboard/partners/${id}`,
+	},
+	posts: {
+		list: "/public/posts",
+		get: (slug: string) => `/public/posts/${slug}`,
+		dashboard: "/dashboard/posts",
+		create: "/dashboard/posts",
+		update: (id: number) => `/dashboard/posts/${id}`,
+		delete: (id: number) => `/dashboard/posts/${id}`,
 	},
 };

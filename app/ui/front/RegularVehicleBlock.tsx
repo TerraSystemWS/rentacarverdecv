@@ -10,6 +10,7 @@ import "swiper/css/navigation";
 import { Vehicle } from "@/lib/api/types";
 import { authFetch } from "@/app/auth/api";
 import { endpoints } from "@/lib/api/endpoints";
+import { API_BASE_URL } from "@/lib/api/endpoints";
 
 const RegularVehicleBlock: React.FC = () => {
 	const [vehicles, setVehicles] = useState<Vehicle[]>([]);
@@ -18,7 +19,7 @@ const RegularVehicleBlock: React.FC = () => {
 	const getImageSrc = (url: string) => {
 		if (!url) return "";
 		if (url.startsWith('/uploads')) {
-			return `http://localhost:8090${url}`;
+			return `${API_BASE_URL}${url}`;
 		}
 		return url;
 	};
@@ -95,18 +96,18 @@ const RegularVehicleBlock: React.FC = () => {
 								}}
 							>
 								{vehicles.map((vehicle) => (
-									<SwiperSlide key={vehicle.id}>
-										<div className="vehicle-content bg-white rounded-lg overflow-hidden shadow hover:shadow-lg transition h-full">
+									<SwiperSlide key={vehicle.id} className="h-auto">
+										<div className="vehicle-content bg-white rounded-lg overflow-hidden shadow hover:shadow-lg transition h-full flex flex-col">
 											<div className="vehicle-thumbnail">
 												<Link href={`/cars/${vehicle.id}`}>
 													<img
 														src={vehicle.images && vehicle.images.length > 0 ? getImageSrc(vehicle.images[0].url) : ""}
 														alt={`${vehicle.make} ${vehicle.model}`}
-														className="w-full h-48 object-cover"
+														className="w-full !h-48 !object-cover"
 													/>
 												</Link>
 											</div>
-											<div className="vehicle-bottom-content p-4 text-center">
+											<div className="vehicle-bottom-content p-4 text-center flex-grow">
 												<h3 className="vehicle-title text-xl font-semibold">
 													<Link href={`/cars/${vehicle.id}`}>{vehicle.make} {vehicle.model}</Link>
 												</h3>

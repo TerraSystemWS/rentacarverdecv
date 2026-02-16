@@ -24,6 +24,7 @@ export type LoginResponse = AuthTokens & {
 };
 
 export type MeResponse = {
+	id: string;
 	username: string;
 	email: string;
 	enabled: boolean;
@@ -35,6 +36,9 @@ export type DashboardSummary = {
 	vehicles: number;
 	activeBookings: number;
 	unreadRecipients: number;
+	totalIncome: number;
+	monthlyRevenue: Record<string, number>;
+	revenueByStatus: Record<string, number>;
 };
 
 export type UserRow = {
@@ -59,11 +63,10 @@ export type BookingRow = {
 	id: number;
 	customer_name: string;
 	vehicle_title: string;
-	status: "pending" | "confirmed" | "in_progress" | "completed" | "cancelled";
+	status: "PENDENTE" | "CONFIRMADA" | "EM_CURSO" | "CONCLUÍDA" | "CANCELADA";
 	start_at: string;
 	end_at: string;
 	grand_total: number;
-	currency: string;
 	created_at: string;
 };
 
@@ -106,4 +109,24 @@ export type Vehicle = {
 	deposit?: number;
 	internalFeatures?: string[];
 	externalFeatures?: string[];
+};
+
+export type Partner = {
+	id?: number;
+	name: string;
+	logoUrl?: string;
+	websiteUrl?: string;
+};
+
+export type Post = {
+	id?: number;
+	title: string;
+	slug: string;
+	content: string;
+	summary?: string;
+	imageUrl?: string;
+	author?: string;
+	status: "DRAFT" | "PUBLISHED";
+	createdAt?: string;
+	updatedAt?: string;
 };

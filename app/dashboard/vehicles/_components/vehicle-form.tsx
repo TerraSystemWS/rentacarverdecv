@@ -21,6 +21,8 @@ const DEFAULT_EXTERNAL_FEATURES = [
     "Combustível Reserva", "Travão de Emergência", "Kit de Segurança"
 ];
 
+import { API_BASE_URL } from "@/lib/api/endpoints";
+
 export default function VehicleForm({
     initialData,
     onSubmit,
@@ -126,11 +128,12 @@ export default function VehicleForm({
         onSubmit(formData, selectedImages);
     };
 
+
     const getImageSrc = (url: string) => {
         if (!url) return "";
         if (url.startsWith('blob:') || url.startsWith('data:')) return url;
         if (url.startsWith('/uploads')) {
-            return `http://localhost:8090${url}`;
+            return `${API_BASE_URL}${url}`;
         }
         return url;
     };

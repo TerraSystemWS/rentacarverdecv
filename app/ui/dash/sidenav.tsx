@@ -9,13 +9,17 @@ import {
 	Users,
 	MessageSquare,
 	ChevronRight,
-	TrendingUp
+	TrendingUp,
+	Handshake,
+	FileText
 } from "lucide-react";
 
 const items = [
 	{ label: "Painel", href: "/dashboard", icon: LayoutDashboard },
 	{ label: "Reservas", href: "/dashboard/bookings", icon: CalendarDays },
 	{ label: "Veículos", href: "/dashboard/vehicles", icon: Car },
+	{ label: "Blog", href: "/dashboard/posts", icon: FileText },
+	{ label: "Parceiros", href: "/dashboard/partners", icon: Handshake },
 	{ label: "Utilizadores", href: "/dashboard/users", icon: Users },
 	{ label: "Mensagens", href: "/dashboard/messages", icon: MessageSquare },
 ];
@@ -81,9 +85,10 @@ export default function SideNav() {
 							<TrendingUp className="w-4 h-4" />
 						</div>
 						<div>
-							<div className="text-xs font-bold text-sidebar-foreground/80 mb-1">Dica Pro</div>
+							<div className="text-xs font-bold text-sidebar-foreground/80 mb-1">Suporte técnico</div>
 							<div className="text-[10px] text-sidebar-foreground/50 leading-relaxed font-medium">
-								Analise as tendências de reserva para otimizar a sua frota.
+								Precisa de ajuda? Contacte-nos:<br />
+								<span className="text-primary font-bold">terra.systemltd@gmail.com</span>
 							</div>
 						</div>
 					</div>

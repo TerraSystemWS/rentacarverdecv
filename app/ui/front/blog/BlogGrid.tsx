@@ -6,10 +6,10 @@ import Link from "next/link";
 export type AuthorInfo =
 	| string
 	| {
-			name: string;
-			role?: string;
-			avatarUrl?: string;
-	  };
+		name: string;
+		role?: string;
+		avatarUrl?: string;
+	};
 
 // export type BlogPostData = {
 // 	id: number | string;
@@ -23,57 +23,40 @@ export type AuthorInfo =
 // 	comments: number;
 // };
 
-export type BlogPostData = {
-	id: number | string;
-	slug: string;
-	title: string;
-	author: {
-		name: string;
-		role: string;
-		avatarUrl: string;
-	};
-	coverImageUrl: string;
-	date: string;
-	views: number;
-	likes: number;
-	comments: number;
-};
-
-// export interface BlogPostData {
-// 	id: number | string;
-// 	slug: string;
-// 	title: string;
-// 	author: Author; // MESMO AUTHOR do SingleMainContent
-// 	coverImageUrl: string;
-// 	date: string;
-
-// 	// estatísticas apenas para o card/listagem:
-// 	views: number;
-// 	likes: number;
-// 	comments: number;
-// }
+import { Post } from "@/lib/api/types";
+import { API_BASE_URL } from "@/lib/api/endpoints";
 
 interface BlogPostProps {
-	post: BlogPostData;
+	post: Post;
 }
 
 const BlogPost: React.FC<BlogPostProps> = ({ post }) => {
 	const postHref = `/posts/${post.slug}`;
+	const formattedDate = post.createdAt ? new Date(post.createdAt).toLocaleDateString('pt-PT', { day: '2-digit', month: 'short' }) : "";
+
+	const getImageSrc = (url: string | undefined | null) => {
+		if (!url) return "/assets/images/blog/blog-1.jpg";
+		if (url.startsWith('blob:') || url.startsWith('data:')) return url;
+		if (url.startsWith('/uploads')) {
+			return `${API_BASE_URL}${url}`;
+		}
+		return url;
+	};
 
 	return (
 		<article className="post">
 			<figure className="post-thumb">
 				<Link href={postHref}>
-					<img src={post.coverImageUrl} alt={post.title} />
+					<img src={getImageSrc(post.imageUrl)} alt={post.title} />
 				</Link>
 			</figure>
 
 			<div className="post-content">
 				<div className="entry-meta">
-					<span className="entry-date nevy-bg">{post.date}</span>
+					<span className="entry-date nevy-bg">{formattedDate}</span>
 					<span className="entry-author red-bg">
 						<i className="fa fa-user" />
-						{post.author.name}
+						{post.author || "Admin"}
 					</span>
 				</div>
 
@@ -85,20 +68,20 @@ const BlogPost: React.FC<BlogPostProps> = ({ post }) => {
 					<div className="entry-footer-meta">
 						<span className="entry-view">
 							<i className="fa fa-eye" />
-							{post.views}
+							0
 						</span>
 
 						<span className="entry-like">
 							<Link href={postHref}>
 								<i className="fa fa-heart-o" />
-								{post.likes}
+								0
 							</Link>
 						</span>
 
 						<span className="entry-comments">
 							<Link href={`${postHref}#comments`}>
 								<i className="fa fa-comments" />
-								{post.comments}
+								0
 							</Link>
 						</span>
 					</div>
@@ -109,7 +92,7 @@ const BlogPost: React.FC<BlogPostProps> = ({ post }) => {
 };
 
 interface BlogGridProps {
-	posts: BlogPostData[];
+	posts: Post[];
 }
 
 const BlogGrid: React.FC<BlogGridProps> = ({ posts }) => {

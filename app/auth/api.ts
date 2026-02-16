@@ -6,6 +6,7 @@ export type Tokens = {
 };
 
 export type Me = {
+	id?: string;
 	username: string;
 	email?: string;
 	enabled?: boolean;
@@ -18,8 +19,9 @@ export type ApiError = {
 	details?: any;
 };
 
-const API_BASE =
-	process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8090";
+import { API_BASE_URL } from "@/lib/api/endpoints";
+
+const API_BASE = API_BASE_URL;
 
 // ✅ mesmas keys do teu AuthContext
 const LS_ACCESS = "rcv_access";

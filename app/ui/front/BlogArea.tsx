@@ -7,61 +7,40 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 
-interface Post {
-	id: number;
-	image: string;
-	date: string;
-	author: string;
-	title: string;
-	views: number;
-	likes: number;
-	comments: number;
-}
-
-const posts: Post[] = [
-	{
-		id: 1,
-		image: "/assets/images/blog/blog-two.png",
-		date: "25 Julho, 2025",
-		author: "Johan",
-		title: "Obtenha o melhor preço de táxi na sua cidade.",
-		views: 35,
-		likes: 9,
-		comments: 5,
-	},
-	{
-		id: 2,
-		image: "/assets/images/blog/blog-two.png",
-		date: "25 Julho, 2025",
-		author: "Johan",
-		title: "Como escolher o carro certo para sua viagem.",
-		views: 42,
-		likes: 12,
-		comments: 7,
-	},
-	{
-		id: 3,
-		image: "/assets/images/blog/blog-three.png",
-		date: "25 Julho, 2025",
-		author: "Sibbir",
-		title: "Dicas para economizar em viagens de táxi.",
-		views: 28,
-		likes: 5,
-		comments: 3,
-	},
-	{
-		id: 4,
-		image: "/assets/images/blog/blog-three.png",
-		date: "25 Julho, 2025",
-		author: "Sibbir",
-		title: "Melhores rotas para chegar rápido ao destino.",
-		views: 50,
-		likes: 15,
-		comments: 8,
-	},
-];
+import { useState, useEffect } from "react";
+import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
+import { Post as BlogPost } from "@/lib/api/types";
+import Link from "next/link";
 
 export default function BlogArea() {
+	const [posts, setPosts] = useState<BlogPost[]>([]);
+
+	useEffect(() => {
+		const fetchPosts = async () => {
+			try {
+				const res = await fetch(`${API_BASE_URL}${endpoints.posts.list}`);
+				if (res.ok) {
+					const data = await res.json();
+					setPosts(data.slice(0, 6)); // Show only latest 6
+				}
+			} catch (error) {
+				console.error("Error fetching posts:", error);
+			}
+		};
+		fetchPosts();
+	}, []);
+
+	const getImageSrc = (url: string | undefined | null) => {
+		if (!url) return "/assets/images/blog/blog-two.png";
+		if (url.startsWith('blob:') || url.startsWith('data:')) return url;
+		if (url.startsWith('/uploads')) {
+			return `${API_BASE_URL}${url}`;
+		}
+		return url;
+	};
+
+	if (posts.length === 0) return null;
+
 	return (
 		<div className="blog-content-block pd-90 bg-gray-color">
 			<div className="container">
@@ -108,41 +87,41 @@ export default function BlogArea() {
 							<SwiperSlide key={post.id} className="flex justify-center">
 								<article className="bg-white shadow-md rounded-lg overflow-hidden w-full">
 									<figure className="post-thumb">
-										<a href="#">
+										<Link href={`/posts/${post.slug}`}>
 											<img
-												src={post.image}
+												src={getImageSrc(post.imageUrl)}
 												alt={post.title}
 												className="w-full h-48 object-cover"
 											/>
-										</a>
+										</Link>
 									</figure>
 									<div className="post-content p-4">
 										<div className="flex items-center justify-between mb-2 text-sm text-gray-500">
 											<span className="bg-blue-500 text-white px-2 py-1 rounded">
-												{post.date}
+												{post.createdAt ? new Date(post.createdAt).toLocaleDateString() : ""}
 											</span>
 											<span className="bg-red-500 text-white px-2 py-1 rounded flex items-center gap-1">
-												<i className="fa fa-user"></i> {post.author}
+												<i className="fa fa-user"></i> {post.author || "Admin"}
 											</span>
 										</div>
 										<h2 className="entry-title text-lg font-semibold mb-2">
-											<a href="#" className="hover:text-red-500">
+											<Link href={`/posts/${post.slug}`} className="hover:text-red-500">
 												{post.title}
-											</a>
+											</Link>
 										</h2>
 										<div className="flex gap-4 text-gray-500 text-sm">
 											<span className="flex items-center gap-1">
-												<i className="fa fa-eye"></i> {post.views}
+												<i className="fa fa-eye"></i> 0
 											</span>
 											<span className="flex items-center gap-1">
-												<a href="#">
-													<i className="fa fa-heart-o"></i> {post.likes}
-												</a>
+												<Link href={`/posts/${post.slug}`}>
+													<i className="fa fa-heart-o"></i> 0
+												</Link>
 											</span>
 											<span className="flex items-center gap-1">
-												<a href="#">
-													<i className="fa fa-comments"></i> {post.comments}
-												</a>
+												<Link href={`/posts/${post.slug}#comments`}>
+													<i className="fa fa-comments"></i> 0
+												</Link>
 											</span>
 										</div>
 									</div>
@@ -154,9 +133,9 @@ export default function BlogArea() {
 
 				<div className="block-navigation-area visible-xs-block">
 					<div className="view-all-item clearfix">
-						<a href="#" className="view-all-btn">
+						<Link href="/posts" className="view-all-btn">
 							Ver Todos
-						</a>
+						</Link>
 					</div>
 				</div>
 			</div>

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import TopNav from "@/app/ui/dash/topNav";
 import PageShell from "@/app/ui/dash/PageShell";
 import StatCard from "@/app/ui/dash/StatCard";
+import RevenueOverview from "@/app/dashboard/_components/RevenueOverview";
 
 import { endpoints } from "@/lib/api/endpoints";
 import type { DashboardSummary } from "@/lib/api/types";
@@ -125,6 +126,15 @@ export default function DashboardHome() {
 									value={data.unreadRecipients}
 									icon={MessageCircle}
 									hint="Não lidas"
+								/>
+							</div>
+
+							{/* Revenue Overview Section - Full Width */}
+							<div className="mt-8">
+								<RevenueOverview
+									monthlyRevenue={data.monthlyRevenue}
+									revenueByStatus={data.revenueByStatus}
+									totalIncome={data.totalIncome}
 								/>
 							</div>
 

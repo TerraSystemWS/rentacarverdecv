@@ -7,17 +7,39 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 
-const logos = [
-	"/assets/images/logo/logo-one.png",
-	"/assets/images/logo/logo-two.png",
-	"/assets/images/logo/logo-three.png",
-	"/assets/images/logo/logo-four.png",
-	"/assets/images/logo/logo-five.png",
-	"/assets/images/logo/logo-six.png",
-	"/assets/images/logo/logo-seven.png",
-];
+import { useState, useEffect } from "react";
+import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
+import { Partner } from "@/lib/api/types";
 
 const CompanyBrandBlock: React.FC = () => {
+	const [partners, setPartners] = useState<Partner[]>([]);
+
+	useEffect(() => {
+		const fetchPartners = async () => {
+			try {
+				const res = await fetch(`${API_BASE_URL}${endpoints.partners.list}`);
+				if (res.ok) {
+					const data = await res.json();
+					setPartners(data);
+				}
+			} catch (error) {
+				console.error("Error fetching partners:", error);
+			}
+		};
+		fetchPartners();
+	}, []);
+
+	const getImageSrc = (url: string | undefined | null) => {
+		if (!url) return "/assets/images/logo/logo-one.png";
+		if (url.startsWith('blob:') || url.startsWith('data:')) return url;
+		if (url.startsWith('/uploads')) {
+			return `${API_BASE_URL}${url}`;
+		}
+		return url;
+	};
+
+	if (partners.length === 0) return null;
+
 	return (
 		<div className="company-brand-block">
 			<div className="container">
@@ -59,16 +81,26 @@ const CompanyBrandBlock: React.FC = () => {
 							1280: { slidesPerView: 6 },
 						}}
 					>
-						{logos.map((logo, index) => (
+						{partners.map((partner) => (
 							<SwiperSlide
-								key={index}
+								key={partner.id}
 								className="flex justify-center items-center"
 							>
-								<img
-									src={logo}
-									alt={`Logo ${index + 1}`}
-									className="h-16 object-contain"
-								/>
+								{partner.websiteUrl ? (
+									<a href={partner.websiteUrl} target="_blank" rel="noopener noreferrer">
+										<img
+											src={getImageSrc(partner.logoUrl)}
+											alt={partner.name}
+											className="h-16 object-contain"
+										/>
+									</a>
+								) : (
+									<img
+										src={getImageSrc(partner.logoUrl)}
+										alt={partner.name}
+										className="h-16 object-contain"
+									/>
+								)}
 							</SwiperSlide>
 						))}
 					</Swiper>

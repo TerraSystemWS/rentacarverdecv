@@ -106,18 +106,18 @@ const DriverBlock: React.FC = () => {
 					}}
 				>
 					{drivers.map((driver) => (
-						<SwiperSlide key={driver.id}>
-							<div className="driver-content vehicle-content theme-yellow bg-yellow-100 rounded-lg overflow-hidden shadow hover:shadow-lg transition">
+						<SwiperSlide key={driver.id} className="h-auto">
+							<div className="driver-content vehicle-content theme-yellow bg-yellow-100 rounded-lg overflow-hidden shadow hover:shadow-lg transition h-full flex flex-col">
 								<div className="driver-thumb vehicle-thumbnail">
 									<Link href="#">
 										<img
 											src={driver.image}
 											alt={driver.name}
-											className="w-full h-48 object-cover"
+											className="w-full !h-48 !object-cover"
 										/>
 									</Link>
 								</div>
-								<div className="vehicle-bottom-content p-4 text-center">
+								<div className="vehicle-bottom-content p-4 text-center flex-grow">
 									<h3 className="driver-name vehicle-title text-xl font-semibold">
 										<Link href="#">{driver.name}</Link>
 									</h3>

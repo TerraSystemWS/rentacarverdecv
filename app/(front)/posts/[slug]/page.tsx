@@ -1,10 +1,12 @@
 import PageHeader from "@/app/ui/front/PageHeader";
 import Comments from "@/app/ui/front/blog/postItem/coments";
 import SingleMainContent from "@/app/ui/front/blog/postItem/SingleMainContent";
-import { posts } from "@/app/lib/posts";
 import BlogSidebar from "@/app/ui/front/blog/postSidebar";
 import { postSidebarData } from "@/app/lib/postSidebar";
 import CommentForm from "@/app/ui/front/blog/postItem/commentForm";
+import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
+import { Post } from "@/lib/api/types";
+import { notFound } from "next/navigation";
 
 // 1. Updated Type: params is now a Promise
 type BlogSinglePageProps = {
@@ -37,20 +39,28 @@ const BlogSinglePage = async ({ params }: BlogSinglePageProps) => {
 	const { slug } = await params;
 
 	if (!slug) {
-		return <div>Slug não fornecido</div>;
+		return notFound();
 	}
 
-	const post = posts.find((p) => p.slug === slug);
+	let post: Post | null = null;
+	try {
+		const res = await fetch(`${API_BASE_URL}${endpoints.posts.get(slug)}`, { cache: 'no-store' });
+		if (res.ok) {
+			post = await res.json();
+		}
+	} catch (error) {
+		console.error("Error fetching post:", error);
+	}
 
 	if (!post) {
-		return <div>Post não encontrado</div>;
+		return notFound();
 	}
 
 	return (
 		<main>
 			<PageHeader
-				titulo="Stories details"
-				descricao="Watch our story details"
+				titulo={post.title}
+				descricao={post.summary || "Leia mais sobre esta novidade."}
 			/>
 
 			<div className="blog-single-block bg-gray-color pd-btm-60">
@@ -60,16 +70,16 @@ const BlogSinglePage = async ({ params }: BlogSinglePageProps) => {
 						<div className="col-md-8">
 							<SingleMainContent
 								title={post.title}
-								author={post.author}
-								coverImageUrl={post.coverImageUrl}
-								date={post.date}
-								categories={post.categories}
-								tags={post.tags}
-								firstParagraph={post.firstParagraph}
-								secondParagraph={post.secondParagraph}
-								gallery={post.gallery}
-								navigation={post.navigation}
-								socialLinks={post.socialLinks}
+								author={{ name: post.author || "Admin", role: "Author", avatarUrl: "/assets/images/default-avatar.png" }}
+								coverImageUrl={post.imageUrl?.startsWith('/uploads') ? `${API_BASE_URL}${post.imageUrl}` : (post.imageUrl || "/assets/images/blog/blog-1.jpg")}
+								date={post.createdAt ? new Date(post.createdAt).toLocaleDateString() : ""}
+								categories={[]}
+								tags={[]}
+								firstParagraph={post.content.split('\n')[0]}
+								secondParagraph={post.content.split('\n').slice(1).join('\n')}
+								gallery={[]}
+								navigation={undefined}
+								socialLinks={undefined}
 							/>
 
 							<Comments comentarios={commentsData} />

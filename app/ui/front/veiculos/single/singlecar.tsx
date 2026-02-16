@@ -1,17 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import VehicleGallery from "./veiculoGalery";
 import PopularVehicleBlock from "../../PopularVehicleBlock";
 import { Vehicle } from "@/lib/api/types";
+import { useAuth } from "@/app/auth/AuthContext";
+import { API_BASE_URL } from "@/lib/api/endpoints";
 
 interface VehicleSingleProps {
 	vehicle: Vehicle;
 }
 
 const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
+	const { user, isAuthenticated, authFetch } = useAuth();
+	const [formData, setFormData] = useState({
+		pickupLocation: "",
+		returnLocation: "",
+		startDate: "",
+		endDate: "",
+		startTime: "10:00",
+		endTime: "10:00",
+	});
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+
 	const getImageSrc = (url: string) => {
 		if (!url) return "";
 		if (url.startsWith('/uploads')) {
-			return `http://localhost:8090${url}`;
+			return `${API_BASE_URL}${url}`;
 		}
 		return url;
 	};
@@ -22,17 +36,78 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 	})) || [];
 
 	const overview = [
-		{ label: "Class", value: vehicle.classType },
-		{ label: "Gear box", value: vehicle.gearbox },
-		{ label: "Mileage", value: vehicle.mileage },
-		{ label: "Max passengers", value: vehicle.maxPassengers },
-		{ label: "Fuel", value: vehicle.fuelType },
-		{ label: "Max luggage", value: vehicle.maxLuggage },
-		{ label: "Fuel usage", value: vehicle.fuelUsage },
-		{ label: "Doors", value: vehicle.doors },
-		{ label: "Engine capacity", value: vehicle.engineCapacity },
-		{ label: "Deposit", value: vehicle.deposit ? `${vehicle.deposit} USD` : "N/A" },
+		{ label: "Classe", value: vehicle.classType },
+		{ label: "Câmbio", value: vehicle.gearbox },
+		{ label: "Quilometragem", value: vehicle.mileage },
+		{ label: "Max passageiros", value: vehicle.maxPassengers },
+		{ label: "Combustível", value: vehicle.fuelType },
+		{ label: "Max bagagem", value: vehicle.maxLuggage },
+		{ label: "Consumo", value: vehicle.fuelUsage },
+		{ label: "Portas", value: vehicle.doors },
+		{ label: "Cilindrada", value: vehicle.engineCapacity },
+		{ label: "Depósito", value: vehicle.deposit ? `${vehicle.deposit} CVE` : "N/A" },
 	];
+
+	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+		const { name, value } = e.target;
+		setFormData(prev => ({ ...prev, [name]: value }));
+	};
+
+	const handleSubmit = async (e: React.FormEvent) => {
+		e.preventDefault();
+		if (!isAuthenticated || !user?.id) {
+			setMessage({ type: 'error', text: "Apenas utilizadores logados podem fazer reservas." });
+			return;
+		}
+
+		if (!formData.startDate || !formData.endDate || !formData.pickupLocation || !formData.returnLocation) {
+			setMessage({ type: 'error', text: "Por favor preencha todos os campos obrigatórios." });
+			return;
+		}
+
+		const start = new Date(`${formData.startDate}T${formData.startTime}:00Z`);
+		const end = new Date(`${formData.endDate}T${formData.endTime}:00Z`);
+
+		if (start >= end) {
+			setMessage({ type: 'error', text: "A data de devolução deve ser posterior à data de levantamento." });
+			return;
+		}
+
+		setIsSubmitting(true);
+		setMessage(null);
+
+		try {
+			const res = await authFetch("/public/bookings", {
+				method: "POST",
+				body: JSON.stringify({
+					vehicleId: vehicle.id,
+					userId: user.id,
+					startDate: start.toISOString(),
+					endDate: end.toISOString()
+				})
+			});
+
+			if (res.ok) {
+				setMessage({ type: 'success', text: "Reserva efetuada com sucesso! Entraremos em contacto em breve." });
+				setFormData({
+					pickupLocation: "",
+					returnLocation: "",
+					startDate: "",
+					endDate: "",
+					startTime: "10:00",
+					endTime: "10:00",
+				});
+			} else {
+				const errorData = await res.json().catch(() => ({ message: "Erro ao processar reserva." }));
+				setMessage({ type: 'error', text: errorData.message || "Ocorreu um erro ao processar a reserva." });
+			}
+		} catch (error) {
+			console.error("Booking error:", error);
+			setMessage({ type: 'error', text: "Erro de conexão com o servidor." });
+		} finally {
+			setIsSubmitting(false);
+		}
+	};
 
 	return (
 		<>
@@ -104,32 +179,52 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 						{/* Sidebar */}
 						<div className="col-md-4">
 							<div className="vehicle-sidebar pd-zero">
-								<form className="advance-search-query search-query-two">
+								<form className="advance-search-query search-query-two" onSubmit={handleSubmit}>
 									<h2 className="form-title">Faça uma Reserva</h2>
 									<div className="form-content available-filter">
+
+										{message && (
+											<div className={`p-4 mb-4 text-sm rounded-lg ${message.type === 'success' ? 'bg-green-100 text-green-800 border border-green-200' : 'bg-red-100 text-red-800 border border-red-200'}`}>
+												{message.text}
+											</div>
+										)}
+
+										{!isAuthenticated && (
+											<div className="p-4 mb-6 bg-amber-50 border border-amber-200 rounded-lg text-amber-800 text-sm">
+												<i className="fa fa-info-circle mr-2"></i>
+												Deverá fazer <strong>Login</strong> para realizar uma reserva.
+											</div>
+										)}
+
 										<div className="regular-search">
 											<div className="form-group">
-												<label className="text-uppercase">
-													Local de levantamento
-												</label>
+												<label className="text-uppercase">Local de levantamento</label>
 												<div className="input">
 													<i className="fa fa-map-marker"></i>
 													<input
 														type="text"
+														name="pickupLocation"
+														value={formData.pickupLocation}
+														onChange={handleInputChange}
 														placeholder="Digite o local"
 														className="pick-location form-controller"
+														required
+														disabled={!isAuthenticated}
 													/>
 												</div>
 
-												<label className="text-uppercase">
-													Local de devolução
-												</label>
+												<label className="text-uppercase">Local de devolução</label>
 												<div className="input">
 													<i className="fa fa-map-marker"></i>
 													<input
 														type="text"
+														name="returnLocation"
+														value={formData.returnLocation}
+														onChange={handleInputChange}
 														placeholder="Digite o local"
 														className="pick-location form-controller"
+														required
+														disabled={!isAuthenticated}
 													/>
 												</div>
 
@@ -137,9 +232,13 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 												<div className="input">
 													<i className="fa fa-calendar"></i>
 													<input
-														type="text"
-														className="date-start date-selector form-controller"
-														placeholder="Data de levantamento"
+														type="date"
+														name="startDate"
+														value={formData.startDate}
+														onChange={handleInputChange}
+														className="form-controller"
+														required
+														disabled={!isAuthenticated}
 													/>
 												</div>
 
@@ -147,115 +246,58 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 												<div className="input">
 													<i className="fa fa-calendar"></i>
 													<input
-														type="text"
-														className="date-end date-selector form-controller"
-														placeholder="Data de devolução"
+														type="date"
+														name="endDate"
+														value={formData.endDate}
+														onChange={handleInputChange}
+														className="form-controller"
+														required
+														disabled={!isAuthenticated}
 													/>
 												</div>
 
-												<label className="text-uppercase">
-													Hora de levantamento
-												</label>
-												<div className="input">
-													<i className="fa fa-clock-o"></i>
-													<input
-														type="text"
-														className="time-selector form-controller"
-														placeholder="15:00"
-													/>
-												</div>
-
-												<label className="text-uppercase">
-													Hora de devolução
-												</label>
-												<div className="input">
-													<i className="fa fa-clock-o"></i>
-													<input
-														type="text"
-														className="time-selector form-controller"
-														placeholder="15:00"
-													/>
-												</div>
-
-												<label className="text-uppercase">
-													Selecionar Classe
-												</label>
-												<div className="input">
-													<select>
-														<option value="0">{vehicle.classType || "Compacto"}</option>
-													</select>
-												</div>
-
-												<label className="text-uppercase">
-													Selecionar Combustível
-												</label>
-												<div className="input">
-													<select>
-														<option value="0">{vehicle.fuelType || "Gasolina"}</option>
-													</select>
-												</div>
-											</div>
-										</div>
-
-										<div className="advance-search">
-											<div className="form-group">
-												<label className="text-uppercase">
-													Cadeiras para Crianças
-												</label>
-												<div className="input">
-													<select>
-														<option value="0">0</option>
-														<option value="1">1</option>
-														<option value="2">2</option>
-													</select>
-												</div>
-
-												<div className="advance-filters">
-													<label>Recursos</label>
-													<ul className="checkbox-content">
-														<li>
+												<div className="row">
+													<div className="col-xs-6">
+														<label>Hora Levantamento</label>
+														<div className="input">
+															<i className="fa fa-clock-o"></i>
 															<input
-																type="checkbox"
-																id="gps-tracker"
-																name="check"
-																value="check"
-																checked={vehicle.internalFeatures?.includes("Satellite Tracker")}
-																readOnly
+																type="time"
+																name="startTime"
+																value={formData.startTime}
+																onChange={handleInputChange}
+																className="form-controller"
+																required
+																disabled={!isAuthenticated}
 															/>
-															<label htmlFor="gps-tracker">GPS</label>
-														</li>
-														<li>
+														</div>
+													</div>
+													<div className="col-xs-6">
+														<label>Hora Devolução</label>
+														<div className="input">
+															<i className="fa fa-clock-o"></i>
 															<input
-																type="checkbox"
-																id="electric-windows"
-																name="check"
-																value="check"
-																checked
-																readOnly
+																type="time"
+																name="endTime"
+																value={formData.endTime}
+																onChange={handleInputChange}
+																className="form-controller"
+																required
+																disabled={!isAuthenticated}
 															/>
-															<label htmlFor="electric-windows">
-																Vidros Elétricos
-															</label>
-														</li>
-														<li>
-															<input
-																type="checkbox"
-																id="air-bags"
-																name="check"
-																value="check"
-																checked
-																readOnly
-															/>
-															<label htmlFor="air-bags">Airbags</label>
-														</li>
-													</ul>
+														</div>
+													</div>
 												</div>
 											</div>
 										</div>
 
 										<div className="check-vehicle-footer">
-											<button type="submit" className="button yellow-button">
-												Reserve Agora
+											<button
+												type="submit"
+												className="button yellow-button w-full disabled:opacity-50"
+												disabled={isSubmitting || !isAuthenticated}
+											>
+												{isSubmitting ? "Processando..." : "Reserve Agora"}
 											</button>
 										</div>
 									</div>

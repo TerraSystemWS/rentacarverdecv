@@ -1,6 +1,8 @@
 import React from "react";
 import { Vehicle } from "@/lib/api/types";
 
+import { API_BASE_URL } from "@/lib/api/endpoints";
+
 type CarroProps = {
 	car: Vehicle;
 };
@@ -9,7 +11,7 @@ const Carro: React.FC<CarroProps> = ({ car }) => {
 	const getImageSrc = (url: string) => {
 		if (!url) return "";
 		if (url.startsWith('/uploads')) {
-			return `http://localhost:8090${url}`;
+			return `${API_BASE_URL}${url}`;
 		}
 		return url;
 	};
@@ -20,7 +22,7 @@ const Carro: React.FC<CarroProps> = ({ car }) => {
 		<div className="vehicle-content theme-yellow">
 			<div className="vehicle-thumbnail">
 				<a href={`/cars/${car.id}`}>
-					<img src={firstImage} alt={`${car.make} ${car.model}`} />
+					<img src={firstImage} alt={`${car.make} ${car.model}`} className="w-full !h-48 !object-cover" />
 				</a>
 			</div>
 			<div className="vehicle-bottom-content">
