@@ -1,18 +1,7 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
 import Providers from "./providers";
-
-const geistSans = Geist({
-	variable: "--font-geist-sans",
-	subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-	variable: "--font-geist-mono",
-	subsets: ["latin"],
-});
 
 export default function RootLayout({
 	children,
@@ -27,21 +16,8 @@ export default function RootLayout({
 					href="https://fonts.googleapis.com/css?family=Exo:400,400i,500,500i,600,600i,700,700i,800,800i,900,900i%7cRoboto+Slab:400,700"
 					rel="stylesheet"
 				/>
-
-				{/* CSS principal */}
-				<link rel="stylesheet" href="/assets/css/plugins.min.css" />
-				<link rel="stylesheet" href="/assets/css/icons.min.css" />
-				<link rel="stylesheet" href="/assets/css/style.css" />
-				<link rel="stylesheet" href="/assets/css/color-schemer.css" />
-
-				{/* Revolution Slider CSS */}
-				<link rel="stylesheet" href="/assets/revolution/css/settings.css" />
-				<link rel="stylesheet" href="/assets/revolution/css/layers.css" />
-				<link rel="stylesheet" href="/assets/revolution/css/navigation.css" />
 			</head>
-			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-			>
+			<body className="antialiased">
 				<Providers>{children}</Providers>
 
 				{/* jQuery primeiro */}

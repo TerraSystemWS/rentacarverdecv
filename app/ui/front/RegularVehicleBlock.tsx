@@ -1,92 +1,44 @@
 // RegularVehicleBlock.tsx
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import Link from "next/link";
 import "swiper/css";
 import "swiper/css/navigation";
-
-interface Vehicle {
-	id: number;
-	name: string;
-	image: string;
-	rent: number;
-	kmPrice: number;
-}
-
-// Lista de veículos
-const vehicles: Vehicle[] = [
-	{
-		id: 1,
-		name: "Toyota Aygo",
-		image: "/assets/images/popular/popular-01.png",
-		rent: 200,
-		kmPrice: 12,
-	},
-	{
-		id: 2,
-		name: "Toyota Aygo",
-		image: "/assets/images/popular/popular-02.png",
-		rent: 200,
-		kmPrice: 12,
-	},
-	{
-		id: 3,
-		name: "Toyota Aygo",
-		image: "/assets/images/popular/popular-03.png",
-		rent: 200,
-		kmPrice: 12,
-	},
-	{
-		id: 4,
-		name: "Toyota Aygo",
-		image: "/assets/images/popular/popular-04.png",
-		rent: 200,
-		kmPrice: 12,
-	},
-	{
-		id: 5,
-		name: "Toyota Aygo",
-		image: "/assets/images/popular/popular-05.png",
-		rent: 200,
-		kmPrice: 12,
-	},
-	{
-		id: 6,
-		name: "Toyota Aygo",
-		image: "/assets/images/popular/popular-06.png",
-		rent: 200,
-		kmPrice: 12,
-	},
-	{
-		id: 7,
-		name: "Toyota Aygo",
-		image: "/assets/images/popular/popular-07.png",
-		rent: 200,
-		kmPrice: 12,
-	},
-	{
-		id: 8,
-		name: "Toyota Aygo",
-		image: "/assets/images/popular/popular-08.png",
-		rent: 200,
-		kmPrice: 12,
-	},
-];
-
-// Função para dividir veículos em grupos de 4 (uma linha)
-const chunkVehicles = (array: Vehicle[], size: number) => {
-	const chunks: Vehicle[][] = [];
-	for (let i = 0; i < array.length; i += size) {
-		chunks.push(array.slice(i, i + size));
-	}
-	return chunks;
-};
+import { Vehicle } from "@/lib/api/types";
+import { authFetch } from "@/app/auth/api";
+import { endpoints } from "@/lib/api/endpoints";
 
 const RegularVehicleBlock: React.FC = () => {
-	const slides = chunkVehicles(vehicles, 8); // 8 veículos por slide (2 linhas de 4)
+	const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+	const [loading, setLoading] = useState(true);
+
+	const getImageSrc = (url: string) => {
+		if (!url) return "";
+		if (url.startsWith('/uploads')) {
+			return `http://localhost:8090${url}`;
+		}
+		return url;
+	};
+
+	useEffect(() => {
+		const fetchVehicles = async () => {
+			try {
+				const res = await authFetch(endpoints.vehicles.list(16), { auth: false });
+				if (res.ok) {
+					const data = await res.json();
+					setVehicles(data);
+				}
+			} catch (error) {
+				console.error("Error fetching vehicles:", error);
+			} finally {
+				setLoading(false);
+			}
+		};
+		fetchVehicles();
+	}, []);
 
 	return (
 		<div className="regular-vehicle-block pd-90 bg-gray-color">
@@ -103,117 +55,80 @@ const RegularVehicleBlock: React.FC = () => {
 					<div className="col-md-3 col-sm-4 hidden-xs block-navigation-area tb-cell">
 						<div className="pull-right">
 							<div className="item-navigation">
-								<a href="#" className="previous-item">
+								<button className="previous-item-reg bg-white w-10 min-w-[2.5rem] h-10 border border-gray-200 rounded-full flex items-center justify-center hover:bg-gray-50 transition mr-2">
 									<i className="fa fa-angle-left"></i>
-								</a>
-								<a href="#" className="next-item">
+								</button>
+								<button className="next-item-reg bg-white w-10 min-w-[2.5rem] h-10 border border-gray-200 rounded-full flex items-center justify-center hover:bg-gray-50 transition">
 									<i className="fa fa-angle-right"></i>
-								</a>
+								</button>
 							</div>
 
 							<div className="view-all-item">
-								<a href="#" className="view-all-btn">
+								<Link href="/cars" className="view-all-btn">
 									Ver Todas
-								</a>
+								</Link>
 							</div>
 						</div>
 					</div>
 				</div>
 
-				<div className="" data-item="">
-					<div className="item row">
-						<Swiper
-							modules={[Navigation]}
-							navigation={{
-								nextEl: ".next-item",
-								prevEl: ".previous-item",
-							}}
-							spaceBetween={24}
-							slidesPerView={1}
-							breakpoints={{
-								640: { slidesPerView: 1 },
-								768: { slidesPerView: 2 },
-								1024: { slidesPerView: 3 },
-								1280: { slidesPerView: 4 },
-							}}
-						>
-							{vehicles.map((vehicle) => (
-								<SwiperSlide key={vehicle.id}>
-									<div className="vehicle-content bg-yellow-100 rounded-lg overflow-hidden shadow hover:shadow-lg transition">
-										<div className="vehicle-thumbnail">
-											<Link href="#">
-												<img
-													src={vehicle.image}
-													alt={vehicle.name}
-													className="w-full h-48 object-cover"
-												/>
-											</Link>
-										</div>
-										<div className="vehicle-bottom-content p-4">
-											<h3 className="vehicle-title text-xl font-semibold">
-												<Link href="#">{vehicle.name}</Link>
-											</h3>
-											<div className="vehicle-meta text-gray-700 mt-2">
-												<span>
-													Valor: ${vehicle.rent} / Dia - ${vehicle.kmPrice} / Km
-												</span>
+				<div className="">
+					{loading ? (
+						<div className="flex justify-center py-20">
+							<div className="h-8 w-8 animate-spin rounded-full border-4 border-solid border-yellow-500 border-r-transparent"></div>
+						</div>
+					) : (
+						<div className="item row">
+							<Swiper
+								modules={[Navigation]}
+								navigation={{
+									nextEl: ".next-item-reg",
+									prevEl: ".previous-item-reg",
+								}}
+								spaceBetween={24}
+								slidesPerView={1}
+								breakpoints={{
+									640: { slidesPerView: 1 },
+									768: { slidesPerView: 2 },
+									1024: { slidesPerView: 3 },
+									1280: { slidesPerView: 4 },
+								}}
+							>
+								{vehicles.map((vehicle) => (
+									<SwiperSlide key={vehicle.id}>
+										<div className="vehicle-content bg-white rounded-lg overflow-hidden shadow hover:shadow-lg transition h-full">
+											<div className="vehicle-thumbnail">
+												<Link href={`/cars/${vehicle.id}`}>
+													<img
+														src={vehicle.images && vehicle.images.length > 0 ? getImageSrc(vehicle.images[0].url) : ""}
+														alt={`${vehicle.make} ${vehicle.model}`}
+														className="w-full h-48 object-cover"
+													/>
+												</Link>
+											</div>
+											<div className="vehicle-bottom-content p-4 text-center">
+												<h3 className="vehicle-title text-xl font-semibold">
+													<Link href={`/cars/${vehicle.id}`}>{vehicle.make} {vehicle.model}</Link>
+												</h3>
+												<div className="vehicle-meta text-gray-700 mt-2">
+													<span className="font-bold text-yellow-600">
+														{vehicle.pricePerDay?.toLocaleString('pt-CV', { style: 'currency', currency: 'CVE' })} / Dia
+													</span>
+												</div>
 											</div>
 										</div>
-									</div>
-								</SwiperSlide>
-							))}
-						</Swiper>
-					</div>
-					<div className="item row">
-						<Swiper
-							modules={[Navigation]}
-							navigation={{
-								nextEl: ".next-item",
-								prevEl: ".previous-item",
-							}}
-							spaceBetween={24}
-							slidesPerView={1}
-							breakpoints={{
-								640: { slidesPerView: 1 },
-								768: { slidesPerView: 2 },
-								1024: { slidesPerView: 3 },
-								1280: { slidesPerView: 4 },
-							}}
-						>
-							{vehicles.map((vehicle) => (
-								<SwiperSlide key={vehicle.id}>
-									<div className="vehicle-content bg-yellow-100 rounded-lg overflow-hidden shadow hover:shadow-lg transition">
-										<div className="vehicle-thumbnail">
-											<Link href="#">
-												<img
-													src={vehicle.image}
-													alt={vehicle.name}
-													className="w-full h-48 object-cover"
-												/>
-											</Link>
-										</div>
-										<div className="vehicle-bottom-content p-4">
-											<h3 className="vehicle-title text-xl font-semibold">
-												<Link href="#">{vehicle.name}</Link>
-											</h3>
-											<div className="vehicle-meta text-gray-700 mt-2">
-												<span>
-													Valor: ${vehicle.rent} / Dia - ${vehicle.kmPrice} / Km
-												</span>
-											</div>
-										</div>
-									</div>
-								</SwiperSlide>
-							))}
-						</Swiper>
-					</div>
+									</SwiperSlide>
+								))}
+							</Swiper>
+						</div>
+					)}
 				</div>
 
 				<div className="block-navigation-area visible-xs-block">
 					<div className="view-all-item clearfix">
-						<a href="#" className="view-all-btn">
+						<Link href="/cars" className="view-all-btn">
 							Ver Todas
-						</a>
+						</Link>
 					</div>
 				</div>
 			</div>

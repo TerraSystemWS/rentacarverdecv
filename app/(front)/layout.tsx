@@ -98,6 +98,17 @@ export default function FrontLayout({
 }) {
 	return (
 		<>
+			{/* Legacy CSS assets only for frontend */}
+			<link rel="stylesheet" href="/assets/css/plugins.min.css" />
+			<link rel="stylesheet" href="/assets/css/icons.min.css" />
+			<link rel="stylesheet" href="/assets/css/style.css" />
+			<link rel="stylesheet" href="/assets/css/color-schemer.css" />
+
+			{/* Revolution Slider CSS */}
+			<link rel="stylesheet" href="/assets/revolution/css/settings.css" />
+			<link rel="stylesheet" href="/assets/revolution/css/layers.css" />
+			<link rel="stylesheet" href="/assets/revolution/css/navigation.css" />
+
 			<Header />
 			<main>{children}</main>
 			<Footer />

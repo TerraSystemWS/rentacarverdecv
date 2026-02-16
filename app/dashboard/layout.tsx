@@ -60,10 +60,10 @@ export default function DashboardLayout({
 	}
 
 	return (
-		<div className="min-h-screen bg-gray-50">
+		<div className="min-h-screen bg-background dashboard-theme">
 			<div className="flex min-h-screen">
 				<SideNav />
-				<div className="flex-1">{children}</div>
+				<div className="flex-1 overflow-hidden">{children}</div>
 			</div>
 		</div>
 	);

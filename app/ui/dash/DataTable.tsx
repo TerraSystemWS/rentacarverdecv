@@ -8,48 +8,47 @@ export type Column<T> = {
 export default function DataTable<T extends Record<string, any>>({
 	columns,
 	rows,
-	emptyText = "Sem dados.",
+	emptyText = "Sem dados encontrados.",
 }: {
 	columns: Column<T>[];
 	rows: T[];
 	emptyText?: string;
 }) {
 	return (
-		<div className="overflow-x-auto rounded-xl border bg-white">
-			<table className="w-full text-sm">
-				<thead className="border-b bg-gray-50">
-					<tr>
-						{columns.map((c) => (
-							<th
-								key={c.key}
-								className="px-4 py-3 text-left font-medium"
-							>
-								{c.label}
-							</th>
-						))}
-					</tr>
-				</thead>
-				<tbody>
-					{rows.length === 0 ? (
+		<div className="overflow-hidden card-solid shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-500">
+			<div className="overflow-x-auto">
+				<table className="w-full text-left border-collapse">
+					<thead className="bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800">
 						<tr>
-							<td className="px-4 py-4 text-gray-500" colSpan={columns.length}>
-								{emptyText}
-							</td>
+							{columns.map((col) => (
+								<th
+									key={col.key as string}
+									className={`px-6 py-4 text-[11px] font-bold text-zinc-400 uppercase tracking-widest ${col.key === "actions" ? "text-right" : "text-left"}`}
+								>
+									{col.label}
+								</th>
+							))}
 						</tr>
-					) : (
-						rows.map((r, idx) => (
-							<tr key={idx} className="border-b last:border-b-0 hover:bg-gray-50/50">
-								{columns.map((c) => (
-									<td key={c.key} className="px-4 py-3">
-										{c.render ? c.render(r) : String(r[c.key as keyof T] ?? "")}
+					</thead>
+					<tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
+						{rows.map((row, idx) => (
+							<tr
+								key={idx}
+								className="group hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors duration-150"
+							>
+								{columns.map((col) => (
+									<td
+										key={col.key as string}
+										className={`px-6 py-4 text-sm font-medium text-zinc-600 dark:text-zinc-400 ${col.key === "actions" ? "text-right" : "text-left"}`}
+									>
+										{row[col.key] as React.ReactNode}
 									</td>
 								))}
 							</tr>
-						))
-					)}
-				</tbody>
-			</table>
+						))}
+					</tbody>
+				</table>
+			</div>
 		</div>
 	);
 }
-

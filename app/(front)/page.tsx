@@ -9,49 +9,6 @@ import AppBlock from "../ui/front/AppBlock";
 import CompanyBrandBlock from "../ui/front/CompanyBrandBlock";
 import BlogArea from "../ui/front/BlogArea";
 
-const vehiclesData = [
-	{
-		id: 1,
-		title: "Economy Sedan",
-		image: "/assets/images/popular/popular-01.png",
-		rentPerDay: "$50",
-		rentPerKm: "$0.50",
-		link: "/vehicles/economy-sedan",
-	},
-	{
-		id: 2,
-		title: "Luxury SUV",
-		image: "/assets/images/popular/popular-02.png",
-		rentPerDay: "$120",
-		rentPerKm: "$1.20",
-		link: "/vehicles/luxury-suv",
-	},
-	{
-		id: 3,
-		title: "Minivan",
-		image: "/assets/images/popular/popular-03.png",
-		rentPerDay: "$80",
-		rentPerKm: "$0.80",
-		link: "/vehicles/minivan",
-	},
-	{
-		id: 4,
-		title: "Sports Car",
-		image: "/assets/images/popular/popular-04.png",
-		rentPerDay: "$150",
-		rentPerKm: "$1.50",
-		link: "/vehicles/sports-car",
-	},
-	{
-		id: 5,
-		title: "Compact Car",
-		image: "/assets/images/popular/popular-05.png",
-		rentPerDay: "$40",
-		rentPerKm: "$0.40",
-		link: "/vehicles/compact-car",
-	},
-];
-
 // app/page.tsx (Home)
 export const metadata = {
 	title: "Página Inicial", // vai gerar: "Página Inicial — Rent a Car Verde"

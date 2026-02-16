@@ -1,10 +1,33 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import PageHeader from "../../ui/front/PageHeader";
 import Carro from "../../ui/front/veiculos/carro";
-import { carros } from "../../lib/cars";
 import SideSearch from "../../ui/front/veiculos/sideSearch";
+import { Vehicle } from "@/lib/api/types";
+import { authFetch } from "@/app/auth/api";
+import { endpoints } from "@/lib/api/endpoints";
 
 export default function CarsPage() {
+	const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+	const [loading, setLoading] = useState(true);
+
+	useEffect(() => {
+		const fetchVehicles = async () => {
+			try {
+				const res = await authFetch(endpoints.vehicles.list(), { auth: false });
+				if (res.ok) {
+					const data = await res.json();
+					setVehicles(data);
+				}
+			} catch (error) {
+				console.error("Error fetching vehicles:", error);
+			} finally {
+				setLoading(false);
+			}
+		};
+		fetchVehicles();
+	}, []);
+
 	return (
 		<>
 			<PageHeader titulo="Home / Carros" descricao="Todos os Nossos Carros" />
@@ -30,75 +53,48 @@ export default function CarsPage() {
 							</div>
 
 							<div className="row">
-								{/* <div className="col-md-4 col-sm-6">
-									<div className="vehicle-content theme-yellow">
-										<div className="vehicle-thumbnail">
-											<a href="#">
-												<img
-													src="/assets/images/popular/popular-01.png"
-													alt="car-item"
-												/>
-											</a>
-										</div>
-										<div className="vehicle-bottom-content">
-											<h2 className="vehicle-title">
-												<a href="#">Toyota Aygo</a>
-											</h2>
-											<div className="vehicle-meta">
-												<div className="meta-item">
-													<span>Rent: $200 / </span> Day, - $12 / Km,
-												</div>
-											</div>
+								{loading ? (
+									<div className="col-md-12 text-center py-20">
+										<div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-yellow-500 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" role="status">
+											<span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Loading...</span>
 										</div>
 									</div>
-								</div> */}
-
-								{carros.map((car) => (
-									<div className="col-md-4 col-sm-6" key={car.id}>
-										<Carro car={car} />
+								) : vehicles.length > 0 ? (
+									vehicles.map((car) => (
+										<div className="col-md-4 col-sm-6" key={car.id}>
+											<Carro car={car} />
+										</div>
+									))
+								) : (
+									<div className="col-md-12 text-center py-20 text-muted-foreground">
+										Nenhum veículo disponível no momento.
 									</div>
-								))}
+								)}
 							</div>
 
-							<div className="row">
-								<div className="col-md-12 clearfix">
-									<div className="pagination-link">
-										<ul className="pagination">
-											<li>
-												<a href="#">
-													<i className="fa fa-angle-left"></i>
-												</a>
-											</li>
-											<li className="active">
-												<a href="#">01</a>
-											</li>
-											<li>
-												<a href="#">02</a>
-											</li>
-											<li>
-												<a href="#">03</a>
-											</li>
-											<li>
-												<a href="#">04</a>
-											</li>
-											<li>
-												<a href="#">05</a>
-											</li>
-											<li>
-												<span className="pages-number-dots">...</span>
-											</li>
-											<li>
-												<a href="#">12</a>
-											</li>
-											<li>
-												<a href="#">
-													<i className="fa fa-angle-right"></i>
-												</a>
-											</li>
-										</ul>
+							{vehicles.length > 0 && (
+								<div className="row">
+									<div className="col-md-12 clearfix">
+										<div className="pagination-link">
+											<ul className="pagination">
+												<li>
+													<a href="#">
+														<i className="fa fa-angle-left"></i>
+													</a>
+												</li>
+												<li className="active">
+													<a href="#">01</a>
+												</li>
+												<li>
+													<a href="#">
+														<i className="fa fa-angle-right"></i>
+													</a>
+												</li>
+											</ul>
+										</div>
 									</div>
 								</div>
-							</div>
+							)}
 						</div>
 
 						<div className="col-md-3">

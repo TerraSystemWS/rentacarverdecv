@@ -1,82 +1,67 @@
 import React from "react";
 import VehicleGallery from "./veiculoGalery";
 import PopularVehicleBlock from "../../PopularVehicleBlock";
-
-interface VehicleImage {
-	fullView: { src: string; alt: string }[];
-	listView: { src: string; alt: string }[];
-}
-
-interface PriceDetail {
-	label: string;
-	value: string;
-}
-
-interface OverviewItem {
-	label: string;
-	value: string;
-}
-
-interface VehicleFeatures {
-	internal: string[];
-	external: string[];
-}
-
-export interface VehicleData {
-	title: string;
-	rentPerDay: string;
-	images: VehicleImage;
-	priceDetails: PriceDetail[];
-	overview: OverviewItem[];
-	features: VehicleFeatures;
-}
+import { Vehicle } from "@/lib/api/types";
 
 interface VehicleSingleProps {
-	vehicle: VehicleData;
+	vehicle: Vehicle;
 }
 
 const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
+	const getImageSrc = (url: string) => {
+		if (!url) return "";
+		if (url.startsWith('/uploads')) {
+			return `http://localhost:8090${url}`;
+		}
+		return url;
+	};
+
+	const galleryImages = vehicle.images?.map(img => ({
+		src: getImageSrc(img.url),
+		alt: `${vehicle.make} ${vehicle.model}`
+	})) || [];
+
+	const overview = [
+		{ label: "Class", value: vehicle.classType },
+		{ label: "Gear box", value: vehicle.gearbox },
+		{ label: "Mileage", value: vehicle.mileage },
+		{ label: "Max passengers", value: vehicle.maxPassengers },
+		{ label: "Fuel", value: vehicle.fuelType },
+		{ label: "Max luggage", value: vehicle.maxLuggage },
+		{ label: "Fuel usage", value: vehicle.fuelUsage },
+		{ label: "Doors", value: vehicle.doors },
+		{ label: "Engine capacity", value: vehicle.engineCapacity },
+		{ label: "Deposit", value: vehicle.deposit ? `${vehicle.deposit} USD` : "N/A" },
+	];
+
 	return (
 		<>
 			<div className="vehicle-single-block vehicle-padding">
-				{" "}
 				<div className="container">
-					{" "}
 					<div className="row">
-						{/* Main content */}{" "}
+						{/* Main content */}
 						<div className="col-md-8">
-							{" "}
-							<VehicleGallery images={vehicle.images.fullView} />
+							<VehicleGallery images={galleryImages} />
 							{/* Vehicle Info */}
 							<div className="vehicle-single-content">
 								<div className="tb mb-block">
 									<div className="tb-cell mb-block">
-										<h2 className="vehicle-single-title">{vehicle.title}</h2>
+										<h2 className="vehicle-single-title">{vehicle.make} {vehicle.model} ({vehicle.year})</h2>
 									</div>
 									<div className="tb-cell mb-block">
 										<h2 className="pull-right rent-price">
-											Aluguer/Dia: {vehicle.rentPerDay}
+											Aluguer/Dia: {vehicle.pricePerDay?.toLocaleString('pt-CV', { style: 'currency', currency: 'CVE' })}
 										</h2>
 									</div>
-								</div>
-
-								{/* Price Details */}
-								<div className="price-details">
-									<h3 className="details-title">Detalhes do Preço</h3>
-									<ul>
-										{vehicle.priceDetails.map((item, idx) => (
-											<li key={idx}>{`${item.label}: ${item.value}`}</li>
-										))}
-									</ul>
 								</div>
 
 								{/* Overview */}
 								<div className="vehicle-overview">
 									<h3 className="overview-title">Detalhes do Veículo</h3>
 									<ul>
-										{vehicle.overview.map((item, idx) => (
+										{overview.map((item, idx) => (
 											<li key={idx}>
-												{item.label}: <span>{item.value}</span>
+												{item.label}: <span>{item.value || "N/A"}</span>
 											</li>
 										))}
 									</ul>
@@ -88,17 +73,23 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 										<div className="col-md-6">
 											<h3 className="features-title">Funções Internas</h3>
 											<ul className="features-list">
-												{vehicle.features.internal.map((feature, idx) => (
+												{vehicle.internalFeatures?.map((feature, idx) => (
 													<li key={idx}>{feature}</li>
 												))}
+												{(!vehicle.internalFeatures || vehicle.internalFeatures.length === 0) && (
+													<li className="text-muted-foreground opacity-50 italic">Nenhuma</li>
+												)}
 											</ul>
 										</div>
 										<div className="col-md-6">
 											<h3 className="features-title">Funções Externas</h3>
 											<ul className="features-list">
-												{vehicle.features.external.map((feature, idx) => (
+												{vehicle.externalFeatures?.map((feature, idx) => (
 													<li key={idx}>{feature}</li>
 												))}
+												{(!vehicle.externalFeatures || vehicle.externalFeatures.length === 0) && (
+													<li className="text-muted-foreground opacity-50 italic">Nenhuma</li>
+												)}
 											</ul>
 										</div>
 									</div>
@@ -191,11 +182,7 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 												</label>
 												<div className="input">
 													<select>
-														<option value="0">Intermediário</option>
-														<option value="1">Compacto</option>
-														<option value="2">Station Wagon</option>
-														<option value="3">SUV</option>
-														<option value="4">Minibus</option>
+														<option value="0">{vehicle.classType || "Compacto"}</option>
 													</select>
 												</div>
 
@@ -204,9 +191,7 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 												</label>
 												<div className="input">
 													<select>
-														<option value="0">Gasolina</option>
-														<option value="1">Diesel</option>
-														<option value="2">Gás</option>
+														<option value="0">{vehicle.fuelType || "Gasolina"}</option>
 													</select>
 												</div>
 											</div>
@@ -222,9 +207,6 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 														<option value="0">0</option>
 														<option value="1">1</option>
 														<option value="2">2</option>
-														<option value="3">3</option>
-														<option value="4">4</option>
-														<option value="5">5</option>
 													</select>
 												</div>
 
@@ -237,19 +219,10 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 																id="gps-tracker"
 																name="check"
 																value="check"
+																checked={vehicle.internalFeatures?.includes("Satellite Tracker")}
+																readOnly
 															/>
 															<label htmlFor="gps-tracker">GPS</label>
-														</li>
-														<li>
-															<input
-																type="checkbox"
-																id="hand-controls"
-																name="check"
-																value="check"
-															/>
-															<label htmlFor="hand-controls">
-																Controlo Manual
-															</label>
 														</li>
 														<li>
 															<input
@@ -257,6 +230,8 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 																id="electric-windows"
 																name="check"
 																value="check"
+																checked
+																readOnly
 															/>
 															<label htmlFor="electric-windows">
 																Vidros Elétricos
@@ -268,6 +243,8 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 																id="air-bags"
 																name="check"
 																value="check"
+																checked
+																readOnly
 															/>
 															<label htmlFor="air-bags">Airbags</label>
 														</li>
@@ -283,12 +260,6 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 										</div>
 									</div>
 								</form>
-
-								<div className="ads_area">
-									<a href="#">
-										<img src="/assets/images/Add-Image.jpg" alt="add" />
-									</a>
-								</div>
 							</div>
 						</div>
 					</div>

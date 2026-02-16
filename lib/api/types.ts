@@ -79,13 +79,30 @@ export type MessageRow = {
 
 // --- Full Vehicle Types ---
 
+export type VehicleImage = {
+	id?: number;
+	url: string;
+};
+
 export type Vehicle = {
-	id: number;
+	id?: number;
 	make: string;
 	model: string;
 	year: number;
 	licensePlate: string;
 	pricePerDay: number;
 	available: boolean;
-	imageUrl: string;
+	images: VehicleImage[];
+	classType?: string;
+	gearbox?: string;
+	mileage?: string;
+	maxPassengers?: number;
+	fuelType?: string;
+	maxLuggage?: number;
+	fuelUsage?: string;
+	doors?: number;
+	engineCapacity?: string;
+	deposit?: number;
+	internalFeatures?: string[];
+	externalFeatures?: string[];
 };
