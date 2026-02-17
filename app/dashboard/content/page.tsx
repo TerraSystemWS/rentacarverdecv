@@ -113,8 +113,8 @@ export default function ContentPage() {
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
                                 className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all ${activeTab === tab.id
-                                        ? "bg-blue-600 text-white shadow-lg shadow-blue-200"
-                                        : "text-gray-500 hover:bg-gray-50"
+                                    ? "bg-blue-600 text-white shadow-lg shadow-blue-200"
+                                    : "text-gray-500 hover:bg-gray-50"
                                     }`}
                             >
                                 <tab.icon size={18} />
@@ -339,8 +339,18 @@ export default function ContentPage() {
                                 <div className="bg-white p-8 rounded-[32px] shadow-sm border border-gray-100 space-y-6">
                                     <h3 className="text-xl font-black text-gray-900 border-b pb-4">Números (Fun Facts)</h3>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        {/* Facto 1 */}
                                         <div className="space-y-2">
-                                            <label className="text-xs font-black uppercase text-gray-400 tracking-widest pl-1">Facto 1</label>
+                                            <label className="text-xs font-black uppercase text-gray-400 tracking-widest pl-1">Facto 1 (Número)</label>
+                                            <input
+                                                type="number"
+                                                value={content.home.funFacts.f1Num || 0}
+                                                onChange={(e) => handleNestedChange("home", "funFacts", "f1Num", e.target.value)}
+                                                className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-black text-lg"
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-black uppercase text-gray-400 tracking-widest pl-1">Facto 1 (Texto)</label>
                                             <input
                                                 type="text"
                                                 value={content.home.funFacts.f1}
@@ -348,8 +358,19 @@ export default function ContentPage() {
                                                 className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-medium"
                                             />
                                         </div>
+
+                                        {/* Facto 2 */}
                                         <div className="space-y-2">
-                                            <label className="text-xs font-black uppercase text-gray-400 tracking-widest pl-1">Facto 2</label>
+                                            <label className="text-xs font-black uppercase text-gray-400 tracking-widest pl-1">Facto 2 (Número)</label>
+                                            <input
+                                                type="number"
+                                                value={content.home.funFacts.f2Num || 0}
+                                                onChange={(e) => handleNestedChange("home", "funFacts", "f2Num", e.target.value)}
+                                                className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-black text-lg"
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-black uppercase text-gray-400 tracking-widest pl-1">Facto 2 (Texto)</label>
                                             <input
                                                 type="text"
                                                 value={content.home.funFacts.f2}
@@ -357,8 +378,19 @@ export default function ContentPage() {
                                                 className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-medium"
                                             />
                                         </div>
+
+                                        {/* Facto 3 */}
                                         <div className="space-y-2">
-                                            <label className="text-xs font-black uppercase text-gray-400 tracking-widest pl-1">Facto 3</label>
+                                            <label className="text-xs font-black uppercase text-gray-400 tracking-widest pl-1">Facto 3 (Número)</label>
+                                            <input
+                                                type="number"
+                                                value={content.home.funFacts.f3Num || 0}
+                                                onChange={(e) => handleNestedChange("home", "funFacts", "f3Num", e.target.value)}
+                                                className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-black text-lg"
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-black uppercase text-gray-400 tracking-widest pl-1">Facto 3 (Texto)</label>
                                             <input
                                                 type="text"
                                                 value={content.home.funFacts.f3}
@@ -366,8 +398,19 @@ export default function ContentPage() {
                                                 className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-medium"
                                             />
                                         </div>
+
+                                        {/* Facto 4 */}
                                         <div className="space-y-2">
-                                            <label className="text-xs font-black uppercase text-gray-400 tracking-widest pl-1">Facto 4</label>
+                                            <label className="text-xs font-black uppercase text-gray-400 tracking-widest pl-1">Facto 4 (Número)</label>
+                                            <input
+                                                type="number"
+                                                value={content.home.funFacts.f4Num || 0}
+                                                onChange={(e) => handleNestedChange("home", "funFacts", "f4Num", e.target.value)}
+                                                className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-black text-lg"
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-black uppercase text-gray-400 tracking-widest pl-1">Facto 4 (Texto)</label>
                                             <input
                                                 type="text"
                                                 value={content.home.funFacts.f4}

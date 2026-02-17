@@ -16,8 +16,11 @@ export default function GalleryPage() {
         const fetchGallery = async () => {
             setLoading(true);
             try {
-                const categoryParam = activeCategory === "Tudo" ? "" : `?category=${activeCategory}`;
-                const res = await fetch(`${API_BASE_URL}${endpoints.gallery.list}${categoryParam}`);
+                const categoryParam =
+                    activeCategory === "Tudo" ? "" : `?category=${activeCategory}`;
+                const res = await fetch(
+                    `${API_BASE_URL}${endpoints.gallery.list}${categoryParam}`
+                );
                 if (res.ok) {
                     const data = await res.json();
                     setItems(data);
@@ -30,15 +33,6 @@ export default function GalleryPage() {
         };
         fetchGallery();
     }, [activeCategory]);
-
-    const getImageSrc = (url: string) => {
-        if (!url) return "/assets/images/dummy.png";
-        if (url.startsWith('blob:') || url.startsWith('data:')) return url;
-        if (url.startsWith('/uploads')) {
-            return `${API_BASE_URL}${url}`;
-        }
-        return url;
-    };
 
     return (
         <main>
@@ -57,9 +51,9 @@ export default function GalleryPage() {
                                     <button
                                         key={cat}
                                         onClick={() => setActiveCategory(cat)}
-                                        className={`px-8 py-3 rounded-full text-sm font-black uppercase tracking-widest transition-all duration-300 ${activeCategory === cat
-                                                ? "bg-blue-600 text-white shadow-xl shadow-blue-200"
-                                                : "bg-gray-100 text-gray-400 hover:bg-gray-200"
+                                        className={`px-8 py-3 rounded-full text-sm font-bold uppercase tracking-widest transition-all duration-300 ${activeCategory === cat
+                                            ? "bg-yellow-500 text-black shadow-lg shadow-yellow-200"
+                                            : "bg-gray-100 text-gray-500 hover:bg-gray-200"
                                             }`}
                                     >
                                         {cat}
@@ -74,32 +68,39 @@ export default function GalleryPage() {
                         {loading ? (
                             <div className="py-20 text-center">
                                 <div className="flex flex-col items-center gap-4">
-                                    <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-                                    <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">A carregar momentos...</p>
+                                    <div className="w-12 h-12 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin" />
+                                    <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">
+                                        A carregar momentos...
+                                    </p>
                                 </div>
                             </div>
                         ) : items.length === 0 ? (
                             <div className="py-20 text-center">
-                                <p className="text-gray-400 font-bold">Nenhuma imagem disponível nesta categoria.</p>
+                                <p className="text-gray-400 font-bold">
+                                    Nenhuma imagem disponível nesta categoria.
+                                </p>
                             </div>
                         ) : (
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                                 {items.map((item) => (
-                                    <div key={item.id} className="group relative aspect-square rounded-[40px] overflow-hidden bg-gray-100 shadow-sm hover:shadow-2xl transition-all duration-700 hover:-translate-y-3">
+                                    <div
+                                        key={item.id}
+                                        className="group relative aspect-square rounded-2xl overflow-hidden bg-gray-100 shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
+                                    >
                                         <img
-                                            src={getImageSrc(item.imageUrl)}
+                                            src={`${API_BASE_URL}${item.imageUrl}`}
                                             alt={item.title || "Gallery"}
-                                            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-125"
+                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                         />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-10 translate-y-4 group-hover:translate-y-0">
-                                            <span className="text-blue-400 text-[10px] font-black uppercase tracking-[0.3em] mb-3">
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-end p-6">
+                                            <span className="text-yellow-400 text-xs font-bold uppercase tracking-widest mb-2">
                                                 {item.category}
                                             </span>
-                                            <h4 className="text-white font-black text-2xl mb-3 leading-tight">
+                                            <h4 className="text-white font-bold text-lg leading-tight">
                                                 {item.title}
                                             </h4>
                                             {item.description && (
-                                                <p className="text-gray-300 text-xs line-clamp-2 leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity delay-200 duration-500">
+                                                <p className="text-gray-300 text-xs line-clamp-2 mt-2">
                                                     {item.description}
                                                 </p>
                                             )}

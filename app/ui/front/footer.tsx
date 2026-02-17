@@ -1,7 +1,35 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
+
+interface GalleryItem {
+	id: number;
+	imageUrl: string;
+	title: string;
+}
 
 const Footer = () => {
+	const [gallery, setGallery] = useState<GalleryItem[]>([]);
+
+	useEffect(() => {
+		const fetchGallery = async () => {
+			try {
+				const res = await fetch(`${API_BASE_URL}${endpoints.gallery.list}`);
+				if (res.ok) {
+					const data = await res.json();
+					setGallery(data.slice(0, 9)); // Get latest 9
+				}
+			} catch (error) {
+				console.error("Error fetching gallery:", error);
+			}
+		};
+
+		fetchGallery();
+	}, []);
+
 	return (
 		<>
 			<div className="container footer-top-border">
@@ -31,7 +59,7 @@ const Footer = () => {
 											ao seu ritmo, com uma frota de carros moderna e fiável
 											para tornar a sua viagem inesquecível.
 										</p>
-										<Link href="/" className="button">
+										<Link href="/about" className="button">
 											saber mais
 										</Link>
 									</div>
@@ -39,22 +67,22 @@ const Footer = () => {
 							</div>
 							<div className="col-md-2 col-sm-6">
 								<div className="widget widget_menu">
-									<h3 className="widget-title">Useful link</h3>
+									<h3 className="widget-title">Links Úteis</h3>
 									<ul>
 										<li>
-											<Link href="/">Home</Link>
+											<Link href="/">Início</Link>
 										</li>
 										<li>
 											<Link href="/#reservar"> Reservar</Link>
 										</li>
 										<li>
-											<Link href="/cars">Our car</Link>
+											<Link href="/cars">Veículos</Link>
 										</li>
 										<li>
-											<Link href="/contact">Contato</Link>
+											<Link href="/contact">Contacto</Link>
 										</li>
 										<li>
-											<Link href="/">Reviews</Link>
+											<Link href="/gallery">Galeria</Link>
 										</li>
 									</ul>
 								</div>
@@ -62,7 +90,7 @@ const Footer = () => {
 
 							<div className="col-md-3 col-sm-6">
 								<div className="widget widget_hot_contact">
-									<h3 className="widget-title">Contato</h3>
+									<h3 className="widget-title">Contacto</h3>
 									<ul>
 										<li>
 											<Link href="mailto:reservas@rentacarverde.cv">
@@ -112,78 +140,24 @@ const Footer = () => {
 								<div className="widget widget_photo_gallery">
 									<h3 className="widget-title">Galeria</h3>
 									<ul className="photo-gallery-content">
-										<li>
-											<Link href="#">
-												<img
-													src="/assets/images/instagram/instagram-01.png"
-													alt="instagram"
-												/>
-											</Link>
-										</li>
-										<li>
-											<Link href="#">
-												<img
-													src="/assets/images/instagram/instagram-02.png"
-													alt="instagram"
-												/>
-											</Link>
-										</li>
-										<li>
-											<Link href="#">
-												<img
-													src="/assets/images/instagram/instagram-03.png"
-													alt="instagram"
-												/>
-											</Link>
-										</li>
-										<li>
-											<Link href="#">
-												<img
-													src="/assets/images/instagram/instagram-04.png"
-													alt="instagram"
-												/>
-											</Link>
-										</li>
-										<li>
-											<Link href="#">
-												<img
-													src="/assets/images/instagram/instagram-05.png"
-													alt="instagram"
-												/>
-											</Link>
-										</li>
-										<li>
-											<Link href="#">
-												<img
-													src="/assets/images/instagram/instagram-06.png"
-													alt="instagram"
-												/>
-											</Link>
-										</li>
-										<li>
-											<Link href="#">
-												<img
-													src="/assets/images/instagram/instagram-07.png"
-													alt="instagram"
-												/>
-											</Link>
-										</li>
-										<li>
-											<Link href="#">
-												<img
-													src="/assets/images/instagram/instagram-08.png"
-													alt="instagram"
-												/>
-											</Link>
-										</li>
-										<li>
-											<Link href="#">
-												<img
-													src="/assets/images/instagram/instagram-09.png"
-													alt="instagram"
-												/>
-											</Link>
-										</li>
+										{gallery.length > 0 ? (
+											gallery.map((item) => (
+												<li key={item.id}>
+													<Link href="/gallery">
+														<div className="relative w-full h-[70px]">
+															<img
+																src={`${API_BASE_URL}${item.imageUrl}`}
+																alt={item.title}
+																className="object-cover w-full h-full"
+																style={{ width: '85px', height: '85px', objectFit: 'cover' }}
+															/>
+														</div>
+													</Link>
+												</li>
+											))
+										) : (
+											<p className="text-gray-500 text-sm">Sem imagens disponíveis.</p>
+										)}
 									</ul>
 								</div>
 							</div>
@@ -195,7 +169,7 @@ const Footer = () => {
 							<div className="col-md-9">
 								<div className="bottom-content-left">
 									<p className="copyright">
-										Copyright &copy; 2017 TerraSystem - All Right Reserved{" "}
+										Copyright &copy; {new Date().getFullYear()} TerraSystem - All Right Reserved{" "}
 										<Link href="https://terrasystem.cv">terrasystem.cv</Link>
 									</p>
 								</div>

@@ -32,9 +32,13 @@ interface SiteContent {
         };
         funFacts: {
             f1: string;
+            f1Num: number | string;
             f2: string;
+            f2Num: number | string;
             f3: string;
+            f3Num: number | string;
             f4: string;
+            f4Num: number | string;
         };
     };
     settings: {
