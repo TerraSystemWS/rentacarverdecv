@@ -21,6 +21,8 @@ export default function VehiclesPage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [editingVehicle, setEditingVehicle] = useState<Vehicle | null>(null);
 
+    const [searchQuery, setSearchQuery] = useState("");
+
     async function fetchVehicles() {
         setLoading(true);
         setErr(null);
@@ -71,11 +73,6 @@ export default function VehiclesPage() {
             // We need to use FormData for images
             const formData = new FormData();
 
-            // Remove images from the main data object to send separately if needed, 
-            // though here we are just sending the whole object as JSON string in a field
-            // or building the form data.
-            // Let's check how the backend expects it. Usually it's better to send fields.
-
             // Simple approach: send JSON for data and files for images
             formData.append("vehicle", new Blob([JSON.stringify(data)], { type: "application/json" }));
 
@@ -113,6 +110,10 @@ export default function VehiclesPage() {
         return url;
     };
 
+    const filteredVehicles = vehicles.filter(v =>
+        (v.licensePlate || "").toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     if (loading) {
         return (
             <div>
@@ -144,7 +145,22 @@ export default function VehiclesPage() {
             />
 
             <PageShell>
-                <div className="max-w-7xl mx-auto">
+                <div className="max-w-7xl mx-auto space-y-4">
+                    <div className="flex items-center justify-end">
+                        <div className="relative w-full max-w-sm">
+                            <input
+                                type="text"
+                                placeholder="Pesquisar por matrícula..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="w-full pl-4 pr-10 py-2.5 text-sm rounded-xl border border-zinc-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-50"
+                            />
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
+                            </div>
+                        </div>
+                    </div>
+
                     <DataTable
                         columns={[
                             {
@@ -205,11 +221,7 @@ export default function VehiclesPage() {
                                 )
                             }
                         ]}
-                        rows={vehicles.map(v => ({
-                            ...v,
-                            // Pre-render some simple things if needed, or use the render function in DataTable
-                            // DataTable currently just does row[col.key], so we should use render or maps
-                        }))}
+                        rows={filteredVehicles}
                     />
                 </div>
             </PageShell>
