@@ -67,4 +67,10 @@ export const endpoints = {
 		dashboard: "/dashboard/content",
 		update: "/dashboard/content",
 	},
+	settings: {
+		backupDb: "/dashboard/settings/backup/database",
+		restoreDb: "/dashboard/settings/restore/database",
+		backupUploads: "/dashboard/settings/backup/uploads",
+		restoreUploads: "/dashboard/settings/restore/uploads",
+	}
 };

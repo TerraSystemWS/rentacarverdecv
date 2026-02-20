@@ -142,6 +142,155 @@ export default function SettingsPage() {
                             </Link>
                         </div>
                     </div>
+
+                    {/* Backups */}
+                    <div className="bg-white p-8 rounded-[32px] shadow-sm border border-gray-100">
+                        <div className="flex items-center gap-4 mb-8">
+                            <div className="p-3 rounded-2xl bg-purple-50 text-purple-600">
+                                <Save size={24} />
+                            </div>
+                            <div>
+                                <h3 className="text-xl font-black text-gray-900">Backups e Restauro</h3>
+                                <p className="text-sm text-gray-500 font-medium">Faça o download de backups para o seu PC ou restaure dados de backups antigos.</p>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {/* DB Backup */}
+                            <div className="border border-gray-200 rounded-2xl p-6 flex flex-col justify-between">
+                                <div>
+                                    <h4 className="font-bold text-gray-900 mb-2">Base de Dados (.dump)</h4>
+                                    <p className="text-sm text-gray-500 mb-6">Contém todos os veículos, reservas, clientes e definições textuais em formato PostgreSQL.</p>
+                                </div>
+                                <div className="space-y-3">
+                                    <button
+                                        onClick={async () => {
+                                            if (!confirm("O download da base de dados pode demorar alguns segundos. Deseja continuar?")) return;
+                                            setSubmitting(true);
+                                            try {
+                                                const res = await authFetch(endpoints.settings.backupDb);
+                                                if (!res.ok) throw new Error("Erro ao gerar backup");
+                                                const blob = await res.blob();
+                                                const url = window.URL.createObjectURL(blob);
+                                                const a = document.createElement('a');
+                                                a.href = url;
+                                                a.download = "database_backup.dump";
+                                                document.body.appendChild(a);
+                                                a.click();
+                                                window.URL.revokeObjectURL(url);
+                                                document.body.removeChild(a);
+                                            } catch (e: any) {
+                                                alert(e.message || "Erro de rede ao baixar ficheiro.");
+                                            } finally {
+                                                setSubmitting(false);
+                                            }
+                                        }}
+                                        disabled={submitting}
+                                        className="w-full px-4 py-2.5 bg-gray-900 text-white rounded-xl font-bold hover:bg-gray-800 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        Exportar Base de Dados
+                                    </button>
+                                    <div className="relative">
+                                        <input
+                                            type="file"
+                                            accept=".dump"
+                                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                            onChange={async (e) => {
+                                                const file = e.target.files?.[0];
+                                                if (!file) return;
+                                                if (!confirm("Tem a certeza absoluta? Todos os dados atuais serão substituídos pelos do backup!")) return;
+
+                                                setSubmitting(true);
+                                                try {
+                                                    const formData = new FormData();
+                                                    formData.append("file", file);
+                                                    const res = await authFetch(endpoints.settings.restoreDb, {
+                                                        method: "POST",
+                                                        body: formData
+                                                    });
+                                                    if (res.ok) alert("Base de dados restaurada com sucesso!");
+                                                    else alert("Erro ao restaurar base de dados.");
+                                                } finally {
+                                                    setSubmitting(false);
+                                                    e.target.value = "";
+                                                }
+                                            }}
+                                        />
+                                        <button disabled={submitting} className="w-full px-4 py-2.5 bg-gray-50 text-gray-900 border border-gray-200 rounded-xl font-bold hover:bg-gray-100 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                                            {submitting ? "A processar..." : "Importar Base de Dados"}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Uploads Backup */}
+                            <div className="border border-gray-200 rounded-2xl p-6 flex flex-col justify-between">
+                                <div>
+                                    <h4 className="font-bold text-gray-900 mb-2">Ficheiros de Média (.zip)</h4>
+                                    <p className="text-sm text-gray-500 mb-6">Contém todas as imagens da galeria e fotos de veículos (Pasta Uploads).</p>
+                                </div>
+                                <div className="space-y-3">
+                                    <button
+                                        onClick={async () => {
+                                            if (!confirm("Este pacote ZIP pode ser muito pesado dependendo do número de imagens. Deseja iniciar o download?")) return;
+                                            setSubmitting(true);
+                                            try {
+                                                const res = await authFetch(endpoints.settings.backupUploads);
+                                                if (!res.ok) throw new Error("Erro ao gerar pacote de imagens");
+                                                const blob = await res.blob();
+                                                const url = window.URL.createObjectURL(blob);
+                                                const a = document.createElement('a');
+                                                a.href = url;
+                                                a.download = "uploads_backup.zip";
+                                                document.body.appendChild(a);
+                                                a.click();
+                                                window.URL.revokeObjectURL(url);
+                                                document.body.removeChild(a);
+                                            } catch (e: any) {
+                                                alert(e.message || "Erro de rede ao baixar pacote.");
+                                            } finally {
+                                                setSubmitting(false);
+                                            }
+                                        }}
+                                        disabled={submitting}
+                                        className="w-full px-4 py-2.5 bg-gray-900 text-white rounded-xl font-bold hover:bg-gray-800 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        Exportar Pasta Média
+                                    </button>
+                                    <div className="relative">
+                                        <input
+                                            type="file"
+                                            accept=".zip"
+                                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                            onChange={async (e) => {
+                                                const file = e.target.files?.[0];
+                                                if (!file) return;
+                                                if (!confirm("Atenção: A pasta atual de imagens será substituída pelo conteúdo deste ficheiro ZIP!")) return;
+
+                                                setSubmitting(true);
+                                                try {
+                                                    const formData = new FormData();
+                                                    formData.append("file", file);
+                                                    const res = await authFetch(endpoints.settings.restoreUploads, {
+                                                        method: "POST",
+                                                        body: formData
+                                                    });
+                                                    if (res.ok) alert("Pasta média restaurada com sucesso!");
+                                                    else alert("Erro ao restaurar ficheiros de imagem.");
+                                                } finally {
+                                                    setSubmitting(false);
+                                                    e.target.value = "";
+                                                }
+                                            }}
+                                        />
+                                        <button disabled={submitting} className="w-full px-4 py-2.5 bg-gray-50 text-gray-900 border border-gray-200 rounded-xl font-bold hover:bg-gray-100 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                                            {submitting ? "A processar..." : "Importar Pasta Média"}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </PageShell>
         </div>
