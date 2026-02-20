@@ -81,7 +81,7 @@ export default function VehiclesPage() {
 
             if (images && images.length > 0) {
                 images.forEach((image) => {
-                    formData.append("files", image);
+                    formData.append("images", image);
                 });
             }
 
