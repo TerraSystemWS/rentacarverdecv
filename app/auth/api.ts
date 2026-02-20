@@ -114,10 +114,19 @@ export async function authFetch(
 	const res = await fetch(url, { ...init, headers, cache: "no-store" });
 
 	// 401 -> tenta refresh e repete 1x
-	if (res.status === 401 && init.auth !== false && init.retry !== false) {
-		const ok = await refreshTokens().catch(() => false);
-		if (ok) {
-			return authFetch(path, { ...init, retry: false });
+	if (res.status === 401 && init.auth !== false) {
+		if (init.retry !== false) {
+			const ok = await refreshTokens().catch(() => false);
+			if (ok) {
+				return authFetch(path, { ...init, retry: false });
+			}
+		}
+
+		// Se chegamos aqui, ou refresh falhou, ou não havia token pra retry
+		// -> Limpar storage e emitir evento para o AuthContext capturar
+		clearTokens();
+		if (typeof window !== "undefined") {
+			window.dispatchEvent(new Event("auth:unauthorized"));
 		}
 	}
 

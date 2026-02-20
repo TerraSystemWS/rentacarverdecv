@@ -60,8 +60,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 		};
 
 		initializeAuth();
+
+		// Escutar evento de token expirado pra forçar logout global
+		const handleUnauthorized = () => {
+			setUser(null);
+			setIsAuthenticated(false);
+			authApi.clearTokens();
+			// Não forçamos o rounter.replace aqui porque o AuthGate já vai redirecionar 
+			// baseado no setIsAuthenticated(false). Mas podíamos se fosse necessário.
+		};
+		window.addEventListener("auth:unauthorized", handleUnauthorized);
+
 		return () => {
 			isMounted = false;
+			window.removeEventListener("auth:unauthorized", handleUnauthorized);
 		};
 	}, []);
 	/*
