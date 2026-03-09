@@ -75,12 +75,17 @@ const FSideBar = ({ isOpen, onToggleSidebar }: FSideBarProps) => {
 						{/* MENU (layout original) */}
 						<div className="author-menu">
 							<ul className="yellow-color">
-								{/* Se NÃO autenticado, mostra só login */}
+								{/* Se NÃO autenticado, mostra login e registo */}
 								{!isAuthenticated ? (
 									<>
 										<li>
 											<a href="/login" onClick={(e) => go(e, "/login")}>
-												<i className="fa fa-sign-in"></i> Sign In
+												<i className="fa fa-sign-in"></i> Entrar
+											</a>
+										</li>
+										<li>
+											<a href="/register" onClick={(e) => go(e, "/register")}>
+												<i className="fa fa-user-plus"></i> Criar Conta
 											</a>
 										</li>
 									</>

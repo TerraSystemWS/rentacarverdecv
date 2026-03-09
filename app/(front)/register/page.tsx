@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { API_BASE_URL } from "@/lib/api/endpoints";
+import { Turnstile } from "@marsidev/react-turnstile";
 
 export default function RegisterPage() {
     const router = useRouter();
@@ -14,6 +15,7 @@ export default function RegisterPage() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [err, setErr] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [turnstileToken, setTurnstileToken] = useState<string>("");
 
     async function onSubmit(e: React.FormEvent) {
         e.preventDefault();
@@ -21,6 +23,11 @@ export default function RegisterPage() {
 
         if (!username || !email || !password || !confirmPassword) {
             setErr("Preencha todos os campos");
+            return;
+        }
+
+        if (!turnstileToken) {
+            setErr("Por favor, resolva o desafio de segurança (Captcha).");
             return;
         }
 
@@ -37,7 +44,7 @@ export default function RegisterPage() {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ username, email, password })
+                body: JSON.stringify({ username, email, password, turnstileToken })
             });
 
             if (!res.ok) {
@@ -123,6 +130,14 @@ export default function RegisterPage() {
                             {err}
                         </div>
                     )}
+
+                    <div className="flex justify-center mt-2">
+                        <Turnstile
+                            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+                            onSuccess={(token) => setTurnstileToken(token)}
+                            options={{ theme: "light" }}
+                        />
+                    </div>
 
                     <button
                         type="submit"
