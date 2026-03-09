@@ -86,77 +86,38 @@ const FSideBar = ({ isOpen, onToggleSidebar }: FSideBarProps) => {
 									</>
 								) : (
 									<>
-										{/* Admin dashboard só se for admin */}
 										{isAdmin ? (
 											<li>
 												<a
 													href="/dashboard"
 													onClick={(e) => go(e, "/dashboard")}
 												>
-													<i className="fa fa-user-circle-o"></i> Author
-													Dashboard
+													<i className="fa fa-user-circle-o"></i> Admin Dashboard
 												</a>
 											</li>
 										) : (
-											<li>
-												<a href="/user" onClick={(e) => go(e, "/user")}>
-													<i className="fa fa-user-circle-o"></i> My Account
-												</a>
-											</li>
+											<>
+												<li>
+													<a href="/profile" onClick={(e) => go(e, "/profile")}>
+														<i className="fa fa-user-circle-o"></i> O Meu Perfil
+													</a>
+												</li>
+												<li>
+													<a href="/profile" onClick={(e) => go(e, "/profile")}>
+														<i className="fa fa-automobile"></i> As Minhas Reservas
+													</a>
+												</li>
+												<li>
+													<a href="#" onClick={(e) => { e.preventDefault(); alert("Em breve!"); }}>
+														<i className="fa fa-envelope-open"></i> Mensagens
+													</a>
+												</li>
+											</>
 										)}
 
 										<li>
-											<a
-												href="/user/inbox"
-												onClick={(e) => go(e, "/user/inbox")}
-											>
-												<i className="fa fa-envelope-open"></i> Your Inbox
-											</a>
-										</li>
-										<li>
-											<a
-												href="/user/track"
-												onClick={(e) => go(e, "/user/track")}
-											>
-												<i className="fa fa-location-arrow"></i> Track your taxi
-											</a>
-										</li>
-										<li>
-											<a
-												href="/user/bookings/status"
-												onClick={(e) => go(e, "/user/bookings/status")}
-											>
-												<i className="fa fa-area-chart"></i> Your Bookings
-												Status
-											</a>
-										</li>
-										<li>
-											<a
-												href="/user/bookings/new"
-												onClick={(e) => go(e, "/user/bookings/new")}
-											>
-												<i className="fa fa-automobile"></i> New Bookings
-											</a>
-										</li>
-										<li>
-											<a
-												href="/user/bookings"
-												onClick={(e) => go(e, "/user/bookings")}
-											>
-												<i className="fa fa-archive"></i> Your Bookings
-											</a>
-										</li>
-
-										{/* Mantive o item “Deposit” igual (podes trocar por valor real depois) */}
-										<li>
-											<a href="#">
-												<i className="fa fa-money"></i> Your Deposit - $150.00
-											</a>
-										</li>
-
-										<li>
 											<a href="#" onClick={handleLogout}>
-												<i className="fa fa-sign-out"></i> Sign Out
+												<i className="fa fa-sign-out"></i> Sair
 											</a>
 										</li>
 									</>

@@ -1,100 +1,71 @@
-// Nomalmentemente
-//#########################################
-// export default async function Page({
-//   params,
-// }: {
-//   params: Promise<{ slug: string }>
-// }) {
-//   const { slug } = await params
-//   return <div>My Post: {slug}</div>
-// }
-
-// Na Cliente componte tem opcao
-//#########################################
-// 'use client'
-// import { use } from 'react'
-
-// export default function BlogPostPage({
-//   params,
-// }: {
-//   params: Promise<{ slug: string }>
-// }) {
-//   const { slug } = use(params)
-
-//   return (
-//     <div>
-//       <p>{slug}</p>
-//     </div>
-//   )
-// }
-
-// Alternativa com async/await (mas precisa ser componente de Servidor)
-//#########################################
-
-// const CarId = async ({ params }: { params: Promise<{ carId: string }> }) => {
-// 	const { carId } = await params;
-
-// 	return (
-// 		<div>
-// 			<h1>Car Details Page</h1>
-// 			<p>Car ID: {carId}</p>
-// 			{/* Add more details about the car here */}
-// 		</div>
-// 	);
-// };
-
-// "use client";
-// import { use } from "react";
-// const CarId = ({ params }: { params: Promise<{ carId: string }> }) => {
-// 	const { carId } = use(params);
-// 	return (
-// 		<div>
-// 			<h1>Car Details Page</h1>
-// 			<p>Car ID: {carId}</p>
-// 			{/* Add more details about the car here */}
-// 		</div>
-// 	);
-// };
-
-"use client";
-import { use, useEffect, useState } from "react";
 import PageHeader from "@/app/ui/front/PageHeader";
 import VehicleSingle from "@/app/ui/front/veiculos/single/singlecar";
 import { Vehicle } from "@/lib/api/types";
-import { authFetch } from "@/app/auth/api";
-import { endpoints } from "@/lib/api/endpoints";
+import { API_BASE_URL } from "@/lib/api/endpoints";
+import { Metadata } from "next";
 
-const CarId = ({ params }: { params: Promise<{ carId: string }> }) => {
-	const { carId } = use(params);
-	const [vehicle, setVehicle] = useState<Vehicle | null>(null);
-	const [loading, setLoading] = useState(true);
+export async function generateMetadata({ params }: { params: Promise<{ carId: string }> }): Promise<Metadata> {
+	const { carId } = await params;
 
-	useEffect(() => {
-		const fetchVehicle = async () => {
-			try {
-				const res = await authFetch(endpoints.vehicles.get(Number(carId)), { auth: false });
-				if (res.ok) {
-					const data = await res.json();
-					setVehicle(data);
-				}
-			} catch (error) {
-				console.error("Error fetching vehicle details:", error);
-			} finally {
-				setLoading(false);
+	try {
+		const res = await fetch(`${API_BASE_URL}/public/vehicles/${carId}`, { cache: 'no-store' });
+		if (!res.ok) return { title: 'Veículo não encontrado' };
+
+		const vehicle: Vehicle = await res.json();
+
+		return {
+			title: `Alugar ${vehicle.make} ${vehicle.model}`,
+			description: `Alugue este impecável ${vehicle.make} ${vehicle.model} por apenas ${vehicle.pricePerDay} CVE/dia. Reserve já com a Verde CV!`,
+			openGraph: {
+				title: `Alugar ${vehicle.make} ${vehicle.model} | Verde CV`,
+				description: `Alugue este impecável ${vehicle.make} ${vehicle.model} por apenas ${vehicle.pricePerDay} CVE/dia.`,
+				images: vehicle.images?.[0] ? [{ url: `${API_BASE_URL}${vehicle.images[0].url}` }] : []
 			}
 		};
-		if (carId) fetchVehicle();
-	}, [carId]);
+	} catch (e) {
+		return { title: 'Veículo' };
+	}
+}
+
+export default async function CarId({ params }: { params: Promise<{ carId: string }> }) {
+	const { carId } = await params;
+	let vehicle: Vehicle | null = null;
+
+	try {
+		const res = await fetch(`${API_BASE_URL}/public/vehicles/${carId}`, { cache: 'no-store' });
+		if (res.ok) {
+			vehicle = await res.json();
+		}
+	} catch (error) {
+		console.error("Error fetching vehicle details:", error);
+	}
 
 	return (
 		<div>
-			<PageHeader titulo={vehicle ? `${vehicle.make} ${vehicle.model}` : "Carregando..."} descricao="Sobre a Rent-A-Car Verde" />
+			<PageHeader titulo={vehicle ? `${vehicle.make} ${vehicle.model}` : "Veículo não encontrado"} descricao="Sobre a Rent-A-Car Verde" />
 
-			{loading ? (
-				<div className="container py-20 text-center">
-					<div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-yellow-500 border-r-transparent" role="status"></div>
-				</div>
-			) : vehicle ? (
+			{vehicle && (
+				<script
+					type="application/ld+json"
+					dangerouslySetInnerHTML={{
+						__html: JSON.stringify({
+							"@context": "https://schema.org/",
+							"@type": "Product",
+							"name": `${vehicle.make} ${vehicle.model}`,
+							"image": vehicle.images?.[0]?.url ? `${API_BASE_URL}${vehicle.images[0].url}` : "",
+							"description": `Alugue este ${vehicle.make} ${vehicle.model}`,
+							"offers": {
+								"@type": "Offer",
+								"price": vehicle.pricePerDay,
+								"priceCurrency": "CVE",
+								"availability": "https://schema.org/InStock"
+							}
+						})
+					}}
+				/>
+			)}
+
+			{vehicle ? (
 				<VehicleSingle vehicle={vehicle} />
 			) : (
 				<div className="container py-20 text-center text-muted-foreground">
@@ -103,6 +74,4 @@ const CarId = ({ params }: { params: Promise<{ carId: string }> }) => {
 			)}
 		</div>
 	);
-};
-
-export default CarId;
+}

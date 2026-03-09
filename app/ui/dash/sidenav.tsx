@@ -20,6 +20,7 @@ const items = [
 	{ label: "Painel", href: "/dashboard", icon: LayoutDashboard },
 	{ label: "Reservas", href: "/dashboard/bookings", icon: CalendarDays },
 	{ label: "Veículos", href: "/dashboard/vehicles", icon: Car },
+	{ label: "Calendário", href: "/dashboard/calendar", icon: CalendarDays },
 	{ label: "Blog", href: "/dashboard/posts", icon: FileText },
 	{ label: "Parceiros", href: "/dashboard/partners", icon: Handshake },
 	{ label: "Galeria", href: "/dashboard/gallery", icon: Image },

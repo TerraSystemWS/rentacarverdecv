@@ -63,6 +63,8 @@ export default function VehicleForm({
         let val: any = value;
         if (type === "number") {
             val = parseFloat(value) || 0;
+        } else if (name === "licensePlate") {
+            val = value.toUpperCase();
         }
 
         setFormData((prev) => ({

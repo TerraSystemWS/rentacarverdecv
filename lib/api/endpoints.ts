@@ -24,6 +24,7 @@ export const endpoints = {
 	},
 	bookings: {
 		list: (limit = 100) => `/dashboard/bookings?limit=${limit}`,
+		me: "/dashboard/bookings/me",
 		create: "/dashboard/bookings",
 		update: (id: number) => `/dashboard/bookings/${id}`,
 		updateStatus: (id: number) => `/dashboard/bookings/${id}/status`,

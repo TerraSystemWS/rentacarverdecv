@@ -11,18 +11,28 @@ export default function LoginPage() {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const [err, setErr] = useState<string | null>(null);
+	const [successMsg, setSuccessMsg] = useState<string | null>(null);
+
+	useEffect(() => {
+		if (typeof window !== "undefined") {
+			const urlParams = new URLSearchParams(window.location.search);
+			if (urlParams.get("registered") === "true") {
+				setSuccessMsg("Conta criada com sucesso! Faça login para continuar.");
+			}
+		}
+	}, []);
 
 	const roles: string[] =
 		(user as any)?.roles ??
 		(user as any)?.authorities?.map((a: any) => a.authority) ??
-	[];
+		[];
 	const isAdmin =
 		roles.includes("ROLE_ADMIN") || roles.includes("ADMIN");
 
-	// Se já logado: admin → dashboard, não-admin → front
+	// Se já logado: admin → dashboard, não-admin → profile
 	useEffect(() => {
 		if (!isLoading && isAuthenticated) {
-			router.replace(isAdmin ? "/dashboard" : "/");
+			router.replace(isAdmin ? "/dashboard" : "/profile");
 		}
 	}, [isLoading, isAuthenticated, isAdmin, router]);
 
@@ -82,6 +92,12 @@ export default function LoginPage() {
 					{err && (
 						<div className="bg-red-50 text-red-600 text-sm p-3 rounded-md border border-red-100">
 							{err}
+						</div>
+					)}
+
+					{successMsg && (
+						<div className="bg-green-50 text-green-700 text-sm p-3 rounded-md border border-green-200">
+							{successMsg}
 						</div>
 					)}
 

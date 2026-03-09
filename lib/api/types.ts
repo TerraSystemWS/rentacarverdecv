@@ -61,6 +61,7 @@ export type VehicleRow = {
 
 export type BookingRow = {
 	id: number;
+	vehicle_id: number;
 	customer_name: string;
 	vehicle_title: string;
 	status: "PENDENTE" | "CONFIRMADA" | "EM_CURSO" | "CONCLUÍDA" | "CANCELADA";

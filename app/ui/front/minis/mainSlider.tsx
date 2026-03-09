@@ -61,8 +61,17 @@ const MainSlider = () => {
 			}
 		};
 		fetchAds();
-		// Inicialização do Revolution Slider será feita pelo script global
 	}, []);
+
+	// Inicialização do Revolution Slider após carregar os banners
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			if (typeof (window as any).initRevolutionSlider === 'function') {
+				(window as any).initRevolutionSlider();
+			}
+		}, 100);
+		return () => clearTimeout(timer);
+	}, [ads]);
 
 	const getImageSrc = (url: string) => {
 		if (!url) return "";

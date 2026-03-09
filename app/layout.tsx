@@ -3,6 +3,34 @@ import "./globals.css";
 import Script from "next/script";
 import Providers from "./providers";
 
+export const metadata: Metadata = {
+	title: {
+		template: '%s | Verde CV Rent a Car',
+		default: 'Verde CV Rent a Car | Aluguer de Carros em Cabo Verde',
+	},
+	description: 'A melhor experiência de aluguer de viaturas comerciais e de passageiros em Cabo Verde.',
+	openGraph: {
+		title: 'Verde CV Rent a Car',
+		description: 'A melhor experiência de aluguer de viaturas comerciais e de passageiros em Cabo Verde.',
+		url: 'https://rentacarverdecv.com', // Placeholder URL
+		siteName: 'Verde CV',
+		images: [{ url: '/assets/images/slider/1.jpg', width: 1200, height: 630 }], // Placeholder OGP image
+		locale: 'pt_PT',
+		type: 'website',
+	},
+	robots: {
+		index: true,
+		follow: true,
+		googleBot: {
+			index: true,
+			follow: true,
+			'max-video-preview': -1,
+			'max-image-preview': 'large',
+			'max-snippet': -1,
+		},
+	},
+};
+
 export default function RootLayout({
 	children,
 }: {
@@ -29,59 +57,66 @@ export default function RootLayout({
 				{/* Revolution Slider Core */}
 				<Script
 					src="/assets/revolution/js/jquery.themepunch.tools.min.js"
-					strategy="afterInteractive"
+					strategy="beforeInteractive"
 				/>
 				<Script
 					src="/assets/revolution/js/jquery.themepunch.revolution.min.js"
-					strategy="afterInteractive"
+					strategy="beforeInteractive"
 				/>
 
 				{/* Extensões */}
 				<Script
 					src="/assets/revolution/js/extensions/revolution.extension.video.min.js"
-					strategy="afterInteractive"
+					strategy="beforeInteractive"
 				/>
 				<Script
 					src="/assets/revolution/js/extensions/revolution.extension.slideanims.min.js"
-					strategy="afterInteractive"
+					strategy="beforeInteractive"
 				/>
 				<Script
 					src="/assets/revolution/js/extensions/revolution.extension.actions.min.js"
-					strategy="afterInteractive"
+					strategy="beforeInteractive"
 				/>
 				<Script
 					src="/assets/revolution/js/extensions/revolution.extension.layeranimation.min.js"
-					strategy="afterInteractive"
+					strategy="beforeInteractive"
 				/>
 				<Script
 					src="/assets/revolution/js/extensions/revolution.extension.kenburn.min.js"
-					strategy="afterInteractive"
+					strategy="beforeInteractive"
 				/>
 				<Script
 					src="/assets/revolution/js/extensions/revolution.extension.navigation.min.js"
-					strategy="afterInteractive"
+					strategy="beforeInteractive"
 				/>
 				<Script
 					src="/assets/revolution/js/extensions/revolution.extension.migration.min.js"
-					strategy="afterInteractive"
+					strategy="beforeInteractive"
 				/>
 				<Script
 					src="/assets/revolution/js/extensions/revolution.extension.parallax.min.js"
-					strategy="afterInteractive"
+					strategy="beforeInteractive"
 				/>
 
 				{/* Inicialização do Revolution Slider */}
 				<Script
 					id="revolution-init"
-					strategy="afterInteractive"
+					strategy="beforeInteractive"
 					dangerouslySetInnerHTML={{
 						__html: `
-              (function() {
-                function initRevolution() {
+              window.initRevolutionSlider = function() {
+                setTimeout(function() {
                   if (typeof jQuery !== 'undefined' && typeof jQuery.fn.revolution !== 'undefined') {
-                    var $sliderSelector = jQuery(".carrent-slider");
-                    if ($sliderSelector.length) {
-                      $sliderSelector.revolution({
+                    try {
+                      var $sliderSelector = jQuery(".carrent-slider");
+                      if ($sliderSelector.length === 0) return;
+                      
+                      if ($sliderSelector.hasClass("revslider-initialised")) {
+                          // Destroying it might throw if _R isn't fully established, so catch errors
+                          try { $sliderSelector.revkill(); } catch(e) {}
+                      }
+
+                      $sliderSelector.show().revolution({
                         sliderType: "standard",
                         sliderLayout: "fullwidth",
                         delay: 9000,
@@ -96,20 +131,12 @@ export default function RootLayout({
                         gridheight: [600,600,500,380],
                         disableProgressBar: "on"
                       });
+                    } catch(e) {
+                      console.warn("Revolution Slider Initialization Error:", e);
                     }
-                  } else {
-                    // Tenta novamente após um breve delay se os scripts não carregaram
-                    setTimeout(initRevolution, 100);
                   }
-                }
-
-                // Inicia quando o documento estiver pronto
-                if (document.readyState === 'loading') {
-                  document.addEventListener('DOMContentLoaded', initRevolution);
-                } else {
-                  initRevolution();
-                }
-              })();
+                }, 300); // Small threshold for DOM attachments
+              };
             `,
 					}}
 				/>
