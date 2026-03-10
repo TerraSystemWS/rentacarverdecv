@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Save, Loader2, Layout, Info, Phone, Home } from "lucide-react";
+import Swal from "sweetalert2";
 import { useAuth } from "@/app/auth/AuthContext";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
 import TopNav from "@/app/ui/dash/topNav";
@@ -64,11 +65,11 @@ export default function ContentPage() {
                 body: JSON.stringify(content)
             });
             if (res.ok) {
-                alert("Conteúdo atualizado com sucesso!");
+                Swal.fire({ icon: "success", title: "Sucesso", text: "Conteúdo atualizado com sucesso!", confirmButtonColor: "#3085d6" });
             }
         } catch (error) {
             console.error("Error updating content:", error);
-            alert("Erro ao atualizar conteúdo.");
+            Swal.fire({ icon: "error", title: "Erro", text: "Erro ao atualizar conteúdo.", confirmButtonColor: "#3085d6" });
         } finally {
             setSubmitting(false);
         }

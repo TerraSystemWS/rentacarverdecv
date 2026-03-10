@@ -5,6 +5,7 @@ import TopNav from "@/app/ui/dash/topNav";
 import PageShell from "@/app/ui/dash/PageShell";
 import DataTable from "@/app/ui/dash/DataTable";
 import { CalendarCheck, Loader2, Plus, Trash2 } from "lucide-react";
+import Swal from "sweetalert2";
 import { apiFetch } from "@/lib/api/client";
 import { endpoints } from "@/lib/api/endpoints";
 import type { BookingRow } from "@/lib/api/types";
@@ -25,6 +26,16 @@ export default function BookingsPage() {
 		() =>
 			rows.map((b) => ({
 				...b,
+				customer_name: (
+					<div className="flex items-center gap-2">
+						<span>{b.customer_name}</span>
+						{b.has_extra_driver && (
+							<span className="bg-yellow-100 text-yellow-800 text-[10px] px-2 py-0.5 rounded-full font-bold uppercase whitespace-nowrap" title="Com Condutor Extra">
+								+ Condutor
+							</span>
+						)}
+					</div>
+				),
 				start_at: fmtDateTime(b.start_at),
 				end_at: fmtDateTime(b.end_at),
 				grand_total: (
@@ -96,17 +107,27 @@ export default function BookingsPage() {
 			});
 			setRows(prev => prev.map(r => r.id === id ? { ...r, status: newStatus as any } : r));
 		} catch (e: any) {
-			alert("Falha ao atualizar estado: " + e.message);
+			Swal.fire({ icon: "error", title: "Erro", text: "Falha ao atualizar estado: " + e.message, confirmButtonColor: "#3085d6" });
 		}
 	}
 
 	async function handleDelete(id: number) {
-		if (!window.confirm("Tem a certeza que deseja eliminar esta reserva?")) return;
+		const result = await Swal.fire({
+			title: "Tem a certeza?",
+			text: "Deseja mesmo eliminar esta reserva?",
+			icon: "warning",
+			showCancelButton: true,
+			confirmButtonColor: "#d33",
+			cancelButtonColor: "#3085d6",
+			confirmButtonText: "Sim, eliminar!",
+			cancelButtonText: "Cancelar"
+		});
+		if (!result.isConfirmed) return;
 		try {
 			await apiFetch(endpoints.bookings.delete(id), { method: "DELETE" });
 			setRows(prev => prev.filter(r => r.id !== id));
 		} catch (e: any) {
-			alert("Falha ao eliminar reserva: " + e.message);
+			Swal.fire({ icon: "error", title: "Erro", text: "Falha ao eliminar reserva: " + e.message, confirmButtonColor: "#3085d6" });
 		}
 	}
 

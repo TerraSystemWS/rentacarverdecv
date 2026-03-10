@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { FileText, Plus, Pencil, Trash2, Eye, Calendar } from "lucide-react";
+import Swal from "sweetalert2";
 import TopNav from "@/app/ui/dash/topNav";
 import PageShell from "@/app/ui/dash/PageShell";
 import DataTable from "@/app/ui/dash/DataTable";
@@ -53,7 +54,17 @@ export default function PostsPage() {
     };
 
     const handleDelete = async (id: number) => {
-        if (!confirm("Tem a certeza que deseja eliminar este post?")) return;
+        const result = await Swal.fire({
+            title: "Tem a certeza?",
+            text: "Deseja mesmo eliminar este post?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Sim, eliminar!",
+            cancelButtonText: "Cancelar"
+        });
+        if (!result.isConfirmed) return;
 
         try {
             const res = await authFetch(`/dashboard/posts/${id}`, {
@@ -62,7 +73,7 @@ export default function PostsPage() {
             if (!res.ok) throw new Error("Erro ao eliminar post.");
             setPosts(prev => prev.filter(p => p.id !== id));
         } catch (e: any) {
-            alert(e?.message || "Erro ao eliminar post.");
+            Swal.fire({ icon: "error", title: "Erro", text: e?.message || "Erro ao eliminar post.", confirmButtonColor: "#3085d6" });
         }
     };
 
@@ -96,7 +107,7 @@ export default function PostsPage() {
 
             setIsDialogOpen(false);
         } catch (e: any) {
-            alert(e?.message || "Erro ao guardar post.");
+            Swal.fire({ icon: "error", title: "Erro", text: e?.message || "Erro ao guardar post.", confirmButtonColor: "#3085d6" });
         } finally {
             setIsSubmitting(false);
         }

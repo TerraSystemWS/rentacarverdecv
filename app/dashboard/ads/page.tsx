@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Plus, Search, Trash2, Edit2, Megaphone, CheckCircle2, XCircle } from "lucide-react";
+import Swal from "sweetalert2";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
 import { useAuth } from "@/app/auth/AuthContext";
 import { Advertisement } from "@/lib/api/types";
@@ -45,7 +46,17 @@ export default function AdsPage() {
     };
 
     const handleDelete = async (id: number) => {
-        if (!confirm("Tem a certeza que deseja eliminar este anúncio?")) return;
+        const result = await Swal.fire({
+            title: "Tem a certeza?",
+            text: "Deseja mesmo eliminar este anúncio?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Sim, eliminar!",
+            cancelButtonText: "Cancelar"
+        });
+        if (!result.isConfirmed) return;
 
         try {
             const res = await authFetch(endpoints.ads.delete(id), { method: "DELETE" });

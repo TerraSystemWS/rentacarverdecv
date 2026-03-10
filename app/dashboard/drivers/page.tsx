@@ -1,61 +1,61 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Handshake, Plus, Pencil, Trash2, Globe } from "lucide-react";
+import { UserSquare2, Plus, Pencil, Trash2 } from "lucide-react";
 import Swal from "sweetalert2";
 import TopNav from "@/app/ui/dash/topNav";
 import PageShell from "@/app/ui/dash/PageShell";
 import DataTable from "@/app/ui/dash/DataTable";
-import PartnerDialog from "./_components/partner-dialog";
-import PartnerForm from "./_components/partner-form";
+import DriverDialog from "./_components/driver-dialog";
+import DriverForm from "./_components/driver-form";
 import { useAuth } from "@/app/auth/AuthContext";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
-import { Partner } from "@/lib/api/types";
+import { Driver } from "@/lib/api/types";
 
-export default function PartnersPage() {
+export default function DriversPage() {
     const { authFetch } = useAuth();
-    const [partners, setPartners] = useState<Partner[]>([]);
+    const [drivers, setDrivers] = useState<Driver[]>([]);
     const [loading, setLoading] = useState(true);
     const [err, setErr] = useState<string | null>(null);
 
     // Dialog State
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [editingPartner, setEditingPartner] = useState<Partner | null>(null);
+    const [editingDriver, setEditingDriver] = useState<Driver | null>(null);
 
-    async function fetchPartners() {
+    async function fetchDrivers() {
         setLoading(true);
         setErr(null);
         try {
-            const res = await authFetch(endpoints.partners.list);
-            if (!res.ok) throw new Error("Erro ao carregar parceiros.");
+            const res = await authFetch(endpoints.drivers.list);
+            if (!res.ok) throw new Error("Erro ao carregar motoristas.");
             const data = await res.json();
-            setPartners(data);
+            setDrivers(data);
         } catch (e: any) {
-            setErr(e?.message || "Erro ao carregar parceiros.");
+            setErr(e?.message || "Erro ao carregar motoristas.");
         } finally {
             setLoading(false);
         }
     }
 
     useEffect(() => {
-        fetchPartners();
+        fetchDrivers();
     }, []);
 
     const handleOpenCreate = () => {
-        setEditingPartner(null);
+        setEditingDriver(null);
         setIsDialogOpen(true);
     };
 
-    const handleOpenEdit = (partner: Partner) => {
-        setEditingPartner(partner);
+    const handleOpenEdit = (driver: Driver) => {
+        setEditingDriver(driver);
         setIsDialogOpen(true);
     };
 
     const handleDelete = async (id: number) => {
         const result = await Swal.fire({
             title: "Tem a certeza?",
-            text: "Deseja mesmo eliminar este parceiro?",
+            text: "Deseja mesmo eliminar este motorista?",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#d33",
@@ -66,28 +66,29 @@ export default function PartnersPage() {
         if (!result.isConfirmed) return;
 
         try {
-            const res = await authFetch(`/dashboard/partners/${id}`, {
+            const res = await authFetch(`/dashboard/drivers/${id}`, {
                 method: "DELETE",
             });
-            if (!res.ok) throw new Error("Erro ao eliminar parceiro.");
-            setPartners(prev => prev.filter(p => p.id !== id));
+            if (!res.ok) throw new Error("Erro ao eliminar motorista.");
+            setDrivers(prev => prev.filter(p => p.id !== id));
         } catch (e: any) {
-            Swal.fire({ icon: "error", title: "Erro", text: e?.message || "Erro ao eliminar parceiro.", confirmButtonColor: "#3085d6" });
+            Swal.fire({ icon: "error", title: "Erro", text: e?.message || "Erro ao eliminar motorista.", confirmButtonColor: "#3085d6" });
         }
     };
 
-    const handleSubmit = async (data: Partner, logo?: File) => {
+    const handleSubmit = async (data: Driver, image?: File) => {
         setIsSubmitting(true);
         try {
-            const isEdit = !!editingPartner;
-            const url = isEdit ? `/dashboard/partners/${editingPartner.id}` : "/dashboard/partners";
+            const isEdit = !!editingDriver;
+            const url = isEdit ? `/dashboard/drivers/${editingDriver.id}` : "/dashboard/drivers";
             const method = isEdit ? "PUT" : "POST";
 
             const formData = new FormData();
-            formData.append("partner", new Blob([JSON.stringify(data)], { type: "application/json" }));
+            formData.append("name", data.name);
+            formData.append("description", data.description);
 
-            if (logo) {
-                formData.append("file", logo);
+            if (image) {
+                formData.append("image", image);
             }
 
             const res = await authFetch(url, {
@@ -95,18 +96,18 @@ export default function PartnersPage() {
                 body: formData,
             });
 
-            if (!res.ok) throw new Error("Erro ao guardar parceiro.");
+            if (!res.ok) throw new Error("Erro ao guardar motorista.");
             const result = await res.json();
 
             if (isEdit) {
-                setPartners(prev => prev.map(p => p.id === result.id ? result : p));
+                setDrivers(prev => prev.map(p => p.id === result.id ? result : p));
             } else {
-                setPartners(prev => [result, ...prev]);
+                setDrivers(prev => [result, ...prev]);
             }
 
             setIsDialogOpen(false);
         } catch (e: any) {
-            Swal.fire({ icon: "error", title: "Erro", text: e?.message || "Erro ao guardar parceiro.", confirmButtonColor: "#3085d6" });
+            Swal.fire({ icon: "error", title: "Erro", text: e?.message || "Erro ao guardar motorista.", confirmButtonColor: "#3085d6" });
         } finally {
             setIsSubmitting(false);
         }
@@ -123,11 +124,11 @@ export default function PartnersPage() {
     if (loading) {
         return (
             <div>
-                <TopNav title="Parceiros" subtitle="Gestão de colaborações" />
+                <TopNav title="Motoristas" subtitle="Gestão de motoristas" />
                 <PageShell>
                     <div className="flex flex-col h-[60vh] items-center justify-center gap-6 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl">
-                        <Handshake className="w-10 h-10 text-primary animate-pulse" />
-                        <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Listando Parceiros...</p>
+                        <UserSquare2 className="w-10 h-10 text-primary animate-pulse" />
+                        <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Listando Motoristas...</p>
                     </div>
                 </PageShell>
             </div>
@@ -137,15 +138,15 @@ export default function PartnersPage() {
     return (
         <div>
             <TopNav
-                title="Parceiros"
-                subtitle="Gestão de colaborações"
+                title="Motoristas"
+                subtitle="Gestão de motoristas"
                 right={
                     <button
                         onClick={handleOpenCreate}
                         className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-xs font-extrabold uppercase tracking-tight text-white hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 active:scale-95"
                     >
                         <Plus size={16} />
-                        <span>Novo Parceiro</span>
+                        <span>Novo Motorista</span>
                     </button>
                 }
             />
@@ -155,33 +156,32 @@ export default function PartnersPage() {
                     <DataTable
                         columns={[
                             {
-                                key: "logoUrl",
-                                label: "Logo",
-                                render: (row: Partner) => (
-                                    <div className="w-12 h-12 rounded-lg overflow-hidden bg-zinc-50 border border-zinc-200 flex items-center justify-center p-2">
-                                        {row.logoUrl ? (
-                                            <img src={getImageSrc(row.logoUrl)} alt="" className="max-w-full max-h-full object-contain" />
+                                key: "imageUrl",
+                                label: "Foto",
+                                render: (row: Driver) => (
+                                    <div className="w-12 h-12 rounded-lg overflow-hidden bg-zinc-50 border border-zinc-200 flex items-center justify-center">
+                                        {row.imageUrl ? (
+                                            <img src={getImageSrc(row.imageUrl)} alt={row.name} className="w-full h-full object-cover" />
                                         ) : (
-                                            <Handshake className="w-5 h-5 text-zinc-300" />
+                                            <img
+                                                src="/assets/images/driver/avatar-placeholder.png"
+                                                alt="Default"
+                                                className="w-full h-full object-cover"
+                                            />
                                         )}
                                     </div>
                                 )
                             },
                             { key: "name", label: "Nome" },
                             {
-                                key: "websiteUrl",
-                                label: "Website",
-                                render: (row: Partner) => row.websiteUrl ? (
-                                    <a href={row.websiteUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-blue-600 hover:underline">
-                                        <Globe size={14} />
-                                        <span className="max-w-[200px] truncate">{row.websiteUrl}</span>
-                                    </a>
-                                ) : <span className="text-zinc-400">-</span>
+                                key: "description",
+                                label: "Descrição",
+                                render: (row: Driver) => <span className="text-zinc-500 truncate max-w-[300px] inline-block">{row.description}</span>
                             },
                             {
                                 key: "actions",
                                 label: "Ações",
-                                render: (row: Partner) => (
+                                render: (row: Driver) => (
                                     <div className="flex justify-end gap-2">
                                         <button
                                             onClick={() => handleOpenEdit(row)}
@@ -201,23 +201,23 @@ export default function PartnersPage() {
                                 )
                             }
                         ]}
-                        rows={partners}
+                        rows={drivers}
                     />
                 </div>
             </PageShell>
 
-            <PartnerDialog
+            <DriverDialog
                 isOpen={isDialogOpen}
                 onClose={() => setIsDialogOpen(false)}
-                title={editingPartner ? "Editar Parceiro" : "Novo Parceiro"}
+                title={editingDriver ? "Editar Motorista" : "Novo Motorista"}
             >
-                <PartnerForm
-                    initialData={editingPartner || undefined}
+                <DriverForm
+                    initialData={editingDriver || undefined}
                     onSubmit={handleSubmit}
                     onCancel={() => setIsDialogOpen(false)}
                     isSubmitting={isSubmitting}
                 />
-            </PartnerDialog>
+            </DriverDialog>
         </div>
     );
 }

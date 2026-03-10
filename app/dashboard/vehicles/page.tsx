@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Car, Plus, Pencil, Trash2 } from "lucide-react";
+import Swal from "sweetalert2";
 import TopNav from "@/app/ui/dash/topNav";
 import PageShell from "@/app/ui/dash/PageShell";
 import DataTable from "@/app/ui/dash/DataTable";
@@ -51,7 +52,17 @@ export default function VehiclesPage() {
     };
 
     const handleDelete = async (id: number) => {
-        if (!confirm("Tem a certeza que deseja eliminar este veículo?")) return;
+        const result = await Swal.fire({
+            title: "Tem a certeza?",
+            text: "Deseja mesmo eliminar este veículo?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Sim, eliminar!",
+            cancelButtonText: "Cancelar"
+        });
+        if (!result.isConfirmed) return;
 
         try {
             await apiFetch(endpoints.vehicles.delete(id), {
@@ -59,7 +70,7 @@ export default function VehiclesPage() {
             });
             setVehicles(prev => prev.filter(v => v.id !== id));
         } catch (e: any) {
-            alert(e?.message || "Erro ao eliminar veículo.");
+            Swal.fire({ icon: "error", title: "Erro", text: e?.message || "Erro ao eliminar veículo.", confirmButtonColor: "#3085d6" });
         }
     };
 
@@ -96,7 +107,7 @@ export default function VehiclesPage() {
             setIsDialogOpen(false);
         } catch (e: any) {
             console.error("Error submitting vehicle:", e);
-            alert(e?.message || "Erro ao guardar veículo.");
+            Swal.fire({ icon: "error", title: "Erro", text: e?.message || "Erro ao guardar veículo.", confirmButtonColor: "#3085d6" });
         } finally {
             setIsSubmitting(false);
         }

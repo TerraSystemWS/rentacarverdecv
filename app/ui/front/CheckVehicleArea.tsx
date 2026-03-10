@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 interface FormData {
 	localRetirada: string;
@@ -23,10 +25,10 @@ const CheckVehicleArea = () => {
 		dataDevolucao: "",
 		horaDevolucao: "",
 		orcamento: "",
-		classe: "0",
-		combustivel: "0",
+		classe: "",
+		combustivel: "",
 	});
-
+	const router = useRouter();
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
 	) => {
@@ -38,7 +40,27 @@ const CheckVehicleArea = () => {
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		// lógica de envio aqui
+
+		const hasValue = Object.values(formData).some((value) => value.trim() !== "");
+		if (!hasValue) {
+			Swal.fire({
+				icon: "warning",
+				title: "Atenção",
+				text: "Por favor, preencha pelo menos um campo para pesquisar.",
+				confirmButtonColor: "#ffcc00"
+			});
+			return;
+		}
+
+		const params = new URLSearchParams();
+
+		if (formData.localRetirada) params.append("loc", formData.localRetirada);
+		if (formData.dataRetirada) params.append("date", formData.dataRetirada);
+		if (formData.orcamento) params.append("budget", formData.orcamento);
+		if (formData.classe && formData.classe !== "0") params.append("class", formData.classe);
+		if (formData.combustivel && formData.combustivel !== "X") params.append("fuel", formData.combustivel);
+
+		router.push(`/cars?${params.toString()}`);
 	};
 
 	return (
@@ -180,12 +202,12 @@ const CheckVehicleArea = () => {
 												value={formData.classe}
 												onChange={handleChange}
 											>
-												<option value="0">Intermediário</option>
-												<option value="1">Intermediário</option>
-												<option value="2">Compacto</option>
-												<option value="3">Station Wagon</option>
-												<option value="4">SUV</option>
-												<option value="5">Micro-ônibus</option>
+												<option value="">Todas</option>
+												<option value="Intermediário">Intermediário</option>
+												<option value="Compacto">Compacto</option>
+												<option value="Station Wagon">Station Wagon</option>
+												<option value="SUV">SUV</option>
+												<option value="Micro-ônibus">Micro-ônibus</option>
 											</select>
 										</div>
 									</div>
@@ -197,9 +219,12 @@ const CheckVehicleArea = () => {
 												value={formData.combustivel}
 												onChange={handleChange}
 											>
-												<option value="0">Gasolina</option>
-												<option value="1">Diesel</option>
-												<option value="2">Etanol</option>
+												<option value="X">Qualquer</option>
+												<option value="Gasolina">Gasolina</option>
+												<option value="Diesel">Diesel</option>
+												<option value="Etanol">Etanol</option>
+												<option value="Híbrido">Híbrido</option>
+												<option value="Elétrico">Elétrico</option>
 											</select>
 										</div>
 									</div>
@@ -207,12 +232,7 @@ const CheckVehicleArea = () => {
 							</div>
 
 							<div className="check-vehicle-footer">
-								<div className="row">
-									<div className="advanced-search">
-										<a href="#" className="advanced-search-btn">
-											<i className="fa fa-search"></i>Busca avançada
-										</a>
-									</div>
+								<div className="row flex justify-end">
 									<button type="submit" className="button">
 										Encontrar carro
 									</button>

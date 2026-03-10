@@ -9,6 +9,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 
 import { Calendar as CalendarIcon } from "lucide-react";
+import Swal from "sweetalert2";
 import TopNav from "@/app/ui/dash/topNav";
 import PageShell from "@/app/ui/dash/PageShell";
 import { apiFetch } from "@/lib/api/client";
@@ -86,7 +87,7 @@ export default function CalendarPage() {
             console.error("Failed to update booking dates", error);
             // Revert changes on fail
             fetchBookings();
-            alert("Erro ao tentar atualizar as datas da reserva.");
+            Swal.fire({ icon: "error", title: "Erro", text: "Erro ao tentar atualizar as datas da reserva.", confirmButtonColor: "#3085d6" });
         }
     };
 

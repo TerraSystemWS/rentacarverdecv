@@ -56,6 +56,13 @@ export const endpoints = {
 		update: (id: number) => `/dashboard/gallery/${id}`,
 		delete: (id: number) => `/dashboard/gallery/${id}`,
 	},
+	drivers: {
+		list: "/public/drivers",
+		dashboard: "/dashboard/drivers",
+		create: "/dashboard/drivers",
+		update: (id: number) => `/dashboard/drivers/${id}`,
+		delete: (id: number) => `/dashboard/drivers/${id}`,
+	},
 	ads: {
 		list: "/public/ads",
 		dashboard: "/dashboard/ads",

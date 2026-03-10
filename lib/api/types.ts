@@ -69,6 +69,7 @@ export type BookingRow = {
 	end_at: string;
 	grand_total: number;
 	created_at: string;
+	has_extra_driver?: boolean;
 };
 
 
@@ -151,4 +152,11 @@ export type Advertisement = {
 	priority: number;
 	createdAt?: string;
 	updatedAt?: string;
+};
+
+export type Driver = {
+	id?: number;
+	name: string;
+	description: string;
+	imageUrl: string;
 };

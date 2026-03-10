@@ -52,11 +52,11 @@ export default function AboutMainContent({ content }: AboutMainContentProps) {
 								</div>
 								<div className="col-md-6">
 									<Image
-										src="/assets/images/about/about-01.png"
+										src="/assets/images/about/rentcv_art.png"
 										alt="imagem sobre nós"
-										width={600}
-										height={400}
-										className="img-fluid"
+										width={555}
+										height={350}
+										className="img-fluid rounded-3xl object-cover shadow-lg shadow-black/10"
 									/>
 								</div>
 							</div>

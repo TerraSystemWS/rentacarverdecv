@@ -15,7 +15,7 @@ export default function PageHeader({
 	return (
 		<div
 			className="page-header background-overlay"
-			style={{ backgroundImage: "url(/assets/images/page-header-one.png)" }}
+			style={{ backgroundImage: "url(/assets/images/page-header-one.jpg)" }}
 		>
 			<div className="container">
 				<div className="row">

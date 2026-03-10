@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Settings, ShieldAlert, FileText, Loader2, Save } from "lucide-react";
+import Swal from "sweetalert2";
 import { useAuth } from "@/app/auth/AuthContext";
 import { endpoints } from "@/lib/api/endpoints";
 import TopNav from "@/app/ui/dash/topNav";
@@ -57,11 +58,11 @@ export default function SettingsPage() {
             if (res.ok) {
                 // Success
             } else {
-                alert("Erro ao salvar definições.");
+                Swal.fire({ icon: "error", title: "Erro", text: "Erro ao salvar definições.", confirmButtonColor: "#3085d6" });
             }
         } catch (error) {
             console.error("Error updating settings:", error);
-            alert("Erro ao atualizar definições.");
+            Swal.fire({ icon: "error", title: "Erro", text: "Erro ao atualizar definições.", confirmButtonColor: "#3085d6" });
         } finally {
             setSubmitting(false);
         }
@@ -165,7 +166,17 @@ export default function SettingsPage() {
                                 <div className="space-y-3">
                                     <button
                                         onClick={async () => {
-                                            if (!confirm("O download da base de dados pode demorar alguns segundos. Deseja continuar?")) return;
+                                            const result = await Swal.fire({
+                                                title: "Atenção",
+                                                text: "O download da base de dados pode demorar alguns segundos. Deseja continuar?",
+                                                icon: "info",
+                                                showCancelButton: true,
+                                                confirmButtonColor: "#3085d6",
+                                                cancelButtonColor: "#d33",
+                                                confirmButtonText: "Sim, continuar",
+                                                cancelButtonText: "Cancelar"
+                                            });
+                                            if (!result.isConfirmed) return;
                                             setSubmitting(true);
                                             try {
                                                 const res = await authFetch(endpoints.settings.backupDb);
@@ -180,7 +191,7 @@ export default function SettingsPage() {
                                                 window.URL.revokeObjectURL(url);
                                                 document.body.removeChild(a);
                                             } catch (e: any) {
-                                                alert(e.message || "Erro de rede ao baixar ficheiro.");
+                                                Swal.fire({ icon: "error", title: "Erro", text: e.message || "Erro de rede ao baixar ficheiro.", confirmButtonColor: "#3085d6" });
                                             } finally {
                                                 setSubmitting(false);
                                             }
@@ -198,7 +209,18 @@ export default function SettingsPage() {
                                             onChange={async (e) => {
                                                 const file = e.target.files?.[0];
                                                 if (!file) return;
-                                                if (!confirm("Tem a certeza absoluta? Todos os dados atuais serão substituídos pelos do backup!")) return;
+
+                                                const result = await Swal.fire({
+                                                    title: "Tem a certeza absoluta?",
+                                                    text: "Todos os dados atuais serão substituídos pelos do backup!",
+                                                    icon: "warning",
+                                                    showCancelButton: true,
+                                                    confirmButtonColor: "#d33",
+                                                    cancelButtonColor: "#3085d6",
+                                                    confirmButtonText: "Sim, restaurar",
+                                                    cancelButtonText: "Cancelar"
+                                                });
+                                                if (!result.isConfirmed) return;
 
                                                 setSubmitting(true);
                                                 try {
@@ -208,8 +230,8 @@ export default function SettingsPage() {
                                                         method: "POST",
                                                         body: formData
                                                     });
-                                                    if (res.ok) alert("Base de dados restaurada com sucesso!");
-                                                    else alert("Erro ao restaurar base de dados.");
+                                                    if (res.ok) Swal.fire({ icon: "success", title: "Sucesso", text: "Base de dados restaurada com sucesso!", confirmButtonColor: "#3085d6" });
+                                                    else Swal.fire({ icon: "error", title: "Erro", text: "Erro ao restaurar base de dados.", confirmButtonColor: "#3085d6" });
                                                 } finally {
                                                     setSubmitting(false);
                                                     e.target.value = "";
@@ -232,7 +254,17 @@ export default function SettingsPage() {
                                 <div className="space-y-3">
                                     <button
                                         onClick={async () => {
-                                            if (!confirm("Este pacote ZIP pode ser muito pesado dependendo do número de imagens. Deseja iniciar o download?")) return;
+                                            const result = await Swal.fire({
+                                                title: "Atenção",
+                                                text: "Este pacote ZIP pode ser muito pesado dependendo do número de imagens. Deseja iniciar o download?",
+                                                icon: "info",
+                                                showCancelButton: true,
+                                                confirmButtonColor: "#3085d6",
+                                                cancelButtonColor: "#d33",
+                                                confirmButtonText: "Sim, continuar",
+                                                cancelButtonText: "Cancelar"
+                                            });
+                                            if (!result.isConfirmed) return;
                                             setSubmitting(true);
                                             try {
                                                 const res = await authFetch(endpoints.settings.backupUploads);
@@ -247,7 +279,7 @@ export default function SettingsPage() {
                                                 window.URL.revokeObjectURL(url);
                                                 document.body.removeChild(a);
                                             } catch (e: any) {
-                                                alert(e.message || "Erro de rede ao baixar pacote.");
+                                                Swal.fire({ icon: "error", title: "Erro", text: e.message || "Erro de rede ao baixar pacote.", confirmButtonColor: "#3085d6" });
                                             } finally {
                                                 setSubmitting(false);
                                             }
@@ -265,7 +297,18 @@ export default function SettingsPage() {
                                             onChange={async (e) => {
                                                 const file = e.target.files?.[0];
                                                 if (!file) return;
-                                                if (!confirm("Atenção: A pasta atual de imagens será substituída pelo conteúdo deste ficheiro ZIP!")) return;
+
+                                                const result = await Swal.fire({
+                                                    title: "Atenção",
+                                                    text: "A pasta atual de imagens será substituída pelo conteúdo deste ficheiro ZIP!",
+                                                    icon: "warning",
+                                                    showCancelButton: true,
+                                                    confirmButtonColor: "#d33",
+                                                    cancelButtonColor: "#3085d6",
+                                                    confirmButtonText: "Sim, restaurar",
+                                                    cancelButtonText: "Cancelar"
+                                                });
+                                                if (!result.isConfirmed) return;
 
                                                 setSubmitting(true);
                                                 try {
@@ -275,8 +318,8 @@ export default function SettingsPage() {
                                                         method: "POST",
                                                         body: formData
                                                     });
-                                                    if (res.ok) alert("Pasta média restaurada com sucesso!");
-                                                    else alert("Erro ao restaurar ficheiros de imagem.");
+                                                    if (res.ok) Swal.fire({ icon: "success", title: "Sucesso", text: "Pasta média restaurada com sucesso!", confirmButtonColor: "#3085d6" });
+                                                    else Swal.fire({ icon: "error", title: "Erro", text: "Erro ao restaurar ficheiros de imagem.", confirmButtonColor: "#3085d6" });
                                                 } finally {
                                                     setSubmitting(false);
                                                     e.target.value = "";

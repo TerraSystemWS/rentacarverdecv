@@ -2,6 +2,7 @@
 
 import { useAuth } from "@/app/auth/AuthContext";
 import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 interface FSideBarProps {
 	isOpen: boolean;
@@ -113,7 +114,7 @@ const FSideBar = ({ isOpen, onToggleSidebar }: FSideBarProps) => {
 													</a>
 												</li>
 												<li>
-													<a href="#" onClick={(e) => { e.preventDefault(); alert("Em breve!"); }}>
+													<a href="#" onClick={(e) => { e.preventDefault(); Swal.fire({ icon: "info", title: "Em breve", text: "Esta funcionalidade estará disponível em breve!", confirmButtonColor: "#ffcc00" }); }}>
 														<i className="fa fa-envelope-open"></i> Mensagens
 													</a>
 												</li>

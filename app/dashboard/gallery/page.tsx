@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Plus, Search, Trash2, Edit2, Image as ImageIcon, Calendar } from "lucide-react";
+import Swal from "sweetalert2";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
 import { useAuth } from "@/app/auth/AuthContext";
 import { GalleryItem } from "@/lib/api/types";
@@ -45,7 +46,17 @@ export default function GalleryPage() {
     };
 
     const handleDelete = async (id: number) => {
-        if (!confirm("Tem a certeza que deseja eliminar esta imagem da galeria?")) return;
+        const result = await Swal.fire({
+            title: "Tem a certeza?",
+            text: "Deseja mesmo eliminar esta imagem da galeria?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Sim, eliminar!",
+            cancelButtonText: "Cancelar"
+        });
+        if (!result.isConfirmed) return;
 
         try {
             const res = await authFetch(endpoints.gallery.delete(id), { method: "DELETE" });

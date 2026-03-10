@@ -39,7 +39,7 @@ const FunFactsBlock: React.FC<FunFactsBlockProps> = ({ content }) => {
 	return (
 		<section
 			className="fun-facts-block relative bg-cover bg-center py-24 fun-facts-block background-overlay"
-			style={{ backgroundImage: "url('/assets/images/fun-fect-image.png')" }}
+			style={{ backgroundImage: "url('/assets/images/fun-fect-image.jpg')" }}
 		>
 			<div className="absolute inset-0 bg-black/50"></div> {/* overlay */}
 			<div className="container mx-auto relative z-10">

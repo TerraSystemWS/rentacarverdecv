@@ -13,7 +13,8 @@ import {
 	Handshake,
 	FileText,
 	Image,
-	Megaphone
+	Megaphone,
+	UserSquare2
 } from "lucide-react";
 
 const items = [
@@ -25,6 +26,7 @@ const items = [
 	{ label: "Parceiros", href: "/dashboard/partners", icon: Handshake },
 	{ label: "Galeria", href: "/dashboard/gallery", icon: Image },
 	{ label: "Publicidade", href: "/dashboard/ads", icon: Megaphone },
+	{ label: "Motoristas", href: "/dashboard/drivers", icon: UserSquare2 },
 	{ label: "Utilizadores", href: "/dashboard/users", icon: Users },
 	{ label: "Mensagens", href: "/dashboard/messages", icon: MessageSquare },
 	{ label: "Definições", href: "/dashboard/settings", icon: LayoutDashboard },

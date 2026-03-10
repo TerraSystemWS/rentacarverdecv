@@ -1,5 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import PageHeader from "../../ui/front/PageHeader";
 import Carro from "../../ui/front/veiculos/carro";
 import SideSearch from "../../ui/front/veiculos/sideSearch";
@@ -7,16 +8,37 @@ import { Vehicle } from "@/lib/api/types";
 import { authFetch } from "@/app/auth/api";
 import { endpoints } from "@/lib/api/endpoints";
 
-export default function CarsPage() {
+function CarsContent() {
 	const [vehicles, setVehicles] = useState<Vehicle[]>([]);
 	const [loading, setLoading] = useState(true);
+	const searchParams = useSearchParams();
 
 	useEffect(() => {
 		const fetchVehicles = async () => {
 			try {
 				const res = await authFetch(endpoints.vehicles.list(), { auth: false });
 				if (res.ok) {
-					const data = await res.json();
+					let data: Vehicle[] = await res.json();
+
+					// Apply filters from URL query params
+					const loc = searchParams.get("loc");
+					const budget = searchParams.get("budget");
+					const vClass = searchParams.get("class");
+					const fuel = searchParams.get("fuel");
+
+					if (budget) {
+						const budgetValue = parseFloat(budget.replace(/[^0-9.]/g, ""));
+						if (!isNaN(budgetValue)) {
+							data = data.filter(v => v.pricePerDay <= budgetValue);
+						}
+					}
+					if (vClass) {
+						data = data.filter(v => v.classType?.toLowerCase() === vClass.toLowerCase());
+					}
+					if (fuel) {
+						data = data.filter(v => v.fuelType?.toLowerCase() === fuel.toLowerCase());
+					}
+
 					setVehicles(data);
 				}
 			} catch (error) {
@@ -26,7 +48,7 @@ export default function CarsPage() {
 			}
 		};
 		fetchVehicles();
-	}, []);
+	}, [searchParams]);
 
 	return (
 		<>
@@ -104,5 +126,19 @@ export default function CarsPage() {
 				</div>
 			</div>
 		</>
+	);
+}
+
+export default function CarsPage() {
+	return (
+		<Suspense fallback={
+			<div className="min-h-screen flex justify-center items-center">
+				<div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-yellow-500 border-r-transparent align-[-0.125em]" role="status">
+					<span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Loading...</span>
+				</div>
+			</div>
+		}>
+			<CarsContent />
+		</Suspense>
 	);
 }

@@ -1,60 +1,44 @@
 // DriverBlock.tsx
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import Link from "next/link";
+import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
+import { Driver } from "@/lib/api/types";
 import "swiper/css";
 import "swiper/css/navigation";
 
-interface Driver {
-	id: number;
-	name: string;
-	description: string;
-	image: string;
-}
-
-const drivers: Driver[] = [
-	{
-		id: 1,
-		name: "Johan Silva",
-		description: "Trabalho em tempo integral, 27 anos",
-		image: "/assets/images/driver/driver-01.jpg",
-	},
-	{
-		id: 2,
-		name: "Maria Fernandes",
-		description: "Trabalho em tempo parcial, 32 anos",
-		image: "/assets/images/driver/driver-02.jpg",
-	},
-	{
-		id: 3,
-		name: "Carlos Sousa",
-		description: "Trabalho em tempo integral, 29 anos",
-		image: "/assets/images/driver/driver-03.jpg",
-	},
-	{
-		id: 4,
-		name: "Ana Costa",
-		description: "Trabalho em tempo parcial, 25 anos",
-		image: "/assets/images/driver/driver-04.jpg",
-	},
-	{
-		id: 5,
-		name: "Carlos Sousa",
-		description: "Trabalho em tempo integral, 29 anos",
-		image: "/assets/images/driver/driver-03.jpg",
-	},
-	{
-		id: 6,
-		name: "Ana Costa",
-		description: "Trabalho em tempo parcial, 25 anos",
-		image: "/assets/images/driver/driver-04.jpg",
-	},
-];
-
 const DriverBlock: React.FC = () => {
+	const [drivers, setDrivers] = useState<Driver[]>([]);
+	const [loading, setLoading] = useState(true);
+
+	useEffect(() => {
+		fetch(`${API_BASE_URL}${endpoints.drivers.list}`)
+			.then(res => res.json())
+			.then(data => {
+				setDrivers(data);
+				setLoading(false);
+			})
+			.catch(err => {
+				console.error("Error fetching drivers", err);
+				setLoading(false);
+			});
+	}, []);
+
+	const getImageSrc = (url: string) => {
+		if (!url) return "";
+		if (url.startsWith('/uploads')) {
+			return `${API_BASE_URL}${url}`;
+		}
+		return url;
+	};
+
+	if (loading || drivers.length === 0) {
+		return null; // or a loading spinner
+	}
+
 	return (
 		<section className="driver-block py-24 bg-yellow-50">
 			<div className="container mx-auto px-4">
@@ -108,13 +92,21 @@ const DriverBlock: React.FC = () => {
 					{drivers.map((driver) => (
 						<SwiperSlide key={driver.id} className="h-auto">
 							<div className="driver-content vehicle-content theme-yellow bg-yellow-100 rounded-lg overflow-hidden shadow hover:shadow-lg transition h-full flex flex-col">
-								<div className="driver-thumb vehicle-thumbnail">
-									<Link href="#">
-										<img
-											src={driver.image}
-											alt={driver.name}
-											className="w-full !h-48 !object-cover"
-										/>
+								<div className="driver-thumb vehicle-thumbnail flex bg-zinc-100 min-h-[192px] w-full">
+									<Link href="#" className="w-full h-full block">
+										{driver.imageUrl ? (
+											<img
+												src={getImageSrc(driver.imageUrl)}
+												alt={driver.name}
+												className="w-full h-full object-cover"
+											/>
+										) : (
+											<img
+												src="/assets/images/driver/avatar-placeholder.png"
+												alt="Motorista"
+												className="w-full h-full object-cover"
+											/>
+										)}
 									</Link>
 								</div>
 								<div className="vehicle-bottom-content p-4 text-center flex-grow">

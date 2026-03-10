@@ -20,6 +20,7 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 		endDate: "",
 		startTime: "10:00",
 		endTime: "10:00",
+		hasExtraDriver: false,
 	});
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
@@ -51,8 +52,13 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 	];
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-		const { name, value } = e.target;
-		setFormData(prev => ({ ...prev, [name]: value }));
+		const { name, value, type } = e.target;
+		if (type === 'checkbox') {
+			const checked = (e.target as HTMLInputElement).checked;
+			setFormData(prev => ({ ...prev, [name]: checked }));
+		} else {
+			setFormData(prev => ({ ...prev, [name]: value }));
+		}
 	};
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -85,7 +91,8 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 					vehicleId: vehicle.id,
 					userId: user.id,
 					startDate: start.toISOString(),
-					endDate: end.toISOString()
+					endDate: end.toISOString(),
+					hasExtraDriver: formData.hasExtraDriver
 				})
 			});
 
@@ -98,6 +105,7 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 					endDate: "",
 					startTime: "10:00",
 					endTime: "10:00",
+					hasExtraDriver: false,
 				});
 			} else {
 				const errorData = await res.json().catch(() => ({ message: "Erro ao processar reserva." }));
@@ -290,6 +298,21 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 														</div>
 													</div>
 												</div>
+											</div>
+
+											<div className="mt-4 mb-2 flex items-center">
+												<input
+													type="checkbox"
+													id="hasExtraDriver"
+													name="hasExtraDriver"
+													checked={formData.hasExtraDriver}
+													onChange={handleInputChange}
+													disabled={!isAuthenticated}
+													className="w-5 h-5 mr-3 text-yellow-600 rounded focus:ring-yellow-500 cursor-pointer"
+												/>
+												<label htmlFor="hasExtraDriver" className="text-gray-700 m-0 cursor-pointer select-none">
+													Adicionar condutor extra <span className="text-yellow-600 font-bold">(+3300 CVE / dia)</span>
+												</label>
 											</div>
 										</div>
 
