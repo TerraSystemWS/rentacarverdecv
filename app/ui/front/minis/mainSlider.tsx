@@ -241,76 +241,94 @@ const MainSlider = () => {
 		}))
 		: defaultSlides;
 
+	const renderSlidesContent = (slidesArray: Slide[]) => {
+		const slidesHtml = slidesArray.map((slide) => {
+			const layersHtml = slide.layers.map((layer, index) => {
+				const styleObj = {
+					zIndex: 5 + index,
+					color: "#464646",
+					fontWeight: 600,
+					fontFamily: "inherit",
+					...layer.style,
+				};
+
+				const styleString = Object.entries(styleObj)
+					.map(([k, v]) => {
+						const cssKey = k.replace(/[A-Z]/g, match => `-${match.toLowerCase()}`);
+						return `${cssKey}: ${v}`;
+					})
+					.join(';');
+
+				return `
+					<div
+						class="${layer.className}"
+						data-type="${layer.type}"
+						data-x="${layer.data.x}"
+						data-hoffset="${layer.data.hoffset}"
+						data-y="${layer.data.y}"
+						data-voffset="${layer.data.voffset}"
+						${layer.data.fontsize ? `data-fontsize="${layer.data.fontsize}"` : ''}
+						${layer.data.lineheight ? `data-lineheight="${layer.data.lineheight}"` : ''}
+						${layer.data.visibility ? `data-visibility="${layer.data.visibility}"` : ''}
+						data-width="none"
+						data-height="none"
+						data-whitespace="nowrap"
+						data-transform_idle="o:1;"
+						data-transform_in="y:[100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;opacity:0;s:600;e:Power4.easeInOut;"
+						data-transform_out="y:[100%];s:1000;e:Power2.easeInOut;s:1000;e:Power2.easeInOut;"
+						data-mask_in="x:0px;y:[100%];s:inherit;e:inherit;"
+						data-mask_out="x:inherit;y:inherit;s:inherit;e:inherit;"
+						data-start="${layer.data.start}"
+						data-splitin="none"
+						data-splitout="none"
+						data-responsive_offset="on"
+						style="${styleString}"
+					>
+						${layer.content}
+					</div>
+				`;
+			}).join('');
+
+			return `
+				<li
+					data-transition="fade"
+					data-slotamount="default"
+					data-easein="Power4.easeInOut"
+					data-easeout="Power4.easeInOut"
+					data-masterspeed="2000"
+					data-rotate="0"
+					data-fstransition="fade"
+					data-fsmasterspeed="1500"
+					data-fsslotamount="7"
+					data-saveperformance="off"
+					data-title="materialize Material"
+					data-description=""
+				>
+					<img
+						src="${slide.bgImage}"
+						alt=""
+						data-bgposition="center center"
+						data-bgfit="cover"
+						data-bgrepeat="no-repeat"
+						class="rev-slidebg"
+						data-no-retina
+					/>
+					${layersHtml}
+				</li>
+			`;
+		}).join('');
+
+		return `<ul>${slidesHtml}</ul>`;
+	};
+
 	return (
 		<div className="slider-block">
 			<div className="rev_slider_wrapper">
-				<div className="rev_slider carrent-slider" ref={sliderRef}>
-					<ul>
-						{slides.map((slide) => (
-							<li
-								key={slide.id}
-								data-transition="fade"
-								data-slotamount="default"
-								data-easein="Power4.easeInOut"
-								data-easeout="Power4.easeInOut"
-								data-masterspeed="2000"
-								data-rotate="0"
-								data-fstransition="fade"
-								data-fsmasterspeed="1500"
-								data-fsslotamount="7"
-								data-saveperformance="off"
-								data-title="materialize Material"
-								data-description=""
-							>
-								{/* Imagem de fundo */}
-								<img
-									src={slide.bgImage}
-									alt=""
-									data-bgposition="center center"
-									data-bgfit="cover"
-									data-bgrepeat="no-repeat"
-									className="rev-slidebg"
-									data-no-retina
-								/>
-
-								{/* Renderizar camadas */}
-								{slide.layers.map((layer, index) => (
-									<div
-										key={index}
-										className={layer.className}
-										data-type={layer.type}
-										data-x={layer.data.x}
-										data-hoffset={layer.data.hoffset}
-										data-y={layer.data.y}
-										data-voffset={layer.data.voffset}
-										data-fontsize={layer.data.fontsize}
-										data-lineheight={layer.data.lineheight}
-										data-width="none"
-										data-height="none"
-										data-whitespace="nowrap"
-										data-transform_idle="o:1;"
-										data-transform_in="y:[100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;opacity:0;s:600;e:Power4.easeInOut;"
-										data-transform_out="y:[100%];s:1000;e:Power2.easeInOut;s:1000;e:Power2.easeInOut;"
-										data-mask_in="x:0px;y:[100%];s:inherit;e:inherit;"
-										data-mask_out="x:inherit;y:inherit;s:inherit;e:inherit;"
-										data-start={layer.data.start}
-										data-splitin="none"
-										data-splitout="none"
-										data-responsive_offset="on"
-										style={{
-											zIndex: 5 + index,
-											color: "#464646",
-											fontWeight: 600,
-											fontFamily: "inherit",
-											...layer.style,
-										}}
-										dangerouslySetInnerHTML={{ __html: layer.content }}
-									/>
-								))}
-							</li>
-						))}
-					</ul>
-				</div>
+				<div
+					className="rev_slider carrent-slider"
+					ref={sliderRef}
+					dangerouslySetInnerHTML={{ __html: renderSlidesContent(slides) }}
+				/>
 			</div>
 		</div>
 	);

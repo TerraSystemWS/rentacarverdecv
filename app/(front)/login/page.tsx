@@ -55,8 +55,8 @@ export default function LoginPage() {
 	}
 
 	return (
-		/* Centralização usando Grid como discutimos */
-		<main className="min-h-screen bg-slate-50 grid place-items-center p-6">
+		/* Centralização usando bg-slate-50 flex items-center justify-center p-6 */
+		<main className="min-h-[80vh] bg-slate-50 flex items-center justify-center p-6">
 			<div className="w-full max-w-sm bg-white rounded-xl shadow-md p-8 border border-slate-200">
 				<h1 className="text-2xl font-bold text-slate-800 mb-6 text-center">
 					Login
