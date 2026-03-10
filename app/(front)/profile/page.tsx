@@ -105,14 +105,14 @@ export default function ProfilePage() {
 
             <div className="container mx-auto px-4 mt-10 max-w-6xl">
 
-                <div className="flex justify-between items-center mb-10 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                     <div>
                         <h2 className="text-xl font-bold text-slate-800">A Minha Conta</h2>
                         <p className="text-slate-500 text-sm">Faça a gestão dos seus alugueres e histórico no nosso sistema.</p>
                     </div>
                     <button
                         onClick={() => logout()}
-                        className="bg-red-50 text-red-600 hover:bg-red-100 px-4 py-2 font-semibold rounded-lg transition-colors border border-red-200"
+                        className="w-full sm:w-auto bg-red-50 text-red-600 hover:bg-red-100 px-4 py-2 font-semibold rounded-lg transition-colors border border-red-200 text-center"
                     >
                         Terminar Sessão
                     </button>

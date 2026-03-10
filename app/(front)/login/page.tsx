@@ -55,9 +55,9 @@ export default function LoginPage() {
 	}
 
 	return (
-		/* Centralização usando bg-slate-50 flex items-center justify-center p-6 */
-		<main className="min-h-[80vh] bg-slate-50 flex items-center justify-center p-6">
-			<div className="w-full max-w-sm bg-white rounded-xl shadow-md p-8 border border-slate-200">
+		/* Resoldendo alinhamento usando mx-auto para garantir centralização independente do container pai */
+		<div className="min-h-[80vh] w-full bg-slate-50 py-12 px-4 sm:px-6 lg:px-8 flex flex-col justify-center items-center">
+			<div className="w-full max-w-sm mx-auto bg-white rounded-xl shadow-md p-6 sm:p-8 border border-slate-200">
 				<h1 className="text-2xl font-bold text-slate-800 mb-6 text-center">
 					Login
 				</h1>
@@ -118,6 +118,6 @@ export default function LoginPage() {
 					</div>
 				</form>
 			</div>
-		</main>
+		</div>
 	);
 }
