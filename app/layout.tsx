@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Script from "next/script";
 import Providers from "./providers";
+import GoogleAnalytics from "./ui/GoogleAnalytics";
 
 export const metadata: Metadata = {
 	title: {
@@ -44,6 +45,7 @@ export default function RootLayout({
 					href="https://fonts.googleapis.com/css?family=Exo:400,400i,500,500i,600,600i,700,700i,800,800i,900,900i%7cRoboto+Slab:400,700"
 					rel="stylesheet"
 				/>
+				<GoogleAnalytics />
 			</head>
 			<body className="antialiased">
 				<Providers>{children}</Providers>
