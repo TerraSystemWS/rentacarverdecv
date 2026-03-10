@@ -141,6 +141,39 @@
   }
 }
 
+/* Frontend Buttons */
+@layer components {
+  .btn-racv {
+    background: #ffcc00 !important;
+    color: #1d1d1f !important;
+    font-family: "Exo", sans-serif !important;
+    font-weight: 900 !important;
+    font-size: 16px !important;
+    letter-spacing: 0.035em !important;
+    padding: 15px 60px !important;
+    text-transform: uppercase !important;
+    border-radius: 25px !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none !important;
+    transition: all 0.3s ease !important;
+    cursor: pointer;
+  }
+
+  .btn-racv:hover {
+    background: #e6b800 !important;
+    color: #FFFFFF !important;
+    transform: translateY(-2px);
+  }
+
+  .btn-racv:disabled {
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+  }
+}
+
 /* Saturated Buttons - More 'Charged' */
 .dashboard-theme button {
   @apply inline-flex items-center justify-center rounded-lg px-6 py-2.5 text-sm font-bold transition-all duration-200 active:scale-[0.97] disabled:opacity-50 disabled:pointer-events-none tracking-tight;

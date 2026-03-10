@@ -8747,3 +8747,11 @@ object {
 .photo-gallery-area {
   padding: 20px 0 60px;
 }
+
+/* RACV GLOBAL BUTTON OVERRIDE */
+.button, .button:hover, .btn, .btn:hover, button[type="submit"], .slider-button {
+}
+
+.button:hover, .btn:hover, button[type="submit"]:hover, .slider-button:hover {
+}
+

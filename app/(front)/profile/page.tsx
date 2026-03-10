@@ -112,7 +112,7 @@ export default function ProfilePage() {
                     </div>
                     <button
                         onClick={() => logout()}
-                        className="w-full sm:w-auto bg-red-50 text-red-600 hover:bg-red-100 px-4 py-2 font-semibold rounded-lg transition-colors border border-red-200 text-center"
+                        className="w-full sm:w-auto btn-racv"
                     >
                         Terminar Sessão
                     </button>

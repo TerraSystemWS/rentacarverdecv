@@ -142,7 +142,7 @@ export default function RegisterPage() {
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full bg-yellow-400 text-slate-900 font-bold rounded-lg px-4 py-3 hover:bg-yellow-500 transition-colors disabled:opacity-60 disabled:cursor-not-allowed mt-2"
+                        className="w-full btn-racv mt-4"
                     >
                         {isLoading ? "A Registar..." : "Registar"}
                     </button>

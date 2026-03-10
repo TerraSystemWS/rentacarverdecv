@@ -105,7 +105,7 @@ export default function LoginPage() {
 					<button
 						type="submit"
 						disabled={isLoading}
-						className="w-full bg-indigo-600 text-white font-semibold rounded-lg px-4 py-2.5 hover:bg-indigo-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+						className="w-full btn-racv mt-4"
 					>
 						{isLoading ? "A entrar..." : "Entrar"}
 					</button>
