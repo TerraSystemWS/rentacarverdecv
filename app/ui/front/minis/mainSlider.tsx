@@ -305,14 +305,14 @@ const MainSlider = () => {
 					data-description=""
 				>
 					<img
-	src="${slide.bgImage}"
-	alt=""
-	data-bgposition="center top"
-	data-bgfit="cover"
-	data-bgrepeat="no-repeat"
-	class="rev-slidebg"
-	data-no-retina
-/>
+						src="${slide.bgImage}"
+						alt=""
+						data-bgposition="center center"
+						data-bgfit="cover"
+						data-bgrepeat="no-repeat"
+						class="rev-slidebg"
+						data-no-retina
+					/>
 					${layersHtml}
 				</li>
 			`;
