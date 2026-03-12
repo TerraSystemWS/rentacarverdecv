@@ -20,7 +20,7 @@ const Header = () => {
 									<li>
 										<a href="tel:02385810945" className="top-left-menu">
 											<i className="fa fa-phone"></i>
-											<span>Chamar - 5810945</span>
+											<span>Chamar - +238 581 09 45</span>
 										</a>
 									</li>
 									<li>

@@ -1,6 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
+import Swal from 'sweetalert2';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
+import { ptBR } from 'date-fns/locale';
 import VehicleGallery from "./veiculoGalery";
 import PopularVehicleBlock from "../../PopularVehicleBlock";
 import { Vehicle } from "@/lib/api/types";
@@ -28,14 +32,14 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 	const getImageSrc = (url: string) => {
 		if (!url) return "";
 		if (url.startsWith('/uploads')) {
-			return `${API_BASE_URL}${url}`;
+			return `${API_BASE_URL}${url} `;
 		}
 		return url;
 	};
 
 	const galleryImages = vehicle.images?.map(img => ({
 		src: getImageSrc(img.url),
-		alt: `${vehicle.make} ${vehicle.model}`
+		alt: `${vehicle.make} ${vehicle.model} `
 	})) || [];
 
 	const overview = [
@@ -194,7 +198,7 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 									<div className="form-content available-filter">
 
 										{message && (
-											<div className={`p-4 mb-4 text-sm rounded-lg ${message.type === 'success' ? 'bg-green-100 text-green-800 border border-green-200' : 'bg-red-100 text-red-800 border border-red-200'}`}>
+											<div className={`p - 4 mb - 4 text - sm rounded - lg ${message.type === 'success' ? 'bg-green-100 text-green-800 border border-green-200' : 'bg-red-100 text-red-800 border border-red-200'} `}>
 												{message.text}
 											</div>
 										)}
@@ -239,28 +243,42 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 												</div>
 
 												<label>Data de levantamento</label>
-												<div className="input">
-													<i className="fa fa-calendar"></i>
-													<input
-														type="date"
-														name="startDate"
-														value={formData.startDate}
-														onChange={handleInputChange}
-														className="form-controller"
+												<div className="input relative">
+													<i className="fa fa-calendar absolute right-3 top-3 text-gray-400 z-10 pointer-events-none"></i>
+													<DatePicker
+														selected={formData.startDate ? new Date(formData.startDate) : null}
+														onChange={(date: Date | null) => {
+															setFormData(prev => ({
+																...prev,
+																startDate: date ? date.toISOString().split('T')[0] : ""
+															}));
+														}}
+														dateFormat="dd/MM/yyyy"
+														locale={ptBR}
+														minDate={new Date()}
+														className="form-controller w-full bg-transparent"
+														placeholderText="dd/mm/aaaa"
 														required
 														disabled={!isAuthenticated}
 													/>
 												</div>
 
 												<label>Data de devolução</label>
-												<div className="input">
-													<i className="fa fa-calendar"></i>
-													<input
-														type="date"
-														name="endDate"
-														value={formData.endDate}
-														onChange={handleInputChange}
-														className="form-controller"
+												<div className="input relative">
+													<i className="fa fa-calendar absolute right-3 top-3 text-gray-400 z-10 pointer-events-none"></i>
+													<DatePicker
+														selected={formData.endDate ? new Date(formData.endDate) : null}
+														onChange={(date: Date | null) => {
+															setFormData(prev => ({
+																...prev,
+																endDate: date ? date.toISOString().split('T')[0] : ""
+															}));
+														}}
+														dateFormat="dd/MM/yyyy"
+														locale={ptBR}
+														minDate={formData.startDate ? new Date(formData.startDate) : new Date()}
+														className="form-controller w-full bg-transparent"
+														placeholderText="dd/mm/aaaa"
 														required
 														disabled={!isAuthenticated}
 													/>
