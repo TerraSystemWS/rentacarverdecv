@@ -308,7 +308,7 @@ const MainSlider = () => {
 						src="${slide.bgImage}"
 						alt=""
 						data-bgposition="center center"
-						data-bgfit="cover"
+						data-bgfit="contain"
 						data-bgrepeat="no-repeat"
 						class="rev-slidebg"
 						data-no-retina
