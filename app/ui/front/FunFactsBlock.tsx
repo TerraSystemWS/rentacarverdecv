@@ -3,6 +3,7 @@
 
 import React from "react";
 import CountUp from "react-countup";
+import { API_BASE_URL, endpoints } from "@/lib/api/endpoints";
 
 interface FunFactsBlockProps {
 	content?: {
@@ -18,22 +19,45 @@ interface FunFactsBlockProps {
 }
 
 const FunFactsBlock: React.FC<FunFactsBlockProps> = ({ content }) => {
-	const labels = content || {
-		f1: "Caros na frota",
-		f1Num: 50,
-		f2: "Clientes Satisfeitos",
-		f2Num: 1200,
-		f3: "Condutores",
-		f3Num: 2500,
-		f4: "Dias Na Atividade",
-		f4Num: 365,
+	const [stats, setStats] = React.useState({
+		vehiclesCount: Number(content?.f1Num) || 50,
+		driversCount: Number(content?.f3Num) || 2500,
+		clientsCount: Number(content?.f2Num) || 1200,
+		daysInActivity: Number(content?.f4Num) || 365,
+	});
+
+	React.useEffect(() => {
+		const fetchStats = async () => {
+			try {
+				const res = await fetch(`${API_BASE_URL}${endpoints.content.stats}`);
+				if (res.ok) {
+					const data = await res.json();
+					setStats({
+						vehiclesCount: data.vehiclesCount || stats.vehiclesCount,
+						driversCount: data.driversCount || stats.driversCount,
+						clientsCount: data.clientsCount || stats.clientsCount,
+						daysInActivity: data.daysInActivity || stats.daysInActivity,
+					});
+				}
+			} catch (error) {
+				console.error("Error fetching fun facts stats:", error);
+			}
+		};
+		fetchStats();
+	}, []);
+
+	const labels = {
+		f1: content?.f1 || "Caros na frota",
+		f2: content?.f2 || "Clientes Satisfeitos",
+		f3: content?.f3 || "Condutores",
+		f4: content?.f4 || "Dias Na Atividade",
 	};
 
 	const funFacts = [
-		{ id: 1, count: Number(labels.f1Num) || 50, label: labels.f1 },
-		{ id: 2, count: Number(labels.f2Num) || 1200, label: labels.f2 },
-		{ id: 3, count: Number(labels.f3Num) || 2500, label: labels.f3 },
-		{ id: 4, count: Number(labels.f4Num) || 365, label: labels.f4 },
+		{ id: 1, count: stats.vehiclesCount, label: labels.f1 },
+		{ id: 2, count: stats.clientsCount, label: labels.f2 },
+		{ id: 3, count: stats.driversCount, label: labels.f3 },
+		{ id: 4, count: stats.daysInActivity, label: labels.f4 },
 	];
 
 	return (

@@ -74,6 +74,7 @@ export const endpoints = {
 		public: "/public/content",
 		dashboard: "/dashboard/content",
 		update: "/dashboard/content",
+		stats: "/public/stats",
 	},
 	settings: {
 		backupDb: "/dashboard/settings/backup/database",
