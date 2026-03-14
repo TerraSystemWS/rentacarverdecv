@@ -7,6 +7,19 @@ import "react-datepicker/dist/react-datepicker.css";
 import { ptBR } from 'date-fns/locale';
 import VehicleGallery from "./veiculoGalery";
 import PopularVehicleBlock from "../../PopularVehicleBlock";
+import {
+	Car,
+	Settings2,
+	Gauge,
+	Users as UsersIcon,
+	Fuel,
+	Briefcase,
+	Zap,
+	DoorOpen,
+	Cpu,
+	Wallet
+} from "lucide-react";
+
 import { Vehicle } from "@/lib/api/types";
 import { useAuth } from "@/app/auth/AuthContext";
 import { API_BASE_URL } from "@/lib/api/endpoints";
@@ -43,16 +56,16 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 	})) || [];
 
 	const overview = [
-		{ label: "Classe", value: vehicle.classType },
-		{ label: "Câmbio", value: vehicle.gearbox },
-		{ label: "Quilometragem", value: vehicle.mileage },
-		{ label: "Max passageiros", value: vehicle.maxPassengers },
-		{ label: "Combustível", value: vehicle.fuelType },
-		{ label: "Max bagagem", value: vehicle.maxLuggage },
-		{ label: "Consumo", value: vehicle.fuelUsage },
-		{ label: "Portas", value: vehicle.doors },
-		{ label: "Cilindrada", value: vehicle.engineCapacity },
-		{ label: "Depósito", value: vehicle.deposit ? `${vehicle.deposit} CVE` : "N/A" },
+		{ label: "Classe", value: vehicle.classType, icon: Car },
+		{ label: "Câmbio", value: vehicle.gearbox, icon: Settings2 },
+		{ label: "Quilometragem", value: vehicle.mileage, icon: Gauge },
+		{ label: "Lugares", value: vehicle.maxPassengers, icon: UsersIcon },
+		{ label: "Combustível", value: vehicle.fuelType, icon: Fuel },
+		{ label: "Bagagem", value: vehicle.maxLuggage, icon: Briefcase },
+		{ label: "Consumo", value: vehicle.fuelUsage, icon: Zap },
+		{ label: "Portas", value: vehicle.doors, icon: DoorOpen },
+		{ label: "Cilindrada", value: vehicle.engineCapacity, icon: Cpu },
+		{ label: "Depósito", value: vehicle.deposit ? `${vehicle.deposit} CVE` : "N/A", icon: Wallet },
 	];
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -144,12 +157,21 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 								{/* Overview */}
 								<div className="vehicle-overview">
 									<h3 className="overview-title">Detalhes do Veículo</h3>
-									<ul>
-										{overview.map((item, idx) => (
-											<li key={idx}>
-												{item.label}: <span>{item.value || "N/A"}</span>
-											</li>
-										))}
+									<ul className="grid grid-cols-2 md:grid-cols-3 gap-6">
+										{overview.map((item, idx) => {
+											const Icon = item.icon;
+											return (
+												<li key={idx} className="flex items-center gap-3">
+													<div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 text-primary shadow-sm border border-primary/5">
+														<Icon className="w-5 h-5" />
+													</div>
+													<div className="flex flex-col">
+														<span className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold">{item.label}</span>
+														<span className="text-sm font-extrabold text-foreground leading-tight">{item.value || "N/A"}</span>
+													</div>
+												</li>
+											);
+										})}
 									</ul>
 								</div>
 
