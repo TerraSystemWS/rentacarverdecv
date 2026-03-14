@@ -15,31 +15,31 @@ export default function DataTable<T extends Record<string, any>>({
 	emptyText?: string;
 }) {
 	return (
-		<div className="overflow-hidden card-solid shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-500">
-			<div className="overflow-x-auto">
-				<table className="w-full text-left border-collapse">
-					<thead className="bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800">
-						<tr>
+		<div className="w-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl overflow-hidden shadow-sm shadow-zinc-200/50">
+			<div className="overflow-x-auto custom-scrollbar">
+				<table className="w-full text-left border-collapse min-w-[800px] lg:min-w-0">
+					<thead>
+						<tr className="bg-zinc-50/50 dark:bg-zinc-800/50 border-b border-zinc-200 dark:border-zinc-800">
 							{columns.map((col) => (
 								<th
-									key={col.key as string}
-									className={`px-6 py-4 text-[11px] font-bold text-zinc-400 uppercase tracking-widest ${col.key === "actions" ? "text-right" : "text-left"}`}
+									key={col.key}
+									className="px-4 md:px-6 py-4 md:py-5 text-[10px] md:text-xs font-black uppercase tracking-[0.2em] text-zinc-400"
 								>
 									{col.label}
 								</th>
 							))}
 						</tr>
 					</thead>
-					<tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
+					<tbody className="divide-y divide-zinc-100 dark:divide-zinc-800/50">
 						{rows.map((row, idx) => (
 							<tr
 								key={idx}
-								className="group hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors duration-150"
+								className="group hover:bg-zinc-50/50 dark:hover:bg-zinc-800/30 transition-colors duration-200"
 							>
 								{columns.map((col) => (
 									<td
 										key={col.key as string}
-										className={`px-6 py-4 text-sm font-medium text-zinc-600 dark:text-zinc-400 ${col.key === "actions" ? "text-right" : "text-left"}`}
+										className="px-4 md:px-6 py-4 md:py-5 text-xs md:text-sm font-medium text-zinc-600 dark:text-zinc-300"
 									>
 										{col.render ? col.render(row) : (row[col.key] as React.ReactNode)}
 									</td>

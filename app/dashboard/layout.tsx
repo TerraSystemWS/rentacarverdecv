@@ -4,6 +4,7 @@ import SideNav from "@/app/ui/dash/sidenav";
 import { useEffect, useMemo } from "react";
 import { useAuth } from "@/app/auth/AuthContext";
 import { usePathname, useRouter } from "next/navigation";
+import { SidebarProvider } from "@/app/context/SidebarContext";
 
 const DASH_LOGIN = "/dashboard/login";
 const FRONT_HOME = "/"; // não-admin → redireciona para o front
@@ -60,11 +61,13 @@ export default function DashboardLayout({
 	}
 
 	return (
-		<div className="min-h-screen bg-background dashboard-theme">
-			<div className="flex min-h-screen">
-				<SideNav />
-				<div className="flex-1 overflow-hidden">{children}</div>
+		<SidebarProvider>
+			<div className="min-h-screen bg-background dashboard-theme">
+				<div className="flex flex-col lg:flex-row min-h-screen">
+					<SideNav />
+					<div className="flex-1 overflow-hidden">{children}</div>
+				</div>
 			</div>
-		</div>
+		</SidebarProvider>
 	);
 }

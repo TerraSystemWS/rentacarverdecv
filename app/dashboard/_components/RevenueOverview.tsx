@@ -48,16 +48,16 @@ export default function RevenueOverview({ monthlyRevenue, revenueByStatus, total
     }
 
     return (
-        <div className="w-full bg-white rounded-3xl border border-gray-200 shadow-sm p-8 space-y-8">
+        <div className="w-full bg-white rounded-3xl border border-gray-200 shadow-sm p-4 md:p-8 space-y-6 md:space-y-8">
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h2 className="text-2xl font-extrabold tracking-tight text-gray-900">Análise de Receitas</h2>
-                    <p className="text-sm text-gray-500 mt-1">Visão detalhada do desempenho financeiro</p>
+                    <h2 className="text-xl md:text-2xl font-extrabold tracking-tight text-gray-900">Análise de Receitas</h2>
+                    <p className="text-xs md:text-sm text-gray-500 mt-1">Visão detalhada do desempenho financeiro</p>
                 </div>
-                <div className="text-left sm:text-right">
-                    <p className="text-xs uppercase tracking-wider text-gray-400 font-bold">Total Acumulado</p>
-                    <p className="text-3xl font-black text-primary mt-1">
+                <div className="text-left sm:text-right bg-secondary/20 p-3 rounded-2xl md:bg-transparent md:p-0">
+                    <p className="text-[10px] md:text-xs uppercase tracking-wider text-gray-400 font-bold">Total Acumulado</p>
+                    <p className="text-2xl md:text-3xl font-black text-primary mt-1">
                         {new Intl.NumberFormat("pt-PT", { style: "currency", currency: "CVE" }).format(totalIncome)}
                     </p>
                 </div>
