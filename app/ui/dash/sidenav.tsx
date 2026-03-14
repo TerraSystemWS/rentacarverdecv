@@ -137,8 +137,8 @@ export default function SideNav() {
 				</nav>
 
 				<div className="p-6 space-y-6">
-					{/* User Profile & Logout - Visible on all screens in SideNav */}
-					<div className="pt-6 border-t border-sidebar-border/50">
+					{/* User Profile & Logout - Visible ONLY on mobile in SideNav */}
+					<div className="pt-6 border-t border-sidebar-border/50 lg:hidden">
 						<div className="flex items-center gap-3 bg-sidebar-accent/30 p-3 rounded-2xl border border-sidebar-border/50 group transition-all duration-300 hover:border-primary/30">
 							<div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center text-primary border border-primary/10 shadow-inner group-hover:scale-105 transition-transform">
 								<UserIcon className="w-5 h-5" />
