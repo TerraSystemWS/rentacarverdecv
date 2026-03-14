@@ -8,6 +8,7 @@ import Link from "next/link";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Vehicle } from "@/lib/api/types";
+import { Settings2, Fuel } from "lucide-react";
 import { authFetch } from "@/app/auth/api";
 import { endpoints } from "@/lib/api/endpoints";
 import { API_BASE_URL } from "@/lib/api/endpoints";
@@ -111,10 +112,23 @@ const RegularVehicleBlock: React.FC = () => {
 												<h3 className="vehicle-title text-xl font-semibold">
 													<Link href={`/cars/${vehicle.id}`}>{vehicle.make} {vehicle.model}</Link>
 												</h3>
-												<div className="vehicle-meta text-gray-700 mt-2">
-													<span className="font-bold text-yellow-600">
-														{vehicle.pricePerDay?.toLocaleString('pt-CV', { style: 'currency', currency: 'CVE' })} / Dia
-													</span>
+												<div className="vehicle-meta flex flex-col items-center gap-2 mt-3">
+													<div className="flex items-center gap-4 text-gray-500 text-xs font-bold uppercase tracking-wider">
+														<div className="flex items-center gap-1.5">
+															<Settings2 className="w-3.5 h-3.5 text-yellow-600" />
+															<span>{vehicle.gearbox || "N/A"}</span>
+														</div>
+														<div className="flex items-center gap-1.5">
+															<Fuel className="w-3.5 h-3.5 text-yellow-600" />
+															<span>{vehicle.fuelType || "N/A"}</span>
+														</div>
+													</div>
+													<div className="mt-1">
+														<span className="font-black text-yellow-600 text-lg">
+															{vehicle.pricePerDay?.toLocaleString('pt-CV', { style: 'currency', currency: 'CVE' })}
+														</span>
+														<span className="text-gray-400 text-[10px] uppercase font-bold ml-1">/ Dia</span>
+													</div>
 												</div>
 											</div>
 										</div>
