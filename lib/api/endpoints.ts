@@ -81,5 +81,9 @@ export const endpoints = {
 		restoreDb: "/dashboard/settings/restore/database",
 		backupUploads: "/dashboard/settings/backup/uploads",
 		restoreUploads: "/dashboard/settings/restore/uploads",
+	},
+	payment: {
+		init: (id: number, responseUrl: string) => `/public/payment/init/${id}?responseUrl=${encodeURIComponent(responseUrl)}`,
+		callback: "/public/payment/callback",
 	}
 };

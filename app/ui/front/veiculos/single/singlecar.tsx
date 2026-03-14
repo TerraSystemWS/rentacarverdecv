@@ -101,16 +101,13 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 			});
 
 			if (res.ok) {
-				setMessage({ type: 'success', text: "Reserva efetuada com sucesso! Entraremos em contacto em breve." });
-				setFormData({
-					pickupLocation: "",
-					returnLocation: "",
-					startDate: "",
-					endDate: "",
-					startTime: "10:00",
-					endTime: "10:00",
-					hasExtraDriver: false,
-				});
+				const bookingData = await res.json();
+				setMessage({ type: 'success', text: "Reserva efetuada! Redirecionando para o pagamento..." });
+
+				// Redirect to payment page after a short delay
+				setTimeout(() => {
+					window.location.href = `/payment/${bookingData.id}`;
+				}, 1500);
 			} else {
 				const errorData = await res.json().catch(() => ({ message: "Erro ao processar reserva." }));
 				setMessage({ type: 'error', text: errorData.message || "Ocorreu um erro ao processar a reserva." });

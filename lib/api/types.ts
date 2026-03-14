@@ -37,6 +37,10 @@ export type DashboardSummary = {
 	activeBookings: number;
 	unreadRecipients: number;
 	totalIncome: number;
+	dailyIncome: number;
+	weeklyIncome: number;
+	monthlyIncome: number;
+	pendingIncome: number;
 	monthlyRevenue: Record<string, number>;
 	revenueByStatus: Record<string, number>;
 };
@@ -65,6 +69,8 @@ export type BookingRow = {
 	customer_name: string;
 	vehicle_title: string;
 	status: "PENDENTE" | "CONFIRMADA" | "EM_CURSO" | "CONCLUÍDA" | "CANCELADA";
+	payment_status?: "PENDING" | "SUCCESS" | "FAILED";
+	merchant_ref?: string;
 	start_at: string;
 	end_at: string;
 	grand_total: number;

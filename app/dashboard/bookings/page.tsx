@@ -49,6 +49,18 @@ export default function BookingsPage() {
 						{b.status}
 					</span>
 				),
+				payment_status: (
+					<div className="flex items-center gap-2">
+						<span className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-tight shadow-sm border ${getPaymentStatusStyles(b.payment_status)}`}>
+							{b.payment_status === "SUCCESS" ? "PAGO" : b.payment_status || "PENDENTE"}
+						</span>
+						{b.merchant_ref && (
+							<span className="text-[8px] text-zinc-400 font-mono" title={`Ref: ${b.merchant_ref}`}>
+								#{b.merchant_ref.slice(-4)}
+							</span>
+						)}
+					</div>
+				),
 				actions: (
 					<div className="flex justify-end gap-3 items-center">
 						<select
@@ -83,6 +95,15 @@ export default function BookingsPage() {
 			case "CONCLUÍDA": return "bg-emerald-50 text-emerald-600 border-emerald-200/50";
 			case "CANCELADA": return "bg-red-50 text-red-600 border-red-200/50";
 			default: return "bg-gray-50 text-gray-600 border-gray-200/50";
+		}
+	}
+
+	function getPaymentStatusStyles(status?: string) {
+		switch (status) {
+			case "SUCCESS": return "bg-green-50 text-green-700 border-green-200";
+			case "FAILED": return "bg-red-50 text-red-700 border-red-200";
+			case "PENDING":
+			default: return "bg-zinc-50 text-zinc-500 border-zinc-200";
 		}
 	}
 
@@ -191,6 +212,7 @@ export default function BookingsPage() {
 								{ key: "customer_name", label: "Cliente" },
 								{ key: "vehicle_title", label: "Veículo" },
 								{ key: "status", label: "Estado" },
+								{ key: "payment_status", label: "Pagamento" },
 								{ key: "start_at", label: "Levantamento" },
 								{ key: "end_at", label: "Entrega" },
 								{ key: "grand_total", label: "Total" },

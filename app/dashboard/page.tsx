@@ -7,6 +7,7 @@ import TopNav from "@/app/ui/dash/topNav";
 import PageShell from "@/app/ui/dash/PageShell";
 import StatCard from "@/app/ui/dash/StatCard";
 import RevenueOverview from "@/app/dashboard/_components/RevenueOverview";
+import CashflowDetails from "@/app/dashboard/_components/CashflowDetails";
 
 import { endpoints } from "@/lib/api/endpoints";
 import type { DashboardSummary } from "@/lib/api/types";
@@ -18,6 +19,7 @@ import {
 	CalendarCheck,
 	MessageCircle,
 	ArrowRight,
+	TrendingUp,
 	Loader2
 } from "lucide-react";
 
@@ -129,8 +131,22 @@ export default function DashboardHome() {
 								/>
 							</div>
 
+							{/* Cashflow Statistics Section */}
+							<div className="mt-10">
+								<h3 className="text-xl font-extrabold text-zinc-900 dark:text-zinc-50 mb-6 tracking-tight flex items-center gap-2">
+									<TrendingUp className="w-5 h-5 text-primary" />
+									Fluxo de Caixa
+								</h3>
+								<CashflowDetails
+									dailyIncome={data.dailyIncome}
+									weeklyIncome={data.weeklyIncome}
+									monthlyIncome={data.monthlyIncome}
+									pendingIncome={data.pendingIncome}
+								/>
+							</div>
+
 							{/* Revenue Overview Section - Full Width */}
-							<div className="mt-8">
+							<div className="mt-12">
 								<RevenueOverview
 									monthlyRevenue={data.monthlyRevenue}
 									revenueByStatus={data.revenueByStatus}
