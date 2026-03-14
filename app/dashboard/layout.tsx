@@ -65,7 +65,7 @@ export default function DashboardLayout({
 			<div className="min-h-screen bg-background dashboard-theme">
 				<div className="flex flex-col lg:flex-row min-h-screen">
 					<SideNav />
-					<div className="flex-1 overflow-hidden">{children}</div>
+					<div className="flex-1 min-w-0">{children}</div>
 				</div>
 			</div>
 		</SidebarProvider>

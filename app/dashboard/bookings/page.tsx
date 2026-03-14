@@ -188,7 +188,7 @@ export default function BookingsPage() {
 				}
 			/>
 			<PageShell>
-				<div className="max-w-7xl mx-auto">
+				<div className="max-w-7xl mx-auto space-y-10">
 					{loading && (
 						<div className="flex flex-col h-[60vh] items-center justify-center gap-6 bg-white border border-zinc-200">
 							<Loader2 className="w-10 h-10 text-primary animate-spin" />

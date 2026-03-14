@@ -152,7 +152,7 @@ export default function PostsPage() {
             />
 
             <PageShell>
-                <div className="max-w-7xl mx-auto">
+                <div className="max-w-7xl mx-auto space-y-10">
                     <DataTable
                         columns={[
                             {
@@ -161,7 +161,7 @@ export default function PostsPage() {
                                 render: (row: Post) => (
                                     <div className="w-16 aspect-video rounded overflow-hidden bg-zinc-50 border border-zinc-200 flex items-center justify-center">
                                         {row.imageUrl ? (
-                                            <img src={getImageSrc(row.imageUrl)} alt="" className="w-full h-full object-cover" />
+                                            <img src={getImageSrc(row.imageUrl)} alt="" className="max-w-7xl mx-auto space-y-10" />
                                         ) : (
                                             <FileText className="w-4 h-4 text-zinc-300" />
                                         )}

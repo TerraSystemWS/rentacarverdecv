@@ -151,7 +151,7 @@ export default function PartnersPage() {
             />
 
             <PageShell>
-                <div className="max-w-7xl mx-auto">
+                <div className="max-w-7xl mx-auto space-y-10">
                     <DataTable
                         columns={[
                             {

@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useRef, useState, useEffect } from "react";
+import { useAuth } from "@/app/auth/AuthContext";
 import {
 	LayoutDashboard,
 	CalendarDays,
@@ -15,7 +17,9 @@ import {
 	Image,
 	Megaphone,
 	UserSquare2,
-	X
+	X,
+	LogOut,
+	User as UserIcon
 } from "lucide-react";
 import { useSidebar } from "@/app/context/SidebarContext";
 
@@ -36,21 +40,43 @@ const items = [
 
 export default function SideNav() {
 	const pathname = usePathname();
+	const router = useRouter();
 	const { isOpen, close } = useSidebar();
+	const { user, logout } = useAuth();
+	const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+	const mountedRef = useRef(true);
+	useEffect(() => {
+		return () => {
+			mountedRef.current = false;
+		};
+	}, []);
+
+	async function handleLogout() {
+		if (isLoggingOut) return;
+		setIsLoggingOut(true);
+
+		try {
+			await logout();
+		} finally {
+			router.replace("/dashboard/login");
+			if (mountedRef.current) setIsLoggingOut(false);
+		}
+	}
 
 	return (
 		<>
 			{/* Mobile Overlay */}
 			<div
 				className={[
-					"fixed inset-0 bg-zinc-950/60 backdrop-blur-sm z-40 lg:hidden transition-opacity duration-300",
+					"fixed inset-0 bg-zinc-950/60 backdrop-blur-sm z-[60] lg:hidden transition-opacity duration-300",
 					isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
 				].join(" ")}
 				onClick={close}
 			/>
 
 			<aside className={[
-				"fixed inset-y-0 left-0 lg:static h-screen w-72 flex flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border shadow-[4px_0_24px_rgba(0,0,0,0.1)] z-50 transition-all duration-300 transform lg:translate-x-0",
+				"fixed inset-y-0 left-0 lg:sticky lg:top-0 h-screen w-72 flex flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border shadow-[4px_0_24px_rgba(0,0,0,0.1)] z-[70] transition-all duration-300 transform lg:translate-x-0",
 				isOpen ? "translate-x-0" : "-translate-x-full"
 			].join(" ")}>
 				<div className="px-6 py-10 flex items-center justify-between">
@@ -111,6 +137,36 @@ export default function SideNav() {
 				</nav>
 
 				<div className="p-6 space-y-6">
+					{/* User Profile & Logout - Visible on all screens in SideNav */}
+					<div className="pt-6 border-t border-sidebar-border/50">
+						<div className="flex items-center gap-3 bg-sidebar-accent/30 p-3 rounded-2xl border border-sidebar-border/50 group transition-all duration-300 hover:border-primary/30">
+							<div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center text-primary border border-primary/10 shadow-inner group-hover:scale-105 transition-transform">
+								<UserIcon className="w-5 h-5" />
+							</div>
+							<div className="min-w-0 flex-1">
+								<div className="text-base font-black text-sidebar-foreground/80 truncate">{user?.username ?? "Admin"}</div>
+								<div className="text-xs font-black uppercase tracking-tighter text-primary/60 truncate">
+									{user?.roles?.length ? user.roles[0] : "ADMINISTRADOR"}
+								</div>
+							</div>
+						</div>
+
+						<button
+							onClick={handleLogout}
+							disabled={isLoggingOut}
+							className="mt-3 w-full group flex items-center justify-center gap-2.5 rounded-xl px-4 py-3 text-xs font-bold transition-all duration-300 bg-destructive/5 text-destructive hover:bg-destructive hover:text-white"
+						>
+							{isLoggingOut ? (
+								<span className="animate-pulse">...</span>
+							) : (
+								<>
+									<LogOut className="w-4 h-4 transition-transform group-hover:rotate-12" />
+									<span>Sair do Painel</span>
+								</>
+							)}
+						</button>
+					</div>
+
 					<div className="relative overflow-hidden bg-gradient-to-br from-sidebar-accent/30 to-sidebar-accent/10 rounded-3xl p-5 border border-sidebar-border/50">
 						<div className="absolute -right-4 -top-4 w-16 h-16 bg-primary/10 rounded-full blur-2xl" />
 						<div className="flex items-start gap-3 relative z-10">

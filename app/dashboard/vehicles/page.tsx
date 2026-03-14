@@ -156,7 +156,7 @@ export default function VehiclesPage() {
             />
 
             <PageShell>
-                <div className="max-w-7xl mx-auto space-y-4">
+                <div className="max-w-7xl mx-auto space-y-10">
                     <div className="flex items-center justify-end">
                         <div className="relative w-full max-w-sm">
                             <input

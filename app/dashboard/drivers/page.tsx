@@ -152,7 +152,7 @@ export default function DriversPage() {
             />
 
             <PageShell>
-                <div className="max-w-7xl mx-auto">
+                <div className="max-w-7xl mx-auto space-y-10">
                     <DataTable
                         columns={[
                             {
@@ -161,12 +161,12 @@ export default function DriversPage() {
                                 render: (row: Driver) => (
                                     <div className="w-12 h-12 rounded-lg overflow-hidden bg-zinc-50 border border-zinc-200 flex items-center justify-center">
                                         {row.imageUrl ? (
-                                            <img src={getImageSrc(row.imageUrl)} alt={row.name} className="w-full h-full object-cover" />
+                                            <img src={getImageSrc(row.imageUrl)} alt={row.name} className="max-w-7xl mx-auto space-y-10" />
                                         ) : (
                                             <img
                                                 src="/assets/images/driver/avatar-placeholder.png"
                                                 alt="Default"
-                                                className="w-full h-full object-cover"
+                                                className="max-w-7xl mx-auto space-y-10"
                                             />
                                         )}
                                     </div>

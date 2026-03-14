@@ -64,9 +64,9 @@ export default function MessagesPage() {
 
 	return (
 		<div>
-			<TopNav title="Mensagens" subtitle="Sistema/Admin → Utilizadores" />
+			<TopNav title="Mensagens" subtitle="Gestão de comunicações com utilizadores" />
 			<PageShell>
-				<div className="max-w-7xl mx-auto">
+				<div className="max-w-7xl mx-auto space-y-10">
 					<DataTable
 						columns={[
 							{ key: "id", label: "ID" },

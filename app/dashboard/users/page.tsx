@@ -126,7 +126,7 @@ export default function UsersPage() {
 			/>
 
 			<PageShell>
-				<div className="max-w-7xl mx-auto space-y-6">
+				<div className="max-w-7xl mx-auto space-y-10">
 
 					{/* Tabs */}
 					<div className="flex border-b border-gray-200 gap-8">
