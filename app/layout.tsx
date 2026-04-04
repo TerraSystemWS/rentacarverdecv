@@ -1,8 +1,21 @@
 import type { Metadata } from "next";
+import { Exo, Roboto_Slab } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
 import Providers from "./providers";
 import GoogleAnalytics from "./ui/GoogleAnalytics";
+
+const exo = Exo({
+	subsets: ["latin"],
+	display: "swap",
+	variable: "--font-exo",
+});
+
+const robotoSlab = Roboto_Slab({
+	subsets: ["latin"],
+	display: "swap",
+	variable: "--font-roboto-slab",
+});
 
 export const metadata: Metadata = {
 	title: {
@@ -40,14 +53,9 @@ export default function RootLayout({
 	return (
 		<html lang="pt">
 			<head>
-				{/* Fontes personalizadas */}
-				<link
-					href="https://fonts.googleapis.com/css?family=Exo:400,400i,500,500i,600,600i,700,700i,800,800i,900,900i%7cRoboto+Slab:400,700"
-					rel="stylesheet"
-				/>
 				<GoogleAnalytics />
 			</head>
-			<body className="antialiased">
+			<body className={`antialiased ${exo.variable} ${robotoSlab.variable}`}>
 				<Providers>{children}</Providers>
 
 				{/* jQuery primeiro */}

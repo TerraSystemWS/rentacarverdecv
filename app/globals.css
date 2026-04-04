@@ -175,26 +175,28 @@
 }
 
 /* Saturated Buttons - More 'Charged' */
-.dashboard-theme button {
-  @apply inline-flex items-center justify-center rounded-lg px-6 py-2.5 text-sm font-bold transition-all duration-200 active:scale-[0.97] disabled:opacity-50 disabled:pointer-events-none tracking-tight;
-}
+@layer components {
+  .dashboard-theme button {
+    @apply inline-flex items-center justify-center rounded-lg px-6 py-2.5 text-sm font-bold transition-all duration-200 active:scale-[0.97] disabled:opacity-50 disabled:pointer-events-none tracking-tight;
+  }
 
-.dashboard-theme .btn-primary {
-  @apply bg-primary text-white shadow-lg shadow-primary/30 hover:bg-primary/90 hover:-translate-y-0.5;
-}
+  .dashboard-theme .btn-primary {
+    @apply bg-primary text-white shadow-lg shadow-primary/30 hover:bg-primary/90 hover:-translate-y-0.5;
+  }
 
-.dashboard-theme .btn-secondary {
-  @apply bg-zinc-200 text-zinc-900 hover:bg-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700;
-}
+  .dashboard-theme .btn-secondary {
+    @apply bg-zinc-200 text-zinc-900 hover:bg-zinc-300 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700;
+  }
 
-.dashboard-theme .btn-outline {
-  @apply border-2 border-primary bg-transparent text-primary hover:bg-primary hover:text-white;
-}
+  .dashboard-theme .btn-outline {
+    @apply border-2 border-primary bg-transparent text-primary hover:bg-primary hover:text-white;
+  }
 
-.dashboard-theme .btn-ghost {
-  @apply text-zinc-500 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white;
-}
+  .dashboard-theme .btn-ghost {
+    @apply text-zinc-500 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white;
+  }
 
-.dashboard-theme .dashboard-link {
-  @apply text-primary font-bold hover:opacity-80 transition-all duration-200 underline decoration-2 underline-offset-4;
+  .dashboard-theme .dashboard-link {
+    @apply text-primary font-bold hover:opacity-80 transition-all duration-200 underline decoration-2 underline-offset-4;
+  }
 }
