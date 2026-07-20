@@ -11,7 +11,7 @@ export type SessionUser = {
 	roles?: Role[];
 };
 
-export type LoginRequest = { username: string; password: string };
+export type LoginRequest = { email: string; password: string };
 
 export type AuthTokens = {
 	accessToken: string;

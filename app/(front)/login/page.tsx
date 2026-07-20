@@ -9,7 +9,7 @@ export default function LoginPage() {
 	const { login, isLoading, isAuthenticated, user } = useAuth();
 	const router = useRouter();
 
-	const [username, setUsername] = useState("");
+	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [err, setErr] = useState<string | null>(null);
 	const [successMsg, setSuccessMsg] = useState<string | null>(null);
@@ -41,16 +41,16 @@ export default function LoginPage() {
 		e.preventDefault();
 		setErr(null);
 
-		if (!username || !password) {
+		if (!email || !password) {
 			setErr("Preencha todos os campos");
 			return;
 		}
 
 		try {
-			await login(username, password);
+			await login(email, password);
 			// O useEffect acima cuidará do redirecionamento assim que o estado mudar
 		} catch (error: any) {
-			setErr(error?.message || "Usuário ou senha inválidos");
+			setErr(error?.message || "Email ou senha inválidos");
 		}
 	}
 
@@ -65,14 +65,15 @@ export default function LoginPage() {
 				<form onSubmit={onSubmit} className="space-y-4">
 					<div>
 						<label className="block text-sm font-medium text-slate-700 mb-1">
-							Username
+							Email
 						</label>
 						<input
+							type="email"
 							className="w-full rounded-lg border border-slate-300 p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all"
-							placeholder="seu_usuario"
-							value={username}
-							onChange={(e) => setUsername(e.target.value)}
-							autoComplete="username"
+							placeholder="seu@email.com"
+							value={email}
+							onChange={(e) => setEmail(e.target.value)}
+							autoComplete="email"
 						/>
 					</div>
 

@@ -8,7 +8,7 @@ export default function DashboardLoginPage() {
 	const router = useRouter();
 	const { login, isLoading, isAuthenticated, user } = useAuth();
 
-	const [username, setUsername] = useState("admin");
+	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState<string | null>(null);
 	const [submitting, setSubmitting] = useState(false);
@@ -33,7 +33,7 @@ export default function DashboardLoginPage() {
 		setSubmitting(true);
 
 		try {
-			await login(username, password);
+			await login(email, password);
 			// ✅ não redireciona aqui — o layout decide
 		} catch (e: any) {
 			setError(e?.message || "Falha no login");
@@ -63,13 +63,14 @@ export default function DashboardLoginPage() {
 					<form onSubmit={onSubmit} className="space-y-6 relative z-10">
 						<div className="space-y-2">
 							<label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest ml-0.5">
-								Utilizador
+								Email
 							</label>
 							<input
-								value={username}
-								onChange={(e) => setUsername(e.target.value)}
-								autoComplete="username"
-								placeholder="admin"
+								type="email"
+								value={email}
+								onChange={(e) => setEmail(e.target.value)}
+								autoComplete="email"
+								placeholder="admin@rentacarverde.cv"
 								className="w-full h-12 px-4 rounded-md bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-medium text-zinc-900 dark:text-zinc-100 text-sm"
 							/>
 						</div>

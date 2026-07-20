@@ -138,13 +138,13 @@ export async function authFetch(
    ========================== */
 
 export async function login(
-	username: string,
+	email: string,
 	password: string,
 ): Promise<Tokens> {
 	const res = await authFetch("/auth/login", {
 		method: "POST",
 		auth: false,
-		body: JSON.stringify({ username, password }),
+		body: JSON.stringify({ email, password }),
 	});
 
 	const data = await parseOrThrow<Tokens>(res);

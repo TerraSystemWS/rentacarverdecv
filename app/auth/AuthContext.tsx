@@ -16,7 +16,7 @@ type AuthContextValue = {
 	user: Me | null;
 	isAuthenticated: boolean;
 	isLoading: boolean;
-	login: (username: string, password: string) => Promise<void>;
+	login: (email: string, password: string) => Promise<void>;
 	logout: () => Promise<void>;
 	refresh: () => Promise<void>;
 	authFetch: (path: string, init?: RequestInit) => Promise<Response>;
@@ -76,30 +76,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			window.removeEventListener("auth:unauthorized", handleUnauthorized);
 		};
 	}, []);
-	/*
-	async function login(username: string, password: string) {
-		setIsLoading(true);
-		try {
-			await authApi.login(username, password);
-			await loadMe(); // Valida o login recém-feito
-		} catch (error) {
-			throw error; // Deixa a LoginPage tratar a mensagem de erro
-		} finally {
-			setIsLoading(false);
-		}
-	}
-*/
-
 	function isAdmin(me: any) {
 		const roles: string[] =
 			me?.roles ?? me?.authorities?.map((a: any) => a.authority) ?? [];
 		return roles.includes("ROLE_ADMIN") || roles.includes("ADMIN");
 	}
 
-	async function login(username: string, password: string) {
+	async function login(email: string, password: string) {
 		setIsLoading(true);
 		try {
-			await authApi.login(username, password);
+			await authApi.login(email, password);
 			const me = await authApi.me(); // ou loadMe() mas devolvendo o me
 			setUser(me);
 			setIsAuthenticated(true);
