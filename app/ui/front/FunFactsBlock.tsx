@@ -3,7 +3,6 @@
 
 import React from "react";
 import CountUp from "react-countup";
-import { API_BASE_URL, endpoints } from "@/lib/api/endpoints";
 
 interface FunFactsBlockProps {
 	content?: {
@@ -19,45 +18,11 @@ interface FunFactsBlockProps {
 }
 
 const FunFactsBlock: React.FC<FunFactsBlockProps> = ({ content }) => {
-	const [stats, setStats] = React.useState({
-		vehiclesCount: Number(content?.f1Num) || 50,
-		driversCount: Number(content?.f3Num) || 2500,
-		clientsCount: Number(content?.f2Num) || 1200,
-		daysInActivity: Number(content?.f4Num) || 365,
-	});
-
-	React.useEffect(() => {
-		const fetchStats = async () => {
-			try {
-				const res = await fetch(`${API_BASE_URL}${endpoints.content.stats}`);
-				if (res.ok) {
-					const data = await res.json();
-					setStats({
-						vehiclesCount: data.vehiclesCount || stats.vehiclesCount,
-						driversCount: data.driversCount || stats.driversCount,
-						clientsCount: data.clientsCount || stats.clientsCount,
-						daysInActivity: data.daysInActivity || stats.daysInActivity,
-					});
-				}
-			} catch (error) {
-				console.error("Error fetching fun facts stats:", error);
-			}
-		};
-		fetchStats();
-	}, []);
-
-	const labels = {
-		f1: content?.f1 || "Caros na frota",
-		f2: content?.f2 || "Clientes Satisfeitos",
-		f3: content?.f3 || "Condutores",
-		f4: content?.f4 || "Dias Na Atividade",
-	};
-
 	const funFacts = [
-		{ id: 1, count: stats.vehiclesCount, label: labels.f1 },
-		{ id: 2, count: stats.clientsCount, label: labels.f2 },
-		{ id: 3, count: stats.driversCount, label: labels.f3 },
-		{ id: 4, count: stats.daysInActivity, label: labels.f4 },
+		{ id: 1, count: Number(content?.f1Num) || 0, label: content?.f1 || "Caros na frota" },
+		{ id: 2, count: Number(content?.f2Num) || 0, label: content?.f2 || "Clientes Satisfeitos" },
+		{ id: 3, count: Number(content?.f3Num) || 0, label: content?.f3 || "Condutores" },
+		{ id: 4, count: Number(content?.f4Num) || 0, label: content?.f4 || "Dias Na Atividade" },
 	];
 
 	return (
