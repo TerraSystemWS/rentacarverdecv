@@ -17,6 +17,7 @@ export default function BookingForm({ onSubmit, onCancel, isSubmitting, initialD
     const [vehicles, setVehicles] = useState<Vehicle[]>([]);
     const [customers, setCustomers] = useState<UserRow[]>([]);
     const [loadingData, setLoadingData] = useState(true);
+    const [bookedIntervals, setBookedIntervals] = useState<{ start: Date; end: Date }[]>([]);
 
     const [formData, setFormData] = useState({
         userId: initialData?.userId || "",
@@ -48,6 +49,27 @@ export default function BookingForm({ onSubmit, onCancel, isSubmitting, initialD
         loadOptions();
     }, []);
 
+    // Ao editar uma reserva existente, as datas atuais dessa própria reserva
+    // fazem parte do intervalo "ocupado" devolvido pelo backend, por isso a
+    // verificação no cliente só se aplica a novas reservas (o backend valida
+    // sempre, excluindo a própria reserva no caso de edição).
+    useEffect(() => {
+        if (!formData.vehicleId || initialData) {
+            setBookedIntervals([]);
+            return;
+        }
+        let cancelled = false;
+        apiFetch<{ startDate: string; endDate: string }[]>(
+            endpoints.vehicles.bookedDates(parseInt(formData.vehicleId))
+        )
+            .then((data) => {
+                if (cancelled) return;
+                setBookedIntervals((data || []).map(d => ({ start: new Date(d.startDate), end: new Date(d.endDate) })));
+            })
+            .catch(() => setBookedIntervals([]));
+        return () => { cancelled = true; };
+    }, [formData.vehicleId, initialData]);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
@@ -62,6 +84,11 @@ export default function BookingForm({ onSubmit, onCancel, isSubmitting, initialD
 
         if (new Date(start) >= new Date(end)) {
             setError("A data de entrega deve ser posterior à data de levantamento.");
+            return;
+        }
+
+        if (!initialData && bookedIntervals.some(b => new Date(start) < b.end && new Date(end) > b.start)) {
+            setError("Este veículo já está reservado para o período selecionado.");
             return;
         }
 

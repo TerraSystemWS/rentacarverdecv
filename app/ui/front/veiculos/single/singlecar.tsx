@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Swal from 'sweetalert2';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { ptBR } from 'date-fns/locale';
 import VehicleGallery from "./veiculoGalery";
 import PopularVehicleBlock from "../../PopularVehicleBlock";
+import { endpoints } from "@/lib/api/endpoints";
 import {
 	Car,
 	Settings2,
@@ -41,6 +42,25 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 	});
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+	const [bookedIntervals, setBookedIntervals] = useState<{ start: Date; end: Date }[]>([]);
+
+	useEffect(() => {
+		if (!vehicle.id) return;
+		let cancelled = false;
+		fetch(`${API_BASE_URL}${endpoints.vehicles.bookedDates(vehicle.id)}`)
+			.then(res => res.ok ? res.json() : [])
+			.then((data: { startDate: string; endDate: string }[]) => {
+				if (cancelled) return;
+				setBookedIntervals(
+					(data || []).map(d => ({ start: new Date(d.startDate), end: new Date(d.endDate) }))
+				);
+			})
+			.catch(() => { /* não bloquear o formulário se a consulta falhar */ });
+		return () => { cancelled = true; };
+	}, [vehicle.id]);
+
+	const rangeOverlapsBooking = (start: Date, end: Date) =>
+		bookedIntervals.some(b => start < b.end && end > b.start);
 
 	const getImageSrc = (url: string) => {
 		if (!url) return "";
@@ -95,6 +115,11 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 
 		if (start >= end) {
 			setMessage({ type: 'error', text: "A data de devolução deve ser posterior à data de levantamento." });
+			return;
+		}
+
+		if (rangeOverlapsBooking(start, end)) {
+			setMessage({ type: 'error', text: "Este veículo já está reservado para o período selecionado. Escolha outras datas." });
 			return;
 		}
 
@@ -275,6 +300,7 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 														dateFormat="dd/MM/yyyy"
 														locale={ptBR}
 														minDate={new Date()}
+														excludeDateIntervals={bookedIntervals}
 														className="form-controller w-full bg-transparent"
 														placeholderText="dd/mm/aaaa"
 														required
@@ -296,6 +322,7 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 														dateFormat="dd/MM/yyyy"
 														locale={ptBR}
 														minDate={formData.startDate ? new Date(formData.startDate) : new Date()}
+														excludeDateIntervals={bookedIntervals}
 														className="form-controller w-full bg-transparent"
 														placeholderText="dd/mm/aaaa"
 														required

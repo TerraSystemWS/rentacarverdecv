@@ -21,6 +21,7 @@ export const endpoints = {
 		create: "/dashboard/vehicles",
 		update: (id: number) => `/dashboard/vehicles/${id}`,
 		delete: (id: number) => `/dashboard/vehicles/${id}`,
+		bookedDates: (id: number) => `/public/vehicles/${id}/booked-dates`,
 	},
 	bookings: {
 		list: (limit = 100) => `/dashboard/bookings?limit=${limit}`,
