@@ -18,8 +18,10 @@ export const endpoints = {
 	vehicles: {
 		list: (limit = 100) => `/public/vehicles?limit=${limit}`,
 		get: (id: number) => `/public/vehicles/${id}`,
+		dashboardList: "/dashboard/vehicles",
 		create: "/dashboard/vehicles",
 		update: (id: number) => `/dashboard/vehicles/${id}`,
+		updateAvailability: (id: number) => `/dashboard/vehicles/${id}/availability`,
 		delete: (id: number) => `/dashboard/vehicles/${id}`,
 		bookedDates: (id: number) => `/public/vehicles/${id}/booked-dates`,
 	},

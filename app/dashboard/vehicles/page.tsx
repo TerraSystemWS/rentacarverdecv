@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Car, Plus, Pencil, Trash2 } from "lucide-react";
+import { Car, Plus, Pencil, Trash2, Power, PowerOff } from "lucide-react";
 import Swal from "sweetalert2";
 import TopNav from "@/app/ui/dash/topNav";
 import PageShell from "@/app/ui/dash/PageShell";
@@ -28,7 +28,7 @@ export default function VehiclesPage() {
         setLoading(true);
         setErr(null);
         try {
-            const data = await apiFetch<Vehicle[]>(endpoints.vehicles.list(100));
+            const data = await apiFetch<Vehicle[]>(endpoints.vehicles.dashboardList);
             setVehicles(data);
         } catch (e: any) {
             setErr(e?.message || "Erro ao carregar veículos.");
@@ -36,6 +36,20 @@ export default function VehiclesPage() {
             setLoading(false);
         }
     }
+
+    const handleToggleAvailability = async (vehicle: Vehicle) => {
+        const nextAvailable = !vehicle.available;
+        setVehicles(prev => prev.map(v => v.id === vehicle.id ? { ...v, available: nextAvailable } : v));
+        try {
+            await apiFetch(endpoints.vehicles.updateAvailability(vehicle.id!), {
+                method: "PATCH",
+                body: JSON.stringify({ available: nextAvailable }),
+            });
+        } catch (e: any) {
+            setVehicles(prev => prev.map(v => v.id === vehicle.id ? { ...v, available: !nextAvailable } : v));
+            Swal.fire({ icon: "error", title: "Erro", text: e?.message || "Erro ao atualizar disponibilidade.", confirmButtonColor: "#3085d6" });
+        }
+    };
 
     useEffect(() => {
         fetchVehicles();
@@ -207,6 +221,23 @@ export default function VehiclesPage() {
                                     <span className="font-bold text-zinc-900 dark:text-zinc-50">
                                         {row.pricePerDay?.toLocaleString('pt-CV', { style: 'currency', currency: 'CVE' })}
                                     </span>
+                                )
+                            },
+                            {
+                                key: "available",
+                                label: "Disponibilidade",
+                                render: (row: Vehicle) => (
+                                    <button
+                                        onClick={() => handleToggleAvailability(row)}
+                                        title={row.available ? "Marcar como indisponível" : "Marcar como disponível"}
+                                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider shadow-sm border transition-colors ${row.available
+                                            ? "bg-emerald-50 text-emerald-600 border-emerald-200/50 hover:bg-emerald-100"
+                                            : "bg-red-50 text-red-600 border-red-200/50 hover:bg-red-100"
+                                            }`}
+                                    >
+                                        {row.available ? <Power size={12} /> : <PowerOff size={12} />}
+                                        {row.available ? "Disponível" : "Indisponível"}
+                                    </button>
                                 )
                             },
                             {
