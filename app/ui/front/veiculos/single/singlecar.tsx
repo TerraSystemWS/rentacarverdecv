@@ -148,7 +148,14 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 				}, 1500);
 			} else {
 				const errorData = await res.json().catch(() => ({ message: "Erro ao processar reserva." }));
-				setMessage({ type: 'error', text: errorData.message || "Ocorreu um erro ao processar a reserva." });
+				if (errorData.code === "PROFILE_INCOMPLETE") {
+					setMessage({
+						type: 'error',
+						text: `${errorData.message} Vá a "O Meu Perfil > Os Meus Dados" para completar.`,
+					});
+				} else {
+					setMessage({ type: 'error', text: errorData.message || "Ocorreu um erro ao processar a reserva." });
+				}
 			}
 		} catch (error) {
 			console.error("Booking error:", error);

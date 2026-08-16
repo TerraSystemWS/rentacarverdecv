@@ -68,7 +68,7 @@ export type BookingRow = {
 	vehicle_id: number;
 	customer_name: string;
 	vehicle_title: string;
-	status: "PENDENTE" | "CONFIRMADA" | "EM_CURSO" | "CONCLUÍDA" | "CANCELADA";
+	status: "PENDENTE" | "APROVADA" | "PAGA" | "EM_CURSO" | "CONCLUÍDA" | "CANCELADA";
 	payment_status?: "PENDING" | "SUCCESS" | "FAILED";
 	merchant_ref?: string;
 	start_at: string;
@@ -76,17 +76,35 @@ export type BookingRow = {
 	grand_total: number;
 	created_at: string;
 	has_extra_driver?: boolean;
+	voucher_code?: string | null;
+	discount_percent?: number | null;
+	pickup_location?: string | null;
+	return_location?: string | null;
+	subtotal?: number;
+	iva_rate?: number;
+	iva_amount?: number;
+	picked_up_at?: string | null;
+	returned_at?: string | null;
+	has_license_photo?: boolean;
+};
+
+export type PagedBookings = {
+	content: BookingRow[];
+	page: number;
+	size: number;
+	total_elements: number;
+	total_pages: number;
 };
 
 
 export type MessageRow = {
 	id: number;
-	sender_type: "system" | "admin";
-	sender_name: string | null;
-	subject: string;
-	delivery: "in_app" | "email" | "sms" | "whatsapp";
-	recipients: number;
-	created_at: string;
+	name: string;
+	email: string;
+	subject: string | null;
+	message: string;
+	read: boolean;
+	createdAt: string;
 };
 
 // --- Full Vehicle Types ---
@@ -104,6 +122,7 @@ export type Vehicle = {
 	licensePlate: string;
 	pricePerDay: number;
 	available: boolean;
+	status?: "ACTIVE" | "MAINTENANCE" | "ARCHIVED";
 	images: VehicleImage[];
 	classType?: string;
 	gearbox?: string;
@@ -124,6 +143,7 @@ export type Partner = {
 	name: string;
 	logoUrl?: string;
 	websiteUrl?: string;
+	status?: "ACTIVE" | "ARCHIVED";
 };
 
 export type Post = {
@@ -155,7 +175,13 @@ export type Advertisement = {
 	linkUrl?: string;
 	placement: "BANNER" | "SIDEBAR" | "POPUP";
 	active: boolean;
+	status?: "ACTIVE" | "ARCHIVED";
 	priority: number;
+	clickCount?: number;
+	vehicleId?: number | null;
+	vehicleTitle?: string | null;
+	voucherId?: number | null;
+	voucherCode?: string | null;
 	createdAt?: string;
 	updatedAt?: string;
 };
@@ -165,4 +191,111 @@ export type Driver = {
 	name: string;
 	description: string;
 	imageUrl: string;
+	status?: "ACTIVE" | "ARCHIVED";
+};
+
+export type Subscriber = {
+	id: number;
+	email: string;
+	createdAt: string;
+};
+
+export type Voucher = {
+	id?: number;
+	code: string;
+	discountPercent: number;
+	scope: "ALL" | "VEHICLE" | "CLASS";
+	vehicleId?: number | null;
+	vehicleTitle?: string | null;
+	classType?: string | null;
+	active: boolean;
+	maxUses?: number | null;
+	usedCount?: number;
+	validFrom?: string | null;
+	validUntil?: string | null;
+	maxUsesPerCustomer?: number | null;
+	usable?: boolean;
+};
+
+export type Invoice = {
+	id: number;
+	documentNumber: string;
+	bookingId: number;
+	vehicleTitle: string;
+	customerName: string;
+	customerEmail: string | null;
+	customerNif: string | null;
+	totalAmount: string;
+	subtotal?: string | null;
+	ivaRate?: string | null;
+	ivaAmount?: string | null;
+	createdAt: string;
+};
+
+export type CompanyProfile = {
+	name: string;
+	legalName: string | null;
+	nif: string;
+	address: string | null;
+	email: string | null;
+	logoUrl: string | null;
+	ivaRate?: string;
+	facebookUrl?: string | null;
+	instagramUrl?: string | null;
+	twitterUrl?: string | null;
+	whatsappUrl?: string | null;
+};
+
+export type CustomerProfile = {
+	id: string;
+	username: string;
+	email: string;
+	fullName: string | null;
+	phone: string | null;
+	address: string | null;
+	zipCode: string | null;
+	country: string | null;
+	nationality: string | null;
+	birthDate: string | null;
+	placeOfBirth: string | null;
+	idNumber: string | null;
+	idIssuedBy: string | null;
+	idIssuedAt: string | null;
+	idExpiresAt: string | null;
+	licenseNumber: string | null;
+	licenseIssuedBy: string | null;
+	licenseIssuedAt: string | null;
+	licenseExpiresAt: string | null;
+	hasLicensePhoto: boolean;
+	licensePhotoUploadedAt: string | null;
+	profileComplete: boolean;
+};
+
+export type MediaAsset = {
+	id: number;
+	originalFilename: string;
+	storedFilename: string;
+	url: string;
+	category: string;
+	contentType?: string | null;
+	sizeBytes?: number | null;
+	uploadedAt: string;
+};
+
+export type PostComment = {
+	id: number;
+	authorName: string;
+	message: string;
+	createdAt: string;
+};
+
+export type AppNotification = {
+	id: number;
+	type: "BOOKING" | "CONTACT_MESSAGE";
+	title: string;
+	body: string | null;
+	linkUrl: string | null;
+	relatedEntityId: number | null;
+	read: boolean;
+	createdAt: string;
 };

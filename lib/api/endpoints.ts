@@ -1,5 +1,21 @@
 // lib/api/endpoints.ts
+
+// Usado pelo browser (client components, <img src>, URLs em HTML/meta tags)
+// — tem de ser um endereço que o BROWSER do utilizador consiga resolver, por
+// isso é sempre "localhost:PORTA" (a porta publicada do Docker), nunca o nome
+// de um serviço do docker-compose.
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8090";
+
+// Usado só por Server Components / código que corre dentro do próprio
+// processo Next.js (SSR, generateMetadata, sitemap) — esse código corre
+// DENTRO do container do frontend, onde "localhost:8090" é o próprio
+// frontend, não o backend (estão em containers diferentes). Sem esta
+// distinção, qualquer fetch feito num Server Component falhava sempre em
+// Docker (connection refused), mesmo com o backend saudável — foi o que
+// causava "Veículo não encontrado" na página de um veículo específico.
+// INTERNAL_API_BASE_URL (sem NEXT_PUBLIC_, nunca é exposta ao browser) deve
+// apontar para o nome do serviço Docker, ex: "http://backend:8090".
+export const SERVER_API_BASE_URL = process.env.INTERNAL_API_BASE_URL || API_BASE_URL;
 
 export const endpoints = {
 	auth: {
@@ -7,6 +23,8 @@ export const endpoints = {
 		me: "/auth/me",
 		refresh: "/auth/refresh",
 		logout: "/auth/logout",
+		profile: "/auth/profile",
+		licensePhoto: "/auth/profile/license-photo",
 	},
 	dashboard: {
 		summary: "/dashboard/summary",
@@ -22,20 +40,42 @@ export const endpoints = {
 		create: "/dashboard/vehicles",
 		update: (id: number) => `/dashboard/vehicles/${id}`,
 		updateAvailability: (id: number) => `/dashboard/vehicles/${id}/availability`,
+		updateStatus: (id: number) => `/dashboard/vehicles/${id}/status`,
 		delete: (id: number) => `/dashboard/vehicles/${id}`,
 		bookedDates: (id: number) => `/public/vehicles/${id}/booked-dates`,
 	},
 	bookings: {
 		list: (limit = 100) => `/dashboard/bookings?limit=${limit}`,
+		completed: "/dashboard/bookings/completed",
 		me: "/dashboard/bookings/me",
+		meHistory: (page = 0, size = 6) => `/dashboard/bookings/me/history?page=${page}&size=${size}`,
 		create: "/dashboard/bookings",
 		update: (id: number) => `/dashboard/bookings/${id}`,
 		updateStatus: (id: number) => `/dashboard/bookings/${id}/status`,
 		delete: (id: number) => `/dashboard/bookings/${id}`,
 		createPublic: "/public/bookings",
+		licensePhoto: (id: number) => `/dashboard/bookings/${id}/documents/license-photo`,
 	},
 	messages: {
 		list: (limit = 100) => `/dashboard/messages?limit=${limit}`,
+		unreadCount: "/dashboard/messages/unread-count",
+		markRead: (id: number) => `/dashboard/messages/${id}/read`,
+		markUnread: (id: number) => `/dashboard/messages/${id}/unread`,
+		delete: (id: number) => `/dashboard/messages/${id}`,
+		create: "/public/messages",
+	},
+	subscribers: {
+		list: "/dashboard/subscribers",
+		delete: (id: number) => `/dashboard/subscribers/${id}`,
+		create: "/public/subscribers",
+	},
+	vouchers: {
+		list: "/dashboard/vouchers",
+		create: "/dashboard/vouchers",
+		update: (id: number) => `/dashboard/vouchers/${id}`,
+		delete: (id: number) => `/dashboard/vouchers/${id}`,
+		validate: (code: string, vehicleId?: number) =>
+			`/public/vouchers/validate?code=${encodeURIComponent(code)}${vehicleId ? `&vehicleId=${vehicleId}` : ""}`,
 	},
 	partners: {
 		list: "/public/partners",
@@ -43,6 +83,7 @@ export const endpoints = {
 		create: "/dashboard/partners",
 		update: (id: number) => `/dashboard/partners/${id}`,
 		delete: (id: number) => `/dashboard/partners/${id}`,
+		updateStatus: (id: number) => `/dashboard/partners/${id}/status`,
 	},
 	posts: {
 		list: "/public/posts",
@@ -65,13 +106,28 @@ export const endpoints = {
 		create: "/dashboard/drivers",
 		update: (id: number) => `/dashboard/drivers/${id}`,
 		delete: (id: number) => `/dashboard/drivers/${id}`,
+		updateStatus: (id: number) => `/dashboard/drivers/${id}/status`,
 	},
 	ads: {
-		list: "/public/ads",
+		list: (placement: string) => `/public/ads?placement=${encodeURIComponent(placement)}`,
+		click: (id: number) => `/public/ads/${id}/click`,
 		dashboard: "/dashboard/ads",
 		create: "/dashboard/ads",
 		update: (id: number) => `/dashboard/ads/${id}`,
 		delete: (id: number) => `/dashboard/ads/${id}`,
+		updateStatus: (id: number) => `/dashboard/ads/${id}/status`,
+	},
+	archived: {
+		summary: "/dashboard/archived",
+	},
+	media: {
+		list: (category?: string) => `/dashboard/media${category ? `?category=${encodeURIComponent(category)}` : ""}`,
+		upload: "/dashboard/media/upload",
+		delete: (id: number) => `/dashboard/media/${id}`,
+	},
+	comments: {
+		list: (slug: string) => `/public/posts/${slug}/comments`,
+		create: (slug: string) => `/public/posts/${slug}/comments`,
 	},
 	content: {
 		public: "/public/content",
@@ -88,5 +144,24 @@ export const endpoints = {
 	payment: {
 		init: (id: number, responseUrl: string) => `/public/payment/init/${id}?responseUrl=${encodeURIComponent(responseUrl)}`,
 		callback: "/public/payment/callback",
-	}
+	},
+	notifications: {
+		list: "/dashboard/notifications",
+		unreadCount: "/dashboard/notifications/unread-count",
+		markRead: (id: number) => `/dashboard/notifications/${id}/read`,
+		markAllRead: "/dashboard/notifications/read-all",
+		stream: "/dashboard/notifications/stream",
+	},
+	invoices: {
+		list: "/dashboard/invoices",
+		mine: "/dashboard/invoices/mine",
+		pdf: (id: number) => `/dashboard/invoices/${id}/pdf`,
+		verify: (doc: string, sig: string) => `/public/invoices/verify?doc=${encodeURIComponent(doc)}&sig=${encodeURIComponent(sig)}`,
+	},
+	companyProfile: {
+		get: "/dashboard/company-profile",
+		update: "/dashboard/company-profile",
+		logo: "/dashboard/company-profile/logo",
+		public: "/public/company-profile",
+	},
 };

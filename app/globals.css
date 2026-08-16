@@ -200,3 +200,94 @@
     @apply text-primary font-bold hover:opacity-80 transition-all duration-200 underline decoration-2 underline-offset-4;
   }
 }
+
+/*
+ * O CSS legado do template público (public/assets/css/style.css, carregado
+ * como <link> em app/(front)/layout.tsx, portanto SEM @layer) tem a regra
+ * "input,select,textarea{border:none}" — CSS sem @layer tem sempre
+ * prioridade sobre CSS dentro de qualquer @layer (incluindo o
+ * @layer utilities do Tailwind), independentemente de especificidade. Isso
+ * apagava a borda de qualquer campo Tailwind-styled no site público (ex: o
+ * formulário "Os Meus Dados" do perfil ficava com campos sem contorno
+ * nenhum, difícil de perceber onde clicar). Esta regra, também sem @layer
+ * mas com especificidade maior (classe + elemento), restaura borda/cor a
+ * sério — só nos formulários marcados com a classe .styled-form.
+ */
+.styled-form input,
+.styled-form select,
+.styled-form textarea {
+  border: 1px solid #cbd5e1; /* slate-300 */
+  color: #0f172a; /* slate-900 */
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+}
+
+.styled-form input:focus,
+.styled-form select:focus,
+.styled-form textarea:focus {
+  border-color: #eab308; /* yellow-500, a mesma cor de destaque usada no resto do site público */
+  box-shadow: 0 0 0 3px rgb(234 179 8 / 0.2);
+}
+
+/*
+ * Mesmo problema de layer que o .styled-form acima: o style.css legado tem
+ * "button{color:#ffffff}" sem @layer, que ganha ao "text-black" do Tailwind
+ * (dentro de @layer utilities) independentemente de especificidade. Isso
+ * deixava os botões de aba "As Minhas Reservas"/"Os Meus Dados" (perfil
+ * público) brancos sobre fundo branco, ilegíveis quando não selecionados.
+ * Regra também sem @layer, com especificidade de classe (maior que o
+ * elemento "button" sozinho), restaura a cor certa em cada estado.
+ */
+.profile-tabs button {
+  color: #0f172a; /* slate-900, aba não selecionada */
+}
+
+.profile-tabs button.bg-yellow-500 {
+  color: #ffffff; /* aba selecionada, fundo amarelo */
+}
+
+/*
+ * Mesmo problema de layer, agora no botão "Descarregar Fatura" do
+ * histórico de reservas: "button{color:#ffffff}" do CSS legado apagava o
+ * "text-yellow-700" do Tailwind, texto branco sobre fundo amarelo-claro
+ * (bg-yellow-50) ficava invisível.
+ */
+.invoice-download-btn {
+  color: #a16207; /* yellow-700 */
+}
+
+/*
+ * Mesmo problema de layer, agora nos botões "Enviar foto"/"Substituir
+ * foto"/"Remover" da foto da carta de condução (perfil): a regra base
+ * "button{color:#fff;border:0;padding:12px 40px;border-radius:25px}" do
+ * CSS legado apagava a cor do texto E a forma do botão (sem borda, cantos
+ * em pílula, padding enorme) — ficava texto branco sobre fundo branco,
+ * "transparente". Aqui a regra de :hover do legado tem mesmo !important
+ * ("button:hover{color:#ffffff!important}"), que ganha a qualquer regra
+ * normal independentemente de layer/especificidade — por isso o :hover
+ * abaixo também precisa de !important para conseguir substituir a cor.
+ */
+.license-photo-actions button {
+  color: #334155; /* slate-700 */
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1; /* slate-300 */
+  border-radius: 0.5rem;
+  padding: 0 1rem;
+  text-transform: none;
+  font-size: 0.75rem;
+}
+
+.license-photo-actions button:hover {
+  background-color: #f8fafc; /* slate-50 */
+  color: #334155 !important;
+}
+
+.license-photo-actions button.text-red-600 {
+  color: #dc2626 !important; /* red-600 */
+  border-color: #fecaca; /* red-200 */
+}
+
+.license-photo-actions button.text-red-600:hover {
+  background-color: #fef2f2; /* red-50 */
+  color: #b91c1c !important; /* red-700 */
+}
