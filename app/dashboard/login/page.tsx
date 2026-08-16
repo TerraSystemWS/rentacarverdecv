@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useAuth } from "../../auth/AuthContext";
 import { useRouter } from "next/navigation";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 
 export default function DashboardLoginPage() {
 	const router = useRouter();
@@ -12,6 +13,8 @@ export default function DashboardLoginPage() {
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState<string | null>(null);
 	const [submitting, setSubmitting] = useState(false);
+	const [turnstileToken, setTurnstileToken] = useState<string>("");
+	const turnstileRef = useRef<TurnstileInstance>(null);
 
 	const roles: string[] =
 		(user as any)?.roles ??
@@ -30,13 +33,23 @@ export default function DashboardLoginPage() {
 	async function onSubmit(e: React.FormEvent) {
 		e.preventDefault();
 		setError(null);
+
+		if (!turnstileToken) {
+			setError("Por favor, resolva o desafio de segurança (Captcha).");
+			return;
+		}
+
 		setSubmitting(true);
 
 		try {
-			await login(email, password);
+			await login(email, password, turnstileToken);
 			// ✅ não redireciona aqui — o layout decide
 		} catch (e: any) {
 			setError(e?.message || "Falha no login");
+			// Token do Turnstile é de uso único — sem isto, uma tentativa
+			// falhada obrigava a recarregar a página para tentar de novo.
+			turnstileRef.current?.reset();
+			setTurnstileToken("");
 		} finally {
 			setSubmitting(false);
 		}
@@ -94,6 +107,15 @@ export default function DashboardLoginPage() {
 								{error}
 							</div>
 						)}
+
+						<div className="flex justify-center">
+							<Turnstile
+								ref={turnstileRef}
+								siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+								onSuccess={(token) => setTurnstileToken(token)}
+								options={{ theme: "auto" }}
+							/>
+						</div>
 
 						<button
 							type="submit"

@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { API_BASE_URL } from "@/lib/api/endpoints";
-import { Turnstile } from "@marsidev/react-turnstile";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 
 export default function RegisterPage() {
     const router = useRouter();
@@ -16,6 +16,7 @@ export default function RegisterPage() {
     const [err, setErr] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [turnstileToken, setTurnstileToken] = useState<string>("");
+    const turnstileRef = useRef<TurnstileInstance>(null);
 
     async function onSubmit(e: React.FormEvent) {
         e.preventDefault();
@@ -23,6 +24,11 @@ export default function RegisterPage() {
 
         if (!username || !email || !password || !confirmPassword) {
             setErr("Preencha todos os campos");
+            return;
+        }
+
+        if (password.length < 8) {
+            setErr("A senha deve ter pelo menos 8 caracteres");
             return;
         }
 
@@ -56,6 +62,10 @@ export default function RegisterPage() {
             router.push("/login?registered=true");
         } catch (error: any) {
             setErr(error?.message || "Erro ao registar utilizador");
+            // Token do Turnstile é de uso único — sem isto, uma tentativa
+            // falhada obrigava a recarregar a página para tentar de novo.
+            turnstileRef.current?.reset();
+            setTurnstileToken("");
         } finally {
             setIsLoading(false);
         }
@@ -109,6 +119,7 @@ export default function RegisterPage() {
                             onChange={(e) => setPassword(e.target.value)}
                             required
                         />
+                        <p className="text-xs text-slate-400 mt-1">Mínimo 8 caracteres</p>
                     </div>
 
                     <div>
@@ -133,6 +144,7 @@ export default function RegisterPage() {
 
                     <div className="flex justify-center mt-2">
                         <Turnstile
+                            ref={turnstileRef}
                             siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
                             onSuccess={(token) => setTurnstileToken(token)}
                             options={{ theme: "light" }}

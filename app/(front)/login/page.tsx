@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/app/auth/AuthContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 
 export default function LoginPage() {
 	const { login, isLoading, isAuthenticated, user } = useAuth();
@@ -13,6 +14,8 @@ export default function LoginPage() {
 	const [password, setPassword] = useState("");
 	const [err, setErr] = useState<string | null>(null);
 	const [successMsg, setSuccessMsg] = useState<string | null>(null);
+	const [turnstileToken, setTurnstileToken] = useState<string>("");
+	const turnstileRef = useRef<TurnstileInstance>(null);
 
 	useEffect(() => {
 		if (typeof window !== "undefined") {
@@ -46,11 +49,20 @@ export default function LoginPage() {
 			return;
 		}
 
+		if (!turnstileToken) {
+			setErr("Por favor, resolva o desafio de segurança (Captcha).");
+			return;
+		}
+
 		try {
-			await login(email, password);
+			await login(email, password, turnstileToken);
 			// O useEffect acima cuidará do redirecionamento assim que o estado mudar
 		} catch (error: any) {
 			setErr(error?.message || "Email ou senha inválidos");
+			// Token do Turnstile é de uso único — sem isto, uma tentativa
+			// falhada obrigava a recarregar a página para tentar de novo.
+			turnstileRef.current?.reset();
+			setTurnstileToken("");
 		}
 	}
 
@@ -102,6 +114,15 @@ export default function LoginPage() {
 							{successMsg}
 						</div>
 					)}
+
+					<div className="flex justify-center mt-2">
+						<Turnstile
+							ref={turnstileRef}
+							siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+							onSuccess={(token) => setTurnstileToken(token)}
+							options={{ theme: "light" }}
+						/>
+					</div>
 
 					<button
 						type="submit"

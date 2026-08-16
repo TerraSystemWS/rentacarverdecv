@@ -16,7 +16,7 @@ type AuthContextValue = {
 	user: Me | null;
 	isAuthenticated: boolean;
 	isLoading: boolean;
-	login: (email: string, password: string) => Promise<void>;
+	login: (email: string, password: string, turnstileToken: string) => Promise<void>;
 	logout: () => Promise<void>;
 	refresh: () => Promise<void>;
 	authFetch: (path: string, init?: RequestInit) => Promise<Response>;
@@ -82,10 +82,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 		return roles.includes("ROLE_ADMIN") || roles.includes("ADMIN");
 	}
 
-	async function login(email: string, password: string) {
+	async function login(email: string, password: string, turnstileToken: string) {
 		setIsLoading(true);
 		try {
-			await authApi.login(email, password);
+			await authApi.login(email, password, turnstileToken);
 			const me = await authApi.me(); // ou loadMe() mas devolvendo o me
 			setUser(me);
 			setIsAuthenticated(true);

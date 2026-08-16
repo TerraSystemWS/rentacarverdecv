@@ -28,7 +28,11 @@ const LS_ACCESS = "rcv_access";
 const LS_REFRESH = "rcv_refresh";
 const LS_TOKEN_TYPE = "rcv_token_type";
 
-function getAccessToken() {
+// Exportado para o EventSource das notificações em tempo real — a API
+// EventSource do browser não permite definir o header Authorization, por isso
+// o token vai por parâmetro de query (o JwtAuthFilter do backend já aceita
+// isto em qualquer rota, não só na de streaming).
+export function getAccessToken() {
 	if (typeof window === "undefined") return null;
 	return localStorage.getItem(LS_ACCESS);
 }
@@ -46,6 +50,10 @@ export function setTokens(tokens: Tokens) {
 	localStorage.setItem(LS_ACCESS, tokens.accessToken);
 	localStorage.setItem(LS_REFRESH, tokens.refreshToken);
 	localStorage.setItem(LS_TOKEN_TYPE, tokens.tokenType ?? "Bearer");
+	// Avisa quem tiver uma ligação de longa duração presa ao token antigo (ex:
+	// o EventSource das notificações, que não passa por authFetch e por isso
+	// nunca saberia sozinho que o token mudou) para se reconectar com o novo.
+	window.dispatchEvent(new Event("auth:tokens-updated"));
 }
 
 export function clearTokens() {
@@ -140,11 +148,12 @@ export async function authFetch(
 export async function login(
 	email: string,
 	password: string,
+	turnstileToken: string,
 ): Promise<Tokens> {
 	const res = await authFetch("/auth/login", {
 		method: "POST",
 		auth: false,
-		body: JSON.stringify({ email, password }),
+		body: JSON.stringify({ email, password, turnstileToken }),
 	});
 
 	const data = await parseOrThrow<Tokens>(res);
@@ -155,10 +164,33 @@ export async function login(
 /**
  * Refresh tokens usando o refreshToken do storage.
  * Retorna true/false (pra facilitar no authFetch).
+ *
+ * O backend faz *rotação* do refresh token a cada uso (revoga o antigo,
+ * emite um par novo — ver AuthService.refresh()). Sem isto, quando o access
+ * token expira e várias chamadas de authFetch levam 401 ao mesmo tempo (ex:
+ * o dashboard a carregar resumo + reservas + notificações em paralelo), cada
+ * uma tentava um refresh próprio com o MESMO refresh token — só a primeira
+ * tinha sucesso, as restantes caíam num refresh token já revogado, e cada
+ * falha dessas fazia logout (clearTokens + "auth:unauthorized"), mesmo a
+ * sessão tendo acabado de ser renovada com sucesso um instante antes. Um
+ * único pedido de refresh "em voo" partilhado por todos os chamadores
+ * resolve isto — todos esperam pelo mesmo resultado em vez de cada um
+ * disparar o seu.
  */
+let refreshInFlight: Promise<boolean> | null = null;
+
 export async function refreshTokens(
 	refreshTokenArg?: string,
 ): Promise<boolean> {
+	if (refreshInFlight) return refreshInFlight;
+
+	refreshInFlight = doRefresh(refreshTokenArg).finally(() => {
+		refreshInFlight = null;
+	});
+	return refreshInFlight;
+}
+
+async function doRefresh(refreshTokenArg?: string): Promise<boolean> {
 	const refreshToken = refreshTokenArg ?? getRefreshToken();
 	if (!refreshToken) return false;
 
