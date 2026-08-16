@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Handshake, Plus, Pencil, Trash2, Globe } from "lucide-react";
+import { Handshake, Plus, Pencil, Trash2, Globe, Archive, ArchiveRestore } from "lucide-react";
 import Swal from "sweetalert2";
 import TopNav from "@/app/ui/dash/topNav";
 import PageShell from "@/app/ui/dash/PageShell";
@@ -27,7 +27,7 @@ export default function PartnersPage() {
         setLoading(true);
         setErr(null);
         try {
-            const res = await authFetch(endpoints.partners.list);
+            const res = await authFetch(endpoints.partners.dashboard);
             if (!res.ok) throw new Error("Erro ao carregar parceiros.");
             const data = await res.json();
             setPartners(data);
@@ -73,6 +73,35 @@ export default function PartnersPage() {
             setPartners(prev => prev.filter(p => p.id !== id));
         } catch (e: any) {
             Swal.fire({ icon: "error", title: "Erro", text: e?.message || "Erro ao eliminar parceiro.", confirmButtonColor: "#3085d6" });
+        }
+    };
+
+    const handleToggleArchive = async (partner: Partner) => {
+        const archiving = partner.status !== "ARCHIVED";
+        const nextStatus = archiving ? "ARCHIVED" : "ACTIVE";
+        if (archiving) {
+            const result = await Swal.fire({
+                title: "Arquivar parceiro?",
+                text: "O parceiro deixa de aparecer no site, mas fica guardado no painel.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Sim, arquivar",
+                cancelButtonText: "Cancelar",
+            });
+            if (!result.isConfirmed) return;
+        }
+        try {
+            const res = await authFetch(endpoints.partners.updateStatus(partner.id!), {
+                method: "PATCH",
+                body: JSON.stringify({ status: nextStatus }),
+            });
+            if (!res.ok) throw new Error("Erro ao atualizar estado.");
+            const updated = await res.json();
+            setPartners(prev => prev.map(p => p.id === partner.id ? updated : p));
+        } catch (e: any) {
+            Swal.fire({ icon: "error", title: "Erro", text: e?.message || "Erro ao atualizar estado do parceiro.", confirmButtonColor: "#3085d6" });
         }
     };
 
@@ -179,6 +208,22 @@ export default function PartnersPage() {
                                 ) : <span className="text-zinc-400">-</span>
                             },
                             {
+                                key: "status",
+                                label: "Estado",
+                                render: (row: Partner) => (
+                                    row.status === "ARCHIVED" ? (
+                                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider shadow-sm border bg-zinc-100 text-zinc-500 border-zinc-200/50">
+                                            <Archive size={12} />
+                                            Arquivado
+                                        </span>
+                                    ) : (
+                                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider shadow-sm border bg-emerald-50 text-emerald-600 border-emerald-200/50">
+                                            Ativo
+                                        </span>
+                                    )
+                                )
+                            },
+                            {
                                 key: "actions",
                                 label: "Ações",
                                 render: (row: Partner) => (
@@ -189,6 +234,13 @@ export default function PartnersPage() {
                                             title="Editar"
                                         >
                                             <Pencil size={18} />
+                                        </button>
+                                        <button
+                                            onClick={() => handleToggleArchive(row)}
+                                            className="p-2 hover:bg-amber-50 rounded-lg text-zinc-500 hover:text-amber-600 transition-colors"
+                                            title={row.status === "ARCHIVED" ? "Restaurar" : "Arquivar"}
+                                        >
+                                            {row.status === "ARCHIVED" ? <ArchiveRestore size={18} /> : <Archive size={18} />}
                                         </button>
                                         <button
                                             onClick={() => handleDelete(row.id!)}

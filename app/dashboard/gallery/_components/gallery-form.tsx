@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { GalleryItem } from "@/lib/api/types";
-import { Upload } from "lucide-react";
+import { GalleryItem, MediaAsset } from "@/lib/api/types";
+import { Upload, Images } from "lucide-react";
 import { API_BASE_URL } from "@/lib/api/endpoints";
+import MediaPicker from "@/app/dashboard/_components/MediaPicker";
 
 interface GalleryFormProps {
     initialData?: Partial<GalleryItem>;
@@ -28,6 +29,7 @@ export default function GalleryForm({
 
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(initialData?.imageUrl || null);
+    const [pickerOpen, setPickerOpen] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -48,6 +50,13 @@ export default function GalleryForm({
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         onSubmit(formData, selectedImage || undefined);
+    };
+
+    const handlePickFromLibrary = (asset: MediaAsset) => {
+        setSelectedImage(null);
+        setPreview(asset.url);
+        setFormData((prev) => ({ ...prev, imageUrl: asset.url }));
+        setPickerOpen(false);
     };
 
     const getImageSrc = (url: string) => {
@@ -111,14 +120,30 @@ export default function GalleryForm({
                                 <Upload className="text-gray-300 w-12 h-12" />
                             )}
                         </div>
-                        <button
-                            type="button"
-                            onClick={() => document.getElementById('gallery-image-upload')?.click()}
-                            className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-                        >
-                            {preview ? "Alterar Imagem" : "Selecionar Imagem"}
-                        </button>
+                        <div className="flex gap-2">
+                            <button
+                                type="button"
+                                onClick={() => document.getElementById('gallery-image-upload')?.click()}
+                                className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                            >
+                                {preview ? "Alterar" : "Enviar do PC"}
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setPickerOpen(true)}
+                                className="flex-1 flex items-center justify-center gap-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                            >
+                                <Images className="w-4 h-4" />
+                                Biblioteca
+                            </button>
+                        </div>
                         <input id="gallery-image-upload" type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+                        <MediaPicker
+                            isOpen={pickerOpen}
+                            category="gallery"
+                            onClose={() => setPickerOpen(false)}
+                            onSelect={handlePickFromLibrary}
+                        />
                     </div>
                 </div>
             </div>

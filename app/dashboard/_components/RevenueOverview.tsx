@@ -10,8 +10,9 @@ type RevenueOverviewProps = {
 
 const STATUS_COLORS: Record<string, string> = {
     PENDENTE: "#f59e0b",
-    CONFIRMADA: "#3b82f6",
-    EM_CURSO: "#8b5cf6",
+    APROVADA: "#3b82f6",
+    PAGA: "#8b5cf6",
+    EM_CURSO: "#6366f1",
     CONCLUÍDA: "#10b981",
     CANCELADA: "#ef4444",
 };

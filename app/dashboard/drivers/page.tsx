@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { UserSquare2, Plus, Pencil, Trash2 } from "lucide-react";
+import { UserSquare2, Plus, Pencil, Trash2, Archive, ArchiveRestore } from "lucide-react";
 import Swal from "sweetalert2";
 import TopNav from "@/app/ui/dash/topNav";
 import PageShell from "@/app/ui/dash/PageShell";
@@ -27,7 +27,7 @@ export default function DriversPage() {
         setLoading(true);
         setErr(null);
         try {
-            const res = await authFetch(endpoints.drivers.list);
+            const res = await authFetch(endpoints.drivers.dashboard);
             if (!res.ok) throw new Error("Erro ao carregar motoristas.");
             const data = await res.json();
             setDrivers(data);
@@ -76,6 +76,35 @@ export default function DriversPage() {
         }
     };
 
+    const handleToggleArchive = async (driver: Driver) => {
+        const archiving = driver.status !== "ARCHIVED";
+        const nextStatus = archiving ? "ARCHIVED" : "ACTIVE";
+        if (archiving) {
+            const result = await Swal.fire({
+                title: "Arquivar motorista?",
+                text: "O motorista deixa de aparecer no site, mas fica guardado no painel.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Sim, arquivar",
+                cancelButtonText: "Cancelar",
+            });
+            if (!result.isConfirmed) return;
+        }
+        try {
+            const res = await authFetch(endpoints.drivers.updateStatus(driver.id!), {
+                method: "PATCH",
+                body: JSON.stringify({ status: nextStatus }),
+            });
+            if (!res.ok) throw new Error("Erro ao atualizar estado.");
+            const updated = await res.json();
+            setDrivers(prev => prev.map(d => d.id === driver.id ? updated : d));
+        } catch (e: any) {
+            Swal.fire({ icon: "error", title: "Erro", text: e?.message || "Erro ao atualizar estado do motorista.", confirmButtonColor: "#3085d6" });
+        }
+    };
+
     const handleSubmit = async (data: Driver, image?: File) => {
         setIsSubmitting(true);
         try {
@@ -89,6 +118,8 @@ export default function DriversPage() {
 
             if (image) {
                 formData.append("image", image);
+            } else if (data.imageUrl) {
+                formData.append("imageUrl", data.imageUrl);
             }
 
             const res = await authFetch(url, {
@@ -179,6 +210,22 @@ export default function DriversPage() {
                                 render: (row: Driver) => <span className="text-zinc-500 truncate max-w-[300px] inline-block">{row.description}</span>
                             },
                             {
+                                key: "status",
+                                label: "Estado",
+                                render: (row: Driver) => (
+                                    row.status === "ARCHIVED" ? (
+                                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider shadow-sm border bg-zinc-100 text-zinc-500 border-zinc-200/50">
+                                            <Archive size={12} />
+                                            Arquivado
+                                        </span>
+                                    ) : (
+                                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider shadow-sm border bg-emerald-50 text-emerald-600 border-emerald-200/50">
+                                            Ativo
+                                        </span>
+                                    )
+                                )
+                            },
+                            {
                                 key: "actions",
                                 label: "Ações",
                                 render: (row: Driver) => (
@@ -189,6 +236,13 @@ export default function DriversPage() {
                                             title="Editar"
                                         >
                                             <Pencil size={18} />
+                                        </button>
+                                        <button
+                                            onClick={() => handleToggleArchive(row)}
+                                            className="p-2 hover:bg-amber-50 rounded-lg text-zinc-500 hover:text-amber-600 transition-colors"
+                                            title={row.status === "ARCHIVED" ? "Restaurar" : "Arquivar"}
+                                        >
+                                            {row.status === "ARCHIVED" ? <ArchiveRestore size={18} /> : <Archive size={18} />}
                                         </button>
                                         <button
                                             onClick={() => handleDelete(row.id!)}

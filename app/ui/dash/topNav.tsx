@@ -3,8 +3,10 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useAuth } from "@/app/auth/AuthContext";
 import { useRouter } from "next/navigation";
-import { LogOut, User as UserIcon, Bell, Search, Menu } from "lucide-react";
+import { LogOut, User as UserIcon, Search, Menu } from "lucide-react";
 import { useSidebar } from "@/app/context/SidebarContext";
+import NotificationBell from "./NotificationBell";
+import MessagesButton from "./MessagesButton";
 
 export default function TopNav({
 	title,
@@ -71,10 +73,8 @@ export default function TopNav({
 			<div className="flex items-center gap-3 md:gap-6">
 				{right}
 				<div className="flex items-center gap-2 md:gap-4 border-l border-border/30 pl-2 md:pl-6">
-					<button className="relative w-10 h-10 md:w-11 md:h-11 flex items-center justify-center rounded-xl md:rounded-2xl bg-secondary/50 text-secondary-foreground hover:bg-primary hover:text-primary-foreground transition-all duration-300 group shadow-sm hover:shadow-primary/20">
-						<Bell className="w-5 h-5 group-hover:animate-swing" />
-						<span className="absolute top-2 right-2 md:top-3 md:right-3 w-2.5 h-2.5 bg-destructive rounded-full ring-2 ring-background animate-pulse"></span>
-					</button>
+					<MessagesButton />
+					<NotificationBell />
 
 					{/* Profile and Logout hidden on mobile as they are now in SideNav */}
 					<div className="hidden sm:flex items-center gap-3 md:gap-4 border-l border-border/10 pl-4 md:pl-6">

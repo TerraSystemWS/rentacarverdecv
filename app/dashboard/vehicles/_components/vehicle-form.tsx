@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Vehicle } from "@/lib/api/types";
-import { Upload, X } from "lucide-react";
+import { Vehicle, MediaAsset } from "@/lib/api/types";
+import { Upload, X, Images } from "lucide-react";
+import MediaPicker from "@/app/dashboard/_components/MediaPicker";
 
 interface VehicleFormProps {
     initialData?: Partial<Vehicle>;
@@ -56,6 +57,13 @@ export default function VehicleForm({
     const [previews, setPreviews] = useState<{ id?: number; url: string; isNew?: boolean }[]>(
         initialData?.images?.map(img => ({ ...img })) || []
     );
+    const [pickerOpen, setPickerOpen] = useState(false);
+
+    const handlePickFromLibrary = (asset: MediaAsset) => {
+        setFormData(prev => ({ ...prev, images: [...prev.images, { url: asset.url }] }));
+        setPreviews(prev => [...prev, { url: asset.url, isNew: false }]);
+        setPickerOpen(false);
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value, type } = e.target;
@@ -308,10 +316,24 @@ export default function VehicleForm({
                             className="aspect-video rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center gap-2 hover:border-blue-400 hover:bg-blue-50 transition-all text-gray-400 hover:text-blue-500"
                         >
                             <Upload size={24} />
-                            <span className="text-[10px] font-bold uppercase tracking-tight">Adicionar Foto</span>
+                            <span className="text-[10px] font-bold uppercase tracking-tight">Enviar do PC</span>
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setPickerOpen(true)}
+                            className="aspect-video rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center gap-2 hover:border-blue-400 hover:bg-blue-50 transition-all text-gray-400 hover:text-blue-500"
+                        >
+                            <Images size={24} />
+                            <span className="text-[10px] font-bold uppercase tracking-tight">Media Library</span>
                         </button>
                     </div>
                     <input id="image-upload" type="file" accept="image/*" multiple onChange={handleImageChange} className="hidden" />
+                    <MediaPicker
+                        isOpen={pickerOpen}
+                        category="vehicles"
+                        onClose={() => setPickerOpen(false)}
+                        onSelect={handlePickFromLibrary}
+                    />
                 </div>
             </div>
 

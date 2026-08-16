@@ -339,16 +339,16 @@ export default function ContentPage() {
 
                                 <div className="bg-white p-8 rounded-[32px] shadow-sm border border-gray-100 space-y-6">
                                     <h3 className="text-xl font-black text-gray-900 border-b pb-4">Números (Fun Facts)</h3>
+                                    <p className="text-xs text-gray-400 -mt-2">
+                                        Os números dos Factos 1 a 3 são calculados automaticamente a partir da base de dados (veículos, reservas concluídas e condutores). Só o texto é editável.
+                                    </p>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         {/* Facto 1 */}
                                         <div className="space-y-2">
                                             <label className="text-xs font-black uppercase text-gray-400 tracking-widest pl-1">Facto 1 (Número)</label>
-                                            <input
-                                                type="number"
-                                                value={content.home.funFacts.f1Num || 0}
-                                                onChange={(e) => handleNestedChange("home", "funFacts", "f1Num", e.target.value)}
-                                                className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-black text-lg"
-                                            />
+                                            <div className="w-full px-5 py-4 bg-gray-100 border border-gray-200 rounded-2xl font-black text-lg text-gray-400">
+                                                Automático (nº de veículos)
+                                            </div>
                                         </div>
                                         <div className="space-y-2">
                                             <label className="text-xs font-black uppercase text-gray-400 tracking-widest pl-1">Facto 1 (Texto)</label>
@@ -363,12 +363,9 @@ export default function ContentPage() {
                                         {/* Facto 2 */}
                                         <div className="space-y-2">
                                             <label className="text-xs font-black uppercase text-gray-400 tracking-widest pl-1">Facto 2 (Número)</label>
-                                            <input
-                                                type="number"
-                                                value={content.home.funFacts.f2Num || 0}
-                                                onChange={(e) => handleNestedChange("home", "funFacts", "f2Num", e.target.value)}
-                                                className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-black text-lg"
-                                            />
+                                            <div className="w-full px-5 py-4 bg-gray-100 border border-gray-200 rounded-2xl font-black text-lg text-gray-400">
+                                                Automático (reservas concluídas)
+                                            </div>
                                         </div>
                                         <div className="space-y-2">
                                             <label className="text-xs font-black uppercase text-gray-400 tracking-widest pl-1">Facto 2 (Texto)</label>
@@ -383,12 +380,9 @@ export default function ContentPage() {
                                         {/* Facto 3 */}
                                         <div className="space-y-2">
                                             <label className="text-xs font-black uppercase text-gray-400 tracking-widest pl-1">Facto 3 (Número)</label>
-                                            <input
-                                                type="number"
-                                                value={content.home.funFacts.f3Num || 0}
-                                                onChange={(e) => handleNestedChange("home", "funFacts", "f3Num", e.target.value)}
-                                                className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-black text-lg"
-                                            />
+                                            <div className="w-full px-5 py-4 bg-gray-100 border border-gray-200 rounded-2xl font-black text-lg text-gray-400">
+                                                Automático (nº de condutores)
+                                            </div>
                                         </div>
                                         <div className="space-y-2">
                                             <label className="text-xs font-black uppercase text-gray-400 tracking-widest pl-1">Facto 3 (Texto)</label>

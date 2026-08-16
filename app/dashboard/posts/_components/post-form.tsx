@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Post } from "@/lib/api/types";
-import { Upload, X } from "lucide-react";
+import { Post, MediaAsset } from "@/lib/api/types";
+import { Upload, Images } from "lucide-react";
 import { API_BASE_URL } from "@/lib/api/endpoints";
+import MediaPicker from "@/app/dashboard/_components/MediaPicker";
 
 interface PostFormProps {
     initialData?: Partial<Post>;
@@ -31,6 +32,7 @@ export default function PostForm({
 
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(initialData?.imageUrl || null);
+    const [pickerOpen, setPickerOpen] = useState(false);
 
     // Auto-generate slug from title
     useEffect(() => {
@@ -64,6 +66,13 @@ export default function PostForm({
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         onSubmit(formData, selectedImage || undefined);
+    };
+
+    const handlePickFromLibrary = (asset: MediaAsset) => {
+        setSelectedImage(null);
+        setPreview(asset.url);
+        setFormData((prev) => ({ ...prev, imageUrl: asset.url }));
+        setPickerOpen(false);
     };
 
     const getImageSrc = (url: string) => {
@@ -163,14 +172,30 @@ export default function PostForm({
                                 <Upload className="text-gray-300 w-8 h-8" />
                             )}
                         </div>
-                        <button
-                            type="button"
-                            onClick={() => document.getElementById('post-image-upload')?.click()}
-                            className="btn-secondary text-xs h-10 px-4"
-                        >
-                            Alterar Imagem
-                        </button>
+                        <div className="flex flex-col gap-2">
+                            <button
+                                type="button"
+                                onClick={() => document.getElementById('post-image-upload')?.click()}
+                                className="btn-secondary text-xs h-10 px-4"
+                            >
+                                Enviar do PC
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setPickerOpen(true)}
+                                className="flex items-center justify-center gap-1.5 btn-secondary text-xs h-10 px-4"
+                            >
+                                <Images className="w-3.5 h-3.5" />
+                                Media Library
+                            </button>
+                        </div>
                         <input id="post-image-upload" type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+                        <MediaPicker
+                            isOpen={pickerOpen}
+                            category="posts"
+                            onClose={() => setPickerOpen(false)}
+                            onSelect={handlePickFromLibrary}
+                        />
                     </div>
                 </div>
             </div>

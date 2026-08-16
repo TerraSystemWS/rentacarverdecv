@@ -96,21 +96,25 @@ export default function CalendarPage() {
         handleEventDrop({ event, start, end });
     };
 
-    // Style events based on booking status
+    // Style events based on booking status — mesma paleta usada em
+    // bookings/page.tsx e RevenueOverview.tsx.
     const eventPropGetter = (event: CalendarEvent) => {
-        let backgroundColor = '#3b82f6'; // primary blue
+        let backgroundColor = '#3b82f6'; // fallback: blue
         switch (event.booking.status) {
             case 'PENDENTE':
                 backgroundColor = '#f59e0b'; // amber
                 break;
-            case 'CONFIRMADA':
-                backgroundColor = '#10b981'; // green
-                break;
-            case 'EM_CURSO':
+            case 'APROVADA':
                 backgroundColor = '#3b82f6'; // blue
                 break;
+            case 'PAGA':
+                backgroundColor = '#8b5cf6'; // violet
+                break;
+            case 'EM_CURSO':
+                backgroundColor = '#6366f1'; // indigo
+                break;
             case 'CONCLUÍDA':
-                backgroundColor = '#64748b'; // slate
+                backgroundColor = '#10b981'; // emerald
                 break;
             case 'CANCELADA':
                 backgroundColor = '#ef4444'; // red
@@ -118,6 +122,12 @@ export default function CalendarPage() {
         }
         return { style: { backgroundColor } };
     };
+
+    // Reservas já pagas (ou além) só progridem por "Pegou"/"Devolveu" no
+    // painel de reservas — arrastar no calendário deixaria de funcionar
+    // (backend bloqueia com 409), por isso desliga-se visualmente aqui.
+    const draggableAccessor = (event: CalendarEvent) =>
+        event.booking.status === 'PENDENTE' || event.booking.status === 'APROVADA';
 
     return (
         <div>
@@ -146,6 +156,8 @@ export default function CalendarPage() {
                             onNavigate={(date) => setCurrentDate(date)}
                             views={[Views.MONTH, Views.WEEK, Views.DAY]}
                             eventPropGetter={eventPropGetter as any}
+                            draggableAccessor={draggableAccessor as any}
+                            resizableAccessor={draggableAccessor as any}
                             messages={{
                                 next: "Seguinte",
                                 previous: "Anterior",

@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Driver } from "@/lib/api/types";
-import { Upload } from "lucide-react";
+import { Driver, MediaAsset } from "@/lib/api/types";
+import { Images } from "lucide-react";
 import { API_BASE_URL } from "@/lib/api/endpoints";
+import MediaPicker from "@/app/dashboard/_components/MediaPicker";
 
 interface DriverFormProps {
     initialData?: Partial<Driver>;
@@ -27,6 +28,7 @@ export default function DriverForm({
 
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(initialData?.imageUrl || null);
+    const [pickerOpen, setPickerOpen] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -47,6 +49,13 @@ export default function DriverForm({
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         onSubmit(formData, selectedImage || undefined);
+    };
+
+    const handlePickFromLibrary = (asset: MediaAsset) => {
+        setSelectedImage(null);
+        setPreview(asset.url);
+        setFormData((prev) => ({ ...prev, imageUrl: asset.url }));
+        setPickerOpen(false);
     };
 
     const getImageSrc = (url: string) => {
@@ -100,14 +109,30 @@ export default function DriverForm({
                                 />
                             )}
                         </div>
-                        <button
-                            type="button"
-                            onClick={() => document.getElementById('image-upload')?.click()}
-                            className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-200 rounded-lg text-xs h-10 px-4 transition-colors font-semibold"
-                        >
-                            Alterar Imagem
-                        </button>
+                        <div className="flex flex-col gap-2">
+                            <button
+                                type="button"
+                                onClick={() => document.getElementById('image-upload')?.click()}
+                                className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-200 rounded-lg text-xs h-10 px-4 transition-colors font-semibold"
+                            >
+                                Enviar do PC
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setPickerOpen(true)}
+                                className="flex items-center justify-center gap-1.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-200 rounded-lg text-xs h-10 px-4 transition-colors font-semibold"
+                            >
+                                <Images className="w-3.5 h-3.5" />
+                                Media Library
+                            </button>
+                        </div>
                         <input id="image-upload" type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+                        <MediaPicker
+                            isOpen={pickerOpen}
+                            category="drivers"
+                            onClose={() => setPickerOpen(false)}
+                            onSelect={handlePickFromLibrary}
+                        />
                     </div>
                 </div>
             </div>

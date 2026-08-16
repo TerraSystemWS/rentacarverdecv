@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Plus, Search, Trash2, Edit2, Megaphone, CheckCircle2, XCircle } from "lucide-react";
+import { Plus, Search, Trash2, Edit2, Megaphone, CheckCircle2, XCircle, Archive, ArchiveRestore } from "lucide-react";
 import Swal from "sweetalert2";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
 import { useAuth } from "@/app/auth/AuthContext";
@@ -67,6 +67,36 @@ export default function AdsPage() {
             }
         } catch (error) {
             console.error("Error deleting ad:", error);
+        }
+    };
+
+    const handleToggleArchive = async (ad: Advertisement) => {
+        const archiving = ad.status !== "ARCHIVED";
+        const nextStatus = archiving ? "ARCHIVED" : "ACTIVE";
+        if (archiving) {
+            const result = await Swal.fire({
+                title: "Arquivar campanha?",
+                text: "A campanha deixa de aparecer no site (fica também desligada).",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Sim, arquivar",
+                cancelButtonText: "Cancelar",
+            });
+            if (!result.isConfirmed) return;
+        }
+        try {
+            const res = await authFetch(endpoints.ads.updateStatus(ad.id!), {
+                method: "PATCH",
+                body: JSON.stringify({ status: nextStatus }),
+            });
+            if (res.ok) {
+                const updated = await res.json();
+                setAds(prev => prev.map(a => a.id === ad.id ? updated : a));
+            }
+        } catch (error) {
+            console.error("Error updating ad status:", error);
         }
     };
 
@@ -190,7 +220,12 @@ export default function AdsPage() {
                                                     </span>
                                                 </td>
                                                 <td className="px-8 py-5 text-center">
-                                                    {ad.active ? (
+                                                    {ad.status === "ARCHIVED" ? (
+                                                        <div className="flex items-center justify-center gap-1.5 text-zinc-500 bg-zinc-100 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider mx-auto w-fit">
+                                                            <Archive className="w-3.5 h-3.5" />
+                                                            Arquivado
+                                                        </div>
+                                                    ) : ad.active ? (
                                                         <div className="flex items-center justify-center gap-1.5 text-green-600 bg-green-50 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider mx-auto w-fit">
                                                             <CheckCircle2 className="w-3.5 h-3.5" />
                                                             Ativo
@@ -212,6 +247,13 @@ export default function AdsPage() {
                                                             className="p-2.5 rounded-xl text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-all active:scale-90"
                                                         >
                                                             <Edit2 className="w-5 h-5" />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleToggleArchive(ad)}
+                                                            className="p-2.5 rounded-xl text-gray-400 hover:text-amber-600 hover:bg-amber-50 transition-all active:scale-90"
+                                                            title={ad.status === "ARCHIVED" ? "Restaurar" : "Arquivar"}
+                                                        >
+                                                            {ad.status === "ARCHIVED" ? <ArchiveRestore className="w-5 h-5" /> : <Archive className="w-5 h-5" />}
                                                         </button>
                                                         <button
                                                             onClick={() => handleDelete(ad.id!)}

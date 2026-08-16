@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Car, Plus, Pencil, Trash2, Power, PowerOff } from "lucide-react";
+import { Car, Plus, Pencil, Trash2, Power, PowerOff, Archive, ArchiveRestore } from "lucide-react";
 import Swal from "sweetalert2";
 import TopNav from "@/app/ui/dash/topNav";
 import PageShell from "@/app/ui/dash/PageShell";
@@ -48,6 +48,33 @@ export default function VehiclesPage() {
         } catch (e: any) {
             setVehicles(prev => prev.map(v => v.id === vehicle.id ? { ...v, available: !nextAvailable } : v));
             Swal.fire({ icon: "error", title: "Erro", text: e?.message || "Erro ao atualizar disponibilidade.", confirmButtonColor: "#3085d6" });
+        }
+    };
+
+    const handleToggleArchive = async (vehicle: Vehicle) => {
+        const archiving = vehicle.status !== "ARCHIVED";
+        const nextStatus = archiving ? "ARCHIVED" : "ACTIVE";
+        if (archiving) {
+            const result = await Swal.fire({
+                title: "Arquivar veículo?",
+                text: "O veículo deixa de aparecer no site e nas listagens, mas o histórico de reservas e faturas mantém-se intacto.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Sim, arquivar",
+                cancelButtonText: "Cancelar",
+            });
+            if (!result.isConfirmed) return;
+        }
+        try {
+            const updated = await apiFetch<Vehicle>(endpoints.vehicles.updateStatus(vehicle.id!), {
+                method: "PATCH",
+                body: JSON.stringify({ status: nextStatus }),
+            });
+            setVehicles(prev => prev.map(v => v.id === vehicle.id ? updated : v));
+        } catch (e: any) {
+            Swal.fire({ icon: "error", title: "Erro", text: e?.message || "Erro ao atualizar estado do veículo.", confirmButtonColor: "#3085d6" });
         }
     };
 
@@ -226,19 +253,29 @@ export default function VehiclesPage() {
                             {
                                 key: "available",
                                 label: "Disponibilidade",
-                                render: (row: Vehicle) => (
-                                    <button
-                                        onClick={() => handleToggleAvailability(row)}
-                                        title={row.available ? "Marcar como indisponível" : "Marcar como disponível"}
-                                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider shadow-sm border transition-colors ${row.available
-                                            ? "bg-emerald-50 text-emerald-600 border-emerald-200/50 hover:bg-emerald-100"
-                                            : "bg-red-50 text-red-600 border-red-200/50 hover:bg-red-100"
-                                            }`}
-                                    >
-                                        {row.available ? <Power size={12} /> : <PowerOff size={12} />}
-                                        {row.available ? "Disponível" : "Indisponível"}
-                                    </button>
-                                )
+                                render: (row: Vehicle) => {
+                                    if (row.status === "ARCHIVED") {
+                                        return (
+                                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider shadow-sm border bg-zinc-100 text-zinc-500 border-zinc-200/50">
+                                                <Archive size={12} />
+                                                Arquivada
+                                            </span>
+                                        );
+                                    }
+                                    return (
+                                        <button
+                                            onClick={() => handleToggleAvailability(row)}
+                                            title={row.available ? "Marcar como indisponível" : "Marcar como disponível"}
+                                            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider shadow-sm border transition-colors ${row.available
+                                                ? "bg-emerald-50 text-emerald-600 border-emerald-200/50 hover:bg-emerald-100"
+                                                : "bg-amber-50 text-amber-600 border-amber-200/50 hover:bg-amber-100"
+                                                }`}
+                                        >
+                                            {row.available ? <Power size={12} /> : <PowerOff size={12} />}
+                                            {row.available ? "Disponível" : "Em Manutenção"}
+                                        </button>
+                                    );
+                                }
                             },
                             {
                                 key: "actions",
@@ -253,9 +290,16 @@ export default function VehiclesPage() {
                                             <Pencil size={18} />
                                         </button>
                                         <button
+                                            onClick={() => handleToggleArchive(row)}
+                                            className="p-2 hover:bg-amber-50 rounded-lg text-zinc-500 hover:text-amber-600 transition-colors"
+                                            title={row.status === "ARCHIVED" ? "Restaurar" : "Arquivar"}
+                                        >
+                                            {row.status === "ARCHIVED" ? <ArchiveRestore size={18} /> : <Archive size={18} />}
+                                        </button>
+                                        <button
                                             onClick={() => handleDelete(row.id!)}
                                             className="p-2 hover:bg-red-50 rounded-lg text-zinc-500 hover:text-red-600 transition-colors"
-                                            title="Eliminar"
+                                            title="Eliminar (só se nunca teve reservas)"
                                         >
                                             <Trash2 size={18} />
                                         </button>

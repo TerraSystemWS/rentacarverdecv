@@ -1,9 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { Advertisement } from "@/lib/api/types";
-import { Upload } from "lucide-react";
+import { Advertisement, MediaAsset } from "@/lib/api/types";
+import { Upload, AlertTriangle, Images } from "lucide-react";
 import { API_BASE_URL } from "@/lib/api/endpoints";
+import MediaPicker from "@/app/dashboard/_components/MediaPicker";
+
+// Proporção recomendada por posicionamento — usada para avisar (não
+// bloquear) quando a imagem carregada não bate certo, em vez de deixar o
+// admin descobrir só depois de publicado que o banner ficou cortado/esticado.
+const RECOMMENDED_RATIOS: Record<string, { ratio: number; label: string }> = {
+    BANNER: { ratio: 1920 / 600, label: "1920x600px (≈3.2:1)" },
+    SIDEBAR: { ratio: 300 / 250, label: "300x250px (≈1.2:1)" },
+    POPUP: { ratio: 800 / 600, label: "800x600px (≈4:3)" },
+};
+const RATIO_TOLERANCE = 0.15;
 
 interface AdFormProps {
     initialData?: Partial<Advertisement>;
@@ -30,6 +41,8 @@ export default function AdForm({
 
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(initialData?.imageUrl || null);
+    const [ratioWarning, setRatioWarning] = useState<string | null>(null);
+    const [pickerOpen, setPickerOpen] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
@@ -38,19 +51,51 @@ export default function AdForm({
             ...prev,
             [name]: type === 'number' ? parseInt(value) : val,
         }));
+        if (name === 'placement' && preview) {
+            checkRatio(getImageSrc(preview), value);
+        }
+    };
+
+    const checkRatio = (url: string, placement: string) => {
+        const recommended = RECOMMENDED_RATIOS[placement];
+        if (!recommended) {
+            setRatioWarning(null);
+            return;
+        }
+        const img = new Image();
+        img.onload = () => {
+            const actual = img.width / img.height;
+            const diff = Math.abs(actual - recommended.ratio) / recommended.ratio;
+            setRatioWarning(
+                diff > RATIO_TOLERANCE
+                    ? `Esta imagem é ${img.width}x${img.height}px — a proporção recomendada para "${placement}" é ${recommended.label}. A imagem pode ficar cortada ou esticada.`
+                    : null
+            );
+        };
+        img.src = url;
     };
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
             setSelectedImage(file);
-            setPreview(URL.createObjectURL(file));
+            const url = URL.createObjectURL(file);
+            setPreview(url);
+            checkRatio(url, formData.placement);
         }
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         onSubmit(formData, selectedImage || undefined);
+    };
+
+    const handlePickFromLibrary = (asset: MediaAsset) => {
+        setSelectedImage(null);
+        setPreview(asset.url);
+        setFormData((prev) => ({ ...prev, imageUrl: asset.url }));
+        checkRatio(getImageSrc(asset.url), formData.placement);
+        setPickerOpen(false);
     };
 
     const getImageSrc = (url: string) => {
@@ -140,17 +185,39 @@ export default function AdForm({
                                 <Upload className="text-gray-300 w-12 h-12" />
                             )}
                         </div>
-                        <button
-                            type="button"
-                            onClick={() => document.getElementById('ad-image-upload')?.click()}
-                            className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-                        >
-                            {preview ? "Alterar Imagem" : "Selecionar Imagem"}
-                        </button>
+                        <div className="flex gap-2">
+                            <button
+                                type="button"
+                                onClick={() => document.getElementById('ad-image-upload')?.click()}
+                                className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                            >
+                                {preview ? "Alterar Imagem" : "Enviar do PC"}
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setPickerOpen(true)}
+                                className="flex-1 flex items-center justify-center gap-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                            >
+                                <Images className="w-4 h-4" />
+                                Media Library
+                            </button>
+                        </div>
                         <input id="ad-image-upload" type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+                        <MediaPicker
+                            isOpen={pickerOpen}
+                            category="ads"
+                            onClose={() => setPickerOpen(false)}
+                            onSelect={handlePickFromLibrary}
+                        />
                         <p className="text-[10px] text-gray-400 mt-1">
-                            Recomendado: 1920x600px para Banners, 300x250px para Lateral.
+                            Recomendado: {RECOMMENDED_RATIOS.BANNER.label} para Banner, {RECOMMENDED_RATIOS.SIDEBAR.label} para Lateral, {RECOMMENDED_RATIOS.POPUP.label} para Pop-up.
                         </p>
+                        {ratioWarning && (
+                            <div className="flex items-start gap-2 rounded-lg bg-amber-50 border border-amber-200 p-2.5 text-xs text-amber-800">
+                                <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+                                <span>{ratioWarning}</span>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

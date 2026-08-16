@@ -11,31 +11,83 @@ import {
 	Users,
 	MessageSquare,
 	ChevronRight,
+	ChevronLeft,
 	TrendingUp,
 	Handshake,
 	FileText,
 	Image,
+	Images,
 	Megaphone,
 	UserSquare2,
 	X,
 	LogOut,
-	User as UserIcon
+	User as UserIcon,
+	Ticket,
+	Mail,
+	Receipt,
+	Settings2,
+	Briefcase,
+	Archive,
 } from "lucide-react";
 import { useSidebar } from "@/app/context/SidebarContext";
 
-const items = [
-	{ label: "Painel", href: "/dashboard", icon: LayoutDashboard },
-	{ label: "Reservas", href: "/dashboard/bookings", icon: CalendarDays },
-	{ label: "Veículos", href: "/dashboard/vehicles", icon: Car },
-	{ label: "Calendário", href: "/dashboard/calendar", icon: CalendarDays },
-	{ label: "Blog", href: "/dashboard/posts", icon: FileText },
-	{ label: "Parceiros", href: "/dashboard/partners", icon: Handshake },
-	{ label: "Galeria", href: "/dashboard/gallery", icon: Image },
-	{ label: "Publicidade", href: "/dashboard/ads", icon: Megaphone },
-	{ label: "Motoristas", href: "/dashboard/drivers", icon: UserSquare2 },
-	{ label: "Utilizadores", href: "/dashboard/users", icon: Users },
-	{ label: "Mensagens", href: "/dashboard/messages", icon: MessageSquare },
-	{ label: "Definições", href: "/dashboard/settings", icon: LayoutDashboard },
+type Item = { label: string; href: string; icon: any };
+type Group = { label: string; icon: any; items: Item[] };
+
+// Item de topo — sempre visível, nunca dentro de um grupo.
+const rootItem: Item = { label: "Painel", href: "/dashboard", icon: LayoutDashboard };
+
+// Grupos temáticos — clicar num grupo abre uma vista só com os seus itens
+// (tasks.md: "qd um grupo recebe um clique ele abre um subgroup onde o side
+// menu apenas tera esses menus e um ultimo 'Voltar'").
+const groups: Group[] = [
+	{
+		label: "Operações",
+		icon: Briefcase,
+		items: [
+			{ label: "Reservas", href: "/dashboard/bookings", icon: CalendarDays },
+			{ label: "Veículos", href: "/dashboard/vehicles", icon: Car },
+			{ label: "Calendário", href: "/dashboard/calendar", icon: CalendarDays },
+			{ label: "Motoristas", href: "/dashboard/drivers", icon: UserSquare2 },
+		],
+	},
+	{
+		label: "Conteúdo",
+		icon: FileText,
+		items: [
+			{ label: "Blog", href: "/dashboard/posts", icon: FileText },
+			{ label: "Galeria", href: "/dashboard/gallery", icon: Image },
+			{ label: "Parceiros", href: "/dashboard/partners", icon: Handshake },
+			{ label: "Media Library", href: "/dashboard/media", icon: Images },
+		],
+	},
+	{
+		label: "Marketing",
+		icon: Megaphone,
+		items: [
+			{ label: "Publicidade", href: "/dashboard/ads", icon: Megaphone },
+			{ label: "Vouchers", href: "/dashboard/vouchers", icon: Ticket },
+			{ label: "Subscritores", href: "/dashboard/subscribers", icon: Mail },
+		],
+	},
+	{
+		label: "Conta",
+		icon: Receipt,
+		items: [
+			{ label: "Faturação", href: "/dashboard/invoices", icon: Receipt },
+			{ label: "Configuração da Empresa", href: "/dashboard/company-settings", icon: Settings2 },
+		],
+	},
+	{
+		label: "Sistema",
+		icon: Settings2,
+		items: [
+			{ label: "Utilizadores", href: "/dashboard/users", icon: Users },
+			{ label: "Mensagens", href: "/dashboard/messages", icon: MessageSquare },
+			{ label: "Arquivados", href: "/dashboard/archived", icon: Archive },
+			{ label: "Definições", href: "/dashboard/settings", icon: LayoutDashboard },
+		],
+	},
 ];
 
 export default function SideNav() {
@@ -44,6 +96,16 @@ export default function SideNav() {
 	const { isOpen, close } = useSidebar();
 	const { user, logout } = useAuth();
 	const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+	// Se a rota atual pertence a um grupo, abre já nesse grupo em vez de
+	// obrigar o admin a navegar de novo pela raiz do menu depois de um refresh.
+	const activeGroup = groups.find((g) => g.items.some((i) => pathname === i.href || pathname.startsWith(i.href + "/")));
+	const [openGroup, setOpenGroup] = useState<Group | null>(activeGroup || null);
+
+	useEffect(() => {
+		const match = groups.find((g) => g.items.some((i) => pathname === i.href || pathname.startsWith(i.href + "/")));
+		if (match) setOpenGroup(match);
+	}, [pathname]);
 
 	const mountedRef = useRef(true);
 	useEffect(() => {
@@ -62,6 +124,37 @@ export default function SideNav() {
 			router.replace("/dashboard/login");
 			if (mountedRef.current) setIsLoggingOut(false);
 		}
+	}
+
+	function renderLink(item: Item, onNavigate: () => void) {
+		const active = pathname === item.href || pathname.startsWith(item.href + "/");
+		const Icon = item.icon;
+		return (
+			<Link
+				key={item.href}
+				href={item.href}
+				onClick={onNavigate}
+				className={[
+					"group flex items-center justify-between rounded-2xl px-5 py-4 text-sm font-semibold transition-all duration-300",
+					active
+						? "bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-[1.02]"
+						: "text-sidebar-foreground/50 hover:bg-sidebar-accent/40 hover:text-sidebar-foreground hover:translate-x-1",
+				].join(" ")}
+			>
+				<div className="flex items-center gap-4">
+					<Icon className={[
+						"w-5 h-5 transition-all duration-300",
+						active ? "text-primary-foreground scale-110" : "group-hover:scale-110 group-hover:rotate-3"
+					].join(" ")} />
+					<span className="tracking-wide">{item.label}</span>
+				</div>
+				{active ? (
+					<ChevronRight className="w-4 h-4 text-primary-foreground/50" />
+				) : (
+					<ChevronRight className="w-4 h-4 text-sidebar-foreground/10 group-hover:text-sidebar-foreground/30 transition-colors" />
+				)}
+			</Link>
+		);
 	}
 
 	return (
@@ -104,36 +197,47 @@ export default function SideNav() {
 				</div>
 
 				<nav className="flex-1 px-4 space-y-2 overflow-y-auto custom-scrollbar py-2">
-					{items.map((item) => {
-						const active = pathname === item.href;
-						const Icon = item.icon;
-						return (
-							<Link
-								key={item.href}
-								href={item.href}
-								onClick={close}
-								className={[
-									"group flex items-center justify-between rounded-2xl px-5 py-4 text-sm font-semibold transition-all duration-300",
-									active
-										? "bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-[1.02]"
-										: "text-sidebar-foreground/50 hover:bg-sidebar-accent/40 hover:text-sidebar-foreground hover:translate-x-1",
-								].join(" ")}
+					{openGroup ? (
+						<>
+							<button
+								onClick={() => setOpenGroup(null)}
+								className="w-full flex items-center gap-3 rounded-2xl px-5 py-3 mb-2 text-xs font-bold uppercase tracking-widest text-sidebar-foreground/40 hover:text-sidebar-foreground hover:bg-sidebar-accent/30 transition-colors"
 							>
-								<div className="flex items-center gap-4">
-									<Icon className={[
-										"w-5 h-5 transition-all duration-300",
-										active ? "text-primary-foreground scale-110" : "group-hover:scale-110 group-hover:rotate-3"
-									].join(" ")} />
-									<span className="tracking-wide">{item.label}</span>
-								</div>
-								{active ? (
-									<ChevronRight className="w-4 h-4 text-primary-foreground/50" />
-								) : (
-									<ChevronRight className="w-4 h-4 text-sidebar-foreground/10 group-hover:text-sidebar-foreground/30 transition-colors" />
-								)}
-							</Link>
-						);
-					})}
+								<ChevronLeft className="w-4 h-4" />
+								Voltar
+							</button>
+							<div className="px-5 pb-2 text-[10px] uppercase tracking-[0.25em] text-sidebar-foreground/30 font-black">
+								{openGroup.label}
+							</div>
+							{openGroup.items.map((item) => renderLink(item, close))}
+						</>
+					) : (
+						<>
+							{renderLink(rootItem, close)}
+							{groups.map((group) => {
+								const Icon = group.icon;
+								const isGroupActive = group.items.some((i) => pathname === i.href || pathname.startsWith(i.href + "/"));
+								return (
+									<button
+										key={group.label}
+										onClick={() => setOpenGroup(group)}
+										className={[
+											"w-full group flex items-center justify-between rounded-2xl px-5 py-4 text-sm font-semibold transition-all duration-300",
+											isGroupActive
+												? "bg-sidebar-accent/50 text-sidebar-foreground"
+												: "text-sidebar-foreground/50 hover:bg-sidebar-accent/40 hover:text-sidebar-foreground hover:translate-x-1",
+										].join(" ")}
+									>
+										<div className="flex items-center gap-4">
+											<Icon className="w-5 h-5 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300" />
+											<span className="tracking-wide">{group.label}</span>
+										</div>
+										<ChevronRight className="w-4 h-4 text-sidebar-foreground/30" />
+									</button>
+								);
+							})}
+						</>
+					)}
 				</nav>
 
 				<div className="p-6 space-y-6">

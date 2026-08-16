@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Partner } from "@/lib/api/types";
-import { Upload, X } from "lucide-react";
+import { Partner, MediaAsset } from "@/lib/api/types";
+import { Upload, Images } from "lucide-react";
 import { API_BASE_URL } from "@/lib/api/endpoints";
+import MediaPicker from "@/app/dashboard/_components/MediaPicker";
 
 interface PartnerFormProps {
     initialData?: Partial<Partner>;
@@ -27,6 +28,7 @@ export default function PartnerForm({
 
     const [selectedLogo, setSelectedLogo] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(initialData?.logoUrl || null);
+    const [pickerOpen, setPickerOpen] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -47,6 +49,13 @@ export default function PartnerForm({
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         onSubmit(formData, selectedLogo || undefined);
+    };
+
+    const handlePickFromLibrary = (asset: MediaAsset) => {
+        setSelectedLogo(null);
+        setPreview(asset.url);
+        setFormData((prev) => ({ ...prev, logoUrl: asset.url }));
+        setPickerOpen(false);
     };
 
     const getImageSrc = (url: string) => {
@@ -94,14 +103,30 @@ export default function PartnerForm({
                                 <Upload className="text-gray-300 w-8 h-8" />
                             )}
                         </div>
-                        <button
-                            type="button"
-                            onClick={() => document.getElementById('logo-upload')?.click()}
-                            className="btn-secondary text-xs h-10 px-4"
-                        >
-                            Alterar Logo
-                        </button>
+                        <div className="flex flex-col gap-2">
+                            <button
+                                type="button"
+                                onClick={() => document.getElementById('logo-upload')?.click()}
+                                className="btn-secondary text-xs h-10 px-4"
+                            >
+                                Enviar do PC
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setPickerOpen(true)}
+                                className="flex items-center justify-center gap-1.5 btn-secondary text-xs h-10 px-4"
+                            >
+                                <Images className="w-3.5 h-3.5" />
+                                Media Library
+                            </button>
+                        </div>
                         <input id="logo-upload" type="file" accept="image/*" onChange={handleLogoChange} className="hidden" />
+                        <MediaPicker
+                            isOpen={pickerOpen}
+                            category="partners"
+                            onClose={() => setPickerOpen(false)}
+                            onSelect={handlePickFromLibrary}
+                        />
                     </div>
                 </div>
             </div>
