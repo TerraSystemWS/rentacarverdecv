@@ -3,12 +3,13 @@ import VehicleSingle from "@/app/ui/front/veiculos/single/singlecar";
 import { Vehicle } from "@/lib/api/types";
 import { API_BASE_URL, SERVER_API_BASE_URL } from "@/lib/api/endpoints";
 import { Metadata } from "next";
+import { permanentRedirect } from "next/navigation";
 
-export async function generateMetadata({ params }: { params: Promise<{ carId: string }> }): Promise<Metadata> {
-	const { carId } = await params;
+export async function generateMetadata({ params }: { params: Promise<{ carSlug: string }> }): Promise<Metadata> {
+	const { carSlug } = await params;
 
 	try {
-		const res = await fetch(`${SERVER_API_BASE_URL}/public/vehicles/${carId}`, { cache: 'no-store' });
+		const res = await fetch(`${SERVER_API_BASE_URL}/public/vehicles/${carSlug}`, { cache: 'no-store' });
 		if (!res.ok) return { title: 'Veículo não encontrado' };
 
 		const vehicle: Vehicle = await res.json();
@@ -27,17 +28,25 @@ export async function generateMetadata({ params }: { params: Promise<{ carId: st
 	}
 }
 
-export default async function CarId({ params }: { params: Promise<{ carId: string }> }) {
-	const { carId } = await params;
+export default async function CarSlug({ params }: { params: Promise<{ carSlug: string }> }) {
+	const { carSlug } = await params;
 	let vehicle: Vehicle | null = null;
 
 	try {
-		const res = await fetch(`${SERVER_API_BASE_URL}/public/vehicles/${carId}`, { cache: 'no-store' });
+		const res = await fetch(`${SERVER_API_BASE_URL}/public/vehicles/${carSlug}`, { cache: 'no-store' });
 		if (res.ok) {
 			vehicle = await res.json();
 		}
 	} catch (error) {
 		console.error("Error fetching vehicle details:", error);
+	}
+
+	// O backend ainda aceita o id numérico antigo (/cars/32) por compatibilidade
+	// com links já partilhados/indexados — mas a URL canónica passa a ser
+	// sempre o slug (/cars/dacia-spring-2023). Redirect permanente (308) para
+	// consolidar o SEO num único endereço por viatura.
+	if (vehicle && vehicle.slug && carSlug !== vehicle.slug) {
+		permanentRedirect(`/cars/${vehicle.slug}`);
 	}
 
 	return (

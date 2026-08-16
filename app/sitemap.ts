@@ -15,7 +15,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
         // Map vehicles to sitemap entries
         const vehicleUrls = Array.isArray(vehicles) ? vehicles.map((car: any) => ({
-            url: `${baseUrl}/cars/${car.id}`,
+            url: `${baseUrl}/cars/${car.slug ?? car.id}`,
             lastModified: new Date(),
             changeFrequency: 'weekly' as const,
             priority: 0.8,

@@ -21,13 +21,13 @@ const Carro: React.FC<CarroProps> = ({ car }) => {
 	return (
 		<div className="vehicle-content theme-yellow h-full flex flex-col">
 			<div className="vehicle-thumbnail">
-				<a href={`/cars/${car.id}`}>
+				<a href={`/cars/${car.slug ?? car.id}`}>
 					<img src={firstImage} alt={`${car.make} ${car.model}`} className="w-full !h-48 !object-cover" />
 				</a>
 			</div>
 			<div className="vehicle-bottom-content p-4 flex-grow flex flex-col">
 				<h2 className="vehicle-title text-xl font-semibold mb-2">
-					<a href={`/cars/${car.id}`}>{car.make} {car.model}</a>
+					<a href={`/cars/${car.slug ?? car.id}`}>{car.make} {car.model}</a>
 				</h2>
 				<div className="vehicle-meta mt-auto flex flex-col gap-3">
 					<div className="flex items-center gap-4 text-gray-500 text-[11px] font-bold uppercase tracking-wider">

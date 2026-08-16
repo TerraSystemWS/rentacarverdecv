@@ -116,6 +116,7 @@ export type VehicleImage = {
 
 export type Vehicle = {
 	id?: number;
+	slug?: string;
 	make: string;
 	model: string;
 	year: number;

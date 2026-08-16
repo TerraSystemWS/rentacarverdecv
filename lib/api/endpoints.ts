@@ -35,7 +35,7 @@ export const endpoints = {
 	},
 	vehicles: {
 		list: (limit = 100) => `/public/vehicles?limit=${limit}`,
-		get: (id: number) => `/public/vehicles/${id}`,
+		get: (idOrSlug: number | string) => `/public/vehicles/${idOrSlug}`,
 		dashboardList: "/dashboard/vehicles",
 		create: "/dashboard/vehicles",
 		update: (id: number) => `/dashboard/vehicles/${id}`,

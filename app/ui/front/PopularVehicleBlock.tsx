@@ -100,7 +100,7 @@ export default function PopularVehicleBlock() {
 							<SwiperSlide key={vehicle.id} className="h-auto">
 								<div className="vehicle-content bg-green-100 rounded-lg overflow-hidden shadow hover:shadow-lg transition h-full flex flex-col">
 									<div className="vehicle-thumbnail">
-										<Link href={`/cars/${vehicle.id}`}>
+										<Link href={`/cars/${vehicle.slug ?? vehicle.id}`}>
 											<img
 												src={vehicle.images && vehicle.images.length > 0 ? getImageSrc(vehicle.images[0].url) : ""}
 												alt={`${vehicle.make} ${vehicle.model}`}
@@ -110,7 +110,7 @@ export default function PopularVehicleBlock() {
 									</div>
 									<div className="vehicle-bottom-content p-4 flex-grow">
 										<h3 className="vehicle-title text-xl font-semibold">
-											<Link href={`/cars/${vehicle.id}`}>{vehicle.make} {vehicle.model}</Link>
+											<Link href={`/cars/${vehicle.slug ?? vehicle.id}`}>{vehicle.make} {vehicle.model}</Link>
 										</h3>
 										<div className="vehicle-meta flex flex-col items-center gap-2 mt-3">
 											<div className="flex items-center gap-4 text-gray-500 text-xs font-bold uppercase tracking-wider">
