@@ -3,6 +3,7 @@
 
 import React from "react";
 import CountUp from "react-countup";
+import { API_BASE_URL, endpoints } from "@/lib/api/endpoints";
 
 interface FunFactsBlockProps {
 	content?: {
@@ -18,10 +19,36 @@ interface FunFactsBlockProps {
 }
 
 const FunFactsBlock: React.FC<FunFactsBlockProps> = ({ content }) => {
+	// Facto 1 (veículos), 2 (clientes) e 3 (condutores) vêm sempre da contagem
+	// real no backend. Facto 4 continua a ser editável manualmente no dashboard.
+	const [liveStats, setLiveStats] = React.useState({
+		vehiclesCount: 0,
+		clientsCount: 0,
+		driversCount: 0,
+	});
+
+	React.useEffect(() => {
+		let cancelled = false;
+		fetch(`${API_BASE_URL}${endpoints.content.stats}`)
+			.then((res) => (res.ok ? res.json() : null))
+			.then((data) => {
+				if (cancelled || !data) return;
+				setLiveStats({
+					vehiclesCount: data.vehiclesCount ?? 0,
+					clientsCount: data.clientsCount ?? 0,
+					driversCount: data.driversCount ?? 0,
+				});
+			})
+			.catch(() => { /* mantém os valores em 0 se a chamada falhar */ });
+		return () => {
+			cancelled = true;
+		};
+	}, []);
+
 	const funFacts = [
-		{ id: 1, count: Number(content?.f1Num) || 0, label: content?.f1 || "Caros na frota" },
-		{ id: 2, count: Number(content?.f2Num) || 0, label: content?.f2 || "Clientes Satisfeitos" },
-		{ id: 3, count: Number(content?.f3Num) || 0, label: content?.f3 || "Condutores" },
+		{ id: 1, count: liveStats.vehiclesCount, label: content?.f1 || "Caros na frota" },
+		{ id: 2, count: liveStats.clientsCount, label: content?.f2 || "Clientes Satisfeitos" },
+		{ id: 3, count: liveStats.driversCount, label: content?.f3 || "Condutores" },
 		{ id: 4, count: Number(content?.f4Num) || 0, label: content?.f4 || "Dias Na Atividade" },
 	];
 

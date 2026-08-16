@@ -73,16 +73,30 @@ const SingleMainContent: React.FC<SingleMainContentProps> = ({
 						</div>
 					</div>
 
-					<div className="post-navigation block-navigation-area yellow-theme">
-						<div className="item-navigation pull-right">
-							<Link href={navigation?.prevUrl || "#"} className="previous-item">
-								<i className="fa fa-angle-left"></i>
-							</Link>
-							<Link href={navigation?.nextUrl || "#"} className="next-item">
-								<i className="fa fa-angle-right"></i>
-							</Link>
+					{(navigation?.prevUrl || navigation?.nextUrl) && (
+						<div className="post-navigation block-navigation-area yellow-theme">
+							<div className="item-navigation pull-right">
+								{navigation?.prevUrl ? (
+									<Link href={navigation.prevUrl} className="previous-item" title="Novidade anterior">
+										<i className="fa fa-angle-left"></i>
+									</Link>
+								) : (
+									<span className="previous-item" style={{ opacity: 0.3, cursor: "default" }}>
+										<i className="fa fa-angle-left"></i>
+									</span>
+								)}
+								{navigation?.nextUrl ? (
+									<Link href={navigation.nextUrl} className="next-item" title="Próxima novidade">
+										<i className="fa fa-angle-right"></i>
+									</Link>
+								) : (
+									<span className="next-item" style={{ opacity: 0.3, cursor: "default" }}>
+										<i className="fa fa-angle-right"></i>
+									</span>
+								)}
+							</div>
 						</div>
-					</div>
+					)}
 				</div>
 
 				<figure className="post-thumb">
@@ -93,7 +107,7 @@ const SingleMainContent: React.FC<SingleMainContentProps> = ({
 					<div className="entry-meta">
 						<div className="entry-date">
 							<div className="meta-title">Date</div>
-							<Link href="#">{date}</Link>
+							<span>{date}</span>
 						</div>
 
 						{categories.length > 0 && (

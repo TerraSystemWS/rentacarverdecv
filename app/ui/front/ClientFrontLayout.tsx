@@ -4,6 +4,7 @@ import { useContent } from "@/app/context/ContentContext";
 import { ShieldAlert } from "lucide-react";
 import Header from "./minis/Header";
 import Footer from "./footer";
+import AdPopup from "./AdPopup";
 
 export default function ClientFrontLayout({
     children,
@@ -37,6 +38,7 @@ export default function ClientFrontLayout({
             <Header />
             <main>{children}</main>
             <Footer />
+            <AdPopup />
         </>
     );
 }

@@ -51,7 +51,7 @@ const MainSlider = () => {
 	useEffect(() => {
 		const fetchAds = async () => {
 			try {
-				const res = await fetch(`${API_BASE_URL}${endpoints.ads.list}?placement=BANNER`);
+				const res = await fetch(`${API_BASE_URL}${endpoints.ads.list("BANNER")}`);
 				if (res.ok) {
 					const data = await res.json();
 					setAds(data);

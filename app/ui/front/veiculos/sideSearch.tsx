@@ -1,9 +1,52 @@
 import React from "react";
+import { Vehicle } from "@/lib/api/types";
 
-const SideSearch: React.FC = () => {
+export interface CarFilters {
+	q: string;
+	minPrice: string;
+	maxPrice: string;
+	classTypes: string[];
+	fuelTypes: string[];
+	gearboxes: string[];
+}
+
+export const emptyFilters: CarFilters = {
+	q: "",
+	minPrice: "",
+	maxPrice: "",
+	classTypes: [],
+	fuelTypes: [],
+	gearboxes: [],
+};
+
+interface SideSearchProps {
+	vehicles: Vehicle[];
+	filters: CarFilters;
+	onChange: (filters: CarFilters) => void;
+}
+
+// Filtros reais, derivados dos dados existentes — antes disto era um
+// template estático (marcas/modelos fictícios, botão "Filtrar" que não fazia
+// nada, action="#").
+const SideSearch: React.FC<SideSearchProps> = ({ vehicles, filters, onChange }) => {
+	const distinct = (values: (string | undefined)[]) =>
+		Array.from(new Set(values.filter((v): v is string => !!v && v.trim().length > 0))).sort();
+
+	const classTypes = distinct(vehicles.map((v) => v.classType));
+	const fuelTypes = distinct(vehicles.map((v) => v.fuelType));
+	const gearboxes = distinct(vehicles.map((v) => v.gearbox));
+
+	function toggle(list: string[], value: string): string[] {
+		return list.includes(value) ? list.filter((v) => v !== value) : [...list, value];
+	}
+
+	function handleSubmit(e: React.FormEvent) {
+		e.preventDefault();
+	}
+
 	return (
 		<div className="vehicle-sidebar">
-			<form action="#" method="get" className="advance-search-query">
+			<form onSubmit={handleSubmit} className="advance-search-query">
 				<h2 className="form-title">Filtros</h2>
 				<div className="form-content available-filter">
 					{/* Pesquisa Rápida */}
@@ -11,50 +54,37 @@ const SideSearch: React.FC = () => {
 						<div className="input">
 							<input
 								type="text"
-								placeholder="Pesquisa rápida"
+								placeholder="Pesquisa rápida (marca, modelo)"
 								className="calendar form-controller"
-							/>
-						</div>
-					</div>
-
-					{/* Disponível em */}
-					<div className="form-group">
-						<label>Disponível em</label>
-						<div className="input">
-							<i className="fa fa-calendar"></i>
-							<input
-								type="text"
-								className="date-start date-selector form-controller"
-								placeholder="Início do aluguer"
-							/>
-						</div>
-						<div className="input">
-							<i className="fa fa-calendar"></i>
-							<input
-								type="text"
-								className="date-end date-selector form-controller"
-								placeholder="Fim do aluguer"
+								value={filters.q}
+								onChange={(e) => onChange({ ...filters, q: e.target.value })}
 							/>
 						</div>
 					</div>
 
 					{/* Preço */}
 					<div className="form-group">
-						<label>Preço</label>
+						<label>Preço por dia (CVE)</label>
 						<div className="input">
 							<div className="row">
 								<div className="col-xs-6">
 									<input
-										type="text"
-										placeholder="€12"
+										type="number"
+										min={0}
+										placeholder="Mín."
 										className="calendar form-controller min"
+										value={filters.minPrice}
+										onChange={(e) => onChange({ ...filters, minPrice: e.target.value })}
 									/>
 								</div>
 								<div className="col-xs-6">
 									<input
-										type="text"
-										placeholder="€1500"
+										type="number"
+										min={0}
+										placeholder="Máx."
 										className="calendar form-controller"
+										value={filters.maxPrice}
+										onChange={(e) => onChange({ ...filters, maxPrice: e.target.value })}
 									/>
 								</div>
 							</div>
@@ -63,193 +93,72 @@ const SideSearch: React.FC = () => {
 
 					{/* Filtros Avançados */}
 					<div className="advance-filters">
-						{/* Tipo de Carro */}
-						<label>Tipo de Carro</label>
-						<ul className="checkbox-content">
-							<li>
-								<input type="checkbox" id="cupon" name="chack" value="chack" />
-								<label htmlFor="cupon">Cupê</label>
-							</li>
-							<li>
-								<input type="checkbox" id="limo" name="chack" value="chack" />
-								<label htmlFor="limo">Limusine</label>
-							</li>
-							<li>
-								<input type="checkbox" id="sedan" name="chack" value="chack" />
-								<label htmlFor="sedan">Sedan</label>
-							</li>
-							<li>
-								<input type="checkbox" id="van" name="chack" value="chack" />
-								<label htmlFor="van">Van</label>
-							</li>
-						</ul>
+						{classTypes.length > 0 && (
+							<>
+								<label>Categoria</label>
+								<ul className="checkbox-content">
+									{classTypes.map((c) => (
+										<li key={c}>
+											<input
+												type="checkbox"
+												id={`class-${c}`}
+												checked={filters.classTypes.includes(c)}
+												onChange={() => onChange({ ...filters, classTypes: toggle(filters.classTypes, c) })}
+											/>
+											<label htmlFor={`class-${c}`}>{c}</label>
+										</li>
+									))}
+								</ul>
+							</>
+						)}
 
-						{/* Categorias */}
-						<label>Categorias</label>
-						<ul className="checkbox-content">
-							<li>
-								<input
-									type="checkbox"
-									id="compact"
-									name="chack"
-									value="chack"
-								/>
-								<label htmlFor="compact">Compacto</label>
-							</li>
-							<li>
-								<input type="checkbox" id="family" name="chack" value="chack" />
-								<label htmlFor="family">Familiar</label>
-							</li>
-							<li>
-								<input
-									type="checkbox"
-									id="full-size-1"
-									name="chack"
-									value="chack"
-								/>
-								<label htmlFor="full-size-1">Grande</label>
-							</li>
-							<li>
-								<input
-									type="checkbox"
-									id="intermediate"
-									name="chack"
-									value="chack"
-								/>
-								<label htmlFor="intermediate">Intermediário</label>
-							</li>
-							<li>
-								<input type="checkbox" id="mini-1" name="chack" value="chack" />
-								<label htmlFor="mini-1">Mini</label>
-							</li>
-							<li>
-								<input
-									type="checkbox"
-									id="standard-1"
-									name="chack"
-									value="chack"
-								/>
-								<label htmlFor="standard-1">Standard</label>
-							</li>
-						</ul>
+						{fuelTypes.length > 0 && (
+							<>
+								<label>Combustível</label>
+								<ul className="checkbox-content">
+									{fuelTypes.map((f) => (
+										<li key={f}>
+											<input
+												type="checkbox"
+												id={`fuel-${f}`}
+												checked={filters.fuelTypes.includes(f)}
+												onChange={() => onChange({ ...filters, fuelTypes: toggle(filters.fuelTypes, f) })}
+											/>
+											<label htmlFor={`fuel-${f}`}>{f}</label>
+										</li>
+									))}
+								</ul>
+							</>
+						)}
 
-						{/* Marcas */}
-						<label>Marcas</label>
-						<ul className="checkbox-content">
-							<li>
-								<input
-									type="checkbox"
-									id="astonmartin-1"
-									name="chack"
-									value="chack"
-								/>
-								<label htmlFor="astonmartin-1">Aston Martin</label>
-							</li>
-							<li>
-								<input type="checkbox" id="audi-1" name="chack" value="chack" />
-								<label htmlFor="audi-1">Audi</label>
-							</li>
-							<li>
-								<input type="checkbox" id="ford-1" name="chack" value="chack" />
-								<label htmlFor="ford-1">Ford</label>
-							</li>
-							<li>
-								<input
-									type="checkbox"
-									id="maruti-1"
-									name="chack"
-									value="chack"
-								/>
-								<label htmlFor="maruti-1">Maruti</label>
-							</li>
-							<li>
-								<input
-									type="checkbox"
-									id="mercedes-benz-1"
-									name="chack"
-									value="chack"
-								/>
-								<label htmlFor="mercedes-benz-1">Mercedes-Benz</label>
-							</li>
-							<li>
-								<input
-									type="checkbox"
-									id="terasa-1"
-									name="chack"
-									value="chack"
-								/>
-								<label htmlFor="terasa-1">Terasa</label>
-							</li>
-						</ul>
-
-						{/* Modelos */}
-						<label>Modelos</label>
-						<ul className="checkbox-content">
-							<li>
-								<input
-									type="checkbox"
-									id="audi-2007-model-1"
-									name="chack"
-									value="chack"
-								/>
-								<label htmlFor="audi-2007-model-1">Audi 2007</label>
-							</li>
-							<li>
-								<input
-									type="checkbox"
-									id="audi-a9-1"
-									name="chack"
-									value="chack"
-								/>
-								<label htmlFor="audi-a9-1">Audi A9</label>
-							</li>
-							<li>
-								<input
-									type="checkbox"
-									id="c-class-sedan-1"
-									name="chack"
-									value="chack"
-								/>
-								<label htmlFor="c-class-sedan-1">C-Class Sedan</label>
-							</li>
-							<li>
-								<input
-									type="checkbox"
-									id="ford-t-van"
-									name="chack"
-									value="chack"
-								/>
-								<label htmlFor="ford-t-van">Ford T Van</label>
-							</li>
-							<li>
-								<input
-									type="checkbox"
-									id="maruti-2008-model-1"
-									name="chack"
-									value="chack"
-								/>
-								<label htmlFor="maruti-2008-model-1">Maruti 2008</label>
-							</li>
-							<li>
-								<input
-									type="checkbox"
-									id="terasa--2007-1"
-									name="chack"
-									value="chack"
-								/>
-								<label htmlFor="terasa--2007-1">Teresa 2007</label>
-							</li>
-						</ul>
+						{gearboxes.length > 0 && (
+							<>
+								<label>Câmbio</label>
+								<ul className="checkbox-content">
+									{gearboxes.map((g) => (
+										<li key={g}>
+											<input
+												type="checkbox"
+												id={`gearbox-${g}`}
+												checked={filters.gearboxes.includes(g)}
+												onChange={() => onChange({ ...filters, gearboxes: toggle(filters.gearboxes, g) })}
+											/>
+											<label htmlFor={`gearbox-${g}`}>{g}</label>
+										</li>
+									))}
+								</ul>
+							</>
+						)}
 					</div>
 
 					{/* Botões */}
 					<div className="filter-button">
-						<a href="#" className="button nevy-bg">
+						<button type="button" className="button nevy-bg" onClick={() => onChange({ ...filters })}>
 							Filtrar
-						</a>
-						<a href="#" className="button nevy-bg">
+						</button>
+						<button type="button" className="button nevy-bg" onClick={() => onChange({ ...emptyFilters })}>
 							Resetar
-						</a>
+						</button>
 					</div>
 				</div>
 			</form>

@@ -2,14 +2,19 @@
 "use client";
 
 import React, { useState } from "react";
+import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
 
-const CommentForm = () => {
+interface Props {
+	postSlug: string;
+}
+
+const CommentForm = ({ postSlug }: Props) => {
 	const [form, setForm] = useState({
 		name: "",
 		email: "",
-		url: "",
 		message: "",
 	});
+	const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -17,10 +22,29 @@ const CommentForm = () => {
 		setForm({ ...form, [e.target.name]: e.target.value });
 	};
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		console.log("Comentário enviado:", form);
-		// Aqui você pode enviar para API no futuro
+		if (!form.name.trim() || !form.email.trim() || !form.message.trim()) return;
+		setStatus("sending");
+		try {
+			const res = await fetch(`${API_BASE_URL}${endpoints.comments.create(postSlug)}`, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					authorName: form.name.trim(),
+					authorEmail: form.email.trim(),
+					message: form.message.trim(),
+				}),
+			});
+			if (!res.ok) throw new Error();
+			setStatus("sent");
+			setForm({ name: "", email: "", message: "" });
+			// Recarrega a página para o novo comentário aparecer na lista (o
+			// componente Comments busca a lista no seu próprio efeito).
+			setTimeout(() => window.location.reload(), 800);
+		} catch {
+			setStatus("error");
+		}
 	};
 
 	return (
@@ -41,7 +65,7 @@ const CommentForm = () => {
 										<input
 											type="text"
 											name="name"
-											placeholder="Name*"
+											placeholder="Nome*"
 											className="form-controllar"
 											value={form.name}
 											onChange={handleChange}
@@ -66,25 +90,11 @@ const CommentForm = () => {
 
 								<div className="col-md-12">
 									<p>
-										<input
-											type="text"
-											name="url"
-											id="url"
-											placeholder="Website*"
-											className="form-controllar"
-											value={form.url}
-											onChange={handleChange}
-										/>
-									</p>
-								</div>
-
-								<div className="col-md-12">
-									<p>
 										<textarea
 											name="message"
 											id="message"
 											rows={3}
-											placeholder="Write a Comment...."
+											placeholder="Escreva um comentário...."
 											className="form-controllar"
 											value={form.message}
 											onChange={handleChange}
@@ -93,14 +103,26 @@ const CommentForm = () => {
 									</p>
 								</div>
 
+								{status === "sent" && (
+									<div className="col-md-12">
+										<p style={{ color: "#2e7d32" }}>Comentário publicado, obrigado!</p>
+									</div>
+								)}
+								{status === "error" && (
+									<div className="col-md-12">
+										<p style={{ color: "#c62828" }}>Não foi possível publicar o comentário. Tente de novo.</p>
+									</div>
+								)}
+
 								<div className="col-md-12">
 									<p className="form-submit">
 										<button
 											type="submit"
 											id="submit"
 											className="button nevy-bg"
+											disabled={status === "sending"}
 										>
-											Posta o comentario
+											{status === "sending" ? "A publicar..." : "Postar o comentario"}
 										</button>
 									</p>
 								</div>

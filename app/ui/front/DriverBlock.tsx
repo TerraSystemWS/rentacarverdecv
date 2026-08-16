@@ -54,12 +54,12 @@ const DriverBlock: React.FC = () => {
 					<div className="col-md-3 hidden-xs block-navigation-area tb-cell">
 						<div className="pull-right">
 							<div className="item-navigation hidden-xs flex gap-2">
-								<Link href="" className="previous-item">
+								<a href="#" className="previous-item" onClick={(e) => e.preventDefault()}>
 									<i className="fa fa-angle-left"></i>
-								</Link>
-								<Link href="" className="next-item">
+								</a>
+								<a href="#" className="next-item" onClick={(e) => e.preventDefault()}>
 									<i className="fa fa-angle-right"></i>
-								</Link>
+								</a>
 							</div>
 							<div className="view-all-item mt-2">
 								<Link
@@ -93,25 +93,23 @@ const DriverBlock: React.FC = () => {
 						<SwiperSlide key={driver.id} className="h-auto">
 							<div className="driver-content vehicle-content theme-yellow bg-yellow-100 rounded-lg overflow-hidden shadow hover:shadow-lg transition h-full flex flex-col">
 								<div className="driver-thumb vehicle-thumbnail flex bg-zinc-100 min-h-[192px] w-full">
-									<Link href="#" className="w-full h-full block">
-										{driver.imageUrl ? (
-											<img
-												src={getImageSrc(driver.imageUrl)}
-												alt={driver.name}
-												className="w-full h-full object-cover"
-											/>
-										) : (
-											<img
-												src="/assets/images/driver/avatar-placeholder.png"
-												alt="Motorista"
-												className="w-full h-full object-cover"
-											/>
-										)}
-									</Link>
+									{driver.imageUrl ? (
+										<img
+											src={getImageSrc(driver.imageUrl)}
+											alt={driver.name}
+											className="w-full h-full object-cover"
+										/>
+									) : (
+										<img
+											src="/assets/images/driver/avatar-placeholder.png"
+											alt="Motorista"
+											className="w-full h-full object-cover"
+										/>
+									)}
 								</div>
 								<div className="vehicle-bottom-content p-4 text-center flex-grow">
 									<h3 className="driver-name vehicle-title text-xl font-semibold">
-										<Link href="#">{driver.name}</Link>
+										{driver.name}
 									</h3>
 									<h4 className="driver-desc text-gray-700 mt-2">
 										{driver.description}

@@ -64,7 +64,7 @@ const CheckVehicleArea = () => {
 	};
 
 	return (
-		<div className="check-vehicle-block gray-20">
+		<div className="check-vehicle-block gray-20" id="reservar">
 			<div className="container">
 				<div className="row">
 					<div className="col-md-4">

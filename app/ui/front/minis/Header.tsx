@@ -2,11 +2,20 @@
 
 import FSideBar from "@/app/ui/front/minis/FSidebar";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const Header = () => {
+	const router = useRouter();
 	const [isOpen, setIsOpen] = useState(false);
 	const [isPesquisaOpen, setIsPesquisaOpen] = useState(false);
+	const [searchQuery, setSearchQuery] = useState("");
+
+	function handleSearch(e: React.FormEvent) {
+		e.preventDefault();
+		setIsPesquisaOpen(false);
+		router.push(searchQuery.trim() ? `/cars?q=${encodeURIComponent(searchQuery.trim())}` : "/cars");
+	}
 
 	return (
 		<>
@@ -38,23 +47,6 @@ const Header = () => {
 
 						<div className="col-md-6 col-sm-5">
 							<div className="header-content-right">
-								<ul className="header-top-menu">
-									<li>
-										<a href="#" className="language">
-											<i className="fa fa-language"></i>
-											<span>Linguas</span>
-										</a>
-										<ul className="sub-menu">
-											<li>
-												<a href="#">English</a>
-											</li>
-											<li>
-												<a href="#">Português</a>
-											</li>
-										</ul>
-									</li>
-								</ul>
-
 								<ul className="header-top-menu">
 									<li>
 										<a
@@ -100,18 +92,19 @@ const Header = () => {
 						<form
 							id="search-form"
 							className="search-form outer"
-							action="#"
-							method="post"
+							onSubmit={handleSearch}
 						>
 							<div className="input-group">
 								<input
 									type="text"
 									className="input--full"
-									placeholder="search text here ..."
+									placeholder="Pesquisar viaturas (marca, modelo...)"
+									value={searchQuery}
+									onChange={(e) => setSearchQuery(e.target.value)}
 								/>
 							</div>
 
-							<button className="btn text-uppercase search-button">
+							<button type="submit" className="btn text-uppercase search-button">
 								Pesquisar
 							</button>
 						</form>

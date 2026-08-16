@@ -1,16 +1,16 @@
 import { MetadataRoute } from 'next';
-import { API_BASE_URL, endpoints } from '@/lib/api/endpoints';
+import { SERVER_API_BASE_URL, endpoints } from '@/lib/api/endpoints';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = 'https://rentacarverde.cv';
 
     try {
         // Fetch all vehicles
-        const vehiclesReq = await fetch(`${API_BASE_URL}${endpoints.vehicles.list(100)}`, { cache: 'no-store' });
+        const vehiclesReq = await fetch(`${SERVER_API_BASE_URL}${endpoints.vehicles.list(100)}`, { cache: 'no-store' });
         const vehicles = await vehiclesReq.json();
 
         // Fetch all posts
-        const postsReq = await fetch(`${API_BASE_URL}${endpoints.posts.list}`, { cache: 'no-store' });
+        const postsReq = await fetch(`${SERVER_API_BASE_URL}${endpoints.posts.list}`, { cache: 'no-store' });
         const posts = await postsReq.json();
 
         // Map vehicles to sitemap entries

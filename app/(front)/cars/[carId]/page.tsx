@@ -1,14 +1,14 @@
 import PageHeader from "@/app/ui/front/PageHeader";
 import VehicleSingle from "@/app/ui/front/veiculos/single/singlecar";
 import { Vehicle } from "@/lib/api/types";
-import { API_BASE_URL } from "@/lib/api/endpoints";
+import { API_BASE_URL, SERVER_API_BASE_URL } from "@/lib/api/endpoints";
 import { Metadata } from "next";
 
 export async function generateMetadata({ params }: { params: Promise<{ carId: string }> }): Promise<Metadata> {
 	const { carId } = await params;
 
 	try {
-		const res = await fetch(`${API_BASE_URL}/public/vehicles/${carId}`, { cache: 'no-store' });
+		const res = await fetch(`${SERVER_API_BASE_URL}/public/vehicles/${carId}`, { cache: 'no-store' });
 		if (!res.ok) return { title: 'Veículo não encontrado' };
 
 		const vehicle: Vehicle = await res.json();
@@ -32,7 +32,7 @@ export default async function CarId({ params }: { params: Promise<{ carId: strin
 	let vehicle: Vehicle | null = null;
 
 	try {
-		const res = await fetch(`${API_BASE_URL}/public/vehicles/${carId}`, { cache: 'no-store' });
+		const res = await fetch(`${SERVER_API_BASE_URL}/public/vehicles/${carId}`, { cache: 'no-store' });
 		if (res.ok) {
 			vehicle = await res.json();
 		}

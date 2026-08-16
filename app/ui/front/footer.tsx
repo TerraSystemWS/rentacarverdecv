@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
+import { authFetch } from "@/app/auth/api";
+import { CompanyProfile } from "@/lib/api/types";
 
 interface GalleryItem {
 	id: number;
@@ -13,6 +15,27 @@ interface GalleryItem {
 
 const Footer = () => {
 	const [gallery, setGallery] = useState<GalleryItem[]>([]);
+	const [newsletterEmail, setNewsletterEmail] = useState("");
+	const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+	const [company, setCompany] = useState<CompanyProfile | null>(null);
+
+	async function handleNewsletterSubmit(e: React.FormEvent) {
+		e.preventDefault();
+		if (!newsletterEmail.trim()) return;
+		setNewsletterStatus("sending");
+		try {
+			const res = await authFetch(endpoints.subscribers.create, {
+				method: "POST",
+				body: JSON.stringify({ email: newsletterEmail.trim() }),
+				auth: false,
+			});
+			if (!res.ok) throw new Error();
+			setNewsletterStatus("sent");
+			setNewsletterEmail("");
+		} catch {
+			setNewsletterStatus("error");
+		}
+	}
 
 	useEffect(() => {
 		const fetchGallery = async () => {
@@ -28,6 +51,13 @@ const Footer = () => {
 		};
 
 		fetchGallery();
+	}, []);
+
+	useEffect(() => {
+		fetch(`${API_BASE_URL}${endpoints.companyProfile.public}`)
+			.then((res) => (res.ok ? res.json() : null))
+			.then((data) => setCompany(data))
+			.catch(() => { /* rodapé continua a funcionar sem estes dados */ });
 	}, []);
 
 	return (
@@ -104,34 +134,42 @@ const Footer = () => {
 											</Link>
 										</li>
 										<li>
-											<Link href="#">
+											<span className="text-[#ececec]">
 												<i className="fa fa-map-marker"></i>Cidadela - Rua da
 												Independência
-											</Link>
+											</span>
 										</li>
 									</ul>
 								</div>
 								<div className="widget widget_newsletter">
 									<h3 className="widget-title">Subscrever</h3>
 									<form
-										action="#"
+										onSubmit={handleNewsletterSubmit}
 										className="subscribes-newsletter"
-										method="get"
 									>
 										<label>Subscreva as novidades</label>
 										<div className="input-group">
 											<input
-												type="search"
+												type="email"
 												name="s"
-												placeholder="Your email"
+												placeholder="O seu email"
 												className="form-controller"
+												value={newsletterEmail}
+												onChange={(e) => setNewsletterEmail(e.target.value)}
+												required
 											/>
 											<span className="input-group-btn">
-												<button type="submit" className="btn btn-primary">
+												<button type="submit" className="btn btn-primary" disabled={newsletterStatus === "sending"}>
 													<span className="fa fa-paper-plane"></span>
 												</button>
 											</span>
 										</div>
+										{newsletterStatus === "sent" && (
+											<p style={{ marginTop: 8, fontSize: 12, color: "#ffcc00" }}>Subscrito com sucesso!</p>
+										)}
+										{newsletterStatus === "error" && (
+											<p style={{ marginTop: 8, fontSize: 12, color: "#ff8080" }}>Não foi possível subscrever. Tente de novo.</p>
+										)}
 									</form>
 								</div>
 							</div>
@@ -178,18 +216,26 @@ const Footer = () => {
 								<div className="bottom-content-right">
 									<div className="social-profile">
 										<span className="social-profole-title">Siga-nos:</span>
-										<Link href="#">
-											<i className="fa fa-instagram"></i>
-										</Link>
-										<Link href="#">
-											<i className="fa fa-heart"></i>
-										</Link>
-										<Link href="#">
-											<i className="fa fa-facebook"></i>
-										</Link>
-										<Link href="#">
-											<i className="fa fa-twitter"></i>
-										</Link>
+										{company?.instagramUrl && (
+											<Link href={company.instagramUrl} target="_blank" rel="noopener noreferrer">
+												<i className="fa fa-instagram"></i>
+											</Link>
+										)}
+										{company?.facebookUrl && (
+											<Link href={company.facebookUrl} target="_blank" rel="noopener noreferrer">
+												<i className="fa fa-facebook"></i>
+											</Link>
+										)}
+										{company?.twitterUrl && (
+											<Link href={company.twitterUrl} target="_blank" rel="noopener noreferrer">
+												<i className="fa fa-twitter"></i>
+											</Link>
+										)}
+										{company?.whatsappUrl && (
+											<Link href={company.whatsappUrl} target="_blank" rel="noopener noreferrer">
+												<i className="fa fa-whatsapp"></i>
+											</Link>
+										)}
 									</div>
 								</div>
 							</div>

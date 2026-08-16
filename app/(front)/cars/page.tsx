@@ -1,45 +1,38 @@
 "use client";
-import React, { useEffect, useState, Suspense } from "react";
+import React, { useEffect, useMemo, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import PageHeader from "../../ui/front/PageHeader";
 import Carro from "../../ui/front/veiculos/carro";
-import SideSearch from "../../ui/front/veiculos/sideSearch";
+import SideSearch, { CarFilters, emptyFilters } from "../../ui/front/veiculos/sideSearch";
 import { Vehicle } from "@/lib/api/types";
 import { authFetch } from "@/app/auth/api";
 import { endpoints } from "@/lib/api/endpoints";
 
+const PAGE_SIZE = 9;
+
 function CarsContent() {
-	const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+	const [allVehicles, setAllVehicles] = useState<Vehicle[]>([]);
 	const [loading, setLoading] = useState(true);
+	const [page, setPage] = useState(1);
 	const searchParams = useSearchParams();
+
+	// Estado inicial dos filtros a partir dos parâmetros de URL — permite que
+	// a pesquisa da homepage (CheckVehicleArea) e do cabeçalho (Header, campo
+	// "q") continuem a funcionar como pontos de entrada para esta página.
+	const [filters, setFilters] = useState<CarFilters>(() => ({
+		...emptyFilters,
+		q: searchParams.get("q") || "",
+		maxPrice: searchParams.get("budget") || "",
+		classTypes: searchParams.get("class") ? [searchParams.get("class") as string] : [],
+		fuelTypes: searchParams.get("fuel") ? [searchParams.get("fuel") as string] : [],
+	}));
 
 	useEffect(() => {
 		const fetchVehicles = async () => {
 			try {
 				const res = await authFetch(endpoints.vehicles.list(), { auth: false });
 				if (res.ok) {
-					let data: Vehicle[] = await res.json();
-
-					// Apply filters from URL query params
-					const loc = searchParams.get("loc");
-					const budget = searchParams.get("budget");
-					const vClass = searchParams.get("class");
-					const fuel = searchParams.get("fuel");
-
-					if (budget) {
-						const budgetValue = parseFloat(budget.replace(/[^0-9.]/g, ""));
-						if (!isNaN(budgetValue)) {
-							data = data.filter(v => v.pricePerDay <= budgetValue);
-						}
-					}
-					if (vClass) {
-						data = data.filter(v => v.classType?.toLowerCase() === vClass.toLowerCase());
-					}
-					if (fuel) {
-						data = data.filter(v => v.fuelType?.toLowerCase() === fuel.toLowerCase());
-					}
-
-					setVehicles(data);
+					setAllVehicles(await res.json());
 				}
 			} catch (error) {
 				console.error("Error fetching vehicles:", error);
@@ -48,7 +41,32 @@ function CarsContent() {
 			}
 		};
 		fetchVehicles();
-	}, [searchParams]);
+	}, []);
+
+	const vehicles = useMemo(() => {
+		return allVehicles.filter((v) => {
+			if (filters.q) {
+				const q = filters.q.toLowerCase();
+				const haystack = `${v.make} ${v.model}`.toLowerCase();
+				if (!haystack.includes(q)) return false;
+			}
+			if (filters.minPrice && v.pricePerDay < parseFloat(filters.minPrice)) return false;
+			if (filters.maxPrice && v.pricePerDay > parseFloat(filters.maxPrice)) return false;
+			if (filters.classTypes.length > 0 && !filters.classTypes.includes(v.classType || "")) return false;
+			if (filters.fuelTypes.length > 0 && !filters.fuelTypes.includes(v.fuelType || "")) return false;
+			if (filters.gearboxes.length > 0 && !filters.gearboxes.includes(v.gearbox || "")) return false;
+			return true;
+		});
+	}, [allVehicles, filters]);
+
+	// Volta sempre à página 1 quando os filtros mudam, para nunca ficar numa
+	// página vazia depois de um filtro reduzir os resultados.
+	useEffect(() => {
+		setPage(1);
+	}, [filters]);
+
+	const totalPages = Math.max(1, Math.ceil(vehicles.length / PAGE_SIZE));
+	const pageVehicles = vehicles.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
 	return (
 		<>
@@ -60,16 +78,11 @@ function CarsContent() {
 						<div className="col-md-9">
 							<div className="row">
 								<div className="col-md-9 col-sm-9 clearfix">
-									<h2 className="available-title">Available Vehicles</h2>
+									<h2 className="available-title">Veículos Disponíveis</h2>
 								</div>
 								<div className="col-md-3 col-sm-3">
-									<div className="vehicle-category pull-right">
-										<select name="vehicle-category" id="vehicle-cat-list">
-											<option value="volvo">filters</option>
-											<option value="saab">Saab</option>
-											<option value="mercedes">Mercedes</option>
-											<option value="audi">Audi</option>
-										</select>
+									<div className="vehicle-category pull-right text-sm text-muted-foreground pt-2">
+										{loading ? "" : `${vehicles.length} veículo(s) encontrado(s)`}
 									</div>
 								</div>
 							</div>
@@ -81,36 +94,40 @@ function CarsContent() {
 											<span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Loading...</span>
 										</div>
 									</div>
-								) : vehicles.length > 0 ? (
-									vehicles.map((car) => (
+								) : pageVehicles.length > 0 ? (
+									pageVehicles.map((car) => (
 										<div className="col-md-4 col-sm-6" key={car.id}>
 											<Carro car={car} />
 										</div>
 									))
 								) : (
 									<div className="col-md-12 text-center py-20 text-muted-foreground">
-										Nenhum veículo disponível no momento.
+										Nenhum veículo encontrado com estes filtros.
 									</div>
 								)}
 							</div>
 
-							{vehicles.length > 0 && (
+							{totalPages > 1 && (
 								<div className="row">
 									<div className="col-md-12 clearfix">
 										<div className="pagination-link">
 											<ul className="pagination">
-												<li>
-													<a href="#">
+												<li className={page === 1 ? "disabled" : ""}>
+													<button type="button" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1}>
 														<i className="fa fa-angle-left"></i>
-													</a>
+													</button>
 												</li>
-												<li className="active">
-													<a href="#">01</a>
-												</li>
-												<li>
-													<a href="#">
+												{Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+													<li key={p} className={p === page ? "active" : ""}>
+														<button type="button" onClick={() => setPage(p)}>
+															{String(p).padStart(2, "0")}
+														</button>
+													</li>
+												))}
+												<li className={page === totalPages ? "disabled" : ""}>
+													<button type="button" onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages}>
 														<i className="fa fa-angle-right"></i>
-													</a>
+													</button>
 												</li>
 											</ul>
 										</div>
@@ -120,7 +137,7 @@ function CarsContent() {
 						</div>
 
 						<div className="col-md-3">
-							<SideSearch />
+							<SideSearch vehicles={allVehicles} filters={filters} onChange={setFilters} />
 						</div>
 					</div>
 				</div>

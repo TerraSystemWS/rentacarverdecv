@@ -31,18 +31,14 @@ export default function AppBlock({ content }: AppBlockProps) {
 									{data.subtitle}
 								</h3>
 								<div className="app-location-link">
-									<a href="#">
-										<img src="assets/images/app-logo-one.png" alt="mobile" />
-									</a>
-									<a href="#">
-										<img src="assets/images/app-logo-two.png" alt="mobile" />
-									</a>
+									<img src="/assets/images/app-logo-one.png" alt="Em breve na App Store" />
+									<img src="/assets/images/app-logo-two.png" alt="Em breve na Google Play" />
 								</div>
 							</div>
 						</div>
 						<div className="col-md-6 tb-cell">
 							<div className="app-mokeup">
-								<img src="assets/images/mobile.png" alt="mobile" />
+								<img src="/assets/images/mobile.png" alt="mobile" />
 							</div>
 						</div>
 					</div>

@@ -1,91 +1,58 @@
 "use client";
 
 import React from "react";
-
-interface PopularPost {
-	img: string;
-	title: string;
-	date: string;
-	href?: string;
-}
-
-interface CategoryItem {
-	name: string;
-	count: number;
-	href?: string;
-}
+import Link from "next/link";
+import { Post } from "@/lib/api/types";
+import { API_BASE_URL } from "@/lib/api/endpoints";
+import AdSlot from "../AdSlot";
 
 interface BlogSidebarProps {
-	popularPosts: PopularPost[];
-	categories: CategoryItem[];
-	adImage: string;
-	tags: string[];
+	recentPosts: Post[];
+	currentSlug?: string;
 }
 
-const BlogSidebar: React.FC<BlogSidebarProps> = ({
-	popularPosts,
-	categories,
-	adImage,
-	tags,
-}) => {
+const BlogSidebar: React.FC<BlogSidebarProps> = ({ recentPosts, currentSlug }) => {
+	const getImageSrc = (url?: string | null) => {
+		if (!url) return "/assets/images/blog/blog-two.png";
+		if (url.startsWith("/uploads")) return `${API_BASE_URL}${url}`;
+		return url;
+	};
+
+	const others = recentPosts.filter((p) => p.slug !== currentSlug).slice(0, 4);
+
 	return (
 		<div className="col-md-4 blog-sidebar">
 			<div className="blog-content-right nevy-bg">
-				{/* Popular Posts */}
+				{/* Posts Recentes */}
 				<div className="widget widget_popular_posts clearfix">
-					<h4 className="widget-title">Popular Posts</h4>
+					<h4 className="widget-title">Novidades Recentes</h4>
 					<div className="widget-content">
-						{popularPosts.map((post, idx) => (
-							<div className="post-content clearfix" key={idx}>
+						{others.length === 0 && (
+							<p className="text-sm opacity-60">Sem outras novidades por agora.</p>
+						)}
+						{others.map((post) => (
+							<div className="post-content clearfix" key={post.id}>
 								<div className="image-content">
-									<a href={post.href || "#"}>
-										<img src={post.img} alt={post.title} />
-									</a>
+									<Link href={`/posts/${post.slug}`}>
+										<img src={getImageSrc(post.imageUrl)} alt={post.title} />
+									</Link>
 								</div>
 								<div className="post-info">
 									<h5 className="widget-post-title">
-										<a href={post.href || "#"}>{post.title}</a>
+										<Link href={`/posts/${post.slug}`}>{post.title}</Link>
 									</h5>
-									<span className="post-date">{post.date}</span>
+									<span className="post-date">
+										{post.createdAt ? new Date(post.createdAt).toLocaleDateString("pt-PT") : ""}
+									</span>
 								</div>
 							</div>
 						))}
 					</div>
 				</div>
 
-				{/* Categories */}
-				<div className="widget widget_categories clearfix">
-					<h4 className="widget-title">Categories</h4>
-					<ul>
-						{categories.map((cat, idx) => (
-							<li key={idx}>
-								<a href={cat.href || "#"}>{cat.name}</a>
-								<span className="count">{cat.count}</span>
-							</li>
-						))}
-					</ul>
-				</div>
-
-				{/* Ad Banner */}
+				{/* Publicidade — campanha(s) reais do painel para o placement SIDEBAR */}
 				<div className="widget widget_adds clearfix">
-					<h4 className="widget-title">Ad Unit</h4>
-					<div className="add-image">
-						<a href="#">
-							<img src={adImage} alt="blog-add" />
-						</a>
-					</div>
-				</div>
-
-				{/* Tag Cloud */}
-				<div className="widget widget_tagcloud clearfix">
-					<h4 className="widget-title">Tag Cloud</h4>
-					<div className="tagcloud">
-						{tags.map((tag, idx) => (
-							<a href="#" key={idx} title={tag}>
-								{tag}
-							</a>
-						))}
-					</div>
+					<AdSlot placement="SIDEBAR" />
 				</div>
 			</div>
 		</div>
