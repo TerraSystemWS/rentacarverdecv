@@ -35,7 +35,7 @@ export default async function MotoristasPage() {
 						) : (
 							drivers.map((driver) => (
 								<div className="col-md-4 col-sm-6" key={driver.id}>
-									<div className="driver-content vehicle-content theme-yellow bg-yellow-100 rounded-lg overflow-hidden shadow hover:shadow-lg transition h-full flex flex-col mb-8">
+									<div className="driver-content vehicle-content theme-yellow bg-green-100 rounded-lg overflow-hidden shadow hover:shadow-lg transition h-full flex flex-col mb-8">
 										<div className="driver-thumb vehicle-thumbnail flex bg-zinc-100 min-h-[220px] w-full">
 											<img
 												src={getImageSrc(driver.imageUrl)}

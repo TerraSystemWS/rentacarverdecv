@@ -170,7 +170,7 @@ export default function MyDataForm() {
 	if (loading) {
 		return (
 			<div className="flex justify-center py-16">
-				<Loader2 className="w-8 h-8 animate-spin text-yellow-500" />
+				<Loader2 className="w-8 h-8 animate-spin text-green-500" />
 			</div>
 		);
 	}
@@ -190,7 +190,7 @@ export default function MyDataForm() {
 	);
 
 	const sectionTitle = (title: string) => (
-		<h3 className="text-sm font-black uppercase tracking-wide text-slate-800 mb-4 pb-2 border-b-2 border-yellow-400 inline-block">
+		<h3 className="text-sm font-black uppercase tracking-wide text-slate-800 mb-4 pb-2 border-b-2 border-green-400 inline-block">
 			{title}
 		</h3>
 	);

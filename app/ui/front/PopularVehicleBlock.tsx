@@ -44,7 +44,7 @@ export default function PopularVehicleBlock() {
 	}, []);
 
 	return (
-		<section className="popular-vehicle-block py-24 bg-yellow-50">
+		<section className="popular-vehicle-block py-24 bg-green-50">
 			<div className="container mx-auto px-4">
 				{/* Header */}
 				<div className="row tb default-margin-bottom yellow-theme">
@@ -78,7 +78,7 @@ export default function PopularVehicleBlock() {
 				{/* Slider */}
 				{loading ? (
 					<div className="flex justify-center py-20">
-						<div className="h-8 w-8 animate-spin rounded-full border-4 border-solid border-yellow-500 border-r-transparent"></div>
+						<div className="h-8 w-8 animate-spin rounded-full border-4 border-solid border-green-500 border-r-transparent"></div>
 					</div>
 				) : (
 					<Swiper
@@ -98,7 +98,7 @@ export default function PopularVehicleBlock() {
 					>
 						{vehicles.map((vehicle) => (
 							<SwiperSlide key={vehicle.id} className="h-auto">
-								<div className="vehicle-content bg-yellow-100 rounded-lg overflow-hidden shadow hover:shadow-lg transition h-full flex flex-col">
+								<div className="vehicle-content bg-green-100 rounded-lg overflow-hidden shadow hover:shadow-lg transition h-full flex flex-col">
 									<div className="vehicle-thumbnail">
 										<Link href={`/cars/${vehicle.id}`}>
 											<img
@@ -115,16 +115,16 @@ export default function PopularVehicleBlock() {
 										<div className="vehicle-meta flex flex-col items-center gap-2 mt-3">
 											<div className="flex items-center gap-4 text-gray-500 text-xs font-bold uppercase tracking-wider">
 												<div className="flex items-center gap-1.5">
-													<Settings2 className="w-3.5 h-3.5 text-yellow-600" />
+													<Settings2 className="w-3.5 h-3.5 text-green-600" />
 													<span>{vehicle.gearbox || "N/A"}</span>
 												</div>
 												<div className="flex items-center gap-1.5">
-													<Fuel className="w-3.5 h-3.5 text-yellow-600" />
+													<Fuel className="w-3.5 h-3.5 text-green-600" />
 													<span>{vehicle.fuelType || "N/A"}</span>
 												</div>
 											</div>
 											<div className="mt-1">
-												<span className="font-black text-yellow-600 text-lg">
+												<span className="font-black text-green-600 text-lg">
 													{vehicle.pricePerDay?.toLocaleString('pt-CV', { style: 'currency', currency: 'CVE' })}
 												</span>
 												<span className="text-gray-400 text-[10px] uppercase font-bold ml-1">/ Dia</span>
@@ -141,7 +141,7 @@ export default function PopularVehicleBlock() {
 				<div className="block mt-6 md:hidden text-center">
 					<Link
 						href="/cars"
-						className="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 transition"
+						className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
 					>
 						Ver Todas
 					</Link>

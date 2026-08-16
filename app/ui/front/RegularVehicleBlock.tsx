@@ -77,7 +77,7 @@ const RegularVehicleBlock: React.FC = () => {
 				<div className="">
 					{loading ? (
 						<div className="flex justify-center py-20">
-							<div className="h-8 w-8 animate-spin rounded-full border-4 border-solid border-yellow-500 border-r-transparent"></div>
+							<div className="h-8 w-8 animate-spin rounded-full border-4 border-solid border-green-500 border-r-transparent"></div>
 						</div>
 					) : (
 						<div className="item row">
@@ -115,16 +115,16 @@ const RegularVehicleBlock: React.FC = () => {
 												<div className="vehicle-meta flex flex-col items-center gap-2 mt-3">
 													<div className="flex items-center gap-4 text-gray-500 text-xs font-bold uppercase tracking-wider">
 														<div className="flex items-center gap-1.5">
-															<Settings2 className="w-3.5 h-3.5 text-yellow-600" />
+															<Settings2 className="w-3.5 h-3.5 text-green-600" />
 															<span>{vehicle.gearbox || "N/A"}</span>
 														</div>
 														<div className="flex items-center gap-1.5">
-															<Fuel className="w-3.5 h-3.5 text-yellow-600" />
+															<Fuel className="w-3.5 h-3.5 text-green-600" />
 															<span>{vehicle.fuelType || "N/A"}</span>
 														</div>
 													</div>
 													<div className="mt-1">
-														<span className="font-black text-yellow-600 text-lg">
+														<span className="font-black text-green-600 text-lg">
 															{vehicle.pricePerDay?.toLocaleString('pt-CV', { style: 'currency', currency: 'CVE' })}
 														</span>
 														<span className="text-gray-400 text-[10px] uppercase font-bold ml-1">/ Dia</span>

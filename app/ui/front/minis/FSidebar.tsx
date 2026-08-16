@@ -114,7 +114,7 @@ const FSideBar = ({ isOpen, onToggleSidebar }: FSideBarProps) => {
 													</a>
 												</li>
 												<li>
-													<a href="#" onClick={(e) => { e.preventDefault(); Swal.fire({ icon: "info", title: "Em breve", text: "Esta funcionalidade estará disponível em breve!", confirmButtonColor: "#ffcc00" }); }}>
+													<a href="#" onClick={(e) => { e.preventDefault(); Swal.fire({ icon: "info", title: "Em breve", text: "Esta funcionalidade estará disponível em breve!", confirmButtonColor: "#3baa4e" }); }}>
 														<i className="fa fa-envelope-open"></i> Mensagens
 													</a>
 												</li>

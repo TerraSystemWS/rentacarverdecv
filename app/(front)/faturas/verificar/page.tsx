@@ -51,7 +51,7 @@ function VerificarContent() {
 					</div>
 				) : loading ? (
 					<div className="flex justify-center py-16">
-						<Loader2 className="w-8 h-8 animate-spin text-yellow-500" />
+						<Loader2 className="w-8 h-8 animate-spin text-green-500" />
 					</div>
 				) : result?.valid ? (
 					<div className="bg-white border border-slate-200 rounded-lg p-8">
@@ -106,7 +106,7 @@ function VerificarContent() {
 						<p className="text-slate-500 text-sm mt-1">
 							Não foi possível confirmar a autenticidade deste documento — o código não corresponde a nenhuma fatura
 							emitida pela RentaCarVerde, ou os valores foram alterados. Contacte{" "}
-							<a href="mailto:reservas@rentacarverde.cv" className="text-yellow-600">reservas@rentacarverde.cv</a> se
+							<a href="mailto:reservas@rentacarverde.cv" className="text-green-600">reservas@rentacarverde.cv</a> se
 							acredita que isto é um erro.
 						</p>
 					</div>
@@ -118,7 +118,7 @@ function VerificarContent() {
 
 export default function VerificarFaturaPage() {
 	return (
-		<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-yellow-500" /></div>}>
+		<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-green-500" /></div>}>
 			<VerificarContent />
 		</Suspense>
 	);

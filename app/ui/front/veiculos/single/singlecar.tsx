@@ -379,10 +379,10 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 													checked={formData.hasExtraDriver}
 													onChange={handleInputChange}
 													disabled={!isAuthenticated}
-													className="w-5 h-5 mr-3 text-yellow-600 rounded focus:ring-yellow-500 cursor-pointer"
+													className="w-5 h-5 mr-3 text-green-600 rounded focus:ring-green-500 cursor-pointer"
 												/>
 												<label htmlFor="hasExtraDriver" className="text-gray-700 m-0 cursor-pointer select-none">
-													Adicionar condutor extra <span className="text-yellow-600 font-bold">(+3300 CVE / dia)</span>
+													Adicionar condutor extra <span className="text-green-600 font-bold">(+3300 CVE / dia)</span>
 												</label>
 											</div>
 										</div>

@@ -85,7 +85,7 @@ export default function RegisterPage() {
                             Nome de Utilizador (Username)
                         </label>
                         <input
-                            className="w-full rounded-lg border border-slate-300 p-2.5 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none transition-all"
+                            className="w-full rounded-lg border border-slate-300 p-2.5 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
                             placeholder="johndoe"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
@@ -99,7 +99,7 @@ export default function RegisterPage() {
                         </label>
                         <input
                             type="email"
-                            className="w-full rounded-lg border border-slate-300 p-2.5 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none transition-all"
+                            className="w-full rounded-lg border border-slate-300 p-2.5 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
                             placeholder="john@example.com"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
@@ -112,7 +112,7 @@ export default function RegisterPage() {
                             Senha
                         </label>
                         <input
-                            className="w-full rounded-lg border border-slate-300 p-2.5 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none transition-all"
+                            className="w-full rounded-lg border border-slate-300 p-2.5 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
                             placeholder="••••••••"
                             type="password"
                             value={password}
@@ -127,7 +127,7 @@ export default function RegisterPage() {
                             Confirmar Senha
                         </label>
                         <input
-                            className="w-full rounded-lg border border-slate-300 p-2.5 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none transition-all"
+                            className="w-full rounded-lg border border-slate-300 p-2.5 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
                             placeholder="••••••••"
                             type="password"
                             value={confirmPassword}
@@ -160,7 +160,7 @@ export default function RegisterPage() {
                     </button>
 
                     <div className="text-center text-sm text-slate-600 mt-4">
-                        Já tem conta? <Link href="/login" className="text-yellow-600 hover:text-yellow-700 font-semibold">Faça Login</Link>
+                        Já tem conta? <Link href="/login" className="text-green-600 hover:text-green-700 font-semibold">Faça Login</Link>
                     </div>
                 </form>
             </div>

@@ -165,7 +165,7 @@ const Footer = () => {
 											</span>
 										</div>
 										{newsletterStatus === "sent" && (
-											<p style={{ marginTop: 8, fontSize: 12, color: "#ffcc00" }}>Subscrito com sucesso!</p>
+											<p style={{ marginTop: 8, fontSize: 12, color: "#3baa4e" }}>Subscrito com sucesso!</p>
 										)}
 										{newsletterStatus === "error" && (
 											<p style={{ marginTop: 8, fontSize: 12, color: "#ff8080" }}>Não foi possível subscrever. Tente de novo.</p>

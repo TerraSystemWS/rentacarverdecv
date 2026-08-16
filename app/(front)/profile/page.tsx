@@ -92,7 +92,7 @@ export default function ProfilePage() {
     if (isLoading || (!isAuthenticated && !isLoading)) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-slate-100">
-                <Loader2 className="w-10 h-10 animate-spin text-yellow-500" />
+                <Loader2 className="w-10 h-10 animate-spin text-green-500" />
             </div>
         );
     }
@@ -140,7 +140,7 @@ export default function ProfilePage() {
                         {invoiceFor(b.id) && (
                             <button
                                 onClick={() => handleDownloadInvoice(invoiceFor(b.id)!.id)}
-                                className="invoice-download-btn mt-3 w-full text-center text-sm font-bold border border-yellow-400 bg-yellow-50 rounded-lg py-2 hover:bg-yellow-100 transition-colors"
+                                className="invoice-download-btn mt-3 w-full text-center text-sm font-bold border border-green-400 bg-green-50 rounded-lg py-2 hover:bg-green-100 transition-colors"
                             >
                                 Descarregar Fatura
                             </button>
@@ -173,13 +173,13 @@ export default function ProfilePage() {
                 <div className="profile-tabs flex gap-2 mb-8">
                     <button
                         onClick={() => setTab("bookings")}
-                        className={`px-4 py-2 rounded-lg text-sm font-bold border transition-colors ${tab === "bookings" ? "bg-yellow-500 border-yellow-500" : "bg-white border-slate-200 hover:bg-slate-50"}`}
+                        className={`px-4 py-2 rounded-lg text-sm font-bold border transition-colors ${tab === "bookings" ? "bg-green-600 border-green-600" : "bg-white border-slate-200 hover:bg-slate-50"}`}
                     >
                         As Minhas Reservas
                     </button>
                     <button
                         onClick={() => setTab("data")}
-                        className={`px-4 py-2 rounded-lg text-sm font-bold border transition-colors ${tab === "data" ? "bg-yellow-500 border-yellow-500" : "bg-white border-slate-200 hover:bg-slate-50"}`}
+                        className={`px-4 py-2 rounded-lg text-sm font-bold border transition-colors ${tab === "data" ? "bg-green-600 border-green-600" : "bg-white border-slate-200 hover:bg-slate-50"}`}
                     >
                         Os Meus Dados
                     </button>
@@ -189,7 +189,7 @@ export default function ProfilePage() {
                     <MyDataForm />
                 ) : fetchLoading ? (
                     <div className="flex justify-center py-20">
-                        <Loader2 className="w-8 h-8 animate-spin text-yellow-500" />
+                        <Loader2 className="w-8 h-8 animate-spin text-green-500" />
                     </div>
                 ) : err ? (
                     <div className="bg-red-50 text-red-700 p-4 rounded-lg border border-red-200 text-center font-medium">
@@ -200,7 +200,7 @@ export default function ProfilePage() {
                         <section>
                             <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
                                 Reservas Ativas
-                                <span className="bg-yellow-100 text-yellow-900 text-xs py-1 px-2 rounded-full">{activeBookings.length}</span>
+                                <span className="bg-green-100 text-green-900 text-xs py-1 px-2 rounded-full">{activeBookings.length}</span>
                             </h2>
                             {renderBookingsList(activeBookings, "Não tem nenhuma reserva a decorrer ou pendente.")}
                         </section>
@@ -213,7 +213,7 @@ export default function ProfilePage() {
 
                             {historyLoading ? (
                                 <div className="flex justify-center py-16">
-                                    <Loader2 className="w-6 h-6 animate-spin text-yellow-500" />
+                                    <Loader2 className="w-6 h-6 animate-spin text-green-500" />
                                 </div>
                             ) : (
                                 <>
@@ -233,7 +233,7 @@ export default function ProfilePage() {
                                                     key={p}
                                                     onClick={() => fetchHistory(p)}
                                                     className={`w-9 h-9 rounded-lg text-sm font-bold border transition-colors ${p === history.page
-                                                        ? "bg-yellow-500 border-yellow-500 text-white"
+                                                        ? "bg-green-600 border-green-600 text-white"
                                                         : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
                                                         }`}
                                                 >

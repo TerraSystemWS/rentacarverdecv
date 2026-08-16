@@ -144,8 +144,8 @@
 /* Frontend Buttons */
 @layer components {
   .btn-racv {
-    background: #ffcc00 !important;
-    color: #1d1d1f !important;
+    background: #3baa4e !important;
+    color: #ffffff !important;
     font-family: "Exo", sans-serif !important;
     font-weight: 900 !important;
     font-size: 16px !important;
@@ -162,7 +162,7 @@
   }
 
   .btn-racv:hover {
-    background: #e6b800 !important;
+    background: #226b3c !important;
     color: #FFFFFF !important;
     transform: translateY(-2px);
   }
@@ -225,8 +225,8 @@
 .styled-form input:focus,
 .styled-form select:focus,
 .styled-form textarea:focus {
-  border-color: #eab308; /* yellow-500, a mesma cor de destaque usada no resto do site público */
-  box-shadow: 0 0 0 3px rgb(234 179 8 / 0.2);
+  border-color: #3baa4e; /* verde do logo, a mesma cor de destaque usada no resto do site público */
+  box-shadow: 0 0 0 3px rgb(59 170 78 / 0.2);
 }
 
 /*
@@ -242,8 +242,8 @@
   color: #0f172a; /* slate-900, aba não selecionada */
 }
 
-.profile-tabs button.bg-yellow-500 {
-  color: #ffffff; /* aba selecionada, fundo amarelo */
+.profile-tabs button.bg-green-600 {
+  color: #ffffff; /* aba selecionada, fundo verde */
 }
 
 /*
@@ -253,7 +253,7 @@
  * (bg-yellow-50) ficava invisível.
  */
 .invoice-download-btn {
-  color: #a16207; /* yellow-700 */
+  color: #226b3c; /* verde escuro do logo, equivalente ao antigo yellow-700 */
 }
 
 /*

@@ -40,7 +40,7 @@ const DriverBlock: React.FC = () => {
 	}
 
 	return (
-		<section className="driver-block py-24 bg-yellow-50">
+		<section className="driver-block py-24 bg-green-50">
 			<div className="container mx-auto px-4">
 				{/* Header */}
 				<div className="row tb default-margin-bottom yellow-theme">
@@ -64,7 +64,7 @@ const DriverBlock: React.FC = () => {
 							<div className="view-all-item mt-2">
 								<Link
 									href="/motoristas"
-									className="view-all-btn px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 transition"
+									className="view-all-btn px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
 								>
 									Ver Todos
 								</Link>
@@ -91,7 +91,7 @@ const DriverBlock: React.FC = () => {
 				>
 					{drivers.map((driver) => (
 						<SwiperSlide key={driver.id} className="h-auto">
-							<div className="driver-content vehicle-content theme-yellow bg-yellow-100 rounded-lg overflow-hidden shadow hover:shadow-lg transition h-full flex flex-col">
+							<div className="driver-content vehicle-content theme-yellow bg-green-100 rounded-lg overflow-hidden shadow hover:shadow-lg transition h-full flex flex-col">
 								<div className="driver-thumb vehicle-thumbnail flex bg-zinc-100 min-h-[192px] w-full">
 									{driver.imageUrl ? (
 										<img
@@ -124,7 +124,7 @@ const DriverBlock: React.FC = () => {
 				<div className="block mt-6 md:hidden text-center">
 					<Link
 						href="/motoristas"
-						className="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 transition"
+						className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
 					>
 						Ver Todos
 					</Link>

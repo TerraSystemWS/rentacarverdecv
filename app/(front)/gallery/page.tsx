@@ -52,7 +52,7 @@ export default function GalleryPage() {
                                         key={cat}
                                         onClick={() => setActiveCategory(cat)}
                                         className={`px-[60px] py-[15px] rounded-[25px] font-['Exo',sans-serif] font-black uppercase text-[16px] tracking-[0.035em] transition-all duration-300 ${activeCategory === cat
-                                            ? "bg-[#ffcc00] text-[#1d1d1f] shadow-lg"
+                                            ? "bg-[#3baa4e] text-white shadow-lg"
                                             : "bg-gray-100 text-gray-500 hover:bg-gray-200"
                                             }`}
                                     >
@@ -68,7 +68,7 @@ export default function GalleryPage() {
                         {loading ? (
                             <div className="py-20 text-center">
                                 <div className="flex flex-col items-center gap-4">
-                                    <div className="w-12 h-12 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin" />
+                                    <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin" />
                                     <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">
                                         A carregar momentos...
                                     </p>
@@ -93,7 +93,7 @@ export default function GalleryPage() {
                                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-end p-6">
-                                            <span className="text-yellow-400 text-xs font-bold uppercase tracking-widest mb-2">
+                                            <span className="text-green-400 text-xs font-bold uppercase tracking-widest mb-2">
                                                 {item.category}
                                             </span>
                                             <h4 className="text-white font-bold text-lg leading-tight">

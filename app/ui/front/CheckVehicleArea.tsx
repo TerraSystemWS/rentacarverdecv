@@ -47,7 +47,7 @@ const CheckVehicleArea = () => {
 				icon: "warning",
 				title: "Atenção",
 				text: "Por favor, preencha pelo menos um campo para pesquisar.",
-				confirmButtonColor: "#ffcc00"
+				confirmButtonColor: "#3baa4e"
 			});
 			return;
 		}

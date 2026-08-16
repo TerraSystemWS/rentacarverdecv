@@ -1,103 +1,103 @@
 ::-moz-selection {
-  background: #E91E22;
+  background: #3baa4e;
 }
 
 ::selection {
-  background: #E91E22;
+  background: #3baa4e;
 }
 
 /* Default Hover Color */
 a:hover, a:focus, a:active {
-  color: #E91E22;
+  color: #226b3c;
 }
 
 .button:hover {
-  background: #E91E22;
+  background: #226b3c;
 }
 
 /* Yellow Theme Color */
 .theme-yellow.nevy-bg .vehicle-title {
-  color: #ffcc00;
+  color: #3baa4e;
 }
 
 .theme-yellow .vehicle-top-meta .meta-item {
-  color: #ffcc00;
+  color: #3baa4e;
 }
 
 .theme-yellow .vehicle-bottom-content {
-  background: #ffcc00;
+  background: #3baa4e;
 }
 
 .theme-yellow-bg {
-  background: #ffcc00;
+  background: #3baa4e;
 }
 
 .theme-yellow-bg .google-map-area .contact-style-one .social-icon a {
-  color: #ffcc00;
+  color: #3baa4e;
 }
 
 .yellow-color,
 .color-yellow {
-  color: #ffcc00 !important;
+  color: #3baa4e !important;
 }
 
 .yellow-button {
-  background-color: #ffcc00 !important;
+  background-color: #3baa4e !important;
 }
 
 .yellow-button:hover {
-  background-color: rgba(255, 72, 24, 0.9);
+  background-color: rgba(34, 107, 60, 0.9);
 }
 
 .yellow-border {
-  border-color: #ffcc00 !important;
+  border-color: #3baa4e !important;
 }
 
 .yellow-bg {
-  background: #ffcc00;
+  background: #3baa4e;
 }
 
 .yellow-theme .heading-content.style-one.border h2.title:before {
-  background-color: #ffcc00;
+  background-color: #3baa4e;
 }
 
 .yellow-theme .item-navigation .next-item {
-  background-color: #ffcc00 !important;
-  border-color: #ffcc00 !important;
+  background-color: #3baa4e !important;
+  border-color: #3baa4e !important;
 }
 
 .yellow-theme .item-navigation .next-item:before {
-  border-bottom-color: #ffcc00 !important;
+  border-bottom-color: #3baa4e !important;
 }
 
 .yellow-theme .vehicle-top-meta .vehicle-title,
 .yellow-theme .vehicle-top-meta .meta-item {
-  color: #ffcc00;
+  color: #3baa4e;
 }
 
 .yellow-theme .widget .widget-title {
-  color: #ffcc00;
-  border-color: #ffcc00;
+  color: #3baa4e;
+  border-color: #3baa4e;
 }
 
 .yellow-theme .widget .button {
-  background: #ffcc00;
+  background: #3baa4e;
 }
 
 .yellow-theme .widget.widget_menu ul li:before {
-  background: #ffcc00;
+  background: #3baa4e;
 }
 
 .yellow-theme .widget.widget_hot_contact ul li i {
-  color: #ffcc00;
+  color: #3baa4e;
 }
 
 .yellow-theme .widget.widget_newsletter .input-group-btn span {
-  color: #ffcc00;
+  color: #3baa4e;
 }
 
 .yellow-theme .social-profile a:hover {
-  color: #ffcc00;
+  color: #3baa4e;
 }
 
 .yellow-theme a:hover, .yellow-theme a:focus, .yellow-theme a:active {
@@ -109,56 +109,56 @@ a:hover, a:focus, a:active {
 }
 
 .yellow-theme .input i {
-  color: #ffcc00;
+  color: #3baa4e;
 }
 
 .yellow-theme .advanced-search-btn {
-  color: #ffcc00;
+  color: #3baa4e;
 }
 
 .yellow-theme button {
-  background: #ffcc00;
+  background: #3baa4e;
 }
 
 .yellow-theme .title span,
 .yellow-theme .subtitle span {
-  color: #ffcc00;
+  color: #3baa4e;
 }
 
 .yellow-theme.pricing-table-item .pricing-image {
-  background: #ffcc00;
+  background: #3baa4e;
 }
 
 .yellow-theme.pricing-table-item .price .price-subtille {
-  color: #ffcc00;
+  color: #3baa4e;
 }
 
 .yellow-theme.pricing-table-item .price .price-title:after {
-  background: #ffcc00;
+  background: #3baa4e;
 }
 
 .yellow-theme .panel-title i {
-  background: #ffcc00;
+  background: #3baa4e;
 }
 
 .yellow-theme .highlight {
-  color: #ffcc00;
+  color: #3baa4e;
 }
 
 .yellow-theme .vehicle-filter-area .nav-tabs li.active a {
-  background: #ffcc00 !important;
+  background: #3baa4e !important;
 }
 
 .yellow-theme .image-content .renticon {
-  color: #ffcc00;
+  color: #3baa4e;
 }
 
 .yellow-theme .button:hover {
-  background: #ffcc00;
+  background: #3baa4e;
 }
 
 .theme-yellow-bg.contact-style-one:before {
-  background-image: -webkit-linear-gradient(0deg, #ffcc00 15px, #333 0);
+  background-image: -webkit-linear-gradient(0deg, #3baa4e 15px, #333 0);
 }
 
 /* Blue Theme Color */

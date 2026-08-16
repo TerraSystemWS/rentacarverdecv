@@ -32,16 +32,16 @@ const Carro: React.FC<CarroProps> = ({ car }) => {
 				<div className="vehicle-meta mt-auto flex flex-col gap-3">
 					<div className="flex items-center gap-4 text-gray-500 text-[11px] font-bold uppercase tracking-wider">
 						<div className="flex items-center gap-1.5">
-							<Settings2 className="w-3.5 h-3.5 text-yellow-600" />
+							<Settings2 className="w-3.5 h-3.5 text-green-600" />
 							<span>{car.gearbox || "N/A"}</span>
 						</div>
 						<div className="flex items-center gap-1.5">
-							<Fuel className="w-3.5 h-3.5 text-yellow-600" />
+							<Fuel className="w-3.5 h-3.5 text-green-600" />
 							<span>{car.fuelType || "N/A"}</span>
 						</div>
 					</div>
 					<div className="meta-item pt-2 border-t border-gray-100 italic">
-						<span className="font-black text-yellow-600 text-lg">
+						<span className="font-black text-green-600 text-lg">
 							{car.pricePerDay?.toLocaleString('pt-CV', { style: 'currency', currency: 'CVE' })}
 						</span>
 						<span className="text-gray-400 text-[10px] uppercase font-bold ml-1">/ Dia</span>

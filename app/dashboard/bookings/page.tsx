@@ -35,7 +35,7 @@ export default function BookingsPage() {
 					<div className="flex items-center gap-2">
 						<span>{b.customer_name}</span>
 						{b.has_extra_driver && (
-							<span className="bg-yellow-100 text-yellow-800 text-[10px] px-2 py-0.5 rounded-full font-bold uppercase whitespace-nowrap" title="Com Condutor Extra">
+							<span className="bg-green-100 text-green-800 text-[10px] px-2 py-0.5 rounded-full font-bold uppercase whitespace-nowrap" title="Com Condutor Extra">
 								+ Condutor
 							</span>
 						)}
@@ -54,7 +54,7 @@ export default function BookingsPage() {
 				license_photo: b.has_license_photo ? (
 					<button
 						onClick={() => handleViewLicensePhoto(b.id)}
-						className="flex items-center gap-1.5 text-yellow-700 hover:text-yellow-800 hover:underline text-[10px] font-bold uppercase tracking-tight"
+						className="flex items-center gap-1.5 text-green-700 hover:text-green-800 hover:underline text-[10px] font-bold uppercase tracking-tight"
 						title="Ver foto da carta de condução do cliente"
 					>
 						<Paperclip size={13} />
