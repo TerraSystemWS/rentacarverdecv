@@ -142,8 +142,8 @@ export const endpoints = {
 		restoreUploads: "/dashboard/settings/restore/uploads",
 	},
 	payment: {
-		init: (id: number, responseUrl: string) => `/public/payment/init/${id}?responseUrl=${encodeURIComponent(responseUrl)}`,
-		callback: "/public/payment/callback",
+		summary: (bookingId: number) => `/public/payment/${bookingId}`,
+		init: (bookingId: number) => `/public/payment/init/${bookingId}`,
 	},
 	notifications: {
 		list: "/dashboard/notifications",

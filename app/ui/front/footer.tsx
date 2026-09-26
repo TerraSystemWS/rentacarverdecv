@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
 import { authFetch } from "@/app/auth/api";
 import { CompanyProfile } from "@/lib/api/types";
+import PaymentBrands from "@/app/ui/front/payment/PaymentBrands";
 
 interface GalleryItem {
 	id: number;
@@ -114,6 +115,12 @@ const Footer = () => {
 										<li>
 											<Link href="/gallery">Galeria</Link>
 										</li>
+										<li>
+											<Link href="/condicoes-gerais">Condições Gerais</Link>
+										</li>
+										<li>
+											<Link href="/politica-cancelamento">Cancelamento e Reembolso</Link>
+										</li>
 									</ul>
 								</div>
 							</div>
@@ -210,6 +217,9 @@ const Footer = () => {
 										Copyright &copy; {new Date().getFullYear()} TerraSystem - All Right Reserved{" "}
 										<Link href="https://terrasystem.cv">terrasystem.cv</Link>
 									</p>
+									<div style={{ marginTop: 10 }}>
+										<PaymentBrands />
+									</div>
 								</div>
 							</div>
 							<div className="col-md-3">

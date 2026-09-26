@@ -69,7 +69,7 @@ export type BookingRow = {
 	customer_name: string;
 	vehicle_title: string;
 	status: "PENDENTE" | "APROVADA" | "PAGA" | "EM_CURSO" | "CONCLUÍDA" | "CANCELADA";
-	payment_status?: "PENDING" | "SUCCESS" | "FAILED";
+	payment_status?: "PENDING" | "SUCCESS" | "FAILED" | "CANCELLED";
 	merchant_ref?: string;
 	start_at: string;
 	end_at: string;
@@ -255,6 +255,8 @@ export type CustomerProfile = {
 	phone: string | null;
 	address: string | null;
 	zipCode: string | null;
+	city: string | null;
+	countryCode: string | null;
 	country: string | null;
 	nationality: string | null;
 	birthDate: string | null;
@@ -299,4 +301,41 @@ export type AppNotification = {
 	relatedEntityId: number | null;
 	read: boolean;
 	createdAt: string;
+};
+
+// GET /public/payment/{bookingId} — ver PaymentController.summary()
+export type PaymentSummary = {
+	bookingId: number;
+	vehicle: string;
+	startDate: string;
+	endDate: string;
+	hasExtraDriver: boolean;
+	discountPercent: number | null;
+	totalPrice: number;
+	amountCve: number;
+	status: string;
+	paymentStatus: string;
+	merchantRef: string | null;
+	payable: boolean;
+	customerName: string | null;
+	customerEmail: string | null;
+	billingAddress: string | null;
+	billingCity: string | null;
+	billingPostCode: string | null;
+	billingCountryCode: string | null;
+	profileComplete: boolean;
+	lastAttempt?: {
+		merchantRef: string;
+		status: string;
+		panMasked: string | null;
+		errorMessage: string | null;
+		createdAt: string;
+		respondedAt: string | null;
+	};
+};
+
+// POST /public/payment/init/{bookingId}
+export type PaymentInitResponse = {
+	actionUrl: string;
+	fields: Record<string, string>;
 };

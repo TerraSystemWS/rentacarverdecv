@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@/app/auth/AuthContext";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { authFetch } from "@/app/auth/api";
 import { endpoints } from "@/lib/api/endpoints";
 import { BookingRow, Invoice, PagedBookings } from "@/lib/api/types";
@@ -137,6 +138,14 @@ export default function ProfilePage() {
                             <span className="text-slate-600 font-medium">Total Estimado</span>
                             <span className="text-lg font-black text-slate-900">{fmtMoney(b.grand_total, "CVE")}</span>
                         </div>
+                        {(b.status === "PENDENTE" || b.status === "APROVADA") && b.payment_status !== "SUCCESS" && (
+                            <Link
+                                href={`/payment/${b.id}`}
+                                className="btn-racv mt-3 w-full text-center text-sm"
+                            >
+                                Pagar agora
+                            </Link>
+                        )}
                         {invoiceFor(b.id) && (
                             <button
                                 onClick={() => handleDownloadInvoice(invoiceFor(b.id)!.id)}

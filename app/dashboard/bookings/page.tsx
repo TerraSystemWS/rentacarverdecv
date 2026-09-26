@@ -71,7 +71,7 @@ export default function BookingsPage() {
 				payment_status: (
 					<div className="flex items-center gap-2">
 						<span className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-tight shadow-sm border ${getPaymentStatusStyles(b.payment_status)}`}>
-							{b.payment_status === "SUCCESS" ? "PAGO" : b.payment_status || "PENDENTE"}
+							{({ SUCCESS: "PAGO", FAILED: "FALHOU", CANCELLED: "CANCELADO", PENDING: "PENDENTE" } as Record<string, string>)[b.payment_status || "PENDING"] ?? b.payment_status}
 						</span>
 						{b.merchant_ref && (
 							<span className="text-[8px] text-zinc-400 font-mono" title={`Ref: ${b.merchant_ref}`}>
@@ -180,6 +180,7 @@ export default function BookingsPage() {
 		switch (status) {
 			case "SUCCESS": return "bg-green-50 text-green-700 border-green-200";
 			case "FAILED": return "bg-red-50 text-red-700 border-red-200";
+			case "CANCELLED": return "bg-amber-50 text-amber-700 border-amber-200";
 			case "PENDING":
 			default: return "bg-zinc-50 text-zinc-500 border-zinc-200";
 		}

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { authFetch } from "@/app/auth/api";
 import { endpoints } from "@/lib/api/endpoints";
 import { CustomerProfile } from "@/lib/api/types";
+import { COUNTRIES, DEFAULT_COUNTRY_CODE, countryName } from "@/lib/countries";
 import { CheckCircle2, AlertTriangle, Loader2, IdCard, Trash2 } from "lucide-react";
 
 type FormState = {
@@ -11,6 +12,8 @@ type FormState = {
 	phone: string;
 	address: string;
 	zipCode: string;
+	city: string;
+	countryCode: string;
 	country: string;
 	nationality: string;
 	birthDate: string;
@@ -26,7 +29,7 @@ type FormState = {
 };
 
 const emptyForm: FormState = {
-	fullName: "", phone: "", address: "", zipCode: "", country: "", nationality: "",
+	fullName: "", phone: "", address: "", zipCode: "", city: "", countryCode: DEFAULT_COUNTRY_CODE, country: countryName(DEFAULT_COUNTRY_CODE), nationality: "",
 	birthDate: "", placeOfBirth: "", idNumber: "", idIssuedBy: "", idIssuedAt: "", idExpiresAt: "",
 	licenseNumber: "", licenseIssuedBy: "", licenseIssuedAt: "", licenseExpiresAt: "",
 };
@@ -60,12 +63,17 @@ export default function MyDataForm() {
 			.then((res) => (res.ok ? res.json() : null))
 			.then((data: CustomerProfile | null) => {
 				if (!data) return;
+				// Perfis antigos só têm o país em texto livre — tenta reconhecê-lo.
+				const legacyCode = COUNTRIES.find((c) => c.name.toLowerCase() === (data.country || "").trim().toLowerCase())?.code;
+				const code = data.countryCode || legacyCode || DEFAULT_COUNTRY_CODE;
 				setForm({
 					fullName: data.fullName || "",
 					phone: data.phone || "",
 					address: data.address || "",
 					zipCode: data.zipCode || "",
-					country: data.country || "",
+					city: data.city || "",
+					countryCode: code,
+					country: countryName(code),
 					nationality: data.nationality || "",
 					birthDate: toDateInput(data.birthDate),
 					placeOfBirth: data.placeOfBirth || "",
@@ -138,6 +146,14 @@ export default function MyDataForm() {
 
 	function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
 		setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+		setSaved(false);
+	}
+
+	// O país guarda-se como código numérico ISO 3166-1 (exigido pelo
+	// pagamento vinti4) e também pelo nome, usado no contrato e na fatura.
+	function handleCountryChange(e: React.ChangeEvent<HTMLSelectElement>) {
+		const code = e.target.value;
+		setForm((prev) => ({ ...prev, countryCode: code, country: countryName(code) }));
 		setSaved(false);
 	}
 
@@ -216,8 +232,25 @@ export default function MyDataForm() {
 						{field("Nome completo *", "fullName", "text", true)}
 						{field("Telefone *", "phone", "tel", true)}
 						{field("Morada *", "address", "text", true)}
-						{field("Código postal", "zipCode")}
-						{field("País *", "country", "text", true)}
+						{field("Cidade *", "city", "text", true)}
+						<div>
+							{field("Código postal", "zipCode")}
+							<p className="text-[11px] text-slate-500 mt-1">Se não tiver, deixe em branco.</p>
+						</div>
+						<div>
+							<label className="block text-xs font-bold uppercase tracking-wide text-slate-600 mb-1.5">País *</label>
+							<select
+								name="countryCode"
+								value={form.countryCode}
+								onChange={handleCountryChange}
+								required
+								className="w-full px-3 py-2.5 text-sm text-slate-900 outline-none transition-shadow"
+							>
+								{COUNTRIES.map((c) => (
+									<option key={c.code} value={c.code}>{c.name}</option>
+								))}
+							</select>
+						</div>
 						{field("Nacionalidade", "nationality")}
 					</div>
 				</div>
