@@ -143,7 +143,7 @@ const Footer = () => {
 										<li>
 											<span className="text-[#ececec]">
 												<i className="fa fa-map-marker"></i>Cidadela - Rua da
-												Independência
+												Independência - Praia, Ilha de Santiago, Cabo Verde
 											</span>
 										</li>
 									</ul>
