@@ -122,6 +122,10 @@ export type MessageAttachment = {
 	filename: string;
 	contentType: string;
 	size: number;
+	// Ver AttachmentPolicy no backend: WARN pede confirmação antes de
+	// descarregar; BLOCKED não tem ficheiro no servidor.
+	risk: "SAFE" | "WARN" | "BLOCKED";
+	blockedReason: "DANGEROUS_TYPE" | "TOO_LARGE" | null;
 };
 
 export type MessageItem = {

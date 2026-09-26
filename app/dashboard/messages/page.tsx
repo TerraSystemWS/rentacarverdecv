@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
 	MessageSquare, Search, Mail, MailOpen, Trash2, ArrowLeft, Send, Paperclip, PenSquare,
-	AlertTriangle, RotateCw, Bot, Globe, AtSign, X, Loader2, ChevronDown, ChevronUp,
+	AlertTriangle, RotateCw, Bot, Globe, AtSign, X, Loader2, ChevronDown, ChevronUp, ShieldAlert,
 } from "lucide-react";
 import Swal from "sweetalert2";
 import TopNav from "@/app/ui/dash/topNav";
@@ -438,7 +438,37 @@ function MessageBubble({ m, onResent }: { m: MessageItem; onResent: () => void }
 
 function AttachmentChip({ a }: { a: MessageAttachment }) {
 	const [busy, setBusy] = useState(false);
+
+	if (a.risk === "BLOCKED") {
+		const reason = a.blockedReason === "TOO_LARGE"
+			? "Anexo demasiado grande (máx. 10 MB) — não foi guardado."
+			: "Tipo de ficheiro perigoso (executável, script ou macro) — bloqueado por segurança.";
+		return (
+			<span
+				title={`${reason} O original continua na caixa de email reservas@.`}
+				className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 bg-red-50 px-2.5 py-1.5 text-xs font-medium text-red-700 cursor-help"
+			>
+				<ShieldAlert size={12} />
+				<span className="max-w-[200px] truncate line-through">{a.filename}</span>
+				<span className="font-bold">{a.blockedReason === "TOO_LARGE" ? "Demasiado grande" : "Bloqueado"}</span>
+			</span>
+		);
+	}
+
 	async function download() {
+		if (a.risk === "WARN") {
+			const ok = await Swal.fire({
+				icon: "warning",
+				title: "Descarregar este ficheiro?",
+				html: `<b>${a.filename.replace(/[<>&"]/g, "")}</b> é um arquivo comprimido ou página web — pode conter vírus.<br>Só abra se confiar no remetente.`,
+				showCancelButton: true,
+				confirmButtonText: "Descarregar",
+				cancelButtonText: "Cancelar",
+				confirmButtonColor: "#d97706",
+				cancelButtonColor: "#3085d6",
+			});
+			if (!ok.isConfirmed) return;
+		}
 		setBusy(true);
 		try {
 			// O endpoint exige o header Authorization — por isso blob: URL, não <a href>.
@@ -457,8 +487,13 @@ function AttachmentChip({ a }: { a: MessageAttachment }) {
 		}
 	}
 	return (
-		<button onClick={download} disabled={busy} className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-2.5 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-50 disabled:opacity-50">
-			{busy ? <Loader2 size={12} className="animate-spin" /> : <Paperclip size={12} />}
+		<button
+			onClick={download}
+			disabled={busy}
+			title={a.risk === "WARN" ? "Arquivo comprimido/página web — confirmar antes de abrir" : undefined}
+			className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-medium hover:bg-zinc-50 disabled:opacity-50 ${a.risk === "WARN" ? "border-amber-300 bg-amber-50 text-amber-800" : "border-zinc-200 bg-white text-zinc-700"}`}
+		>
+			{busy ? <Loader2 size={12} className="animate-spin" /> : a.risk === "WARN" ? <AlertTriangle size={12} /> : <Paperclip size={12} />}
 			<span className="max-w-[200px] truncate">{a.filename}</span>
 			<span className="text-zinc-400">{fmtSize(a.size)}</span>
 		</button>
