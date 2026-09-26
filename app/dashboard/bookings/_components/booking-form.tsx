@@ -5,6 +5,7 @@ import { Car, User, Calendar, Clock } from "lucide-react";
 import { apiFetch } from "@/lib/api/client";
 import { endpoints } from "@/lib/api/endpoints";
 import type { Vehicle, UserRow } from "@/lib/api/types";
+import { cvToIso, isoToCv } from "@/lib/utils/cvTime";
 
 interface BookingFormProps {
     onSubmit: (data: any) => Promise<void>;
@@ -22,10 +23,12 @@ export default function BookingForm({ onSubmit, onCancel, isSubmitting, initialD
     const [formData, setFormData] = useState({
         userId: initialData?.userId || "",
         vehicleId: initialData?.vehicleId || "",
-        startDate: initialData?.start_at ? new Date(initialData.start_at).toISOString().split('T')[0] : "",
-        startTime: initialData?.start_at ? new Date(initialData.start_at).toTimeString().split(' ')[0].slice(0, 5) : "10:00",
-        endDate: initialData?.end_at ? new Date(initialData.end_at).toISOString().split('T')[0] : "",
-        endTime: initialData?.end_at ? new Date(initialData.end_at).toTimeString().split(' ')[0].slice(0, 5) : "10:00",
+        // Data e hora sempre em hora de Cabo Verde (lib/utils/cvTime.ts) — antes
+        // a data vinha em UTC e a hora no fuso do browser, e não batiam certo.
+        startDate: initialData?.start_at ? isoToCv(initialData.start_at).date : "",
+        startTime: initialData?.start_at ? isoToCv(initialData.start_at).time : "10:00",
+        endDate: initialData?.end_at ? isoToCv(initialData.end_at).date : "",
+        endTime: initialData?.end_at ? isoToCv(initialData.end_at).time : "10:00",
     });
 
     const [error, setError] = useState<string | null>(null);
@@ -79,8 +82,8 @@ export default function BookingForm({ onSubmit, onCancel, isSubmitting, initialD
             return;
         }
 
-        const start = new Date(`${formData.startDate}T${formData.startTime}:00Z`).toISOString();
-        const end = new Date(`${formData.endDate}T${formData.endTime}:00Z`).toISOString();
+        const start = cvToIso(formData.startDate, formData.startTime);
+        const end = cvToIso(formData.endDate, formData.endTime);
 
         if (new Date(start) >= new Date(end)) {
             setError("A data de entrega deve ser posterior à data de levantamento.");

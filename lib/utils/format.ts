@@ -1,13 +1,13 @@
 // lib/utils/format.ts
+import { isoToCv } from "./cvTime";
+
+// Sempre em hora de Cabo Verde (ver lib/utils/cvTime.ts) — um cliente que
+// reserva de Portugal tem de ver a mesma hora de levantamento que a agência.
 export function fmtDateTime(iso: string) {
 	try {
-		const d = new Date(iso);
-		const day = String(d.getDate()).padStart(2, "0");
-		const month = String(d.getMonth() + 1).padStart(2, "0");
-		const year = d.getFullYear();
-		const hours = String(d.getHours()).padStart(2, "0");
-		const minutes = String(d.getMinutes()).padStart(2, "0");
-		return `${day}/${month}/${year} ${hours}:${minutes}`;
+		const { date, time } = isoToCv(iso);
+		const [y, m, d] = date.split("-");
+		return `${d}/${m}/${y} ${time}`;
 	} catch {
 		return iso;
 	}

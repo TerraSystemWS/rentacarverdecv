@@ -24,6 +24,7 @@ import {
 import { Vehicle } from "@/lib/api/types";
 import { useAuth } from "@/app/auth/AuthContext";
 import { API_BASE_URL } from "@/lib/api/endpoints";
+import { cvToIso, localDateString, parseLocalDate } from "@/lib/utils/cvTime";
 
 interface VehicleSingleProps {
 	vehicle: Vehicle;
@@ -110,8 +111,9 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 			return;
 		}
 
-		const start = new Date(`${formData.startDate}T${formData.startTime}:00Z`);
-		const end = new Date(`${formData.endDate}T${formData.endTime}:00Z`);
+		// Hora escolhida = hora de Cabo Verde (onde se levanta a viatura).
+		const start = new Date(cvToIso(formData.startDate, formData.startTime));
+		const end = new Date(cvToIso(formData.endDate, formData.endTime));
 
 		if (start >= end) {
 			setMessage({ type: 'error', text: "A data de devolução deve ser posterior à data de levantamento." });
@@ -297,11 +299,11 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 												<div className="input relative">
 													<i className="fa fa-calendar absolute right-3 top-3 text-gray-400 z-10 pointer-events-none"></i>
 													<DatePicker
-														selected={formData.startDate ? new Date(formData.startDate) : null}
+														selected={formData.startDate ? parseLocalDate(formData.startDate) : null}
 														onChange={(date: Date | null) => {
 															setFormData(prev => ({
 																...prev,
-																startDate: date ? date.toISOString().split('T')[0] : ""
+																startDate: date ? localDateString(date) : ""
 															}));
 														}}
 														dateFormat="dd/MM/yyyy"
@@ -319,16 +321,16 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 												<div className="input relative">
 													<i className="fa fa-calendar absolute right-3 top-3 text-gray-400 z-10 pointer-events-none"></i>
 													<DatePicker
-														selected={formData.endDate ? new Date(formData.endDate) : null}
+														selected={formData.endDate ? parseLocalDate(formData.endDate) : null}
 														onChange={(date: Date | null) => {
 															setFormData(prev => ({
 																...prev,
-																endDate: date ? date.toISOString().split('T')[0] : ""
+																endDate: date ? localDateString(date) : ""
 															}));
 														}}
 														dateFormat="dd/MM/yyyy"
 														locale={ptBR}
-														minDate={formData.startDate ? new Date(formData.startDate) : new Date()}
+														minDate={formData.startDate ? parseLocalDate(formData.startDate) ?? new Date() : new Date()}
 														excludeDateIntervals={bookedIntervals}
 														className="form-controller w-full bg-transparent"
 														placeholderText="dd/mm/aaaa"
