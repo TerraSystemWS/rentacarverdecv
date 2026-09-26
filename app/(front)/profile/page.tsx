@@ -154,6 +154,14 @@ export default function ProfilePage() {
                                 Descarregar Fatura-Recibo
                             </button>
                         )}
+                        {b.payment_status === "SUCCESS" && (
+                            <Link
+                                href={`/payment/result?status=success&id=${b.id}`}
+                                className="invoice-download-btn mt-2 block w-full text-center text-sm font-bold border border-slate-300 bg-white rounded-lg py-2 hover:bg-slate-50 transition-colors"
+                            >
+                                Ver recibo do pagamento
+                            </Link>
+                        )}
                     </div>
                 ))}
             </div>

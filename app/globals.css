@@ -335,3 +335,25 @@
   color: #475569;
   font-style: italic;
 }
+
+/* Recibo de pagamento (/payment/result): o style.css legado mete imagens a
+   100% de largura e uma margem grande nos <p> — sem @layer para ganhar. */
+.receipt-print img.receipt-logo { height: 40px; width: auto; max-width: none; }
+.receipt-print p { margin: 0; line-height: 1.5; }
+
+/*
+ * Impressão do recibo de pagamento (/payment/result, botão "Imprimir"): só o
+ * bloco .receipt-print sai no papel — sem cabeçalho/rodapé/menu do site.
+ */
+@media print {
+  body * { visibility: hidden; }
+  .receipt-print, .receipt-print * { visibility: visible; }
+  .receipt-print {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
+    border: none !important;
+    box-shadow: none !important;
+  }
+  .receipt-print .print\:hidden { display: none !important; }
+}

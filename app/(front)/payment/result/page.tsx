@@ -107,12 +107,16 @@ function PaymentResult() {
 function Receipt({ summary, company }: { summary: PaymentSummary | null; company: CompanyProfile | null }) {
 	const attempt = summary?.lastAttempt;
 	return (
-		<div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-6">
+		// "receipt-print": ao imprimir só este bloco aparece (ver @media print
+		// em globals.css) — sem cabeçalho/rodapé do site nem botões.
+		<div className="receipt-print bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-6">
+			{/* eslint-disable-next-line @next/next/no-img-element */}
+			<img src="/logo_b.png" alt="Rent a Car Verde" className="receipt-logo" />
 			<div className="flex items-center gap-3 text-emerald-800">
 				<CheckCircle2 className="w-8 h-8 shrink-0" />
 				<div>
-					<h2 className="text-xl font-bold">Pagamento efetuado com sucesso</h2>
-					<p className="text-sm text-slate-600">A sua reserva está confirmada. A fatura-recibo está disponível no seu perfil.</p>
+					<h2 className="text-xl font-bold">Recibo de pagamento</h2>
+					<p className="text-sm text-slate-600">Pagamento efetuado com sucesso — a sua reserva está confirmada. A fatura-recibo está disponível no seu perfil.</p>
 				</div>
 			</div>
 
