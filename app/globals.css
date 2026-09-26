@@ -473,3 +473,82 @@
   .nf-actions { flex-direction: column; align-items: stretch; }
   .nf-btn { width: 100%; }
 }
+
+/*
+ * Banner da página principal (AdBanner). Sem @layer: o style.css legado do
+ * template mexe em img/a e ganharia às classes Tailwind.
+ * A imagem aparece sempre inteira (contain); o espaço que sobra leva uma cópia
+ * desfocada da mesma imagem.
+ */
+.hb-banner { position: relative; background: #1b201d; }
+.hb-slide,
+.hb-placeholder {
+  position: relative;
+  overflow: hidden;
+  height: clamp(240px, 42vw, 620px);
+}
+.hb-backdrop {
+  position: absolute;
+  inset: -40px;
+  background-size: cover;
+  background-position: center;
+  filter: blur(28px) brightness(0.55) saturate(1.1);
+  transform: scale(1.05);
+}
+.hb-banner img.hb-image {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: contain;
+  object-position: center;
+}
+/* Título discreto no canto inferior direito, com vidro desfocado. */
+.hb-caption {
+  position: absolute;
+  z-index: 2;
+  right: 18px;
+  bottom: 18px;
+  max-width: min(70%, 520px);
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.35);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: #ffffff;
+  font-family: "Exo", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0.72;
+  text-decoration: none;
+  transition: opacity 0.2s ease, background 0.2s ease;
+}
+a.hb-caption:hover { opacity: 1; background: rgba(34, 107, 60, 0.75); color: #ffffff; text-decoration: none; }
+/* Pontos no canto inferior esquerdo, para nunca ficarem por baixo do título. */
+.hb-banner .swiper-pagination.swiper-pagination-horizontal {
+  left: 18px;
+  right: auto;
+  bottom: 30px !important;
+  width: auto;
+  line-height: 0;
+  text-align: left;
+}
+.hb-banner .swiper-pagination-bullet { background: #ffffff; opacity: 0.6; }
+.hb-banner .swiper-pagination-bullet-active { background: #3baa4e; opacity: 1; }
+.hb-banner .swiper-button-prev,
+.hb-banner .swiper-button-next { color: #ffffff; opacity: 0.7; }
+.hb-banner .swiper-button-prev:hover,
+.hb-banner .swiper-button-next:hover { opacity: 1; }
+@media (max-width: 640px) {
+  .hb-caption { right: 10px; bottom: 10px; font-size: 12px; padding: 5px 10px; max-width: calc(100% - 100px); }
+  .hb-banner .swiper-pagination.swiper-pagination-horizontal { left: 10px; bottom: 19px !important; }
+  .hb-banner .swiper-button-prev,
+  .hb-banner .swiper-button-next { display: none; }
+}

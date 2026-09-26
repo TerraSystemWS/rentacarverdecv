@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Advertisement } from "@/lib/api/types";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
+import AdBanner from "./AdBanner";
 
 interface LayerStyle {
 	color?: string;
@@ -47,6 +48,7 @@ interface Slide {
 const MainSlider = () => {
 	const sliderRef = useRef<HTMLDivElement>(null);
 	const [ads, setAds] = useState<Advertisement[]>([]);
+	const [loaded, setLoaded] = useState(false);
 
 	useEffect(() => {
 		const fetchAds = async () => {
@@ -58,20 +60,24 @@ const MainSlider = () => {
 				}
 			} catch (error) {
 				console.error("Error fetching banners:", error);
+			} finally {
+				setLoaded(true);
 			}
 		};
 		fetchAds();
 	}, []);
 
-	// Inicialização do Revolution Slider após carregar os banners
+	// Revolution Slider só para o slide por omissão do template (sem campanhas
+	// BANNER). As campanhas usam o AdBanner — ver comentário lá.
 	useEffect(() => {
+		if (!loaded || ads.length > 0) return;
 		const timer = setTimeout(() => {
 			if (typeof (window as any).initRevolutionSlider === 'function') {
 				(window as any).initRevolutionSlider();
 			}
 		}, 100);
 		return () => clearTimeout(timer);
-	}, [ads]);
+	}, [loaded, ads]);
 
 	const getImageSrc = (url: string) => {
 		if (!url) return "";
@@ -320,6 +326,11 @@ const MainSlider = () => {
 
 		return `<ul>${slidesHtml}</ul>`;
 	};
+
+	// Enquanto os banners carregam, reserva o espaço (sem saltos na página nem
+	// o slide do template a aparecer por um instante).
+	if (!loaded) return <section className="hb-banner hb-placeholder" aria-hidden="true" />;
+	if (ads.length > 0) return <AdBanner ads={ads} />;
 
 	return (
 		<div className="slider-block">
