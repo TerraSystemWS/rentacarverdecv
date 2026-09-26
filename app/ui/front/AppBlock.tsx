@@ -26,7 +26,7 @@ export default function AppBlock({ content }: AppBlockProps) {
 						<div className="col-md-6 tb-cell">
 							<div className="mobile-app-details">
 								<h4 className="top-subtitle">{data.topSubtitle}</h4>
-								<h2 className="title red-color">{data.title}</h2>
+								<h2 className="title yellow-color">{data.title}</h2>
 								<h3 className="subtitle">
 									{data.subtitle}
 								</h3>

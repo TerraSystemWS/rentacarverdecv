@@ -44,7 +44,7 @@ export default function BlogArea() {
 	return (
 		<div className="blog-content-block pd-90 bg-gray-color">
 			<div className="container">
-				<div className="row tb default-margin-bottom theme-red">
+				<div className="row tb default-margin-bottom theme-green">
 					<div className="col-md-10 block-title-area tb-cell">
 						<div className="heading-content style-one border">
 							<h3 className="subtitle">Nossas Novidades</h3>
@@ -100,7 +100,7 @@ export default function BlogArea() {
 											<span className="bg-blue-500 text-white px-2 py-1 rounded">
 												{post.createdAt ? new Date(post.createdAt).toLocaleDateString() : ""}
 											</span>
-											<span className="bg-red-500 text-white px-2 py-1 rounded flex items-center gap-1">
+											<span className="bg-[#3baa4e] text-white px-2 py-1 rounded flex items-center gap-1">
 												<i className="fa fa-user"></i> {post.author || "Admin"}
 											</span>
 										</div>

@@ -54,7 +54,7 @@ const BlogPost: React.FC<BlogPostProps> = ({ post }) => {
 			<div className="post-content">
 				<div className="entry-meta">
 					<span className="entry-date nevy-bg">{formattedDate}</span>
-					<span className="entry-author red-bg">
+					<span className="entry-author green-bg">
 						<i className="fa fa-user" />
 						{post.author || "Admin"}
 					</span>

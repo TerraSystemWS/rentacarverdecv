@@ -586,3 +586,21 @@ a.hb-caption:hover { opacity: 1; background: rgba(34, 107, 60, 0.75); color: #ff
   letter-spacing: 0.02em;
 }
 .author-image img { width: 100%; height: 100%; object-fit: cover; }
+
+/*
+ * Secção "Novidades" da página principal (BlogArea): era theme-red do
+ * template (#FF4818). O theme-yellow (já verde) não cobre título nem setas,
+ * por isso este theme-green reproduz as regras do theme-red com o verde.
+ */
+.theme-green .heading-content.style-one.border h2.title:before { background-color: #3baa4e; }
+.theme-green .heading-content h2.title span,
+.theme-green .subtitle span { color: #3baa4e !important; }
+.theme-green .item-navigation .next-item {
+  background-color: #3baa4e !important;
+  border-color: #3baa4e !important;
+  color: #ffffff;
+}
+.theme-green .item-navigation .next-item:before { border-bottom-color: #3baa4e !important; }
+/* Autor nos cartões de posts (BlogGrid) — era .red-bg do template (#FF4818). */
+.entry-meta .green-bg { background-color: #3baa4e; color: #ffffff; }
+.entry-meta .green-bg a:hover { color: #ffffff; }
