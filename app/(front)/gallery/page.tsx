@@ -53,7 +53,7 @@ export default function GalleryPage() {
                                         onClick={() => setActiveCategory(cat)}
                                         className={`px-[60px] py-[15px] rounded-[25px] font-['Exo',sans-serif] font-black uppercase text-[16px] tracking-[0.035em] transition-all duration-300 ${activeCategory === cat
                                             ? "bg-[#3baa4e] text-white shadow-lg"
-                                            : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                                            : "bg-gray-100 !text-gray-800 hover:bg-gray-200 hover:!text-black"
                                             }`}
                                     >
                                         {cat}
