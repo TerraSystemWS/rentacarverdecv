@@ -552,3 +552,20 @@ a.hb-caption:hover { opacity: 1; background: rgba(34, 107, 60, 0.75); color: #ff
   .hb-banner .swiper-button-prev,
   .hb-banner .swiper-button-next { display: none; }
 }
+
+/*
+ * Cartões da listagem /cars (veiculos/carro.tsx). O theme-yellow do template
+ * pinta a caixa de verde (#3baa4e) e o texto cinzento e o preço verde deixavam
+ * de se ler. Caixa branca; o verde fica só na faixa axadrezada do topo.
+ */
+.vehicle-content.vehicle-card-light .vehicle-bottom-content {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-top: 0;
+}
+.vehicle-content.vehicle-card-light .vehicle-bottom-content:before {
+  background-color: #3baa4e;
+  opacity: 1;
+}
+.vehicle-content.vehicle-card-light .vehicle-bottom-content .vehicle-title a { color: #1d1d1f; }
+.vehicle-content.vehicle-card-light .vehicle-bottom-content .vehicle-title a:hover { color: #226b3c; }
