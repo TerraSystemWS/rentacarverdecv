@@ -391,3 +391,85 @@
   padding: 8px 14px;
 }
 .footer-payment-brands { padding: 18px 0 6px; }
+
+/*
+ * Página 404 (NotFoundContent). Sem @layer: o style.css legado do template
+ * mexe em img/h1/a e ganharia às classes Tailwind.
+ */
+.nf-page {
+  background: #f1f5f9;
+  padding: 64px 16px 88px;
+}
+.nf-inner {
+  max-width: 560px;
+  margin: 0 auto;
+  text-align: center;
+}
+.nf-illustration {
+  display: block;
+  width: 100%;
+  max-width: 460px;
+  height: auto;
+  margin: 0 auto 28px;
+}
+.nf-title {
+  font-family: "Exo", var(--font-exo), sans-serif;
+  font-size: 2rem;
+  font-weight: 900;
+  line-height: 1.2;
+  color: #1b201d;
+  margin: 0 0 10px;
+}
+.nf-text {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #475569;
+  margin: 0 0 28px;
+}
+.nf-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.nf-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 180px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  text-decoration: none;
+}
+/* Mesmo formato do .btn-racv (botão principal do site), em contorno. */
+.nf-btn-outline {
+  border: 2px solid #3baa4e;
+  color: #226b3c;
+  background: #ffffff;
+  font-family: "Exo", sans-serif;
+  font-weight: 900;
+  font-size: 16px;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+  border-radius: 25px;
+  padding: 13px 40px;
+  transition: all 0.3s ease;
+}
+.nf-btn-outline:hover { background: #3baa4e; color: #ffffff; text-decoration: none; transform: translateY(-2px); }
+.nf-links {
+  margin: 24px 0 0;
+  font-size: 14px;
+  color: #94a3b8;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.nf-links a { color: #226b3c; font-weight: 600; text-decoration: none; }
+.nf-links a:hover { text-decoration: underline; }
+@media (max-width: 480px) {
+  .nf-page { padding: 40px 16px 64px; }
+  .nf-title { font-size: 1.6rem; }
+  .nf-actions { flex-direction: column; align-items: stretch; }
+  .nf-btn { width: 100%; }
+}
