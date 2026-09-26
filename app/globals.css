@@ -604,3 +604,15 @@ a.hb-caption:hover { opacity: 1; background: rgba(34, 107, 60, 0.75); color: #ff
 /* Autor nos cartões de posts (BlogGrid) — era .red-bg do template (#FF4818). */
 .entry-meta .green-bg { background-color: #3baa4e; color: #ffffff; }
 .entry-meta .green-bg a:hover { color: #ffffff; }
+
+/*
+ * Pesquisa da página principal (CheckVehicleArea): datas com react-datepicker
+ * e horas com input type="time". O wrapper do datepicker ocupa o campo todo
+ * e o calendário usa o verde da marca.
+ */
+.check-vehicle-block .react-datepicker-wrapper { display: block; width: 100%; }
+.check-vehicle-block .react-datepicker-popper { z-index: 30; }
+.check-vehicle-block .react-datepicker__day--selected,
+.check-vehicle-block .react-datepicker__day--keyboard-selected { background-color: #3baa4e; color: #ffffff; }
+.check-vehicle-block .react-datepicker__day--today { font-weight: 800; }
+.check-vehicle-block input[type="time"] { color-scheme: dark; }

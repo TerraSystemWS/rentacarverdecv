@@ -3,6 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { ptBR } from "date-fns/locale";
+import { localDateString, parseLocalDate } from "@/lib/utils/cvTime";
 
 interface FormData {
 	localRetirada: string;
@@ -36,6 +40,18 @@ const CheckVehicleArea = () => {
 			...prev,
 			[e.target.name]: e.target.value,
 		}));
+	};
+
+	// Datas guardadas como "YYYY-MM-DD" (dia local, sem fuso — ver cvTime).
+	// Se a retirada passar para depois da devolução, limpa a devolução.
+	const setDate = (field: "dataRetirada" | "dataDevolucao", date: Date | null) => {
+		setFormData((prev) => {
+			const next = { ...prev, [field]: date ? localDateString(date) : "" };
+			if (field === "dataRetirada" && next.dataRetirada && next.dataDevolucao && next.dataDevolucao < next.dataRetirada) {
+				next.dataDevolucao = "";
+			}
+			return next;
+		});
 	};
 
 	const handleSubmit = (e: React.FormEvent) => {
@@ -103,13 +119,16 @@ const CheckVehicleArea = () => {
 										<label>Data de retirada</label>
 										<div className="input">
 											<i className="fa fa-calendar"></i>
-											<input
-												type="text"
+											<DatePicker
+												selected={parseLocalDate(formData.dataRetirada)}
+												onChange={(date: Date | null) => setDate("dataRetirada", date)}
+												dateFormat="dd/MM/yyyy"
+												locale={ptBR}
+												minDate={new Date()}
 												name="dataRetirada"
-												className="date-start date-selector form-controller"
-												placeholder="dd/mm/aa"
-												value={formData.dataRetirada}
-												onChange={handleChange}
+												className="form-controller"
+												placeholderText="dd/mm/aaaa"
+												autoComplete="off"
 											/>
 										</div>
 									</div>
@@ -119,10 +138,9 @@ const CheckVehicleArea = () => {
 										<div className="input">
 											<i className="fa fa-clock-o"></i>
 											<input
-												type="text"
+												type="time"
 												name="horaRetirada"
-												className="time-selector form-controller"
-												placeholder="15:00"
+												className="form-controller"
 												value={formData.horaRetirada}
 												onChange={handleChange}
 											/>
@@ -150,13 +168,16 @@ const CheckVehicleArea = () => {
 										<label>Data de devolução</label>
 										<div className="input">
 											<i className="fa fa-calendar"></i>
-											<input
-												type="text"
+											<DatePicker
+												selected={parseLocalDate(formData.dataDevolucao)}
+												onChange={(date: Date | null) => setDate("dataDevolucao", date)}
+												dateFormat="dd/MM/yyyy"
+												locale={ptBR}
+												minDate={parseLocalDate(formData.dataRetirada) ?? new Date()}
 												name="dataDevolucao"
-												className="date-end date-selector form-controller"
-												placeholder="dd/mm/aa"
-												value={formData.dataDevolucao}
-												onChange={handleChange}
+												className="form-controller"
+												placeholderText="dd/mm/aaaa"
+												autoComplete="off"
 											/>
 										</div>
 									</div>
@@ -166,10 +187,9 @@ const CheckVehicleArea = () => {
 										<div className="input">
 											<i className="fa fa-clock-o"></i>
 											<input
-												type="text"
+												type="time"
 												name="horaDevolucao"
-												className="time-selector form-controller"
-												placeholder="12:00"
+												className="form-controller"
 												value={formData.horaDevolucao}
 												onChange={handleChange}
 											/>
