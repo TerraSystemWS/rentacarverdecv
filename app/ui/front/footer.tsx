@@ -209,6 +209,11 @@ const Footer = () => {
 						</div>
 					</div>
 
+					{/* Marcas aceites no pagamento online — linha própria, centrada na página */}
+					<div className="footer-payment-brands">
+						<PaymentBrands />
+					</div>
+
 					<div className="footer-bottom-block">
 						<div className="row">
 							<div className="col-md-9">
@@ -217,9 +222,7 @@ const Footer = () => {
 										Copyright &copy; {new Date().getFullYear()} TerraSystem - All Right Reserved{" "}
 										<Link href="https://terrasystem.cv">terrasystem.cv</Link>
 									</p>
-									<div style={{ marginTop: 10 }}>
-										<PaymentBrands />
-									</div>
+
 								</div>
 							</div>
 							<div className="col-md-3">

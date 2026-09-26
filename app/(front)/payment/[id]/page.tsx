@@ -181,7 +181,7 @@ export default function PaymentPage() {
 						)}
 
 						<div className="flex justify-center">
-							<PaymentBrands />
+							<PaymentBrands onLight />
 						</div>
 					</div>
 				)}

@@ -24,7 +24,7 @@ export default async function PoliticaCancelamentoPage() {
 				<article className="bg-white border border-slate-200 rounded-xl p-6 sm:p-10 shadow-sm space-y-8">
 					{html ? <RichText html={html} /> : <LegalUnavailable />}
 					<div className="border-t border-slate-200 pt-6">
-						<PaymentBrands />
+						<PaymentBrands onLight />
 					</div>
 				</article>
 			</div>

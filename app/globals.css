@@ -362,3 +362,31 @@
 .post-rich-text { font-size: 16px; line-height: 1.8; color: #555; }
 .post-rich-text h2 { font-size: 1.35rem; }
 .post-rich-text h3 { font-size: 1.15rem; }
+
+/*
+ * Logos das marcas de pagamento (PaymentBrands). Sem @layer de propósito: o
+ * style.css legado do template (sem layer) dava às imagens o tamanho original
+ * (vinti4 com 300px), ganhando às classes Tailwind h-8/w-auto.
+ */
+.payment-brands {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 14px 18px;
+}
+.payment-brands img {
+  height: 32px;
+  width: auto;
+  max-width: none;
+  margin: 0;
+  object-fit: contain;
+}
+.payment-brands img.payment-brand-wide { height: 24px; }
+.payment-brands--on-light {
+  display: inline-flex;
+  background: #0f172a;
+  border-radius: 10px;
+  padding: 8px 14px;
+}
+.footer-payment-brands { padding: 18px 0 6px; }

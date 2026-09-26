@@ -149,7 +149,7 @@ function Receipt({ summary, company }: { summary: PaymentSummary | null; company
 			</div>
 
 			<div className="flex flex-wrap items-center justify-between gap-3 print:hidden">
-				<PaymentBrands />
+				<PaymentBrands onLight />
 				<div className="flex gap-2">
 					<button onClick={() => window.print()} className="h-10 px-4 border border-slate-300 rounded-lg text-sm font-semibold flex items-center gap-2 hover:bg-slate-50">
 						<Printer className="w-4 h-4" /> Imprimir
