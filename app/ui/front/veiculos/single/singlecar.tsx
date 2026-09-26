@@ -25,6 +25,7 @@ import { Vehicle } from "@/lib/api/types";
 import { useAuth } from "@/app/auth/AuthContext";
 import { API_BASE_URL } from "@/lib/api/endpoints";
 import { cvToIso, localDateString, parseLocalDate } from "@/lib/utils/cvTime";
+import { useRentalLocations } from "@/lib/api/useRentalLocations";
 
 interface VehicleSingleProps {
 	vehicle: Vehicle;
@@ -44,6 +45,18 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 	const [bookedIntervals, setBookedIntervals] = useState<{ start: Date; end: Date }[]>([]);
+	const { locations, loading: locationsLoading } = useRentalLocations();
+
+	// Com os locais carregados, pré-seleciona o primeiro para levantamento e
+	// devolução (o cliente pode mudar qualquer um).
+	useEffect(() => {
+		if (locations.length === 0) return;
+		setFormData(prev => ({
+			...prev,
+			pickupLocation: prev.pickupLocation || String(locations[0].id),
+			returnLocation: prev.returnLocation || String(locations[0].id),
+		}));
+	}, [locations]);
 
 	useEffect(() => {
 		if (!vehicle.id) return;
@@ -136,7 +149,9 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 					userId: user.id,
 					startDate: start.toISOString(),
 					endDate: end.toISOString(),
-					hasExtraDriver: formData.hasExtraDriver
+					hasExtraDriver: formData.hasExtraDriver,
+					pickupLocationId: Number(formData.pickupLocation),
+					returnLocationId: Number(formData.returnLocation)
 				})
 			});
 
@@ -268,31 +283,37 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 												<label className="text-uppercase">Local de levantamento</label>
 												<div className="input">
 													<i className="fa fa-map-marker"></i>
-													<input
-														type="text"
+													<select
 														name="pickupLocation"
 														value={formData.pickupLocation}
 														onChange={handleInputChange}
-														placeholder="Digite o local"
-														className="pick-location form-controller"
+														className="form-controller"
 														required
-														disabled={!isAuthenticated}
-													/>
+														disabled={!isAuthenticated || locationsLoading}
+													>
+														<option value="">{locationsLoading ? "A carregar locais..." : "Escolha o local"}</option>
+														{locations.map((l) => (
+															<option key={l.id} value={l.id}>{l.name}</option>
+														))}
+													</select>
 												</div>
 
 												<label className="text-uppercase">Local de devolução</label>
 												<div className="input">
 													<i className="fa fa-map-marker"></i>
-													<input
-														type="text"
+													<select
 														name="returnLocation"
 														value={formData.returnLocation}
 														onChange={handleInputChange}
-														placeholder="Digite o local"
-														className="pick-location form-controller"
+														className="form-controller"
 														required
-														disabled={!isAuthenticated}
-													/>
+														disabled={!isAuthenticated || locationsLoading}
+													>
+														<option value="">{locationsLoading ? "A carregar locais..." : "Escolha o local"}</option>
+														{locations.map((l) => (
+															<option key={l.id} value={l.id}>{l.name}</option>
+														))}
+													</select>
 												</div>
 
 												<label>Data de levantamento</label>

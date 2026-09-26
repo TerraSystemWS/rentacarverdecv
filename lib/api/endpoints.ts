@@ -86,6 +86,14 @@ export const endpoints = {
 		validate: (code: string, vehicleId?: number) =>
 			`/public/vouchers/validate?code=${encodeURIComponent(code)}${vehicleId ? `&vehicleId=${vehicleId}` : ""}`,
 	},
+	// Locais de levantamento/devolução (Operações → Locais).
+	locations: {
+		list: "/public/locations",
+		dashboard: "/dashboard/locations",
+		create: "/dashboard/locations",
+		update: (id: number) => `/dashboard/locations/${id}`,
+		delete: (id: number) => `/dashboard/locations/${id}`,
+	},
 	partners: {
 		list: "/public/partners",
 		dashboard: "/dashboard/partners",

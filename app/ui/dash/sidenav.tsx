@@ -19,6 +19,7 @@ import {
 	Images,
 	Megaphone,
 	UserSquare2,
+	MapPin,
 	X,
 	LogOut,
 	User as UserIcon,
@@ -49,6 +50,7 @@ const groups: Group[] = [
 			{ label: "Veículos", href: "/dashboard/vehicles", icon: Car },
 			{ label: "Calendário", href: "/dashboard/calendar", icon: CalendarDays },
 			{ label: "Motoristas", href: "/dashboard/drivers", icon: UserSquare2 },
+			{ label: "Locais", href: "/dashboard/locations", icon: MapPin },
 		],
 	},
 	{

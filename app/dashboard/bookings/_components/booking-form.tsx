@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Car, User, Calendar, Clock } from "lucide-react";
+import { Car, User, Calendar, Clock, MapPin } from "lucide-react";
 import { apiFetch } from "@/lib/api/client";
 import { endpoints } from "@/lib/api/endpoints";
 import type { Vehicle, UserRow } from "@/lib/api/types";
 import { cvToIso, isoToCv } from "@/lib/utils/cvTime";
+import { useRentalLocations } from "@/lib/api/useRentalLocations";
 
 interface BookingFormProps {
     onSubmit: (data: any) => Promise<void>;
@@ -29,7 +30,21 @@ export default function BookingForm({ onSubmit, onCancel, isSubmitting, initialD
         startTime: initialData?.start_at ? isoToCv(initialData.start_at).time : "10:00",
         endDate: initialData?.end_at ? isoToCv(initialData.end_at).date : "",
         endTime: initialData?.end_at ? isoToCv(initialData.end_at).time : "10:00",
+        // Ids da lista Operações → Locais; vazio ao editar = mantém o local atual.
+        pickupLocationId: "",
+        returnLocationId: "",
     });
+    const { locations, loading: locationsLoading } = useRentalLocations();
+
+    // Nova reserva: pré-seleciona o primeiro local para levantamento e devolução.
+    useEffect(() => {
+        if (initialData || locations.length === 0) return;
+        setFormData(prev => ({
+            ...prev,
+            pickupLocationId: prev.pickupLocationId || String(locations[0].id),
+            returnLocationId: prev.returnLocationId || String(locations[0].id),
+        }));
+    }, [locations, initialData]);
 
     const [error, setError] = useState<string | null>(null);
 
@@ -77,7 +92,8 @@ export default function BookingForm({ onSubmit, onCancel, isSubmitting, initialD
         e.preventDefault();
         setError(null);
 
-        if (!formData.userId || !formData.vehicleId || !formData.startDate || !formData.endDate) {
+        if (!formData.userId || !formData.vehicleId || !formData.startDate || !formData.endDate
+            || (!initialData && (!formData.pickupLocationId || !formData.returnLocationId))) {
             setError("Por favor preencha todos os campos obrigatórios.");
             return;
         }
@@ -101,6 +117,8 @@ export default function BookingForm({ onSubmit, onCancel, isSubmitting, initialD
                 vehicleId: parseInt(formData.vehicleId),
                 startDate: start,
                 endDate: end,
+                pickupLocationId: formData.pickupLocationId ? Number(formData.pickupLocationId) : undefined,
+                returnLocationId: formData.returnLocationId ? Number(formData.returnLocationId) : undefined,
             });
         } catch (err: any) {
             setError(err.message || "Ocorreu um erro ao processar a reserva.");
@@ -222,6 +240,66 @@ export default function BookingForm({ onSubmit, onCancel, isSubmitting, initialD
                     {formData.endDate && (
                         <p className="text-[10px] font-bold text-primary mt-1 px-1 italic">
                             Selecionado: {formData.endDate.split('-').reverse().join('/')}
+                        </p>
+                    )}
+                </div>
+
+                <div className="space-y-1.5">
+                    <label className="text-xs font-bold uppercase tracking-tight text-gray-400">Local de levantamento</label>
+                    <div className="relative">
+                        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                        <select
+                            required={!initialData}
+                            disabled={locationsLoading}
+                            className="w-full rounded-lg border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-4 text-sm focus:border-blue-500 focus:bg-white focus:outline-none transition-all appearance-none"
+                            value={formData.pickupLocationId}
+                            onChange={(e) => setFormData({ ...formData, pickupLocationId: e.target.value })}
+                        >
+                            <option value="">
+                                {locationsLoading
+                                    ? "A carregar locais..."
+                                    : initialData?.pickup_location
+                                        ? `Manter: ${initialData.pickup_location}`
+                                        : "Selecionar Local..."}
+                            </option>
+                            {locations.map(l => (
+                                <option key={l.id} value={l.id}>{l.name}</option>
+                            ))}
+                        </select>
+                    </div>
+                    {!locationsLoading && locations.length === 0 && (
+                        <p className="text-[11px] font-semibold text-red-600 px-1">
+                            Não há locais ativos. Crie um em Operações → Locais.
+                        </p>
+                    )}
+                </div>
+
+                <div className="space-y-1.5">
+                    <label className="text-xs font-bold uppercase tracking-tight text-gray-400">Local de devolução</label>
+                    <div className="relative">
+                        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                        <select
+                            required={!initialData}
+                            disabled={locationsLoading}
+                            className="w-full rounded-lg border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-4 text-sm focus:border-blue-500 focus:bg-white focus:outline-none transition-all appearance-none"
+                            value={formData.returnLocationId}
+                            onChange={(e) => setFormData({ ...formData, returnLocationId: e.target.value })}
+                        >
+                            <option value="">
+                                {locationsLoading
+                                    ? "A carregar locais..."
+                                    : initialData?.return_location
+                                        ? `Manter: ${initialData.return_location}`
+                                        : "Selecionar Local..."}
+                            </option>
+                            {locations.map(l => (
+                                <option key={l.id} value={l.id}>{l.name}</option>
+                            ))}
+                        </select>
+                    </div>
+                    {!locationsLoading && locations.length === 0 && (
+                        <p className="text-[11px] font-semibold text-red-600 px-1">
+                            Não há locais ativos. Crie um em Operações → Locais.
                         </p>
                     )}
                 </div>

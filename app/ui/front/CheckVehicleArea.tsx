@@ -7,6 +7,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ptBR } from "date-fns/locale";
 import { localDateString, parseLocalDate } from "@/lib/utils/cvTime";
+import { useRentalLocations } from "@/lib/api/useRentalLocations";
 
 interface FormData {
 	localRetirada: string;
@@ -33,6 +34,7 @@ const CheckVehicleArea = () => {
 		combustivel: "",
 	});
 	const router = useRouter();
+	const { locations, loading: locationsLoading } = useRentalLocations();
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
 	) => {
@@ -104,14 +106,18 @@ const CheckVehicleArea = () => {
 										<label>Local de retirada</label>
 										<div className="input">
 											<i className="fa fa-map-marker"></i>
-											<input
-												type="text"
+											<select
 												name="localRetirada"
-												placeholder="Seu local"
-												className="pick-location form-controller"
+												className="form-controller"
 												value={formData.localRetirada}
 												onChange={handleChange}
-											/>
+												disabled={locationsLoading}
+											>
+												<option value="">{locationsLoading ? "A carregar locais..." : "Escolha o local"}</option>
+												{locations.map((l) => (
+													<option key={l.id} value={l.id}>{l.name}</option>
+												))}
+											</select>
 										</div>
 									</div>
 
@@ -153,14 +159,18 @@ const CheckVehicleArea = () => {
 										<label>Local de devolução</label>
 										<div className="input">
 											<i className="fa fa-map-marker"></i>
-											<input
-												type="text"
+											<select
 												name="localDevolucao"
-												placeholder="Local de devolução"
-												className="drop-location form-controller"
+												className="form-controller"
 												value={formData.localDevolucao}
 												onChange={handleChange}
-											/>
+												disabled={locationsLoading}
+											>
+												<option value="">{locationsLoading ? "A carregar locais..." : "Igual ao levantamento"}</option>
+												{locations.map((l) => (
+													<option key={l.id} value={l.id}>{l.name}</option>
+												))}
+											</select>
 										</div>
 									</div>
 

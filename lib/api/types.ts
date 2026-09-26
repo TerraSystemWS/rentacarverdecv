@@ -50,6 +50,15 @@ export type DashboardSummary = {
 	revenueByStatus: Record<string, number>;
 };
 
+// Local de levantamento/devolução (Operações → Locais no dashboard).
+export type RentalLocation = {
+	id: number;
+	name: string;
+	address: string | null;
+	active: boolean;
+	sortOrder: number;
+};
+
 export type UserRow = {
 	id: string; // UUID in backend
 	full_name: string;
