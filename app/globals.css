@@ -373,16 +373,17 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 14px 18px;
+  gap: 18px 28px;
 }
 .payment-brands img {
-  height: 32px;
+  height: 81px;
   width: auto;
   max-width: none;
   margin: 0;
   object-fit: contain;
 }
-.payment-brands img.payment-brand-wide { height: 24px; }
+/* Mastercard ID Check é largo (3.5:1) — mesma proporção visual dos outros. */
+.payment-brands img.payment-brand-wide { height: 61px; }
 .payment-brands--on-light {
   display: inline-flex;
   background: #0f172a;
