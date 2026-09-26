@@ -145,7 +145,9 @@ export default function PostForm({
                         <option value="DRAFT">Rascunho</option>
                         <option value="PUBLISHED">Publicado</option>
                     </select>
-                    {initialData?.newsletterSentAt ? (
+                    {initialData?.newsletterSentAt && initialData.newsletterRecipients === 0 ? (
+                        <p className="text-xs text-zinc-500">Newsletter: nenhum email enviado (sem subscritores ou publicada antes da newsletter).</p>
+                    ) : initialData?.newsletterSentAt ? (
                         <p className="text-xs text-green-700">
                             Newsletter enviada em {fmtDateTime(initialData.newsletterSentAt)}
                             {initialData.newsletterRecipients != null && ` a ${initialData.newsletterRecipients} subscritor${initialData.newsletterRecipients === 1 ? "" : "es"}`}.

@@ -190,7 +190,7 @@ export default function PostsPage() {
                                         }`}>
                                         {row.status === 'PUBLISHED' ? 'Publicado' : 'Rascunho'}
                                     </span>
-                                    {row.newsletterSentAt && (
+                                    {row.newsletterSentAt && row.newsletterRecipients !== 0 && (
                                         <span className="ml-1.5 px-2 py-1 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700" title={`Newsletter enviada em ${new Date(row.newsletterSentAt).toLocaleString("pt-PT", { timeZone: "Atlantic/Cape_Verde" })}`}>
                                             ✉ {row.newsletterRecipients ?? "…"}
                                         </span>
