@@ -35,6 +35,11 @@ export type DashboardSummary = {
 	users: number;
 	vehicles: number;
 	activeBookings: number;
+	// Contagens para a tendência das caixas: últimos 30 dias vs. 30 anteriores.
+	newUsers30d: number;
+	newUsersPrev30d: number;
+	newBookings30d: number;
+	newBookingsPrev30d: number;
 	unreadRecipients: number;
 	totalIncome: number;
 	dailyIncome: number;

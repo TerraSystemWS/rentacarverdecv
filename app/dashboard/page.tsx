@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 import TopNav from "@/app/ui/dash/topNav";
 import PageShell from "@/app/ui/dash/PageShell";
-import StatCard from "@/app/ui/dash/StatCard";
+import StatCard, { computeTrend } from "@/app/ui/dash/StatCard";
 import RevenueOverview from "@/app/dashboard/_components/RevenueOverview";
 import CashflowDetails from "@/app/dashboard/_components/CashflowDetails";
 
@@ -110,7 +110,7 @@ export default function DashboardHome() {
 									label="Utilizadores"
 									value={data.users}
 									icon={UsersIcon}
-									trend="+12%"
+									trend={computeTrend(data.newUsers30d ?? 0, data.newUsersPrev30d ?? 0, "registos")}
 								/>
 								<StatCard
 									label="Veículos"
@@ -121,7 +121,7 @@ export default function DashboardHome() {
 									label="Reservas Ativas"
 									value={data.activeBookings}
 									icon={CalendarCheck}
-									trend="+5%"
+									trend={computeTrend(data.newBookings30d ?? 0, data.newBookingsPrev30d ?? 0, "reservas novas")}
 								/>
 								<StatCard
 									label="Mensagens"
