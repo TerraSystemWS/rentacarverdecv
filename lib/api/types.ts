@@ -97,14 +97,58 @@ export type PagedBookings = {
 };
 
 
-export type MessageRow = {
+// Mensagens do dashboard — ver ContactMessageController
+export type MessageSource = "FORM" | "EMAIL" | "REPLY" | "SYSTEM";
+
+// Uma conversa na lista (id = 1.ª mensagem da conversa).
+export type MessageThreadSummary = {
 	id: number;
 	name: string;
 	email: string;
 	subject: string | null;
-	message: string;
+	preview: string;
+	source: MessageSource;
+	lastDirection: "IN" | "OUT";
+	lastFailed: boolean;
+	count: number;
+	unread: number;
 	read: boolean;
 	createdAt: string;
+	lastAt: string;
+};
+
+export type MessageAttachment = {
+	id: number;
+	filename: string;
+	contentType: string;
+	size: number;
+};
+
+export type MessageItem = {
+	id: number;
+	direction: "IN" | "OUT";
+	source: MessageSource;
+	name: string;
+	email: string;
+	toEmail: string | null;
+	subject: string | null;
+	message: string;
+	html: string | null; // já sanitizado no backend
+	read: boolean;
+	sentBy: string | null;
+	deliveryStatus: "PENDING" | "SENT" | "FAILED" | null;
+	deliveryError: string | null;
+	createdAt: string;
+	attachments: MessageAttachment[];
+};
+
+export type MessageThread = {
+	id: number;
+	name: string;
+	email: string;
+	subject: string | null;
+	canReply: boolean;
+	messages: MessageItem[];
 };
 
 // --- Full Vehicle Types ---

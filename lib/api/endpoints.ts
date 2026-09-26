@@ -57,11 +57,19 @@ export const endpoints = {
 		licensePhoto: (id: number) => `/dashboard/bookings/${id}/documents/license-photo`,
 	},
 	messages: {
-		list: (limit = 100) => `/dashboard/messages?limit=${limit}`,
+		// Conversas (formulário de Contacto + caixa de email reservas@). Os ids
+		// são da 1.ª mensagem de cada conversa.
+		list: () => "/dashboard/messages",
+		thread: (id: number) => `/dashboard/messages/${id}`,
 		unreadCount: "/dashboard/messages/unread-count",
+		mailStatus: "/dashboard/messages/mail-status",
 		markRead: (id: number) => `/dashboard/messages/${id}/read`,
 		markUnread: (id: number) => `/dashboard/messages/${id}/unread`,
 		delete: (id: number) => `/dashboard/messages/${id}`,
+		reply: (id: number) => `/dashboard/messages/${id}/reply`,
+		compose: "/dashboard/messages/compose",
+		resend: (messageId: number) => `/dashboard/messages/items/${messageId}/resend`,
+		attachment: (attachmentId: number) => `/dashboard/messages/attachments/${attachmentId}`,
 		create: "/public/messages",
 	},
 	subscribers: {
