@@ -46,8 +46,10 @@ export default function AboutMainContent({ content }: AboutMainContentProps) {
 								</div>
 								<div className="col-md-6">
 									<div className="about-content-left">
-										<p>{data.p1}</p>
-										<p>{data.p2}</p>
+										{/* HTML do editor de texto rico (sanitizado no backend); valores
+										    antigos em texto simples continuam a funcionar. */}
+										<div dangerouslySetInnerHTML={{ __html: asHtml(data.p1) }} />
+										<div dangerouslySetInnerHTML={{ __html: asHtml(data.p2) }} />
 									</div>
 								</div>
 								<div className="col-md-6">
@@ -66,4 +68,11 @@ export default function AboutMainContent({ content }: AboutMainContentProps) {
 			</div>
 		</div>
 	);
+}
+
+function asHtml(value: string | undefined): string {
+	if (!value) return "";
+	if (/<[a-z][\s\S]*>/i.test(value)) return value;
+	const escaped = value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+	return `<p>${escaped}</p>`;
 }

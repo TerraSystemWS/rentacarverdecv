@@ -291,3 +291,47 @@
   background-color: #fef2f2; /* red-50 */
   color: #b91c1c !important; /* red-700 */
 }
+/*
+ * Texto rico da gestão de conteúdos (editor Tiptap no dashboard + componente
+ * RichText no site). Sem @layer de propósito, pelo mesmo motivo do
+ * .styled-form: o style.css legado do template (sem layer) mexe em p/h2/ul e
+ * ganharia a qualquer regra dentro de @layer.
+ */
+.rich-text {
+  color: #334155; /* slate-700 */
+  font-size: 15px;
+  line-height: 1.7;
+}
+/* Espaçamento só por margin-bottom + especificidade (não pela ordem das
+   regras, que o compilador de CSS pode reordenar). */
+.rich-text p, .rich-text ul, .rich-text ol, .rich-text blockquote { margin: 0 0 0.75em; }
+.rich-text li p { margin: 0; }
+.rich-text > :last-child { margin-bottom: 0; }
+.rich-text h2 {
+  font-size: 1.125rem;
+  font-weight: 900;
+  color: #0f172a;
+  margin: 1.75em 0 0.5em;
+  line-height: 1.3;
+  text-transform: none;
+}
+.rich-text h3 {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 1.25em 0 0.4em;
+  text-transform: none;
+}
+.rich-text > h2:first-child, .rich-text > h3:first-child { margin-top: 0; }
+.rich-text ul { list-style: disc; padding-left: 1.5rem; }
+.rich-text ol { list-style: decimal; padding-left: 1.5rem; }
+.rich-text li + li { margin-top: 0.35em; }
+.rich-text li p { margin: 0; }
+.rich-text a { color: #226b3c; font-weight: 600; text-decoration: underline; }
+.rich-text strong { font-weight: 700; color: #0f172a; }
+.rich-text blockquote {
+  border-left: 4px solid #3baa4e;
+  padding-left: 1rem;
+  color: #475569;
+  font-style: italic;
+}

@@ -151,7 +151,7 @@ export default function ProfilePage() {
                                 onClick={() => handleDownloadInvoice(invoiceFor(b.id)!.id)}
                                 className="invoice-download-btn mt-3 w-full text-center text-sm font-bold border border-green-400 bg-green-50 rounded-lg py-2 hover:bg-green-100 transition-colors"
                             >
-                                Descarregar Fatura
+                                Descarregar Fatura-Recibo
                             </button>
                         )}
                     </div>

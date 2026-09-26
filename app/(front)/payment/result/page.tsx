@@ -112,7 +112,7 @@ function Receipt({ summary, company }: { summary: PaymentSummary | null; company
 				<CheckCircle2 className="w-8 h-8 shrink-0" />
 				<div>
 					<h2 className="text-xl font-bold">Pagamento efetuado com sucesso</h2>
-					<p className="text-sm text-slate-600">A sua reserva está confirmada. A fatura está disponível no seu perfil.</p>
+					<p className="text-sm text-slate-600">A sua reserva está confirmada. A fatura-recibo está disponível no seu perfil.</p>
 				</div>
 			</div>
 

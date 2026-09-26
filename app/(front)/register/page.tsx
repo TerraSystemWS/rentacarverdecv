@@ -13,6 +13,9 @@ export default function RegisterPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    // Newsletter só com consentimento explícito (lei de proteção de dados de
+    // Cabo Verde) — por isso a caixa começa desmarcada.
+    const [newsletter, setNewsletter] = useState(false);
     const [err, setErr] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [turnstileToken, setTurnstileToken] = useState<string>("");
@@ -50,7 +53,7 @@ export default function RegisterPage() {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ username, email, password, turnstileToken })
+                body: JSON.stringify({ username, email, password, turnstileToken, newsletter })
             });
 
             if (!res.ok) {
@@ -135,6 +138,16 @@ export default function RegisterPage() {
                             required
                         />
                     </div>
+
+                    <label className="flex items-start gap-2 text-sm text-slate-700 cursor-pointer">
+                        <input
+                            type="checkbox"
+                            checked={newsletter}
+                            onChange={(e) => setNewsletter(e.target.checked)}
+                            className="mt-1"
+                        />
+                        <span>Quero receber novidades e promoções da Rent a Car Verde por email.</span>
+                    </label>
 
                     {err && (
                         <div className="bg-red-50 text-red-600 text-sm p-3 rounded-md border border-red-100">

@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Save, Loader2, Layout, Info, Phone, Home } from "lucide-react";
+import { Save, Loader2, Layout, Info, Phone, Home, ScrollText, Undo2 } from "lucide-react";
 import Swal from "sweetalert2";
 import { useAuth } from "@/app/auth/AuthContext";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
 import TopNav from "@/app/ui/dash/topNav";
 import PageShell from "@/app/ui/dash/PageShell";
+import RichTextEditor from "@/app/ui/dash/RichTextEditor";
 
 export default function ContentPage() {
     const { authFetch } = useAuth();
@@ -87,6 +88,15 @@ export default function ContentPage() {
         { id: "about", label: "Sobre Nós", icon: Info },
         { id: "contact", label: "Contacto", icon: Phone },
         { id: "home", label: "Início", icon: Home },
+        { id: "conditions", label: "Condições Gerais", icon: ScrollText },
+        { id: "cancellation", label: "Cancelamento", icon: Undo2 },
+    ];
+
+    // Páginas legais (texto rico). O backend preenche estes campos com o
+    // texto por omissão (content-defaults/*.html) enquanto não forem editados.
+    const legalPages = [
+        { id: "conditions", title: "Condições Gerais de Aluguer", url: "/condicoes-gerais", hint: "Deve corresponder ao documento em papel entregue com o contrato de aluguer." },
+        { id: "cancellation", title: "Política de Cancelamento e Reembolso", url: "/politica-cancelamento", hint: "Exigida pela SISP para aceitar pagamentos online (checklist, ponto 6)." },
     ];
 
     return (
@@ -108,7 +118,7 @@ export default function ContentPage() {
 
             <PageShell>
                 <div className="max-w-4xl mx-auto">
-                    <div className="flex bg-white p-2 rounded-2xl shadow-sm border border-gray-100 mb-8 gap-2">
+                    <div className="flex flex-wrap bg-white p-2 rounded-2xl shadow-sm border border-gray-100 mb-8 gap-2">
                         {tabs.map((tab) => (
                             <button
                                 key={tab.id}
@@ -182,21 +192,19 @@ export default function ContentPage() {
 
                                 <div className="space-y-2">
                                     <label className="text-xs font-black uppercase text-gray-400 tracking-widest pl-1">Parágrafo 1</label>
-                                    <textarea
-                                        rows={4}
-                                        value={content.about.p1}
-                                        onChange={(e) => handleChange("about", "p1", e.target.value)}
-                                        className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all"
+                                    <RichTextEditor
+                                        value={content.about.p1 || ""}
+                                        onChange={(html) => handleChange("about", "p1", html)}
+                                        minHeight={120}
                                     />
                                 </div>
 
                                 <div className="space-y-2">
                                     <label className="text-xs font-black uppercase text-gray-400 tracking-widest pl-1">Parágrafo 2</label>
-                                    <textarea
-                                        rows={4}
-                                        value={content.about.p2}
-                                        onChange={(e) => handleChange("about", "p2", e.target.value)}
-                                        className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all"
+                                    <RichTextEditor
+                                        value={content.about.p2 || ""}
+                                        onChange={(html) => handleChange("about", "p2", html)}
+                                        minHeight={120}
                                     />
                                 </div>
                             </div>
@@ -417,6 +425,23 @@ export default function ContentPage() {
                                 </div>
                             </div>
                         )}
+
+                        {legalPages.map((page) => activeTab === page.id && (
+                            <div key={page.id} className="bg-white p-8 rounded-[32px] shadow-sm border border-gray-100 space-y-4">
+                                <div className="flex flex-wrap items-baseline justify-between gap-2 border-b pb-4">
+                                    <h3 className="text-xl font-black text-gray-900">{page.title}</h3>
+                                    <a href={page.url} target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-blue-600 hover:underline">
+                                        Ver página {page.url} ↗
+                                    </a>
+                                </div>
+                                <p className="text-sm text-gray-500">{page.hint} As alterações aparecem no site até 1 minuto depois de guardar.</p>
+                                <RichTextEditor
+                                    value={content.legal?.[page.id] || ""}
+                                    onChange={(html) => handleChange("legal", page.id, html)}
+                                    minHeight={420}
+                                />
+                            </div>
+                        ))}
                     </form>
                 </div>
             </PageShell>

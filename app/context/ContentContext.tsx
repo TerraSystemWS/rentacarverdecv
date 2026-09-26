@@ -44,6 +44,11 @@ interface SiteContent {
     settings: {
         maintenanceMode: number;
     };
+    // HTML (editor de texto rico) das páginas /condicoes-gerais e /politica-cancelamento
+    legal?: {
+        conditions: string;
+        cancellation: string;
+    };
 }
 
 interface ContentContextType {
