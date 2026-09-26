@@ -75,6 +75,7 @@ export const endpoints = {
 	subscribers: {
 		list: "/dashboard/subscribers",
 		delete: (id: number) => `/dashboard/subscribers/${id}`,
+		unsubscribe: "/public/subscribers/unsubscribe",
 		create: "/public/subscribers",
 	},
 	vouchers: {

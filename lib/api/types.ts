@@ -206,6 +206,9 @@ export type Post = {
 	status: "DRAFT" | "PUBLISHED";
 	createdAt?: string;
 	updatedAt?: string;
+	// Envio aos subscritores da newsletter (feito pelo servidor na 1.ª publicação)
+	newsletterSentAt?: string | null;
+	newsletterRecipients?: number | null;
 };
 
 export type GalleryItem = {

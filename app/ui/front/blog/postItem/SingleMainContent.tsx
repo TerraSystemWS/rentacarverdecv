@@ -31,6 +31,9 @@ export interface SingleMainContentProps {
 	tags?: LinkItem[];
 	firstParagraph?: string;
 	secondParagraph?: string;
+	// HTML do editor de texto rico (sanitizado no backend) — quando existe,
+	// substitui firstParagraph/secondParagraph.
+	contentHtml?: string;
 	gallery?: GalleryItem[];
 	socialLinks?: SocialLinks;
 }
@@ -46,6 +49,7 @@ const SingleMainContent: React.FC<SingleMainContentProps> = ({
 	tags = [],
 	firstParagraph,
 	secondParagraph,
+	contentHtml,
 	gallery = [],
 	socialLinks,
 }) => {
@@ -136,7 +140,8 @@ const SingleMainContent: React.FC<SingleMainContentProps> = ({
 					</div>
 
 					<div className="entry-content">
-						{firstParagraph && <p>{firstParagraph}</p>}
+						{contentHtml && <div className="rich-text post-rich-text" dangerouslySetInnerHTML={{ __html: contentHtml }} />}
+						{!contentHtml && firstParagraph && <p>{firstParagraph}</p>}
 
 						{gallery.length > 0 && (
 							<div className="gallery gallery-columns-4">
@@ -150,7 +155,7 @@ const SingleMainContent: React.FC<SingleMainContentProps> = ({
 							</div>
 						)}
 
-						{secondParagraph && <p>{secondParagraph}</p>}
+						{!contentHtml && secondParagraph && <p>{secondParagraph}</p>}
 					</div>
 				</div>
 

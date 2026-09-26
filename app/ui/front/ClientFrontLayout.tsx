@@ -13,9 +13,7 @@ export default function ClientFrontLayout({
 }) {
     const { content, loading } = useContent();
 
-    if (loading) return <>{children}</>;
-
-    if (content?.settings?.maintenanceMode === 1) {
+    if (!loading && content?.settings?.maintenanceMode === 1) {
         return (
             <div className="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center p-6 text-center">
                 <div className="w-24 h-24 bg-amber-50 text-amber-500 rounded-3xl flex items-center justify-center mb-8 animate-bounce">
@@ -33,12 +31,18 @@ export default function ClientFrontLayout({
         );
     }
 
+    // A página (children) fica SEMPRE na mesma posição da árvore. Antes, durante
+    // o carregamento dos conteúdos devolvia-se só <>{children}</> e depois
+    // <Header/><main>{children}</main>… — a mudança de posição fazia o React
+    // desmontar e montar a página de novo: perdia-se o que o utilizador já
+    // tinha feito (ex: formulário preenchido, "subscrição cancelada") e os
+    // pedidos iniciais de cada página eram feitos duas vezes.
     return (
         <>
-            <Header />
+            {!loading && <Header />}
             <main>{children}</main>
-            <Footer />
-            <AdPopup />
+            {!loading && <Footer />}
+            {!loading && <AdPopup />}
         </>
     );
 }

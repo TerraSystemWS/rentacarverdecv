@@ -357,3 +357,8 @@
   }
   .receipt-print .print\:hidden { display: none !important; }
 }
+
+/* Conteúdo das novidades (posts) — tamanho de letra do template do blog. */
+.post-rich-text { font-size: 16px; line-height: 1.8; color: #555; }
+.post-rich-text h2 { font-size: 1.35rem; }
+.post-rich-text h3 { font-size: 1.15rem; }

@@ -1,6 +1,7 @@
 import PageHeader from "@/app/ui/front/PageHeader";
 import Comments from "@/app/ui/front/blog/postItem/coments";
 import SingleMainContent from "@/app/ui/front/blog/postItem/SingleMainContent";
+import { textToHtml } from "@/lib/utils/legacyText";
 import BlogSidebar from "@/app/ui/front/blog/postSidebar";
 import CommentForm from "@/app/ui/front/blog/postItem/commentForm";
 import { endpoints, API_BASE_URL, SERVER_API_BASE_URL } from "@/lib/api/endpoints";
@@ -67,8 +68,7 @@ const BlogSinglePage = async ({ params }: BlogSinglePageProps) => {
 								date={post.createdAt ? new Date(post.createdAt).toLocaleDateString() : ""}
 								categories={[]}
 								tags={[]}
-								firstParagraph={post.content.split('\n')[0]}
-								secondParagraph={post.content.split('\n').slice(1).join('\n')}
+								contentHtml={textToHtml(post.content)}
 								gallery={[]}
 								navigation={{
 									prevUrl: prevPost ? `/posts/${prevPost.slug}` : undefined,

@@ -5,6 +5,9 @@ import { Post, MediaAsset } from "@/lib/api/types";
 import { Upload, Images } from "lucide-react";
 import { API_BASE_URL } from "@/lib/api/endpoints";
 import MediaPicker from "@/app/dashboard/_components/MediaPicker";
+import RichTextEditor from "@/app/ui/dash/RichTextEditor";
+import { textToHtml } from "@/lib/utils/legacyText";
+import { fmtDateTime } from "@/lib/utils/format";
 
 interface PostFormProps {
     initialData?: Partial<Post>;
@@ -23,7 +26,8 @@ export default function PostForm({
         id: initialData?.id as number | undefined,
         title: initialData?.title || "",
         slug: initialData?.slug || "",
-        content: initialData?.content || "",
+        // Posts antigos em texto simples/**Markdown** abrem já formatados no editor.
+        content: textToHtml(initialData?.content),
         summary: initialData?.summary || "",
         imageUrl: initialData?.imageUrl || "",
         author: initialData?.author || "",
@@ -63,8 +67,14 @@ export default function PostForm({
         }
     };
 
+    const [contentError, setContentError] = useState(false);
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        if (!formData.content || formData.content.replace(/<[^>]*>/g, "").trim() === "") {
+            setContentError(true);
+            return;
+        }
         onSubmit(formData, selectedImage || undefined);
     };
 
@@ -135,6 +145,16 @@ export default function PostForm({
                         <option value="DRAFT">Rascunho</option>
                         <option value="PUBLISHED">Publicado</option>
                     </select>
+                    {initialData?.newsletterSentAt ? (
+                        <p className="text-xs text-green-700">
+                            Newsletter enviada em {fmtDateTime(initialData.newsletterSentAt)}
+                            {initialData.newsletterRecipients != null && ` a ${initialData.newsletterRecipients} subscritor${initialData.newsletterRecipients === 1 ? "" : "es"}`}.
+                        </p>
+                    ) : formData.status === "PUBLISHED" ? (
+                        <p className="text-xs text-amber-700">
+                            Ao guardar como publicado, esta novidade é enviada por email a todos os subscritores da newsletter (só uma vez).
+                        </p>
+                    ) : null}
                 </div>
 
                 <div className="space-y-2 md:col-span-2">
@@ -150,16 +170,16 @@ export default function PostForm({
                 </div>
 
                 <div className="space-y-2 md:col-span-2">
-                    <label className="text-sm font-medium text-gray-700">Conteúdo (HTML suportado)</label>
-                    <textarea
-                        name="content"
+                    <label className="text-sm font-medium text-gray-700">Conteúdo</label>
+                    <RichTextEditor
                         value={formData.content}
-                        onChange={handleChange}
-                        required
-                        rows={8}
-                        className="w-full rounded-lg border border-gray-300 p-2.5 outline-none focus:ring-2 focus:ring-blue-500/20 font-sans"
-                        placeholder="Escreva aqui o conteúdo do seu post..."
+                        onChange={(html) => {
+                            setFormData((prev) => ({ ...prev, content: html }));
+                            if (html) setContentError(false);
+                        }}
+                        minHeight={260}
                     />
+                    {contentError && <p className="text-xs font-semibold text-red-600">Escreva o conteúdo da novidade.</p>}
                 </div>
 
                 <div className="space-y-2 md:col-span-2">
