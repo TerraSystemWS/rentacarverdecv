@@ -2,6 +2,8 @@
 
 import { useAuth } from "@/app/auth/AuthContext";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { UserRound } from "lucide-react";
 import Swal from "sweetalert2";
 
 interface FSideBarProps {
@@ -27,11 +29,22 @@ const FSideBar = ({ isOpen, onToggleSidebar }: FSideBarProps) => {
 		(user as any)?.email ||
 		"Faça login";
 
-	const description =
-		(user as any)?.jobTitle || (isAdmin ? "Admin" : "Cliente") || "Programmer";
+	const description = !isAuthenticated
+		? ""
+		: (user as any)?.jobTitle || (isAdmin ? "Admin" : "Cliente");
 
-	const avatar =
-		(user as any)?.avatarUrl || "/assets/images/driver/driver-03.png";
+	// A BD ainda não guarda foto de perfil; se um dia vier avatarUrl usa-se,
+	// senão (ou se a imagem falhar) mostra as iniciais — ou um ícone sem sessão.
+	const avatarUrl: string | undefined = (user as any)?.avatarUrl || undefined;
+	const [avatarFailed, setAvatarFailed] = useState(false);
+	const initials = isAuthenticated
+		? displayName
+				.split(/[\s@._-]+/)
+				.filter(Boolean)
+				.slice(0, 2)
+				.map((w: string) => w[0]!.toUpperCase())
+				.join("")
+		: "";
 
 	async function handleLogout(e: React.MouseEvent<HTMLAnchorElement>) {
 		e.preventDefault();
@@ -60,7 +73,13 @@ const FSideBar = ({ isOpen, onToggleSidebar }: FSideBarProps) => {
 					<div className="login-author">
 						<div className="author-info">
 							<div className="author-image yellow-border">
-								<img src={avatar} alt="author-image" />
+								{avatarUrl && !avatarFailed ? (
+									<img src={avatarUrl} alt={displayName} onError={() => setAvatarFailed(true)} />
+								) : (
+									<span className="author-avatar-fallback" aria-label={displayName}>
+										{initials || <UserRound className="w-6 h-6" aria-hidden="true" />}
+									</span>
+								)}
 							</div>
 
 							<div className="author-des">
