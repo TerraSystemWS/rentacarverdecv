@@ -153,12 +153,17 @@ export default function AdForm({
                             <label className="text-sm font-medium text-gray-700">Prioridade</label>
                             <input
                                 type="number"
+                                step={1}
                                 name="priority"
                                 value={formData.priority}
                                 onChange={handleChange}
+                                aria-describedby="priority-help"
                                 className="w-full rounded-lg border border-gray-300 p-2.5 outline-none focus:ring-2 focus:ring-blue-500/20"
                                 placeholder="0"
                             />
+                            <p id="priority-help" className="text-xs text-gray-500">
+                                Número inteiro (0, 1, 2…) que define a ordem entre anúncios do mesmo local: o <strong>número mais baixo aparece primeiro</strong>. No pop-up só aparece o de número mais baixo.
+                            </p>
                         </div>
                     </div>
 
