@@ -122,7 +122,7 @@ const Header = () => {
 						<div className="col-md-3 col-sm-10 col-xs-10">
 							<div className="site-logo">
 								<Link href="/">
-									<img src="/logo_b.png" alt="logo" />
+									<img src="/logo_b.svg" alt="logo" />
 								</Link>
 							</div>
 						</div>

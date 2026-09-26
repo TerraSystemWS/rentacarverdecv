@@ -17,7 +17,7 @@ export default function NotFound() {
 			<div style={{ background: "#ffffff", borderBottom: "1px solid #e2e8f0", padding: "16px", textAlign: "center" }}>
 				<Link href="/">
 					{/* eslint-disable-next-line @next/next/no-img-element */}
-					<img src="/logo_b.png" alt="Rent a Car Verde" style={{ height: 40, width: "auto", display: "inline-block" }} />
+					<img src="/logo_b.svg" alt="Rent a Car Verde" style={{ height: 40, width: "auto", display: "inline-block" }} />
 				</Link>
 			</div>
 			<NotFoundContent />

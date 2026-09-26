@@ -111,7 +111,7 @@ function Receipt({ summary, company }: { summary: PaymentSummary | null; company
 		// em globals.css) — sem cabeçalho/rodapé do site nem botões.
 		<div className="receipt-print bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-6">
 			{/* eslint-disable-next-line @next/next/no-img-element */}
-			<img src="/logo_b.png" alt="Rent a Car Verde" className="receipt-logo" />
+			<img src="/logo_b.svg" alt="Rent a Car Verde" className="receipt-logo" />
 			<div className="flex items-center gap-3 text-emerald-800">
 				<CheckCircle2 className="w-8 h-8 shrink-0" />
 				<div>

@@ -616,3 +616,17 @@ a.hb-caption:hover { opacity: 1; background: rgba(34, 107, 60, 0.75); color: #ff
 .check-vehicle-block .react-datepicker__day--keyboard-selected { background-color: #3baa4e; color: #ffffff; }
 .check-vehicle-block .react-datepicker__day--today { font-weight: 800; }
 .check-vehicle-block input[type="time"] { color-scheme: dark; }
+
+/* Lupa do cabeçalho: o style.css do template pinta-a de #FF4818. */
+.header-content-right a.search-open .fa-search { color: #3baa4e; }
+.header-content-right a.search-open:hover .fa-search { color: #ffffff; }
+
+/*
+ * Títulos de secção "style-one border": no template, "border" só ativa o
+ * traço verde por baixo (h2.title:before), mas a classe .border do Tailwind
+ * acrescentava uma moldura de 1px à volta de todo o bloco.
+ */
+.heading-content.style-one.border { border-width: 0; }
+
+/* Logo do cabeçalho (logo_b.svg): o SVG tem 243×99 de tamanho natural. */
+.header-nav-area .site-logo img { height: 72px; width: auto; max-width: 100%; }
