@@ -52,16 +52,8 @@
   margin-top: 0;
 }
 .site-v2 .footer-block .widget .widget-title { color: var(--v2-white); border-color: var(--v2-sun); }
-.site-v2 .footer-block .widget_newsletter .form-controller {
-  background-color: rgba(255, 255, 255, 0.1) !important;
-  color: var(--v2-white);
-  border-radius: 999px 0 0 999px;
-}
+.site-v2 .footer-block .widget_newsletter .form-controller { background-color: rgba(255, 255, 255, 0.1) !important; color: var(--v2-white); }
 .site-v2 .footer-block .widget_newsletter .form-controller::placeholder { color: #9cc3cf; }
-.site-v2 .footer-block .widget_newsletter .input-group-btn .btn-primary {
-  background: var(--v2-green); border-radius: 0 999px 999px 0;
-}
-.site-v2 .footer-block .widget_newsletter .input-group-btn span { color: var(--v2-white); }
 .site-v2 .footer-block .widget_menu ul li a,
 .site-v2 .footer-block .widget_hot_contact ul li a,
 .site-v2 .footer-block .widget_hot_contact ul li span,
@@ -73,9 +65,7 @@
 .site-v2 .footer-block .copyright,
 .site-v2 .footer-block .copyright a,
 .site-v2 .footer-block .social-profole-title { color: #9cc3cf; }
-.site-v2 .footer-block .widget-about-content .button {
-  background: var(--v2-green); color: var(--v2-white); border-radius: 999px;
-}
+.site-v2 .footer-block .widget-about-content .button { background-color: var(--v2-green); color: var(--v2-white); }
 
 /* ---------- Secções comuns ---------- */
 .site-v2 .v2-section { padding: 88px 0; }
@@ -205,7 +195,9 @@
 .site-v2 .heading-content.style-one .subtitle { color: var(--v2-muted); font-family: var(--v2-text); }
 
 /* =====================================================================
- * Páginas interiores
+ * Páginas interiores — só cores e tipos de letra dos títulos.
+ * Não mexer em tamanhos, bordas, espaçamentos nem campos de formulário:
+ * a forma dos componentes do template fica exatamente como estava.
  * ===================================================================== */
 
 /* ---------- Cabeçalho das páginas (substitui a faixa escura) ---------- */
@@ -230,174 +222,49 @@
 }
 .site-v2 .v2-pagehead__desc { font-size: 18px; line-height: 1.5; color: #d7ebf0; margin: 0; max-width: 56ch; }
 
-/* ---------- Tipografia e fundos gerais ---------- */
-.site-v2 main { background: var(--v2-white); }
-.site-v2 .bg-gray-color { background: #f4f9fa !important; }
-.site-v2 main h2.title, .site-v2 main .heading-content-three .title,
+/* ---------- Títulos: azul Atlântico em vez de preto ---------- */
+.site-v2 main .heading-content-three .title, .site-v2 main .heading-content.style-two .title,
 .site-v2 main .available-title, .site-v2 main .extra-big-title,
 .site-v2 main .vehicle-single-title, .site-v2 main .overview-title,
-.site-v2 main .features-title, .site-v2 main .from-title {
-  font-family: var(--v2-display); color: var(--v2-ocean); letter-spacing: -0.02em;
+.site-v2 main .features-title, .site-v2 main .from-title,
+.site-v2 main .vehicle-sidebar .form-title,
+.site-v2 main .contact-us-content-left .contact h4,
+.site-v2 main .contact-us-content-right h4 {
+  color: var(--v2-ocean) !important;
 }
-.site-v2 main p, .site-v2 main li { font-family: var(--v2-text); }
-.site-v2 .heading-content-three .sub-title,
-.site-v2 .heading-content-three .subtitle { color: var(--v2-green-dark); font-family: var(--v2-text); font-weight: 600; }
-
-/* Botões do template → verdes arredondados */
-.site-v2 main .button.yellow-button, .site-v2 main .submit.yellow-button,
-.site-v2 main .button.nevy-bg, .site-v2 main .btn-racv,
-.site-v2 main .filter-button .button {
-  background: var(--v2-green) !important; color: var(--v2-white) !important;
-  border: 0 !important; border-radius: 999px !important;
-  font-family: var(--v2-display); font-weight: 700; text-transform: none; letter-spacing: 0;
-  transition: background 0.2s ease;
-}
-.site-v2 main .button.yellow-button:hover, .site-v2 main .submit.yellow-button:hover,
-.site-v2 main .button.nevy-bg:hover, .site-v2 main .btn-racv:hover { background: var(--v2-green-dark) !important; }
-.site-v2 main .button.yellow-button:disabled, .site-v2 main .button.yellow-button.disabled { background: #a9cfb1 !important; }
-
-/* Campos de formulário */
-.site-v2 main .form-controller, .site-v2 main .form-control,
-.site-v2 main .contact-us-content-right textarea,
-.site-v2 main input[type="text"], .site-v2 main input[type="email"],
-.site-v2 main input[type="password"], .site-v2 main input[type="tel"],
-.site-v2 main input[type="number"], .site-v2 main select, .site-v2 main textarea {
-  border: 1px solid #d5e3e8 !important; border-radius: 12px !important;
-  background-color: #f7fbfc !important; color: var(--v2-basalt);
-  font-family: var(--v2-text); box-shadow: none;
-}
-.site-v2 main input:focus, .site-v2 main select:focus, .site-v2 main textarea:focus,
-.site-v2 main .form-controller:focus {
-  outline: 2px solid var(--v2-green) !important; outline-offset: 1px; background-color: var(--v2-white) !important;
-}
-.site-v2 main input[type="checkbox"] { accent-color: var(--v2-green); }
-
-/* ---------- Caixas de viaturas (listas e página inicial) ---------- */
-.site-v2 .vehicle-content.vehicle-card-light,
-.site-v2 .popular-vehicle-block .vehicle-content {
-  background: var(--v2-white) !important;
-  border: 1px solid #dcebef; border-radius: 18px; overflow: hidden;
-  box-shadow: 0 1px 2px rgba(8, 58, 80, 0.04);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
-}
-.site-v2 .vehicle-content.vehicle-card-light:hover,
-.site-v2 .popular-vehicle-block .vehicle-content:hover {
-  box-shadow: 0 14px 34px rgba(8, 58, 80, 0.14); transform: translateY(-2px);
-}
-.site-v2 .vehicle-content .vehicle-thumbnail { background: var(--v2-sea); }
-.site-v2 .vehicle-content .vehicle-thumbnail::after,
-.site-v2 .vehicle-content .vehicle-thumbnail::before { display: none !important; }
-.site-v2 .vehicle-content .vehicle-title a { color: var(--v2-ocean) !important; font-family: var(--v2-display); }
+.site-v2 .heading-content.style-one.border h2.title:before { background-color: var(--v2-green); }
+.site-v2 .vehicle-content .vehicle-title a { color: var(--v2-ocean) !important; }
 .site-v2 .vehicle-content .vehicle-title a:hover { color: var(--v2-green-dark) !important; }
-.site-v2 .available-block { padding-top: 64px; }
-.site-v2 .available-title { font-size: 30px; font-weight: 700; }
+.site-v2 .vehicle-single-content .rent-price { color: var(--v2-green-dark); }
 
-/* Paginação */
-.site-v2 .pagination-link .pagination li button {
-  border-radius: 999px; border: 1px solid #d5e3e8; background: var(--v2-white); color: var(--v2-ocean);
-  min-width: 42px; height: 42px; margin: 0 3px;
-}
-.site-v2 .pagination-link .pagination li.active button { background: var(--v2-ocean); border-color: var(--v2-ocean); color: var(--v2-white); }
+/* ---------- Fundos: cinza/preto → tons de mar ---------- */
+.site-v2 .bg-gray-color { background-color: #f4f9fa !important; }
+.site-v2 main .bg-slate-100 { background-color: #f4f9fa !important; }
+.site-v2 main .bg-slate-50 { background-color: var(--v2-sea) !important; }
+.site-v2 .popular-vehicle-block .vehicle-content.bg-green-100 { background-color: var(--v2-white) !important; }
+.site-v2 .driver-content.bg-green-100 { background-color: var(--v2-white) !important; }
+.site-v2 .blog-content-right.nevy-bg { background-color: var(--v2-sea) !important; }
+.site-v2 .blog-content-right .widget-title,
+.site-v2 .blog-content-right .widget-post-title a { color: var(--v2-ocean) !important; }
+.site-v2 .blog-content-right .post-date,
+.site-v2 .blog-content-right .widget-content { color: var(--v2-muted); }
+.site-v2 .post .entry-date.nevy-bg { background-color: var(--v2-ocean) !important; }
 
-/* Filtros laterais e reserva (cartões claros) */
-.site-v2 .vehicle-sidebar .advance-search-query,
-.site-v2 .vehicle-sidebar .available-filter {
-  background: var(--v2-white) !important; border: 1px solid #dcebef; border-radius: 18px;
-  box-shadow: 0 10px 30px rgba(8, 58, 80, 0.07);
-}
-.site-v2 .vehicle-sidebar .form-title, .site-v2 .vehicle-sidebar h3, .site-v2 .vehicle-sidebar h4 {
-  font-family: var(--v2-display); color: var(--v2-ocean);
-}
-.site-v2 .vehicle-sidebar label { color: var(--v2-basalt); font-family: var(--v2-text); }
-
-/* ---------- Detalhe da viatura ---------- */
-.site-v2 .vehicle-single-block { background: #f4f9fa; }
-.site-v2 .vehicle-single-content .rent-price,
-.site-v2 .vehicle-single-content .rent-price span { color: var(--v2-green-dark); font-family: var(--v2-display); }
-.site-v2 .vehicle-single-content .grid > div {
-  background: var(--v2-white) !important; border: 1px solid #dcebef; border-radius: 14px;
-}
-.site-v2 .vehicle-internal-features > div, .site-v2 .features-list {
-  background: var(--v2-white); border-radius: 14px;
-}
-
-/* ---------- Contacto ---------- */
-.site-v2 .contact-us-area { padding-bottom: 72px; }
-.site-v2 .contact-us-content-left .contact h4 { font-family: var(--v2-display); color: var(--v2-ocean); }
-.site-v2 .contact-us-content-left .contact h4 i { color: var(--v2-green); }
-.site-v2 .contact-us-content-left .contact p { color: var(--v2-muted); font-size: 16px; }
-.site-v2 .contact-us-content-left .social-icon a { background: var(--v2-sea); color: var(--v2-ocean); border-radius: 999px; }
-.site-v2 .contact-us-content-right form {
-  background: var(--v2-white); border: 1px solid #dcebef; border-radius: 22px;
-  box-shadow: 0 18px 44px rgba(8, 58, 80, 0.10);
-}
-.site-v2 .contact-us-content-right .fa-paper-plane { color: var(--v2-green); }
-.site-v2 .contact-us-content-right h4 { color: var(--v2-ocean); font-family: var(--v2-display); }
-.site-v2 .map-block .heading-content .title { color: var(--v2-ocean); }
-
-/* ---------- Sobre nós ---------- */
-.site-v2 .about-main-content { padding-bottom: 88px; }
-.site-v2 .about-main-content .extra-big-title { font-weight: 800; line-height: 1.05; }
-.site-v2 .about-main-content p { color: var(--v2-muted); font-size: 17px; line-height: 1.7; }
-
-/* ---------- Blog ---------- */
-.site-v2 .blog-content-right.nevy-bg {
-  background: var(--v2-sea) !important; border-radius: 18px; color: var(--v2-basalt);
-}
-.site-v2 .blog-content-right .widget-title { color: var(--v2-ocean) !important; font-family: var(--v2-display); }
-.site-v2 .blog-content-right .widget-post-title a { color: var(--v2-ocean); }
-.site-v2 .blog-content-right .post-date { color: var(--v2-muted); }
-.site-v2 .post .post-thumb { border-radius: 18px; overflow: hidden; }
-.site-v2 .post .entry-title a { color: var(--v2-ocean); font-family: var(--v2-display); }
-.site-v2 .post .entry-date.nevy-bg { background: var(--v2-ocean) !important; border-radius: 12px; }
-.site-v2 .post .entry-author.green-bg { background: var(--v2-green) !important; }
-
-/* ---------- Motoristas ---------- */
-.site-v2 .driver-content.bg-green-100 { background: var(--v2-white) !important; border: 1px solid #dcebef; border-radius: 18px !important; }
-.site-v2 .driver-content .driver-name { color: var(--v2-ocean); font-family: var(--v2-display); }
-
-/* ---------- Galeria: separadores ---------- */
-.site-v2 .gallery-filter button {
-  border-radius: 999px !important; font-family: var(--v2-display); font-weight: 600;
-}
-
-/* ---------- Condições e política: cartões de leitura ---------- */
-.site-v2 main .bg-slate-100 { background: #f4f9fa !important; }
-.site-v2 main .bg-slate-100 > .container > .bg-white,
-.site-v2 main .bg-slate-100 .rounded-xl.bg-white { border-radius: 22px !important; border-color: #dcebef !important; }
-.site-v2 main .bg-slate-100 h2, .site-v2 main .bg-slate-100 h3 { font-family: var(--v2-display); color: var(--v2-ocean); }
-.site-v2 main .bg-slate-100 a { color: var(--v2-green-dark); }
-
-/* ---------- Entrar / criar conta ---------- */
-.site-v2 main .bg-slate-50 { background: var(--v2-sea) !important; }
-.site-v2 main .bg-slate-50 .bg-white.rounded-xl { border-radius: 22px; box-shadow: 0 18px 44px rgba(8, 58, 80, 0.12); }
-.site-v2 main .bg-slate-50 h1, .site-v2 main .bg-slate-50 h2 { font-family: var(--v2-display); color: var(--v2-ocean); }
+/* ---------- Botões escuros do template → azul (mesma forma) ---------- */
+.site-v2 main .button.nevy-bg { background-color: var(--v2-ocean) !important; }
+.site-v2 main .button.nevy-bg:hover { background-color: var(--v2-ocean-deep) !important; }
+.site-v2 .view-all-btn { background-color: var(--v2-ocean) !important; color: var(--v2-white) !important; }
+.site-v2 .view-all-btn:hover { background-color: var(--v2-green-dark) !important; }
+.site-v2 .pagination-link .pagination li.active button { background-color: var(--v2-ocean); border-color: var(--v2-ocean); color: var(--v2-white); }
 .site-v2 main .text-indigo-600 { color: var(--v2-green-dark) !important; }
+.site-v2 .nf-title { color: var(--v2-ocean); }
 
-/* ---------- Ajustes finos ---------- */
-.site-v2 .view-all-btn {
-  background: var(--v2-ocean) !important; color: var(--v2-white) !important;
-  border-radius: 999px !important; padding: 10px 20px !important;
-  font-family: var(--v2-display); font-weight: 700; text-transform: none;
+/* Títulos enormes do template no telemóvel */
+@media (max-width: 767px) {
+  .site-v2 main .extra-big-title { font-size: 34px !important; line-height: 1.1; }
+  .site-v2 main .heading-content-three .title { font-size: 32px !important; line-height: 1.1; }
+  .site-v2 main .heading-content.style-two .title { font-size: 30px !important; line-height: 1.1; }
 }
-.site-v2 .view-all-btn:hover { background: var(--v2-green-dark) !important; }
-.site-v2 .heading-content.style-one.border h2.title:before { background-color: var(--v2-green); border-radius: 4px; height: 6px; }
-.site-v2 .heading-content.style-two .title, .site-v2 .heading-content.style-two .title.color-nevy { color: var(--v2-ocean) !important; font-family: var(--v2-display); }
-.site-v2 .heading-content.style-two .subtitle { color: var(--v2-green-dark); font-family: var(--v2-text); }
-.site-v2 .header-map-content iframe { width: 100%; border: 0; border-radius: 22px; background: var(--v2-sea); }
-.site-v2 .map-block p { color: var(--v2-muted); margin-top: 14px; }
-.site-v2 .contact-us-content-right .from-title {
-  background: transparent !important; color: var(--v2-ocean) !important; border: 0 !important;
-}
-.site-v2 main .bg-slate-50 h1 { font-weight: 800 !important; letter-spacing: -0.02em; }
-.site-v2 .nf-title { font-family: var(--v2-display); color: var(--v2-ocean); }
-.site-v2 .nf-page { background: var(--v2-sea); }
-.site-v2 .nf-btn { border-radius: 999px !important; font-family: var(--v2-display); text-transform: none; }
-.site-v2 .nf-btn-outline { border-color: var(--v2-ocean) !important; color: var(--v2-ocean) !important; }
-
-.site-v2 main .extra-big-title { font-size: clamp(30px, 4.2vw, 48px) !important; }
-.site-v2 main .heading-content-three .title { font-size: clamp(30px, 4vw, 44px) !important; line-height: 1.1; }
-.site-v2 main .heading-content.style-two .title { font-size: clamp(28px, 3.6vw, 40px) !important; line-height: 1.1; }
 
 /* ---------- Área de cliente e pagamento ---------- */
 .site-v2 .v2-card {
@@ -425,7 +292,6 @@
 .site-v2 .profile-tabs button.v2-tab.is-active { background: var(--v2-ocean); color: var(--v2-white); }
 .site-v2 .profile-tabs button.v2-tab:focus-visible { outline: 3px solid var(--v2-sun); outline-offset: 2px; }
 .site-v2 .payment-brands--on-light { background: var(--v2-ocean-deep); border-radius: 16px; padding: 10px 18px; }
-.site-v2 .invoice-download-btn { border-radius: 999px !important; }
 
 @media (max-width: 991px) {
   .site-v2 .v2-search { grid-template-columns: 1fr 1fr; }
