@@ -1,1 +1,169 @@
-{}
+{
+	"nav": {
+		"home": "Início",
+		"cars": "Viaturas",
+		"about": "Sobre Nós",
+		"news": "Novidades",
+		"contact": "Contacto"
+	},
+	"header": {
+		"call": "Chamar",
+		"searchPlaceholder": "Pesquisar viaturas (marca, modelo...)",
+		"search": "Pesquisar",
+		"openSearch": "Abrir pesquisa",
+		"openMenu": "Abrir menu",
+		"close": "Fechar"
+	},
+	"sidebar": {
+		"guest": "Faça login",
+		"admin": "Admin",
+		"customer": "Cliente",
+		"signIn": "Entrar",
+		"register": "Criar Conta",
+		"dashboard": "Painel de Administração",
+		"profile": "O Meu Perfil",
+		"bookings": "As Minhas Reservas",
+		"messages": "Mensagens",
+		"comingSoonTitle": "Em breve",
+		"comingSoonText": "Esta funcionalidade estará disponível em breve!",
+		"signOut": "Sair",
+		"close": "Fechar"
+	},
+	"footer": {
+		"aboutTitle": "Sobre Nós",
+		"aboutText": "Oferecemos a liberdade de explorar as ilhas de Cabo Verde ao seu ritmo, com uma frota de carros moderna e fiável para tornar a sua viagem inesquecível.",
+		"learnMore": "Saber mais",
+		"usefulLinks": "Links Úteis",
+		"home": "Início",
+		"book": "Reservar",
+		"vehicles": "Veículos",
+		"contact": "Contacto",
+		"gallery": "Galeria",
+		"terms": "Condições Gerais",
+		"cancellation": "Cancelamento e Reembolso",
+		"address": "Cidadela - Rua da Independência - Praia, Ilha de Santiago, Cabo Verde",
+		"subscribe": "Subscrever",
+		"subscribeLabel": "Subscreva as novidades",
+		"emailPlaceholder": "O seu email",
+		"subscribeButton": "Subscrever a newsletter",
+		"subscribed": "Subscrito com sucesso!",
+		"subscribeError": "Não foi possível subscrever. Tente de novo.",
+		"noImages": "Sem imagens disponíveis.",
+		"copyright": "Copyright © {year} TerraSystem - Todos os direitos reservados",
+		"followUs": "Siga-nos:"
+	},
+	"funFacts": {
+		"vehicles": "Carros na frota",
+		"customers": "Clientes satisfeitos",
+		"drivers": "Condutores",
+		"days": "Dias de atividade"
+	},
+	"appBlock": {
+		"topSubtitle": "Todos os descontos só para si",
+		"title": "A Nossa App Gratuita",
+		"subtitle": "Procure Rentacarverde na App Store & Google Play",
+		"appStoreAlt": "Em breve na App Store",
+		"googlePlayAlt": "Em breve na Google Play",
+		"mockupAlt": "App Rent a Car Verde no telemóvel"
+	},
+	"partners": {
+		"subtitle": "Algumas das maiores empresas connosco",
+		"title": "Parceiros",
+		"previous": "Anterior",
+		"next": "Seguinte"
+	},
+	"vehicleTerms": {
+		"fuel": {
+			"gasoline": "Gasolina",
+			"diesel": "Diesel",
+			"electric": "Elétrico",
+			"hybrid": "Híbrido",
+			"ethanol": "Etanol"
+		},
+		"gearbox": {
+			"automatic": "Automático",
+			"manual": "Manual"
+		},
+		"category": {
+			"compact": "Compacto",
+			"suv": "SUV",
+			"luxury": "Luxo",
+			"economy": "Económico",
+			"van": "Carrinha",
+			"intermediate": "Intermédio",
+			"stationWagon": "Station Wagon",
+			"minibus": "Mini-autocarro"
+		}
+	},
+	"search": {
+		"topSubtitle": "Procure o seu veículo",
+		"title": "Tarifas & Disponibilidade",
+		"subtitle": "Encontre o melhor carro",
+		"pickupLocation": "Local de levantamento",
+		"pickupDate": "Data de levantamento",
+		"pickupTime": "Hora de levantamento",
+		"returnLocation": "Local de devolução",
+		"returnDate": "Data de devolução",
+		"returnTime": "Hora de devolução",
+		"loadingLocations": "A carregar locais...",
+		"chooseLocation": "Escolha o local",
+		"sameAsPickup": "Igual ao levantamento",
+		"datePlaceholder": "dd/mm/aaaa",
+		"budget": "O seu orçamento (por dia)",
+		"budgetPlaceholder": "Ex.: 6000 CVE",
+		"class": "Categoria",
+		"allClasses": "Todas",
+		"fuel": "Combustível",
+		"anyFuel": "Qualquer",
+		"submit": "Encontrar carro",
+		"warningTitle": "Atenção",
+		"fillOneField": "Preencha pelo menos um campo para pesquisar.",
+		"ok": "OK"
+	},
+	"vehicle": {
+		"perDay": "/ Dia",
+		"notAvailable": "N/D",
+		"viewAll": "Ver todas",
+		"previous": "Anterior",
+		"next": "Seguinte",
+		"gearbox": "Caixa",
+		"fuel": "Combustível"
+	},
+	"popularVehicles": {
+		"subtitle": "Serviços mais populares",
+		"title": "Veículos populares"
+	},
+	"regularVehicles": {
+		"subtitle": "Encontre o carro perfeito para uma viagem segura",
+		"title": "Os nossos carros disponíveis"
+	},
+	"drivers": {
+		"subtitle": "Tempo inteiro e parcial",
+		"title": "Os nossos motoristas",
+		"viewAll": "Ver todos",
+		"driverAlt": "Motorista"
+	},
+	"blogArea": {
+		"subtitle": "As nossas novidades",
+		"title": "Novidades",
+		"titleHighlight": "Leia os nossos artigos",
+		"views": "Visualizações",
+		"likes": "Gostos",
+		"comments": "Comentários",
+		"defaultAuthor": "Admin",
+		"viewAll": "Ver todas"
+	},
+	"slider": {
+		"discounts": "Muitos descontos para si",
+		"goingSomewhere": "Vai a algum lado?",
+		"chooseLine1": "Escolha o seu",
+		"chooseLine2": "carro",
+		"bestOffers": "As melhores ofertas de Cabo Verde!",
+		"contactNow": "Contacte-nos"
+	},
+	"ads": {
+		"highlights": "Destaques",
+		"close": "Fechar",
+		"advertising": "Publicidade"
+	}
+}

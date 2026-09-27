@@ -10,8 +10,10 @@ import "swiper/css/navigation";
 import { useState, useEffect } from "react";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
 import { Partner } from "@/lib/api/types";
+import { useTranslations } from "next-intl";
 
 const CompanyBrandBlock: React.FC = () => {
+	const t = useTranslations("partners");
 	const [partners, setPartners] = useState<Partner[]>([]);
 
 	useEffect(() => {
@@ -46,18 +48,18 @@ const CompanyBrandBlock: React.FC = () => {
 				<div className="row tb default-margin-bottom yellow-theme">
 					<div className="col-md-9 block-title-area tb-cell">
 						<div className="heading-content style-one border">
-							<h3 className="subtitle">Algumas das maiores empresas conosco</h3>
-							<h2 className="title">Parceiros</h2>
+							<h3 className="subtitle">{t("subtitle")}</h3>
+							<h2 className="title">{t("title")}</h2>
 						</div>
 					</div>
 
 					<div className="col-md-3 hidden-xs block-navigation-area tb-cell">
 						<div className="item-navigation nav-right">
-							<a href="#" className="previous-item">
+							<a href="#" className="previous-item" aria-label={t("previous")}>
 								<i className="fa fa-angle-left"></i>
 							</a>
 
-							<a href="#" className="next-item">
+							<a href="#" className="next-item" aria-label={t("next")}>
 								<i className="fa fa-angle-right"></i>
 							</a>
 						</div>

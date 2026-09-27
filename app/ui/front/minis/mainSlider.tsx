@@ -4,6 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import { Advertisement } from "@/lib/api/types";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
 import AdBanner from "./AdBanner";
+import { useTranslations } from "next-intl";
+
+// Os textos do slide vão para HTML (Revolution Slider) — escapar a tradução.
+const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
 interface LayerStyle {
 	color?: string;
@@ -47,6 +51,7 @@ interface Slide {
 
 const MainSlider = () => {
 	const sliderRef = useRef<HTMLDivElement>(null);
+	const t = useTranslations("slider");
 	const [ads, setAds] = useState<Advertisement[]>([]);
 	const [loaded, setLoaded] = useState(false);
 
@@ -96,7 +101,7 @@ const MainSlider = () => {
 				{
 					type: "text",
 					className: "tp-caption tp-resizeme rev-subheading",
-					content: "Muitos Discontos para si",
+					content: esc(t("discounts")),
 					data: {
 						x: "['left','left','left','center']",
 						hoffset: "['105','105','75','-85']",
@@ -110,7 +115,7 @@ const MainSlider = () => {
 				{
 					type: "text",
 					className: "tp-caption tp-resizeme rev-subheading",
-					content: "Vair a algum lado?",
+					content: esc(t("goingSomewhere")),
 					data: {
 						x: "['left','left','left','center']",
 						hoffset: "['102','102','75','-75']",
@@ -129,7 +134,7 @@ const MainSlider = () => {
 				{
 					type: "text",
 					className: "tp-caption tp-resizeme NotGeneric-Title",
-					content: "Escolha o seu<br> Carro",
+					content: `${esc(t("chooseLine1"))}<br> ${esc(t("chooseLine2"))}`,
 					data: {
 						x: "['left','left','left','center']",
 						hoffset: "['103','103','75','0']",
@@ -149,7 +154,7 @@ const MainSlider = () => {
 				{
 					type: "text",
 					className: "tp-caption rev-subheading tp-resizeme",
-					content: "Melhores ofertas de Cabo Verde!!!!!",
+					content: esc(t("bestOffers")),
 					data: {
 						x: "['left','left','left','center']",
 						hoffset: "['105','105','75','-28']",
@@ -164,7 +169,7 @@ const MainSlider = () => {
 					type: "button",
 					className: "tp-caption tp-resizeme",
 					content:
-						'<a href=\'contact\' class=\'button black-button slider-button\' data-fontsize=\'["22","22","22","22"]\'>Contatar Agora</a>',
+						`<a href='/contact' class='button black-button slider-button' data-fontsize='["22","22","22","22"]'>${esc(t("contactNow"))}</a>`,
 					data: {
 						x: "['left','left','left','center']",
 						hoffset: "['105','105','75','-105']",

@@ -4,6 +4,7 @@
 import React from "react";
 import CountUp from "react-countup";
 import { API_BASE_URL, endpoints } from "@/lib/api/endpoints";
+import { useTranslations } from "next-intl";
 
 interface FunFactsBlockProps {
 	content?: {
@@ -19,6 +20,7 @@ interface FunFactsBlockProps {
 }
 
 const FunFactsBlock: React.FC<FunFactsBlockProps> = ({ content }) => {
+	const t = useTranslations("funFacts");
 	// Facto 1 (veículos), 2 (clientes) e 3 (condutores) vêm sempre da contagem
 	// real no backend. Facto 4 continua a ser editável manualmente no dashboard.
 	const [liveStats, setLiveStats] = React.useState({
@@ -46,10 +48,10 @@ const FunFactsBlock: React.FC<FunFactsBlockProps> = ({ content }) => {
 	}, []);
 
 	const funFacts = [
-		{ id: 1, count: liveStats.vehiclesCount, label: content?.f1 || "Caros na frota" },
-		{ id: 2, count: liveStats.clientsCount, label: content?.f2 || "Clientes Satisfeitos" },
-		{ id: 3, count: liveStats.driversCount, label: content?.f3 || "Condutores" },
-		{ id: 4, count: Number(content?.f4Num) || 0, label: content?.f4 || "Dias Na Atividade" },
+		{ id: 1, count: liveStats.vehiclesCount, label: content?.f1 || t("vehicles") },
+		{ id: 2, count: liveStats.clientsCount, label: content?.f2 || t("customers") },
+		{ id: 3, count: liveStats.driversCount, label: content?.f3 || t("drivers") },
+		{ id: 4, count: Number(content?.f4Num) || 0, label: content?.f4 || t("days") },
 	];
 
 	return (

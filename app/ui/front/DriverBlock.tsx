@@ -5,12 +5,15 @@ import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
 import { Driver } from "@/lib/api/types";
 import "swiper/css";
 import "swiper/css/navigation";
 
 const DriverBlock: React.FC = () => {
+	const t = useTranslations("drivers");
+	const tv = useTranslations("vehicle");
 	const [drivers, setDrivers] = useState<Driver[]>([]);
 	const [loading, setLoading] = useState(true);
 
@@ -46,18 +49,18 @@ const DriverBlock: React.FC = () => {
 				<div className="row tb default-margin-bottom yellow-theme">
 					<div className="col-md-9 block-title-area tb-cell">
 						<div className="heading-content style-one border">
-							<h3 className="subtitle">Tempo Integral e Parcial</h3>
-							<h2 className="title">Nossos Motoristas</h2>
+							<h3 className="subtitle">{t("subtitle")}</h3>
+							<h2 className="title">{t("title")}</h2>
 						</div>
 					</div>
 
 					<div className="col-md-3 hidden-xs block-navigation-area tb-cell">
 						<div className="pull-right">
 							<div className="item-navigation hidden-xs flex gap-2">
-								<a href="#" className="previous-item" onClick={(e) => e.preventDefault()}>
+								<a href="#" className="previous-item" aria-label={tv("previous")} onClick={(e) => e.preventDefault()}>
 									<i className="fa fa-angle-left"></i>
 								</a>
-								<a href="#" className="next-item" onClick={(e) => e.preventDefault()}>
+								<a href="#" className="next-item" aria-label={tv("next")} onClick={(e) => e.preventDefault()}>
 									<i className="fa fa-angle-right"></i>
 								</a>
 							</div>
@@ -66,7 +69,7 @@ const DriverBlock: React.FC = () => {
 									href="/motoristas"
 									className="view-all-btn px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
 								>
-									Ver Todos
+									{t("viewAll")}
 								</Link>
 							</div>
 						</div>
@@ -102,7 +105,7 @@ const DriverBlock: React.FC = () => {
 									) : (
 										<img
 											src="/assets/images/driver/avatar-placeholder.png"
-											alt="Motorista"
+											alt={t("driverAlt")}
 											className="w-full h-full object-cover"
 										/>
 									)}
@@ -126,7 +129,7 @@ const DriverBlock: React.FC = () => {
 						href="/motoristas"
 						className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
 					>
-						Ver Todos
+						{t("viewAll")}
 					</Link>
 				</div>
 			</div>

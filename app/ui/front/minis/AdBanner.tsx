@@ -7,6 +7,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Advertisement } from "@/lib/api/types";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
+import { useTranslations } from "next-intl";
 
 // Banner da página principal com as campanhas BANNER criadas no dashboard.
 // Substitui o Revolution Slider do template para estes banners porque:
@@ -19,6 +20,7 @@ import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
 // discreto no canto inferior direito. Estilos em .hb-* (globals.css, sem
 // @layer — o CSS legado do template mexe em img/a).
 export default function AdBanner({ ads }: { ads: Advertisement[] }) {
+	const t = useTranslations("ads");
 	const src = (url: string) => (url?.startsWith("/uploads") ? `${API_BASE_URL}${url}` : url);
 
 	function registerClick(id?: number) {
@@ -29,7 +31,7 @@ export default function AdBanner({ ads }: { ads: Advertisement[] }) {
 	const many = ads.length > 1;
 
 	return (
-		<section className="hb-banner" aria-label="Destaques">
+		<section className="hb-banner" aria-label={t("highlights")}>
 			<Swiper
 				modules={[Autoplay, Navigation, Pagination]}
 				autoplay={many ? { delay: 7000, disableOnInteraction: false, pauseOnMouseEnter: true } : false}

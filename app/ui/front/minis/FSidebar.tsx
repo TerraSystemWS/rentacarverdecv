@@ -4,6 +4,7 @@ import { useAuth } from "@/app/auth/AuthContext";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { UserRound } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Swal from "sweetalert2";
 
 interface FSideBarProps {
@@ -13,6 +14,7 @@ interface FSideBarProps {
 
 const FSideBar = ({ isOpen, onToggleSidebar }: FSideBarProps) => {
 	const router = useRouter();
+	const t = useTranslations("sidebar");
 	const { user, isAuthenticated, isLoading, logout } = useAuth();
 
 	const roles: string[] =
@@ -27,11 +29,11 @@ const FSideBar = ({ isOpen, onToggleSidebar }: FSideBarProps) => {
 		(user as any)?.fullName ||
 		(user as any)?.username ||
 		(user as any)?.email ||
-		"Faça login";
+		t("guest");
 
 	const description = !isAuthenticated
 		? ""
-		: (user as any)?.jobTitle || (isAdmin ? "Admin" : "Cliente");
+		: (user as any)?.jobTitle || (isAdmin ? t("admin") : t("customer"));
 
 	// A BD ainda não guarda foto de perfil; se um dia vier avatarUrl usa-se,
 	// senão (ou se a imagem falhar) mostra as iniciais — ou um ícone sem sessão.
@@ -65,7 +67,7 @@ const FSideBar = ({ isOpen, onToggleSidebar }: FSideBarProps) => {
 	return (
 		<div className="overlay-sidebar">
 			<div className={isOpen ? "author-area open" : "author-area"}>
-				<button className="closebtn" onClick={onToggleSidebar}>
+				<button className="closebtn" onClick={onToggleSidebar} aria-label={t("close")}>
 					&times;
 				</button>
 
@@ -100,12 +102,12 @@ const FSideBar = ({ isOpen, onToggleSidebar }: FSideBarProps) => {
 									<>
 										<li>
 											<a href="/login" onClick={(e) => go(e, "/login")}>
-												<i className="fa fa-sign-in"></i> Entrar
+												<i className="fa fa-sign-in"></i> {t("signIn")}
 											</a>
 										</li>
 										<li>
 											<a href="/register" onClick={(e) => go(e, "/register")}>
-												<i className="fa fa-user-plus"></i> Criar Conta
+												<i className="fa fa-user-plus"></i> {t("register")}
 											</a>
 										</li>
 									</>
@@ -117,24 +119,24 @@ const FSideBar = ({ isOpen, onToggleSidebar }: FSideBarProps) => {
 													href="/dashboard"
 													onClick={(e) => go(e, "/dashboard")}
 												>
-													<i className="fa fa-user-circle-o"></i> Admin Dashboard
+													<i className="fa fa-user-circle-o"></i> {t("dashboard")}
 												</a>
 											</li>
 										) : (
 											<>
 												<li>
 													<a href="/profile" onClick={(e) => go(e, "/profile")}>
-														<i className="fa fa-user-circle-o"></i> O Meu Perfil
+														<i className="fa fa-user-circle-o"></i> {t("profile")}
 													</a>
 												</li>
 												<li>
 													<a href="/profile" onClick={(e) => go(e, "/profile")}>
-														<i className="fa fa-automobile"></i> As Minhas Reservas
+														<i className="fa fa-automobile"></i> {t("bookings")}
 													</a>
 												</li>
 												<li>
-													<a href="#" onClick={(e) => { e.preventDefault(); Swal.fire({ icon: "info", title: "Em breve", text: "Esta funcionalidade estará disponível em breve!", confirmButtonColor: "#3baa4e" }); }}>
-														<i className="fa fa-envelope-open"></i> Mensagens
+													<a href="#" onClick={(e) => { e.preventDefault(); Swal.fire({ icon: "info", title: t("comingSoonTitle"), text: t("comingSoonText"), confirmButtonColor: "#3baa4e" }); }}>
+														<i className="fa fa-envelope-open"></i> {t("messages")}
 													</a>
 												</li>
 											</>
@@ -142,7 +144,7 @@ const FSideBar = ({ isOpen, onToggleSidebar }: FSideBarProps) => {
 
 										<li>
 											<a href="#" onClick={handleLogout}>
-												<i className="fa fa-sign-out"></i> Sair
+												<i className="fa fa-sign-out"></i> {t("signOut")}
 											</a>
 										</li>
 									</>

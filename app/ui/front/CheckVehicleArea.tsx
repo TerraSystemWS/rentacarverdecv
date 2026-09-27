@@ -5,7 +5,9 @@ import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { ptBR } from "date-fns/locale";
+import { useLocale, useTranslations } from "next-intl";
+import { dateFnsLocale, PICKER_DATE_FORMAT } from "@/lib/i18n/dateLocale";
+import { useVehicleTerms } from "@/lib/i18n/useVehicleTerms";
 import { localDateString, parseLocalDate } from "@/lib/utils/cvTime";
 import { useRentalLocations } from "@/lib/api/useRentalLocations";
 
@@ -34,6 +36,9 @@ const CheckVehicleArea = () => {
 		combustivel: "",
 	});
 	const router = useRouter();
+	const t = useTranslations("search");
+	const locale = useLocale();
+	const term = useVehicleTerms();
 	const { locations, loading: locationsLoading } = useRentalLocations();
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -63,8 +68,8 @@ const CheckVehicleArea = () => {
 		if (!hasValue) {
 			Swal.fire({
 				icon: "warning",
-				title: "Atenção",
-				text: "Por favor, preencha pelo menos um campo para pesquisar.",
+				title: t("warningTitle"),
+				text: t("fillOneField"),
 				confirmButtonColor: "#3baa4e"
 			});
 			return;
@@ -87,11 +92,9 @@ const CheckVehicleArea = () => {
 				<div className="row">
 					<div className="col-md-4">
 						<div className="check-content">
-							<h4 className="top-subtitle">Procure seu Veículo</h4>
-							<h2 className="title yellow-color">
-								Para tarifas & Disponibilidade
-							</h2>
-							<h3 className="subtitle">Encontre o Melhor Carro</h3>
+							<h4 className="top-subtitle">{t("topSubtitle")}</h4>
+							<h2 className="title yellow-color">{t("title")}</h2>
+							<h3 className="subtitle">{t("subtitle")}</h3>
 						</div>
 					</div>
 
@@ -103,7 +106,7 @@ const CheckVehicleArea = () => {
 							<div className="regular-search">
 								<div className="row">
 									<div className="col-md-4">
-										<label>Local de retirada</label>
+										<label>{t("pickupLocation")}</label>
 										<div className="input">
 											<i className="fa fa-map-marker"></i>
 											<select
@@ -113,7 +116,7 @@ const CheckVehicleArea = () => {
 												onChange={handleChange}
 												disabled={locationsLoading}
 											>
-												<option value="">{locationsLoading ? "A carregar locais..." : "Escolha o local"}</option>
+												<option value="">{locationsLoading ? t("loadingLocations") : t("chooseLocation")}</option>
 												{locations.map((l) => (
 													<option key={l.id} value={l.id}>{l.name}</option>
 												))}
@@ -122,25 +125,25 @@ const CheckVehicleArea = () => {
 									</div>
 
 									<div className="col-md-4">
-										<label>Data de retirada</label>
+										<label>{t("pickupDate")}</label>
 										<div className="input">
 											<i className="fa fa-calendar"></i>
 											<DatePicker
 												selected={parseLocalDate(formData.dataRetirada)}
 												onChange={(date: Date | null) => setDate("dataRetirada", date)}
-												dateFormat="dd/MM/yyyy"
-												locale={ptBR}
+												dateFormat={PICKER_DATE_FORMAT}
+												locale={dateFnsLocale(locale)}
 												minDate={new Date()}
 												name="dataRetirada"
 												className="form-controller"
-												placeholderText="dd/mm/aaaa"
+												placeholderText={t("datePlaceholder")}
 												autoComplete="off"
 											/>
 										</div>
 									</div>
 
 									<div className="col-md-4">
-										<label>Hora de retirada</label>
+										<label>{t("pickupTime")}</label>
 										<div className="input">
 											<i className="fa fa-clock-o"></i>
 											<input
@@ -156,7 +159,7 @@ const CheckVehicleArea = () => {
 									<div className="clearfix"></div>
 
 									<div className="col-md-4">
-										<label>Local de devolução</label>
+										<label>{t("returnLocation")}</label>
 										<div className="input">
 											<i className="fa fa-map-marker"></i>
 											<select
@@ -166,7 +169,7 @@ const CheckVehicleArea = () => {
 												onChange={handleChange}
 												disabled={locationsLoading}
 											>
-												<option value="">{locationsLoading ? "A carregar locais..." : "Igual ao levantamento"}</option>
+												<option value="">{locationsLoading ? t("loadingLocations") : t("sameAsPickup")}</option>
 												{locations.map((l) => (
 													<option key={l.id} value={l.id}>{l.name}</option>
 												))}
@@ -175,25 +178,25 @@ const CheckVehicleArea = () => {
 									</div>
 
 									<div className="col-md-4">
-										<label>Data de devolução</label>
+										<label>{t("returnDate")}</label>
 										<div className="input">
 											<i className="fa fa-calendar"></i>
 											<DatePicker
 												selected={parseLocalDate(formData.dataDevolucao)}
 												onChange={(date: Date | null) => setDate("dataDevolucao", date)}
-												dateFormat="dd/MM/yyyy"
-												locale={ptBR}
+												dateFormat={PICKER_DATE_FORMAT}
+												locale={dateFnsLocale(locale)}
 												minDate={parseLocalDate(formData.dataRetirada) ?? new Date()}
 												name="dataDevolucao"
 												className="form-controller"
-												placeholderText="dd/mm/aaaa"
+												placeholderText={t("datePlaceholder")}
 												autoComplete="off"
 											/>
 										</div>
 									</div>
 
 									<div className="col-md-4">
-										<label>Hora de devolução</label>
+										<label>{t("returnTime")}</label>
 										<div className="input">
 											<i className="fa fa-clock-o"></i>
 											<input
@@ -211,50 +214,48 @@ const CheckVehicleArea = () => {
 							<div className="advance-search">
 								<div className="row">
 									<div className="col-md-4">
-										<label>Seu Orçamento</label>
+										<label>{t("budget")}</label>
 										<div className="input">
 											<i className="fa fa-money"></i>
 											<input
 												type="text"
 												name="orcamento"
 												className="budget-fields form-controller"
-												placeholder="A partir de R$ 20"
+												placeholder={t("budgetPlaceholder")}
+												inputMode="numeric"
 												value={formData.orcamento}
 												onChange={handleChange}
 											/>
 										</div>
 									</div>
 									<div className="col-md-4">
-										<label>Classe</label>
+										<label>{t("class")}</label>
 										<div className="input">
 											<select
 												name="classe"
 												value={formData.classe}
 												onChange={handleChange}
 											>
-												<option value="">Todas</option>
-												<option value="Intermediário">Intermediário</option>
-												<option value="Compacto">Compacto</option>
-												<option value="Station Wagon">Station Wagon</option>
-												<option value="SUV">SUV</option>
-												<option value="Micro-ônibus">Micro-ônibus</option>
+												<option value="">{t("allClasses")}</option>
+												{/* Valores em PT (como na BD); o rótulo segue a língua. */}
+												{["Compacto", "Económico", "SUV", "Luxo", "Carrinha"].map((c) => (
+													<option key={c} value={c}>{term(c)}</option>
+												))}
 											</select>
 										</div>
 									</div>
 									<div className="col-md-4">
-										<label>Combustível</label>
+										<label>{t("fuel")}</label>
 										<div className="input">
 											<select
 												name="combustivel"
 												value={formData.combustivel}
 												onChange={handleChange}
 											>
-												<option value="X">Qualquer</option>
-												<option value="Gasolina">Gasolina</option>
-												<option value="Diesel">Diesel</option>
-												<option value="Etanol">Etanol</option>
-												<option value="Híbrido">Híbrido</option>
-												<option value="Elétrico">Elétrico</option>
+												<option value="X">{t("anyFuel")}</option>
+												{["Gasolina", "Diesel", "Híbrido", "Elétrico"].map((f) => (
+													<option key={f} value={f}>{term(f)}</option>
+												))}
 											</select>
 										</div>
 									</div>
@@ -264,7 +265,7 @@ const CheckVehicleArea = () => {
 							<div className="check-vehicle-footer">
 								<div className="row flex justify-end">
 									<button type="submit" className="button">
-										Encontrar carro
+										{t("submit")}
 									</button>
 								</div>
 							</div>

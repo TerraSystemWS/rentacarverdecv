@@ -5,6 +5,9 @@ import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { useVehicleTerms } from "@/lib/i18n/useVehicleTerms";
+import { useFormatPrice } from "@/lib/i18n/format";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Vehicle } from "@/lib/api/types";
@@ -14,6 +17,10 @@ import { endpoints } from "@/lib/api/endpoints";
 import { API_BASE_URL } from "@/lib/api/endpoints";
 
 const RegularVehicleBlock: React.FC = () => {
+	const t = useTranslations("regularVehicles");
+	const tv = useTranslations("vehicle");
+	const term = useVehicleTerms();
+	const price = useFormatPrice();
 	const [vehicles, setVehicles] = useState<Vehicle[]>([]);
 	const [loading, setLoading] = useState(true);
 
@@ -48,26 +55,24 @@ const RegularVehicleBlock: React.FC = () => {
 				<div className="row tb default-margin-bottom yellow-theme">
 					<div className="col-md-9 col-sm-8 block-title-area tb-cell">
 						<div className="heading-content style-one border">
-							<h3 className="subtitle">
-								Encontre o carro perfeito para sua viagem segura
-							</h3>
-							<h2 className="title">Nossos Carros Disponíveis</h2>
+							<h3 className="subtitle">{t("subtitle")}</h3>
+							<h2 className="title">{t("title")}</h2>
 						</div>
 					</div>
 					<div className="col-md-3 col-sm-4 hidden-xs block-navigation-area tb-cell">
 						<div className="pull-right">
 							<div className="item-navigation">
-								<button className="previous-item-reg bg-white w-10 min-w-[2.5rem] h-10 border border-gray-200 rounded-full flex items-center justify-center hover:bg-gray-50 transition mr-2">
+								<button className="previous-item-reg bg-white w-10 min-w-[2.5rem] h-10 border border-gray-200 rounded-full flex items-center justify-center hover:bg-gray-50 transition mr-2" aria-label={tv("previous")}>
 									<i className="fa fa-angle-left"></i>
 								</button>
-								<button className="next-item-reg bg-white w-10 min-w-[2.5rem] h-10 border border-gray-200 rounded-full flex items-center justify-center hover:bg-gray-50 transition">
+								<button className="next-item-reg bg-white w-10 min-w-[2.5rem] h-10 border border-gray-200 rounded-full flex items-center justify-center hover:bg-gray-50 transition" aria-label={tv("next")}>
 									<i className="fa fa-angle-right"></i>
 								</button>
 							</div>
 
 							<div className="view-all-item">
 								<Link href="/cars" className="view-all-btn">
-									Ver Todas
+									{tv("viewAll")}
 								</Link>
 							</div>
 						</div>
@@ -116,18 +121,18 @@ const RegularVehicleBlock: React.FC = () => {
 													<div className="flex items-center gap-4 text-gray-500 text-xs font-bold uppercase tracking-wider">
 														<div className="flex items-center gap-1.5">
 															<Settings2 className="w-3.5 h-3.5 text-green-600" />
-															<span>{vehicle.gearbox || "N/A"}</span>
+															<span>{term(vehicle.gearbox) || tv("notAvailable")}</span>
 														</div>
 														<div className="flex items-center gap-1.5">
 															<Fuel className="w-3.5 h-3.5 text-green-600" />
-															<span>{vehicle.fuelType || "N/A"}</span>
+															<span>{term(vehicle.fuelType) || tv("notAvailable")}</span>
 														</div>
 													</div>
 													<div className="mt-1">
 														<span className="font-black text-green-600 text-lg">
-															{vehicle.pricePerDay?.toLocaleString('pt-CV', { style: 'currency', currency: 'CVE' })}
+															{price(vehicle.pricePerDay)}
 														</span>
-														<span className="text-gray-400 text-[10px] uppercase font-bold ml-1">/ Dia</span>
+														<span className="text-gray-400 text-[10px] uppercase font-bold ml-1">{tv("perDay")}</span>
 													</div>
 												</div>
 											</div>
@@ -142,7 +147,7 @@ const RegularVehicleBlock: React.FC = () => {
 				<div className="block-navigation-area visible-xs-block">
 					<div className="view-all-item clearfix">
 						<Link href="/cars" className="view-all-btn">
-							Ver Todas
+							{tv("viewAll")}
 						</Link>
 					</div>
 				</div>

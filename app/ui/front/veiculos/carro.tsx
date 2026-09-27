@@ -2,12 +2,18 @@ import { Vehicle } from "@/lib/api/types";
 import { Settings2, Fuel } from "lucide-react";
 
 import { API_BASE_URL } from "@/lib/api/endpoints";
+import { useTranslations } from "next-intl";
+import { useVehicleTerms } from "@/lib/i18n/useVehicleTerms";
+import { useFormatPrice } from "@/lib/i18n/format";
 
 type CarroProps = {
 	car: Vehicle;
 };
 
 const Carro: React.FC<CarroProps> = ({ car }) => {
+	const tv = useTranslations("vehicle");
+	const term = useVehicleTerms();
+	const price = useFormatPrice();
 	const getImageSrc = (url: string) => {
 		if (!url) return "";
 		if (url.startsWith('/uploads')) {
@@ -33,18 +39,18 @@ const Carro: React.FC<CarroProps> = ({ car }) => {
 					<div className="flex items-center gap-4 text-gray-600 text-[11px] font-bold uppercase tracking-wider">
 						<div className="flex items-center gap-1.5">
 							<Settings2 className="w-3.5 h-3.5 text-green-600" />
-							<span>{car.gearbox || "N/A"}</span>
+							<span>{term(car.gearbox) || tv("notAvailable")}</span>
 						</div>
 						<div className="flex items-center gap-1.5">
 							<Fuel className="w-3.5 h-3.5 text-green-600" />
-							<span>{car.fuelType || "N/A"}</span>
+							<span>{term(car.fuelType) || tv("notAvailable")}</span>
 						</div>
 					</div>
 					<div className="meta-item pt-2 border-t border-gray-200 italic">
 						<span className="font-black text-green-700 text-lg">
-							{car.pricePerDay?.toLocaleString('pt-CV', { style: 'currency', currency: 'CVE' })}
+							{price(car.pricePerDay)}
 						</span>
-						<span className="text-gray-500 text-[10px] uppercase font-bold ml-1">/ Dia</span>
+						<span className="text-gray-500 text-[10px] uppercase font-bold ml-1">{tv("perDay")}</span>
 					</div>
 				</div>
 			</div>

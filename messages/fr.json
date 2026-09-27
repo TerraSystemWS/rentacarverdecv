@@ -1,1 +1,169 @@
-{}
+{
+	"nav": {
+		"home": "Accueil",
+		"cars": "Véhicules",
+		"about": "À propos",
+		"news": "Actualités",
+		"contact": "Contact"
+	},
+	"header": {
+		"call": "Appeler",
+		"searchPlaceholder": "Rechercher un véhicule (marque, modèle...)",
+		"search": "Rechercher",
+		"openSearch": "Ouvrir la recherche",
+		"openMenu": "Ouvrir le menu",
+		"close": "Fermer"
+	},
+	"sidebar": {
+		"guest": "Connectez-vous",
+		"admin": "Admin",
+		"customer": "Client",
+		"signIn": "Se connecter",
+		"register": "Créer un compte",
+		"dashboard": "Tableau de bord",
+		"profile": "Mon profil",
+		"bookings": "Mes réservations",
+		"messages": "Messages",
+		"comingSoonTitle": "Bientôt disponible",
+		"comingSoonText": "Cette fonctionnalité sera bientôt disponible !",
+		"signOut": "Se déconnecter",
+		"close": "Fermer"
+	},
+	"footer": {
+		"aboutTitle": "À propos",
+		"aboutText": "Nous vous offrons la liberté d'explorer les îles du Cap-Vert à votre rythme, avec une flotte moderne et fiable pour rendre votre voyage inoubliable.",
+		"learnMore": "En savoir plus",
+		"usefulLinks": "Liens utiles",
+		"home": "Accueil",
+		"book": "Réserver",
+		"vehicles": "Véhicules",
+		"contact": "Contact",
+		"gallery": "Galerie",
+		"terms": "Conditions générales",
+		"cancellation": "Annulation et remboursement",
+		"address": "Cidadela - Rua da Independência - Praia, île de Santiago, Cap-Vert",
+		"subscribe": "S'abonner",
+		"subscribeLabel": "Abonnez-vous à nos actualités",
+		"emailPlaceholder": "Votre e-mail",
+		"subscribeButton": "S'abonner à la newsletter",
+		"subscribed": "Abonnement réussi !",
+		"subscribeError": "Impossible de vous abonner. Veuillez réessayer.",
+		"noImages": "Aucune image disponible.",
+		"copyright": "Copyright © {year} TerraSystem - Tous droits réservés",
+		"followUs": "Suivez-nous :"
+	},
+	"funFacts": {
+		"vehicles": "Véhicules dans la flotte",
+		"customers": "Clients satisfaits",
+		"drivers": "Chauffeurs",
+		"days": "Jours d'activité"
+	},
+	"appBlock": {
+		"topSubtitle": "Toutes les réductions, rien que pour vous",
+		"title": "Notre application gratuite",
+		"subtitle": "Cherchez Rentacarverde sur l'App Store et Google Play",
+		"appStoreAlt": "Bientôt sur l'App Store",
+		"googlePlayAlt": "Bientôt sur Google Play",
+		"mockupAlt": "Application Rent a Car Verde sur un téléphone"
+	},
+	"partners": {
+		"subtitle": "Quelques-unes des plus grandes entreprises nous font confiance",
+		"title": "Partenaires",
+		"previous": "Précédent",
+		"next": "Suivant"
+	},
+	"vehicleTerms": {
+		"fuel": {
+			"gasoline": "Essence",
+			"diesel": "Diesel",
+			"electric": "Électrique",
+			"hybrid": "Hybride",
+			"ethanol": "Éthanol"
+		},
+		"gearbox": {
+			"automatic": "Automatique",
+			"manual": "Manuelle"
+		},
+		"category": {
+			"compact": "Compacte",
+			"suv": "SUV",
+			"luxury": "Luxe",
+			"economy": "Économique",
+			"van": "Fourgonnette",
+			"intermediate": "Intermédiaire",
+			"stationWagon": "Break",
+			"minibus": "Minibus"
+		}
+	},
+	"search": {
+		"topSubtitle": "Trouvez votre véhicule",
+		"title": "Tarifs et disponibilité",
+		"subtitle": "Trouvez la meilleure voiture",
+		"pickupLocation": "Lieu de prise en charge",
+		"pickupDate": "Date de prise en charge",
+		"pickupTime": "Heure de prise en charge",
+		"returnLocation": "Lieu de restitution",
+		"returnDate": "Date de restitution",
+		"returnTime": "Heure de restitution",
+		"loadingLocations": "Chargement des lieux...",
+		"chooseLocation": "Choisissez un lieu",
+		"sameAsPickup": "Même lieu",
+		"datePlaceholder": "jj/mm/aaaa",
+		"budget": "Votre budget (par jour)",
+		"budgetPlaceholder": "Ex. : 6000 CVE",
+		"class": "Catégorie",
+		"allClasses": "Toutes",
+		"fuel": "Carburant",
+		"anyFuel": "Tous",
+		"submit": "Trouver une voiture",
+		"warningTitle": "Attention",
+		"fillOneField": "Veuillez remplir au moins un champ pour lancer la recherche.",
+		"ok": "OK"
+	},
+	"vehicle": {
+		"perDay": "/ Jour",
+		"notAvailable": "N/D",
+		"viewAll": "Voir tout",
+		"previous": "Précédent",
+		"next": "Suivant",
+		"gearbox": "Boîte de vitesses",
+		"fuel": "Carburant"
+	},
+	"popularVehicles": {
+		"subtitle": "Services les plus populaires",
+		"title": "Véhicules populaires"
+	},
+	"regularVehicles": {
+		"subtitle": "Trouvez la voiture idéale pour un voyage en toute sécurité",
+		"title": "Nos voitures disponibles"
+	},
+	"drivers": {
+		"subtitle": "À temps plein et à temps partiel",
+		"title": "Nos chauffeurs",
+		"viewAll": "Voir tout",
+		"driverAlt": "Chauffeur"
+	},
+	"blogArea": {
+		"subtitle": "Nos actualités",
+		"title": "Actualités",
+		"titleHighlight": "Lisez nos articles",
+		"views": "Vues",
+		"likes": "J'aime",
+		"comments": "Commentaires",
+		"defaultAuthor": "Admin",
+		"viewAll": "Voir tout"
+	},
+	"slider": {
+		"discounts": "De nombreuses réductions pour vous",
+		"goingSomewhere": "Vous partez quelque part ?",
+		"chooseLine1": "Choisissez votre",
+		"chooseLine2": "voiture",
+		"bestOffers": "Les meilleures offres du Cap-Vert !",
+		"contactNow": "Contactez-nous"
+	},
+	"ads": {
+		"highlights": "À la une",
+		"close": "Fermer",
+		"advertising": "Publicité"
+	}
+}

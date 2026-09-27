@@ -1,1 +1,169 @@
-{}
+{
+	"nav": {
+		"home": "Home",
+		"cars": "Cars",
+		"about": "About Us",
+		"news": "News",
+		"contact": "Contact"
+	},
+	"header": {
+		"call": "Call",
+		"searchPlaceholder": "Search cars (make, model...)",
+		"search": "Search",
+		"openSearch": "Open search",
+		"openMenu": "Open menu",
+		"close": "Close"
+	},
+	"sidebar": {
+		"guest": "Sign in",
+		"admin": "Admin",
+		"customer": "Customer",
+		"signIn": "Sign in",
+		"register": "Create account",
+		"dashboard": "Admin dashboard",
+		"profile": "My profile",
+		"bookings": "My bookings",
+		"messages": "Messages",
+		"comingSoonTitle": "Coming soon",
+		"comingSoonText": "This feature will be available soon!",
+		"signOut": "Sign out",
+		"close": "Close"
+	},
+	"footer": {
+		"aboutTitle": "About Us",
+		"aboutText": "We give you the freedom to explore the islands of Cape Verde at your own pace, with a modern and reliable fleet to make your trip unforgettable.",
+		"learnMore": "Learn more",
+		"usefulLinks": "Useful Links",
+		"home": "Home",
+		"book": "Book",
+		"vehicles": "Vehicles",
+		"contact": "Contact",
+		"gallery": "Gallery",
+		"terms": "Terms and Conditions",
+		"cancellation": "Cancellation and Refunds",
+		"address": "Cidadela - Rua da Independência - Praia, Santiago Island, Cape Verde",
+		"subscribe": "Subscribe",
+		"subscribeLabel": "Subscribe to our news",
+		"emailPlaceholder": "Your email",
+		"subscribeButton": "Subscribe to the newsletter",
+		"subscribed": "Subscribed successfully!",
+		"subscribeError": "We couldn't subscribe you. Please try again.",
+		"noImages": "No images available.",
+		"copyright": "Copyright © {year} TerraSystem - All rights reserved",
+		"followUs": "Follow us:"
+	},
+	"funFacts": {
+		"vehicles": "Cars in our fleet",
+		"customers": "Happy customers",
+		"drivers": "Drivers",
+		"days": "Days in business"
+	},
+	"appBlock": {
+		"topSubtitle": "All the discounts, just for you",
+		"title": "Our Free App",
+		"subtitle": "Search for Rentacarverde on the App Store & Google Play",
+		"appStoreAlt": "Coming soon to the App Store",
+		"googlePlayAlt": "Coming soon to Google Play",
+		"mockupAlt": "Rent a Car Verde app on a phone"
+	},
+	"partners": {
+		"subtitle": "Some of the biggest companies work with us",
+		"title": "Partners",
+		"previous": "Previous",
+		"next": "Next"
+	},
+	"vehicleTerms": {
+		"fuel": {
+			"gasoline": "Petrol",
+			"diesel": "Diesel",
+			"electric": "Electric",
+			"hybrid": "Hybrid",
+			"ethanol": "Ethanol"
+		},
+		"gearbox": {
+			"automatic": "Automatic",
+			"manual": "Manual"
+		},
+		"category": {
+			"compact": "Compact",
+			"suv": "SUV",
+			"luxury": "Luxury",
+			"economy": "Economy",
+			"van": "Van",
+			"intermediate": "Intermediate",
+			"stationWagon": "Estate",
+			"minibus": "Minibus"
+		}
+	},
+	"search": {
+		"topSubtitle": "Find your vehicle",
+		"title": "Rates & Availability",
+		"subtitle": "Find the best car",
+		"pickupLocation": "Pick-up location",
+		"pickupDate": "Pick-up date",
+		"pickupTime": "Pick-up time",
+		"returnLocation": "Return location",
+		"returnDate": "Return date",
+		"returnTime": "Return time",
+		"loadingLocations": "Loading locations...",
+		"chooseLocation": "Choose a location",
+		"sameAsPickup": "Same as pick-up",
+		"datePlaceholder": "dd/mm/yyyy",
+		"budget": "Your budget (per day)",
+		"budgetPlaceholder": "E.g. 6000 CVE",
+		"class": "Category",
+		"allClasses": "All",
+		"fuel": "Fuel",
+		"anyFuel": "Any",
+		"submit": "Find a car",
+		"warningTitle": "Please note",
+		"fillOneField": "Please fill in at least one field to search.",
+		"ok": "OK"
+	},
+	"vehicle": {
+		"perDay": "/ Day",
+		"notAvailable": "N/A",
+		"viewAll": "View all",
+		"previous": "Previous",
+		"next": "Next",
+		"gearbox": "Gearbox",
+		"fuel": "Fuel"
+	},
+	"popularVehicles": {
+		"subtitle": "Most popular services",
+		"title": "Popular vehicles"
+	},
+	"regularVehicles": {
+		"subtitle": "Find the perfect car for a safe trip",
+		"title": "Our available cars"
+	},
+	"drivers": {
+		"subtitle": "Full-time and part-time",
+		"title": "Our drivers",
+		"viewAll": "View all",
+		"driverAlt": "Driver"
+	},
+	"blogArea": {
+		"subtitle": "Our news",
+		"title": "News",
+		"titleHighlight": "Read our articles",
+		"views": "Views",
+		"likes": "Likes",
+		"comments": "Comments",
+		"defaultAuthor": "Admin",
+		"viewAll": "View all"
+	},
+	"slider": {
+		"discounts": "Great discounts for you",
+		"goingSomewhere": "Going somewhere?",
+		"chooseLine1": "Choose your",
+		"chooseLine2": "car",
+		"bestOffers": "The best deals in Cape Verde!",
+		"contactNow": "Contact us"
+	},
+	"ads": {
+		"highlights": "Highlights",
+		"close": "Close",
+		"advertising": "Advertising"
+	}
+}

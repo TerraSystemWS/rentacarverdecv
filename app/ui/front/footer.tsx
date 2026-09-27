@@ -7,6 +7,7 @@ import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
 import { authFetch } from "@/app/auth/api";
 import { CompanyProfile } from "@/lib/api/types";
 import PaymentBrands from "@/app/ui/front/payment/PaymentBrands";
+import { useTranslations } from "next-intl";
 
 interface GalleryItem {
 	id: number;
@@ -15,6 +16,7 @@ interface GalleryItem {
 }
 
 const Footer = () => {
+	const t = useTranslations("footer");
 	const [gallery, setGallery] = useState<GalleryItem[]>([]);
 	const [newsletterEmail, setNewsletterEmail] = useState("");
 	const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
@@ -76,50 +78,46 @@ const Footer = () => {
 						<div className="row">
 							<div className="col-md-3 col-sm-6">
 								<div className="widget widget_about">
-									<h3 className="widget-title">Sobre Nós</h3>
+									<h3 className="widget-title">{t("aboutTitle")}</h3>
 									<div className="widget-about-content">
 										{/* <img src="/assets/images/car-logo.png" alt="logo" /> */}
 										<Image
 											width={181}
 											height={25}
 											src="/logo_b.svg"
-											alt="logo"
+											alt="Rent a Car Verde"
 										/>
-										<p>
-											Oferecemos a liberdade de explorar as ilhas de Cabo Verde
-											ao seu ritmo, com uma frota de carros moderna e fiável
-											para tornar a sua viagem inesquecível.
-										</p>
+										<p>{t("aboutText")}</p>
 										<Link href="/about" className="button">
-											saber mais
+											{t("learnMore")}
 										</Link>
 									</div>
 								</div>
 							</div>
 							<div className="col-md-2 col-sm-6">
 								<div className="widget widget_menu">
-									<h3 className="widget-title">Links Úteis</h3>
+									<h3 className="widget-title">{t("usefulLinks")}</h3>
 									<ul>
 										<li>
-											<Link href="/">Início</Link>
+											<Link href="/">{t("home")}</Link>
 										</li>
 										<li>
-											<Link href="/#reservar"> Reservar</Link>
+											<Link href="/#reservar">{t("book")}</Link>
 										</li>
 										<li>
-											<Link href="/cars">Veículos</Link>
+											<Link href="/cars">{t("vehicles")}</Link>
 										</li>
 										<li>
-											<Link href="/contact">Contacto</Link>
+											<Link href="/contact">{t("contact")}</Link>
 										</li>
 										<li>
-											<Link href="/gallery">Galeria</Link>
+											<Link href="/gallery">{t("gallery")}</Link>
 										</li>
 										<li>
-											<Link href="/condicoes-gerais">Condições Gerais</Link>
+											<Link href="/condicoes-gerais">{t("terms")}</Link>
 										</li>
 										<li>
-											<Link href="/politica-cancelamento">Cancelamento e Reembolso</Link>
+											<Link href="/politica-cancelamento">{t("cancellation")}</Link>
 										</li>
 									</ul>
 								</div>
@@ -127,7 +125,7 @@ const Footer = () => {
 
 							<div className="col-md-3 col-sm-6">
 								<div className="widget widget_hot_contact">
-									<h3 className="widget-title">Contacto</h3>
+									<h3 className="widget-title">{t("contact")}</h3>
 									<ul>
 										<li>
 											<Link href="mailto:reservas@rentacarverde.cv">
@@ -142,40 +140,40 @@ const Footer = () => {
 										</li>
 										<li>
 											<span className="text-[#ececec]">
-												<i className="fa fa-map-marker"></i>Cidadela - Rua da
-												Independência - Praia, Ilha de Santiago, Cabo Verde
+												<i className="fa fa-map-marker"></i>{t("address")}
 											</span>
 										</li>
 									</ul>
 								</div>
 								<div className="widget widget_newsletter">
-									<h3 className="widget-title">Subscrever</h3>
+									<h3 className="widget-title">{t("subscribe")}</h3>
 									<form
 										onSubmit={handleNewsletterSubmit}
 										className="subscribes-newsletter"
 									>
-										<label>Subscreva as novidades</label>
+										<label>{t("subscribeLabel")}</label>
 										<div className="input-group">
 											<input
 												type="email"
 												name="s"
-												placeholder="O seu email"
+												placeholder={t("emailPlaceholder")}
+												aria-label={t("emailPlaceholder")}
 												className="form-controller"
 												value={newsletterEmail}
 												onChange={(e) => setNewsletterEmail(e.target.value)}
 												required
 											/>
 											<span className="input-group-btn">
-												<button type="submit" className="btn btn-primary" disabled={newsletterStatus === "sending"}>
+												<button type="submit" className="btn btn-primary" disabled={newsletterStatus === "sending"} aria-label={t("subscribeButton")}>
 													<span className="fa fa-paper-plane"></span>
 												</button>
 											</span>
 										</div>
 										{newsletterStatus === "sent" && (
-											<p style={{ marginTop: 8, fontSize: 12, color: "#3baa4e" }}>Subscrito com sucesso!</p>
+											<p style={{ marginTop: 8, fontSize: 12, color: "#3baa4e" }}>{t("subscribed")}</p>
 										)}
 										{newsletterStatus === "error" && (
-											<p style={{ marginTop: 8, fontSize: 12, color: "#ff8080" }}>Não foi possível subscrever. Tente de novo.</p>
+											<p style={{ marginTop: 8, fontSize: 12, color: "#ff8080" }}>{t("subscribeError")}</p>
 										)}
 									</form>
 								</div>
@@ -183,7 +181,7 @@ const Footer = () => {
 
 							<div className="col-md-4 col-sm-6">
 								<div className="widget widget_photo_gallery">
-									<h3 className="widget-title">Galeria</h3>
+									<h3 className="widget-title">{t("gallery")}</h3>
 									<ul className="photo-gallery-content">
 										{gallery.length > 0 ? (
 											gallery.map((item) => (
@@ -201,7 +199,7 @@ const Footer = () => {
 												</li>
 											))
 										) : (
-											<p className="text-gray-500 text-sm">Sem imagens disponíveis.</p>
+											<p className="text-gray-500 text-sm">{t("noImages")}</p>
 										)}
 									</ul>
 								</div>
@@ -219,7 +217,7 @@ const Footer = () => {
 							<div className="col-md-9">
 								<div className="bottom-content-left">
 									<p className="copyright">
-										Copyright &copy; {new Date().getFullYear()} TerraSystem - All Right Reserved{" "}
+										{t("copyright", { year: new Date().getFullYear() })}{" "}
 										<Link href="https://terrasystem.cv">terrasystem.cv</Link>
 									</p>
 
@@ -228,7 +226,7 @@ const Footer = () => {
 							<div className="col-md-3">
 								<div className="bottom-content-right">
 									<div className="social-profile">
-										<span className="social-profole-title">Siga-nos:</span>
+										<span className="social-profole-title">{t("followUs")}</span>
 										{company?.instagramUrl && (
 											<Link href={company.instagramUrl} target="_blank" rel="noopener noreferrer">
 												<i className="fa fa-instagram"></i>

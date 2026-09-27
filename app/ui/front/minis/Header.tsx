@@ -5,9 +5,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import LanguageSwitcher from "./LanguageSwitcher";
+import { useTranslations } from "next-intl";
 
 const Header = () => {
 	const router = useRouter();
+	const t = useTranslations("header");
+	const tn = useTranslations("nav");
 	const [isOpen, setIsOpen] = useState(false);
 	const [isPesquisaOpen, setIsPesquisaOpen] = useState(false);
 	const [searchQuery, setSearchQuery] = useState("");
@@ -30,7 +33,7 @@ const Header = () => {
 									<li>
 										<a href="tel:02385810945" className="top-left-menu">
 											<i className="fa fa-phone"></i>
-											<span>Chamar - +238 581 09 45</span>
+											<span>{t("call")} - +238 581 09 45</span>
 										</a>
 									</li>
 									<li>
@@ -56,6 +59,7 @@ const Header = () => {
 										<a
 											href="#"
 											className="search-open"
+											aria-label={t("openSearch")}
 											onClick={() => setIsPesquisaOpen(!isPesquisaOpen)}
 										>
 											<i className="fa fa-search"></i>
@@ -66,6 +70,7 @@ const Header = () => {
 										<a
 											href="#"
 											className="trigger-overlay"
+											aria-label={t("openMenu")}
 											onClick={() => setIsOpen(!isOpen)}
 										>
 											<i className="fa fa-bars"></i>
@@ -87,6 +92,7 @@ const Header = () => {
 					<button
 						type="button"
 						className="overlay-close"
+						aria-label={t("close")}
 						onClick={() => setIsPesquisaOpen(false)}
 					>
 						&#x2716;
@@ -102,14 +108,14 @@ const Header = () => {
 								<input
 									type="text"
 									className="input--full"
-									placeholder="Pesquisar viaturas (marca, modelo...)"
+									placeholder={t("searchPlaceholder")}
 									value={searchQuery}
 									onChange={(e) => setSearchQuery(e.target.value)}
 								/>
 							</div>
 
 							<button type="submit" className="btn text-uppercase search-button">
-								Pesquisar
+								{t("search")}
 							</button>
 						</form>
 					</div>
@@ -126,7 +132,7 @@ const Header = () => {
 						<div className="col-md-3 col-sm-10 col-xs-10">
 							<div className="site-logo">
 								<Link href="/">
-									<img src="/logo_b.svg" alt="logo" />
+									<img src="/logo_b.svg" alt="Rent a Car Verde" />
 								</Link>
 							</div>
 						</div>
@@ -137,19 +143,19 @@ const Header = () => {
 									<div className="menu-content">
 										<ul className="menu-list">
 											<li>
-												<Link href="/">Home</Link>
+												<Link href="/">{tn("home")}</Link>
 											</li>
 											<li>
-												<Link href="/cars">Viaturas</Link>
+												<Link href="/cars">{tn("cars")}</Link>
 											</li>
 											<li>
-												<Link href="/about">Sobre Nós</Link>
+												<Link href="/about">{tn("about")}</Link>
 											</li>
 											<li>
-												<Link href="/posts">Novidades</Link>
+												<Link href="/posts">{tn("news")}</Link>
 											</li>
 											<li>
-												<Link href="/contact">Contato</Link>
+												<Link href="/contact">{tn("contact")}</Link>
 											</li>
 										</ul>
 									</div>

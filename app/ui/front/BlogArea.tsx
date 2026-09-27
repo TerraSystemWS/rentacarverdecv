@@ -11,8 +11,12 @@ import { useState, useEffect } from "react";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
 import { Post as BlogPost } from "@/lib/api/types";
 import Link from "next/link";
+import { useFormatter, useTranslations } from "next-intl";
 
 export default function BlogArea() {
+	const t = useTranslations("blogArea");
+	const tv = useTranslations("vehicle");
+	const format = useFormatter();
 	const [posts, setPosts] = useState<BlogPost[]>([]);
 
 	useEffect(() => {
@@ -47,20 +51,20 @@ export default function BlogArea() {
 				<div className="row tb default-margin-bottom theme-green">
 					<div className="col-md-10 block-title-area tb-cell">
 						<div className="heading-content style-one border">
-							<h3 className="subtitle">Nossas Novidades</h3>
+							<h3 className="subtitle">{t("subtitle")}</h3>
 							<h2 className="title">
-								Novidades - <span>Lê os nossos artigos</span>
+								{t("title")} - <span>{t("titleHighlight")}</span>
 							</h2>
 						</div>
 					</div>
 
 					<div className="col-md-2 hidden-xs block-navigation-area tb-cell">
 						<div className="item-navigation nav-right">
-							<a href="#" className="previous-item">
+							<a href="#" className="previous-item" aria-label={tv("previous")}>
 								<i className="fa fa-angle-left"></i>
 							</a>
 
-							<a href="#" className="next-item">
+							<a href="#" className="next-item" aria-label={tv("next")}>
 								<i className="fa fa-angle-right"></i>
 							</a>
 						</div>
@@ -98,10 +102,10 @@ export default function BlogArea() {
 									<div className="post-content p-4">
 										<div className="flex items-center justify-between mb-2 text-sm text-gray-500">
 											<span className="bg-blue-500 text-white px-2 py-1 rounded">
-												{post.createdAt ? new Date(post.createdAt).toLocaleDateString() : ""}
+												{post.createdAt ? format.dateTime(new Date(post.createdAt), { dateStyle: "medium" }) : ""}
 											</span>
 											<span className="bg-[#3baa4e] text-white px-2 py-1 rounded flex items-center gap-1">
-												<i className="fa fa-user"></i> {post.author || "Admin"}
+												<i className="fa fa-user"></i> {post.author || t("defaultAuthor")}
 											</span>
 										</div>
 										<h2 className="entry-title text-lg font-semibold mb-2">
@@ -111,16 +115,16 @@ export default function BlogArea() {
 										</h2>
 										<div className="flex gap-4 text-gray-500 text-sm">
 											<span className="flex items-center gap-1">
-												<i className="fa fa-eye"></i> 0
+												<i className="fa fa-eye" aria-label={t("views")}></i> 0
 											</span>
 											<span className="flex items-center gap-1">
 												<Link href={`/posts/${post.slug}`}>
-													<i className="fa fa-heart-o"></i> 0
+													<i className="fa fa-heart-o" aria-label={t("likes")}></i> 0
 												</Link>
 											</span>
 											<span className="flex items-center gap-1">
 												<Link href={`/posts/${post.slug}#comments`}>
-													<i className="fa fa-comments"></i> 0
+													<i className="fa fa-comments" aria-label={t("comments")}></i> 0
 												</Link>
 											</span>
 										</div>
@@ -134,7 +138,7 @@ export default function BlogArea() {
 				<div className="block-navigation-area visible-xs-block">
 					<div className="view-all-item clearfix">
 						<Link href="/posts" className="view-all-btn">
-							Ver Todos
+							{t("viewAll")}
 						</Link>
 					</div>
 				</div>

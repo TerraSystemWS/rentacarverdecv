@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { Advertisement } from "@/lib/api/types";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
+import { useTranslations } from "next-intl";
 
 const SESSION_KEY = "racv_popup_ad_dismissed";
 
@@ -11,6 +12,7 @@ const SESSION_KEY = "racv_popup_ad_dismissed";
 // sessão de browser, com um pequeno atraso para não interromper o
 // carregamento inicial da página.
 const AdPopup: React.FC = () => {
+	const t = useTranslations("ads");
 	const [ad, setAd] = useState<Advertisement | null>(null);
 	const [visible, setVisible] = useState(false);
 
@@ -60,7 +62,7 @@ const AdPopup: React.FC = () => {
 			>
 				<button
 					onClick={close}
-					aria-label="Fechar"
+					aria-label={t("close")}
 					style={{
 						position: "absolute", top: -14, right: -14, zIndex: 1,
 						background: "#fff", borderRadius: "9999px", width: 32, height: 32,

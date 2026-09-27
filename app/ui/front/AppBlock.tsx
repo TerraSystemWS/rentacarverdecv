@@ -2,6 +2,7 @@
 "use client";
 
 import React from "react";
+import { useTranslations } from "next-intl";
 
 interface AppBlockProps {
 	content?: {
@@ -12,10 +13,11 @@ interface AppBlockProps {
 }
 
 export default function AppBlock({ content }: AppBlockProps) {
-	const data = content || {
-		topSubtitle: "Todos os descontos só para si",
-		title: "A Nossa App Gratuita",
-		subtitle: "Procure Rentacarverde na App Store & Google Play",
+	const t = useTranslations("appBlock");
+	const data = {
+		topSubtitle: content?.topSubtitle || t("topSubtitle"),
+		title: content?.title || t("title"),
+		subtitle: content?.subtitle || t("subtitle"),
 	};
 
 	return (
@@ -31,14 +33,14 @@ export default function AppBlock({ content }: AppBlockProps) {
 									{data.subtitle}
 								</h3>
 								<div className="app-location-link">
-									<img src="/assets/images/app-logo-one.png" alt="Em breve na App Store" />
-									<img src="/assets/images/app-logo-two.png" alt="Em breve na Google Play" />
+									<img src="/assets/images/app-logo-one.png" alt={t("appStoreAlt")} />
+									<img src="/assets/images/app-logo-two.png" alt={t("googlePlayAlt")} />
 								</div>
 							</div>
 						</div>
 						<div className="col-md-6 tb-cell">
 							<div className="app-mokeup">
-								<img src="/assets/images/mobile.png" alt="mobile" />
+								<img src="/assets/images/mobile.png" alt={t("mockupAlt")} />
 							</div>
 						</div>
 					</div>

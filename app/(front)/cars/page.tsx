@@ -7,6 +7,7 @@ import SideSearch, { CarFilters, emptyFilters } from "../../ui/front/veiculos/si
 import { Vehicle } from "@/lib/api/types";
 import { authFetch } from "@/app/auth/api";
 import { endpoints } from "@/lib/api/endpoints";
+import { sameVehicleTerm } from "@/lib/i18n/useVehicleTerms";
 
 const PAGE_SIZE = 9;
 
@@ -52,9 +53,10 @@ function CarsContent() {
 			}
 			if (filters.minPrice && v.pricePerDay < parseFloat(filters.minPrice)) return false;
 			if (filters.maxPrice && v.pricePerDay > parseFloat(filters.maxPrice)) return false;
-			if (filters.classTypes.length > 0 && !filters.classTypes.includes(v.classType || "")) return false;
-			if (filters.fuelTypes.length > 0 && !filters.fuelTypes.includes(v.fuelType || "")) return false;
-			if (filters.gearboxes.length > 0 && !filters.gearboxes.includes(v.gearbox || "")) return false;
+			// Compara pelo termo normalizado: "Diesel" (pesquisa) encontra "DISEL" (BD).
+			if (filters.classTypes.length > 0 && !filters.classTypes.some((c) => sameVehicleTerm(c, v.classType))) return false;
+			if (filters.fuelTypes.length > 0 && !filters.fuelTypes.some((f) => sameVehicleTerm(f, v.fuelType))) return false;
+			if (filters.gearboxes.length > 0 && !filters.gearboxes.some((g) => sameVehicleTerm(g, v.gearbox))) return false;
 			return true;
 		});
 	}, [allVehicles, filters]);
