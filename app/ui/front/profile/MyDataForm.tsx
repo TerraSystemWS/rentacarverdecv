@@ -207,7 +207,7 @@ export default function MyDataForm() {
 
 	const field = (label: string, name: keyof FormState, type: string = "text", required = false) => (
 		<div>
-			<label htmlFor={`mydata-${name}`} className="block text-xs font-bold uppercase tracking-wide text-slate-600 mb-1.5">{label}</label>
+			<label htmlFor={`mydata-${name}`} className="block text-sm font-semibold text-slate-600 mb-1.5">{label}</label>
 			<input
 				id={`mydata-${name}`}
 				type={type}
@@ -221,13 +221,13 @@ export default function MyDataForm() {
 	);
 
 	const sectionTitle = (title: string) => (
-		<h3 className="text-sm font-black uppercase tracking-wide text-slate-800 mb-4 pb-2 border-b-2 border-green-400 inline-block">
+		<h3 className="v2-card__title">
 			{title}
 		</h3>
 	);
 
 	return (
-		<div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+		<div className="v2-card">
 			{complete ? (
 				<div className="flex items-center gap-2 mb-6 text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-3 text-sm font-semibold">
 					<CheckCircle2 className="w-5 h-5 shrink-0" />
@@ -241,7 +241,7 @@ export default function MyDataForm() {
 			)}
 
 			<form onSubmit={handleSubmit} className="styled-form space-y-6">
-				<div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
+				<div className="v2-card__section">
 					{sectionTitle(t("sections.contact"))}
 					<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 						{field(t("fields.fullName"), "fullName", "text", true)}
@@ -253,7 +253,7 @@ export default function MyDataForm() {
 							<p className="text-[11px] text-slate-500 mt-1">{t("fields.zipHint")}</p>
 						</div>
 						<div>
-							<label htmlFor="mydata-countryCode" className="block text-xs font-bold uppercase tracking-wide text-slate-600 mb-1.5">{t("fields.country")}</label>
+							<label htmlFor="mydata-countryCode" className="block text-sm font-semibold text-slate-600 mb-1.5">{t("fields.country")}</label>
 							<select
 								id="mydata-countryCode"
 								name="countryCode"
@@ -271,7 +271,7 @@ export default function MyDataForm() {
 					</div>
 				</div>
 
-				<div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
+				<div className="v2-card__section">
 					{sectionTitle(t("sections.birth"))}
 					<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 						{field(t("fields.birthDate"), "birthDate", "date", true)}
@@ -279,7 +279,7 @@ export default function MyDataForm() {
 					</div>
 				</div>
 
-				<div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
+				<div className="v2-card__section">
 					{sectionTitle(t("sections.id"))}
 					<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 						{field(t("fields.idNumber"), "idNumber", "text", true)}
@@ -289,7 +289,7 @@ export default function MyDataForm() {
 					</div>
 				</div>
 
-				<div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
+				<div className="v2-card__section">
 					{sectionTitle(t("sections.license"))}
 					<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 						{field(t("fields.licenseNumber"), "licenseNumber", "text", true)}
@@ -299,7 +299,7 @@ export default function MyDataForm() {
 					</div>
 
 					<div className="mt-5 pt-5 border-t border-slate-200">
-						<label className="block text-xs font-bold uppercase tracking-wide text-slate-600 mb-2">{t("photo.label")}</label>
+						<label className="block text-sm font-semibold text-slate-600 mb-2">{t("photo.label")}</label>
 						<div className="flex items-center gap-4">
 							<div className="w-24 h-24 rounded-lg overflow-hidden border border-slate-300 bg-white flex items-center justify-center shrink-0">
 								{licensePhotoPreview ? (

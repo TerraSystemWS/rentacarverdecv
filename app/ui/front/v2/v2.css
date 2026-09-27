@@ -399,6 +399,34 @@
 .site-v2 main .heading-content-three .title { font-size: clamp(30px, 4vw, 44px) !important; line-height: 1.1; }
 .site-v2 main .heading-content.style-two .title { font-size: clamp(28px, 3.6vw, 40px) !important; line-height: 1.1; }
 
+/* ---------- Área de cliente e pagamento ---------- */
+.site-v2 .v2-card {
+  background: var(--v2-white); border: 1px solid #dcebef; border-radius: 22px;
+  padding: 28px; box-shadow: 0 10px 30px rgba(8, 58, 80, 0.07);
+}
+.site-v2 .v2-card--booking { padding: 22px; transition: box-shadow 0.2s ease; }
+.site-v2 .v2-card--booking:hover { box-shadow: 0 16px 38px rgba(8, 58, 80, 0.13); }
+.site-v2 .v2-card__title {
+  font-family: var(--v2-display); font-size: 22px; font-weight: 700; letter-spacing: -0.01em;
+  color: var(--v2-ocean); margin: 0 0 16px;
+}
+.site-v2 .v2-card__name { font-family: var(--v2-display); font-size: 20px; font-weight: 700; color: var(--v2-ocean); margin: 0; }
+.site-v2 .v2-card__amount { font-family: var(--v2-display); font-size: 30px; font-weight: 800; color: var(--v2-ocean); letter-spacing: -0.02em; }
+.site-v2 .v2-card__amount--sm { font-size: 20px; }
+.site-v2 .v2-card__section { background: #f4f9fa; border: 1px solid #e1eef1; border-radius: 16px; padding: 20px; }
+.site-v2 .v2-subtitle { font-family: var(--v2-display); font-size: 28px; font-weight: 700; color: var(--v2-ocean); letter-spacing: -0.02em; }
+.site-v2 .profile-tabs { display: inline-flex; gap: 4px; padding: 4px; background: var(--v2-white); border: 1px solid #dcebef; border-radius: 999px; }
+.site-v2 .profile-tabs button.v2-tab {
+  padding: 10px 20px; border: 0; border-radius: 999px; background: transparent;
+  color: var(--v2-ocean); font-family: var(--v2-display); font-size: 15px; font-weight: 700;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.site-v2 .profile-tabs button.v2-tab:hover { background: var(--v2-sea); }
+.site-v2 .profile-tabs button.v2-tab.is-active { background: var(--v2-ocean); color: var(--v2-white); }
+.site-v2 .profile-tabs button.v2-tab:focus-visible { outline: 3px solid var(--v2-sun); outline-offset: 2px; }
+.site-v2 .payment-brands--on-light { background: var(--v2-ocean-deep); border-radius: 16px; padding: 10px 18px; }
+.site-v2 .invoice-download-btn { border-radius: 999px !important; }
+
 @media (max-width: 991px) {
   .site-v2 .v2-search { grid-template-columns: 1fr 1fr; }
   .site-v2 .v2-search > :first-child { grid-column: 1 / -1; }

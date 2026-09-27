@@ -96,9 +96,9 @@ export default function PaymentPage() {
 				)}
 
 				{summary && (
-					<div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-6">
+					<div className="v2-card space-y-6">
 						<div>
-							<h3 className="text-sm font-black uppercase tracking-wide text-slate-800 mb-4 pb-2 border-b-2 border-green-400 inline-block">
+							<h3 className="v2-card__title">
 								{t("booking", { id: summary.bookingId })}
 							</h3>
 							<dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-sm">
@@ -112,7 +112,7 @@ export default function PaymentPage() {
 						</div>
 
 						<div>
-							<h3 className="text-sm font-black uppercase tracking-wide text-slate-800 mb-4 pb-2 border-b-2 border-green-400 inline-block">
+							<h3 className="v2-card__title">
 								{t("billing")}
 							</h3>
 							<p className="text-sm text-slate-700">
@@ -137,8 +137,8 @@ export default function PaymentPage() {
 						</div>
 
 						<div className="flex items-center justify-between border-t border-slate-200 pt-4">
-							<span className="text-sm font-bold uppercase text-slate-600">{t("total")}</span>
-							<span className="text-2xl font-black text-slate-900">{fmtMoney(summary.amountCve, "CVE", isLocale(locale) ? localeTags[locale] : "pt-PT")}</span>
+							<span className="text-base font-semibold text-slate-600">{t("total")}</span>
+							<span className="v2-card__amount">{fmtMoney(summary.amountCve, "CVE", isLocale(locale) ? localeTags[locale] : "pt-PT")}</span>
 						</div>
 
 						{summary.paymentStatus === "SUCCESS" ? (
@@ -200,7 +200,7 @@ export default function PaymentPage() {
 function Row({ label, value }: { label: string; value: string }) {
 	return (
 		<div>
-			<dt className="text-xs font-bold uppercase tracking-wide text-slate-500">{label}</dt>
+			<dt className="text-sm text-slate-500">{label}</dt>
 			<dd className="text-slate-900 font-semibold">{value}</dd>
 		</div>
 	);

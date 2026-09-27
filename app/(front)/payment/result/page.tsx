@@ -73,7 +73,7 @@ function PaymentResult() {
 				{paid ? (
 					<Receipt summary={summary} company={company} />
 				) : (
-					<div className="bg-white border border-slate-200 rounded-xl p-8 shadow-sm text-center space-y-4">
+					<div className="v2-card text-center space-y-4">
 						{status === "cancelled" ? (
 							<>
 								<Ban className="w-12 h-12 mx-auto text-amber-500" />
@@ -114,7 +114,7 @@ function Receipt({ summary, company }: { summary: PaymentSummary | null; company
 	return (
 		// "receipt-print": ao imprimir só este bloco aparece (ver @media print
 		// em globals.css) — sem cabeçalho/rodapé do site nem botões.
-		<div className="receipt-print bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-6">
+		<div className="receipt-print v2-card space-y-6">
 			{/* eslint-disable-next-line @next/next/no-img-element */}
 			<img src="/logo_b.svg" alt="Rent a Car Verde" className="receipt-logo" />
 			<div className="flex items-center gap-3 text-emerald-800">
@@ -140,8 +140,8 @@ function Receipt({ summary, company }: { summary: PaymentSummary | null; company
 
 			{summary && (
 				<div className="flex items-center justify-between border-t border-slate-200 pt-4">
-					<span className="text-sm font-bold uppercase text-slate-600">{t("totalPaid")}</span>
-					<span className="text-2xl font-black text-slate-900">{fmtMoney(summary.amountCve, "CVE", isLocale(locale) ? localeTags[locale] : "pt-PT")}</span>
+					<span className="text-base font-semibold text-slate-600">{t("totalPaid")}</span>
+					<span className="v2-card__amount">{fmtMoney(summary.amountCve, "CVE", isLocale(locale) ? localeTags[locale] : "pt-PT")}</span>
 				</div>
 			)}
 
@@ -169,7 +169,7 @@ function Receipt({ summary, company }: { summary: PaymentSummary | null; company
 function Row({ label, value }: { label: string; value: string }) {
 	return (
 		<div>
-			<dt className="text-xs font-bold uppercase tracking-wide text-slate-500">{label}</dt>
+			<dt className="text-sm text-slate-500">{label}</dt>
 			<dd className="text-slate-900 font-semibold">{value}</dd>
 		</div>
 	);

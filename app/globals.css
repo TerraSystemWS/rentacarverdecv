@@ -172,6 +172,16 @@
     cursor: not-allowed !important;
     transform: none !important;
   }
+
+  /* Visual v2 do site público (app/ui/front/v2/v2.css): mesmo botão, sem
+     maiúsculas e com a fonte nova. Tem de estar nesta camada para ganhar. */
+  .site-v2 .btn-racv {
+    font-family: var(--font-display), "Exo", sans-serif !important;
+    font-weight: 700 !important;
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+    padding: 14px 40px !important;
+  }
 }
 
 /* Saturated Buttons - More 'Charged' */
