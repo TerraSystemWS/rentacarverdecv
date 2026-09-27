@@ -656,3 +656,8 @@ a.hb-caption:hover { opacity: 1; background: rgba(34, 107, 60, 0.75); color: #ff
 .header-top-area .lang-switcher button:hover { color: #ffffff !important; }
 .header-top-area .lang-switcher button.is-active { color: #3baa4e; }
 .header-top-area .lang-switcher button:focus-visible { outline: 2px solid #3baa4e; outline-offset: 1px; }
+
+/* Cabeçalho: com o logo a 72px o cabeçalho tem 128px, mas o menu do template
+   (82px no desktop, botão hambúrguer no telemóvel) ficava colado ao topo, com
+   o espaço vazio todo por baixo. Centra o logo e o menu na mesma linha. */
+.header-nav-area > .container > .row { display: flex; align-items: center; }
