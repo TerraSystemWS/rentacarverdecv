@@ -7,7 +7,7 @@
 // {
 //   "format": "rentacarverde-theme",
 //   "version": 1,
-//   "name": "Verde claro",
+//   "name": "Verde",
 //   "description": "…",
 //   "colors": { "primary": "#3baa4e", "brand": "#d4efd9", … }
 // }

@@ -11,9 +11,10 @@ import { endpoints } from "@/lib/api/endpoints";
 import type { SiteTheme } from "@/lib/api/types";
 import { THEME_DEFAULTS, THEME_FILE_FORMAT, THEME_FILE_VERSION, THEME_TOKENS, cleanColors, contrastWarnings } from "@/lib/theme/tokens";
 import ThemeEditor, { ThemeSample, type ThemeEditorData } from "./_components/theme-editor";
+import ThemeReadme from "./_components/theme-readme";
 
 // Definições → Aparência: temas de cores do site público (visual v2).
-// Um tema ativo de cada vez; os temas de base (Atlântico, Verde claro) não se
+// Um tema ativo de cada vez; os temas de base (Atlântico, Verde) não se
 // alteram — duplicam-se. Um tema pode ser exportado/importado como ficheiro
 // JSON (formato em lib/theme/tokens.ts) para o levar para outro site ou
 // guardar uma cópia.
@@ -222,6 +223,7 @@ export default function AppearancePage() {
 								Use «Pré-visualizar» para ver o site com outro tema antes de o ativar — só muda no seu separador.
 								Para criar um tema, duplique um existente ou importe um ficheiro de tema (.json).
 							</p>
+							<ThemeReadme />
 							<div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
 								{themes.map((t) => {
 									const warnings = contrastWarnings(t.colors).length;
