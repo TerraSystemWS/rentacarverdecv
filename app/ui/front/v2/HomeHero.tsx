@@ -1,35 +1,34 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { useLocale, useTranslations } from "next-intl";
-import { dateFnsLocale, PICKER_DATE_FORMAT } from "@/lib/i18n/dateLocale";
-import { localDateString, parseLocalDate } from "@/lib/utils/cvTime";
-import { useRentalLocations } from "@/lib/api/useRentalLocations";
-import { tr } from "@/lib/i18n/translate";
+import { useTranslations } from "next-intl";
+import type { Advertisement } from "@/lib/api/types";
 import CvPhoto from "./CvPhoto";
+import HeroBanner from "./HeroBanner";
+import HeroSearch from "./HeroSearch";
 
-// Herói da página inicial: foto de Santiago em ecrã inteiro com a pesquisa
-// por cima (substitui o slide do template e o bloco escuro de pesquisa).
-export default function HomeHero() {
+// Topo da página inicial.
+// - Com publicidades BANNER ativas: o banner em cima (imagem sempre inteira,
+//   sem texto por cima) e, por baixo, uma faixa com o título e a pesquisa.
+// - Sem publicidades: foto de Santiago em ecrã inteiro com o título e a
+//   pesquisa por cima (a foto é decorativa, não um anúncio).
+export default function HomeHero({ ads = [] }: { ads?: Advertisement[] }) {
 	const t = useTranslations("v2.hero");
-	const ts = useTranslations("search");
-	const locale = useLocale();
-	const router = useRouter();
-	const { locations, loading } = useRentalLocations();
-	const [pickupLocation, setPickupLocation] = useState("");
-	const [pickupDate, setPickupDate] = useState("");
-	const [returnDate, setReturnDate] = useState("");
 
-	function submit(e: React.FormEvent) {
-		e.preventDefault();
-		const params = new URLSearchParams();
-		if (pickupLocation) params.set("loc", pickupLocation);
-		if (pickupDate) params.set("date", pickupDate);
-		if (returnDate) params.set("end", returnDate);
-		router.push(`/cars${params.toString() ? `?${params}` : ""}`);
+	if (ads.length > 0) {
+		return (
+			<section className="v2-hero-ads" id="reservar">
+				<HeroBanner ads={ads} />
+				<div className="v2-herodock">
+					<div className="container">
+						<div className="v2-herodock__text">
+							<h1>{t("title")}</h1>
+							<p className="v2-herodock__lead">{t("lead")}</p>
+						</div>
+						<HeroSearch />
+					</div>
+				</div>
+			</section>
+		);
 	}
 
 	return (
@@ -39,48 +38,7 @@ export default function HomeHero() {
 				<div className="container">
 					<h1>{t("title")}</h1>
 					<p className="v2-hero__lead">{t("lead")}</p>
-					<form className="v2-search" onSubmit={submit} aria-label={t("searchLabel")}>
-						<div>
-							<label htmlFor="v2-pickup">{ts("pickupLocation")}</label>
-							<select id="v2-pickup" value={pickupLocation} onChange={(e) => setPickupLocation(e.target.value)} disabled={loading}>
-								<option value="">{loading ? ts("loadingLocations") : ts("chooseLocation")}</option>
-								{locations.map((l) => (
-									<option key={l.id} value={l.id}>{tr(l, "name", locale)}</option>
-								))}
-							</select>
-						</div>
-						<div>
-							<label htmlFor="v2-start">{ts("pickupDate")}</label>
-							<DatePicker
-								id="v2-start"
-								selected={parseLocalDate(pickupDate)}
-								onChange={(d: Date | null) => {
-									const v = d ? localDateString(d) : "";
-									setPickupDate(v);
-									if (returnDate && v && returnDate < v) setReturnDate("");
-								}}
-								dateFormat={PICKER_DATE_FORMAT}
-								locale={dateFnsLocale(locale)}
-								minDate={new Date()}
-								placeholderText={ts("datePlaceholder")}
-								autoComplete="off"
-							/>
-						</div>
-						<div>
-							<label htmlFor="v2-end">{ts("returnDate")}</label>
-							<DatePicker
-								id="v2-end"
-								selected={parseLocalDate(returnDate)}
-								onChange={(d: Date | null) => setReturnDate(d ? localDateString(d) : "")}
-								dateFormat={PICKER_DATE_FORMAT}
-								locale={dateFnsLocale(locale)}
-								minDate={parseLocalDate(pickupDate) ?? new Date()}
-								placeholderText={ts("datePlaceholder")}
-								autoComplete="off"
-							/>
-						</div>
-						<button type="submit" className="v2-search__submit">{t("submit")}</button>
-					</form>
+					<HeroSearch />
 				</div>
 			</div>
 		</section>

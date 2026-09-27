@@ -547,7 +547,11 @@
 			"lead": "Aluguer de carros na Praia, com levantamento na nossa agência ou no aeroporto Nelson Mandela.",
 			"photoAlt": "Paisagem da ilha de Santiago",
 			"searchLabel": "Procurar carros disponíveis",
-			"submit": "Ver carros disponíveis"
+			"submit": "Ver carros disponíveis",
+			"promosLabel": "Promoções",
+			"prev": "Promoção anterior",
+			"next": "Promoção seguinte",
+			"slide": "Promoção {n} de {total}"
 		},
 		"places": {
 			"title": "Para onde ir a partir da Praia",

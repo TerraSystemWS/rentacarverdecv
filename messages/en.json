@@ -547,7 +547,11 @@
 			"lead": "Car hire in Praia, with pick-up at our office or at Nelson Mandela airport.",
 			"photoAlt": "Landscape of Santiago island",
 			"searchLabel": "Search available cars",
-			"submit": "See available cars"
+			"submit": "See available cars",
+			"promosLabel": "Promotions",
+			"prev": "Previous promotion",
+			"next": "Next promotion",
+			"slide": "Promotion {n} of {total}"
 		},
 		"places": {
 			"title": "Where to go from Praia",

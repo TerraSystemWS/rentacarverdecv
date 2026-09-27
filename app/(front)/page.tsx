@@ -1,41 +1,27 @@
-"use client";
+import { SERVER_API_BASE_URL, endpoints } from "@/lib/api/endpoints";
+import type { Advertisement } from "@/lib/api/types";
+import HomePage from "../ui/front/v2/HomePage";
 
-import PopularVehicleBlock from "../ui/front/PopularVehicleBlock";
-import DriverBlock from "../ui/front/DriverBlock";
-import CompanyBrandBlock from "../ui/front/CompanyBrandBlock";
-import BlogArea from "../ui/front/BlogArea";
-import { useContent } from "../context/ContentContext";
-import HomeHero from "../ui/front/v2/HomeHero";
-import PromoStrip from "../ui/front/v2/PromoStrip";
-import Places from "../ui/front/v2/Places";
-import WhyUs from "../ui/front/v2/WhyUs";
-import FactsStrip from "../ui/front/v2/FactsStrip";
+// Banners das publicidades lidos no servidor: o topo da página já vem com o
+// layout certo (banner ou foto), sem saltar quando os anúncios chegam.
+async function bannerAds(): Promise<Advertisement[]> {
+	try {
+		const res = await fetch(`${SERVER_API_BASE_URL}${endpoints.ads.list("BANNER")}`, {
+			next: { revalidate: 60 },
+			signal: AbortSignal.timeout(2000),
+		});
+		if (!res.ok) return [];
+		const data = await res.json();
+		return Array.isArray(data) ? data : [];
+	} catch {
+		return [];
+	}
+}
 
-// Novo visual (newUI): foto de Santiago com a pesquisa no topo, promoções,
-// viaturas, destinos da ilha e porquê nós. Saem o slide do template, o bloco
-// escuro de pesquisa e a lista repetida de viaturas (os banners, os locais e
-// a lista de viaturas continuam a ser usados noutros blocos). Os números
-// (/public/stats + Conteúdo → home.funFacts) passam para a FactsStrip, logo
-// abaixo da pesquisa. O bloco da app (AppBlock) fica fora por agora.
+export default async function Home() {
+	return <HomePage bannerAds={await bannerAds()} />;
+}
 
-const Home = () => {
-	const { content } = useContent();
-	return (
-		<>
-			<HomeHero />
-			<FactsStrip content={content?.home.funFacts} />
-			<PromoStrip />
-			<PopularVehicleBlock />
-			<Places />
-			<WhyUs />
-			<DriverBlock />
-			<CompanyBrandBlock />
-			<BlogArea />
-		</>
-	);
-};
-
-export default Home;
 
 // import Script from "next/script";
 

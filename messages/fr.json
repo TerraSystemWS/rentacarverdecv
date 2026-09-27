@@ -547,7 +547,11 @@
 			"lead": "Location de voitures à Praia, avec prise en charge à notre agence ou à l'aéroport Nelson Mandela.",
 			"photoAlt": "Paysage de l'île de Santiago",
 			"searchLabel": "Rechercher des voitures disponibles",
-			"submit": "Voir les voitures"
+			"submit": "Voir les voitures",
+			"promosLabel": "Promotions",
+			"prev": "Promotion précédente",
+			"next": "Promotion suivante",
+			"slide": "Promotion {n} sur {total}"
 		},
 		"places": {
 			"title": "Où aller depuis Praia",

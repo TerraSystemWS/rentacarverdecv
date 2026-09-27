@@ -166,10 +166,46 @@
 .site-v2 .v2-search button.v2-search__submit:hover { background: var(--v2-green-dark); color: var(--v2-on-primary) !important; }
 .site-v2 .v2-search button.v2-search__submit:focus-visible { outline: 3px solid var(--v2-sun); outline-offset: 2px; }
 
-/* ---------- Promoções (campanhas BANNER do dashboard) ---------- */
-.site-v2 .v2-promos { padding: 64px 0 0; }
-.site-v2 .v2-promos .hb-banner { border-radius: var(--v2-radius-lg); overflow: hidden; background: var(--v2-overlay); }
-.site-v2 .v2-promos .hb-slide { height: clamp(220px, 34vw, 460px); }
+/* ---------- Topo com os banners das publicidades (HeroBanner) ----------
+ * Nada por cima das imagens: controlos e nome da promoção numa barra por
+ * baixo; título e pesquisa numa faixa na cor principal do tema. */
+.site-v2 .v2-herobanner__stage.hb-banner { background: var(--v2-overlay); }
+.site-v2 .v2-herobanner__slide { height: clamp(220px, 34vw, 480px); }
+.site-v2 .v2-herobanner__link { display: block; }
+.site-v2 .v2-herobanner__link:focus-visible { outline: 3px solid var(--v2-sun); outline-offset: -3px; }
+.site-v2 .v2-herobanner__bar { background: var(--v2-white); border-bottom: 1px solid var(--v2-line); }
+.site-v2 .v2-herobanner__barinner { display: flex; align-items: center; gap: 18px; min-height: 52px; padding-top: 8px; padding-bottom: 8px; }
+.site-v2 .v2-herobanner__controls { display: flex; align-items: center; gap: 8px; flex: none; }
+.site-v2 .v2-herobanner__arrow {
+  width: 34px !important; min-width: 0 !important; height: 34px !important; padding: 0 !important;
+  border-radius: 50% !important; border: 1px solid var(--v2-line);
+  background: var(--v2-white); color: var(--v2-secondary);
+  display: grid; place-items: center; cursor: pointer; transition: background 0.2s ease, color 0.2s ease;
+}
+.site-v2 .v2-herobanner__arrow:hover { background: var(--v2-secondary); color: var(--v2-on-secondary); }
+.site-v2 .v2-herobanner__dots { display: flex; align-items: center; gap: 6px; margin-left: 6px; }
+.site-v2 .v2-herobanner__dot {
+  width: 9px; min-width: 0 !important; height: 9px; padding: 0 !important; border: 0; border-radius: 999px;
+  background: var(--v2-line); cursor: pointer; transition: width 0.25s ease, background 0.25s ease;
+}
+.site-v2 .v2-herobanner__dot.is-active { width: 24px; background: var(--v2-secondary); }
+.site-v2 .v2-herobanner__arrow:focus-visible,
+.site-v2 .v2-herobanner__dot:focus-visible,
+.site-v2 .v2-herobanner__title:focus-visible { outline: 3px solid var(--v2-sun); outline-offset: 2px; }
+.site-v2 .v2-herobanner__title {
+  min-width: 0; margin-left: auto; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  font-family: var(--v2-display); font-size: 16px; font-weight: 700; color: var(--v2-heading);
+}
+.site-v2 a.v2-herobanner__title:hover { color: var(--v2-green-dark); text-decoration: none; }
+
+.site-v2 .v2-herodock { background: var(--v2-ocean); color: var(--v2-on-brand); padding: 28px 0 34px; }
+.site-v2 .v2-herodock__text { display: flex; align-items: baseline; gap: 10px 28px; flex-wrap: wrap; margin-bottom: 18px; }
+.site-v2 .v2-herodock h1 {
+  margin: 0; font-size: clamp(32px, 4.2vw, 54px); line-height: 1; font-weight: 800;
+  letter-spacing: -0.03em; color: var(--v2-on-brand);
+}
+.site-v2 .v2-herodock__lead { margin: 0; max-width: 52ch; font-size: 17px; line-height: 1.5; color: var(--v2-on-brand-muted); }
+.site-v2 .v2-herodock .v2-search { max-width: none; box-shadow: 0 14px 36px color-mix(in srgb, var(--v2-overlay) 22%, transparent); }
 
 /* ---------- Para onde ir (o elemento marcante) ---------- */
 .site-v2 .v2-places {
@@ -374,6 +410,9 @@
   .site-v2 .v2-facts__item { flex-direction: column; align-items: flex-start; gap: 10px; padding: 22px 14px; }
   .site-v2 .v2-facts__num { font-size: 32px; }
   .site-v2 .v2-hero__inner { padding: 96px 0 28px; }
+  .site-v2 .v2-herobanner__barinner { flex-wrap: wrap; gap: 8px 12px; }
+  .site-v2 .v2-herobanner__title { margin-left: 0; flex-basis: 100%; font-size: 15px; }
+  .site-v2 .v2-herodock { padding: 28px 0 30px; }
   .site-v2 .v2-search { grid-template-columns: 1fr; padding: 14px; }
   .site-v2 .v2-places { grid-template-columns: 1fr; grid-template-rows: none; grid-auto-rows: 240px; }
   .site-v2 .v2-place:first-child { grid-column: auto; }
