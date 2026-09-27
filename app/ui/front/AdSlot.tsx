@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useLocale } from "next-intl";
+import { tr } from "@/lib/i18n/translate";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
@@ -17,6 +19,7 @@ interface AdSlotProps {
 // "carrossel para múltiplas campanhas ativas no mesmo placement").
 const AdSlot: React.FC<AdSlotProps> = ({ placement, className }) => {
 	const [ads, setAds] = useState<Advertisement[]>([]);
+	const locale = useLocale();
 
 	useEffect(() => {
 		let cancelled = false;
@@ -58,7 +61,7 @@ const AdSlot: React.FC<AdSlotProps> = ({ placement, className }) => {
 							target={ad.linkUrl?.startsWith("http") ? "_blank" : undefined}
 							rel={ad.linkUrl?.startsWith("http") ? "noopener noreferrer" : undefined}
 						>
-							<img src={getImageSrc(ad.imageUrl)} alt={ad.title} style={{ width: "100%", height: "auto", display: "block" }} />
+							<img src={getImageSrc(ad.imageUrl)} alt={tr(ad, "title", locale)} style={{ width: "100%", height: "auto", display: "block" }} />
 						</a>
 					</SwiperSlide>
 				))}

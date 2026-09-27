@@ -1,13 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import type { RentalLocation } from "@/lib/api/types";
+import type { RentalLocation, Translations } from "@/lib/api/types";
+import TranslationFields from "@/app/ui/dash/TranslationFields";
 
 export type LocationFormData = {
     name: string;
     address: string;
     sortOrder: number;
     active: boolean;
+    translations?: Translations; // ausente = o backend mantém as atuais
 };
 
 interface LocationFormProps {
@@ -27,6 +29,7 @@ export default function LocationForm({ initialData, nextSortOrder, onSubmit, onC
         address: initialData?.address ?? "",
         sortOrder: initialData?.sortOrder ?? nextSortOrder,
         active: initialData?.active ?? true,
+        translations: initialData?.translations ?? {},
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -88,6 +91,15 @@ export default function LocationForm({ initialData, nextSortOrder, onSubmit, onC
                     <label htmlFor="loc-active" className="text-sm font-medium text-gray-700">Ativo (aparece no site)</label>
                 </div>
             </div>
+
+            <TranslationFields
+                value={form.translations}
+                onChange={(translations) => setForm({ ...form, translations })}
+                fields={[
+                    { key: "name", label: "Nome do local", source: form.name },
+                    { key: "address", label: "Morada / indicações", source: form.address },
+                ]}
+            />
 
             <div className="flex items-center justify-end gap-3 pt-4 border-t">
                 <button

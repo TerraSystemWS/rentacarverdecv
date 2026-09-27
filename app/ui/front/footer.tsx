@@ -5,18 +5,21 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
 import { authFetch } from "@/app/auth/api";
-import { CompanyProfile } from "@/lib/api/types";
+import { CompanyProfile, Translations } from "@/lib/api/types";
 import PaymentBrands from "@/app/ui/front/payment/PaymentBrands";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { tr, trList } from "@/lib/i18n/translate";
 
 interface GalleryItem {
 	id: number;
 	imageUrl: string;
 	title: string;
+	translations?: Translations;
 }
 
 const Footer = () => {
 	const t = useTranslations("footer");
+	const locale = useLocale();
 	const [gallery, setGallery] = useState<GalleryItem[]>([]);
 	const [newsletterEmail, setNewsletterEmail] = useState("");
 	const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
@@ -190,7 +193,7 @@ const Footer = () => {
 														<div className="relative w-full h-[70px]">
 															<img
 																src={`${API_BASE_URL}${item.imageUrl}`}
-																alt={item.title}
+																alt={tr(item, "title", locale)}
 																className="object-cover w-full h-full"
 																style={{ width: '85px', height: '85px', objectFit: 'cover' }}
 															/>

@@ -7,7 +7,8 @@ import CommentForm from "@/app/ui/front/blog/postItem/commentForm";
 import { endpoints, API_BASE_URL, SERVER_API_BASE_URL } from "@/lib/api/endpoints";
 import { Post } from "@/lib/api/types";
 import { notFound } from "next/navigation";
-import { getFormatter, getTranslations } from "next-intl/server";
+import { getFormatter, getLocale, getTranslations } from "next-intl/server";
+import { tr } from "@/lib/i18n/translate";
 
 type BlogSinglePageProps = {
 	params: Promise<{
@@ -19,6 +20,7 @@ const BlogSinglePage = async ({ params }: BlogSinglePageProps) => {
 	const { slug } = await params;
 	const t = await getTranslations("posts");
 	const format = await getFormatter();
+	const locale = await getLocale();
 
 	if (!slug) {
 		return notFound();
@@ -55,8 +57,8 @@ const BlogSinglePage = async ({ params }: BlogSinglePageProps) => {
 	return (
 		<main>
 			<PageHeader
-				titulo={post.title}
-				descricao={post.summary || t("readMore")}
+				titulo={tr(post, "title", locale)}
+				descricao={tr(post, "summary", locale) || t("readMore")}
 			/>
 
 			<div className="blog-single-block bg-gray-color pd-btm-60">
@@ -65,13 +67,13 @@ const BlogSinglePage = async ({ params }: BlogSinglePageProps) => {
 						{/* Blog single Content */}
 						<div className="col-md-8">
 							<SingleMainContent
-								title={post.title}
+								title={tr(post, "title", locale)}
 								author={{ name: post.author || t("defaultAuthor"), role: t("authorRole"), avatarUrl: "/assets/images/default-avatar.png" }}
 								coverImageUrl={post.imageUrl?.startsWith('/uploads') ? `${API_BASE_URL}${post.imageUrl}` : (post.imageUrl || "/assets/images/blog/blog-1.jpg")}
 								date={post.createdAt ? format.dateTime(new Date(post.createdAt), { dateStyle: "long" }) : ""}
 								categories={[]}
 								tags={[]}
-								contentHtml={textToHtml(post.content)}
+								contentHtml={textToHtml(tr(post, "content", locale))}
 								gallery={[]}
 								navigation={{
 									prevUrl: prevPost ? `/posts/${prevPost.slug}` : undefined,

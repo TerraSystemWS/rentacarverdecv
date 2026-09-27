@@ -5,15 +5,17 @@ import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
 import { Driver } from "@/lib/api/types";
 import "swiper/css";
 import "swiper/css/navigation";
+import { tr, trList } from "@/lib/i18n/translate";
 
 const DriverBlock: React.FC = () => {
 	const t = useTranslations("drivers");
 	const tv = useTranslations("vehicle");
+	const locale = useLocale();
 	const [drivers, setDrivers] = useState<Driver[]>([]);
 	const [loading, setLoading] = useState(true);
 
@@ -115,7 +117,7 @@ const DriverBlock: React.FC = () => {
 										{driver.name}
 									</h3>
 									<h4 className="driver-desc text-gray-700 mt-2">
-										{driver.description}
+										{tr(driver, "description", locale)}
 									</h4>
 								</div>
 							</div>

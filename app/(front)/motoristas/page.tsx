@@ -1,7 +1,8 @@
 import PageHeader from "@/app/ui/front/PageHeader";
 import { Driver } from "@/lib/api/types";
 import { endpoints, API_BASE_URL, SERVER_API_BASE_URL } from "@/lib/api/endpoints";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
+import { tr } from "@/lib/i18n/translate";
 
 async function getDrivers(): Promise<Driver[]> {
 	try {
@@ -22,6 +23,7 @@ function getImageSrc(url?: string | null) {
 export default async function MotoristasPage() {
 	const drivers = await getDrivers();
 	const t = await getTranslations("driversPage");
+	const locale = await getLocale();
 
 	return (
 		<>
@@ -47,7 +49,7 @@ export default async function MotoristasPage() {
 										</div>
 										<div className="vehicle-bottom-content p-4 text-center flex-grow">
 											<h3 className="driver-name vehicle-title text-xl font-semibold">{driver.name}</h3>
-											<h4 className="driver-desc text-gray-700 mt-2">{driver.description}</h4>
+											<h4 className="driver-desc text-gray-700 mt-2">{tr(driver, "description", locale)}</h4>
 										</div>
 									</div>
 								</div>

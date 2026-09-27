@@ -50,8 +50,13 @@ export type DashboardSummary = {
 	revenueByStatus: Record<string, number>;
 };
 
+// Traduções EN/FR do texto mostrado no site: {"en": {campo: texto}, "fr": {...}}.
+// O PT está nos campos normais (ver lib/i18n/translate.ts).
+export type Translations = Partial<Record<"en" | "fr", Record<string, string>>>;
+
 // Local de levantamento/devolução (Operações → Locais no dashboard).
 export type RentalLocation = {
+	translations?: Translations;
 	id: number;
 	name: string;
 	address: string | null;
@@ -177,6 +182,7 @@ export type VehicleImage = {
 };
 
 export type Vehicle = {
+	translations?: Translations;
 	id?: number;
 	slug?: string;
 	make: string;
@@ -210,6 +216,7 @@ export type Partner = {
 };
 
 export type Post = {
+	translations?: Translations;
 	id?: number;
 	title: string;
 	slug: string;
@@ -226,6 +233,7 @@ export type Post = {
 };
 
 export type GalleryItem = {
+	translations?: Translations;
 	id?: number;
 	title?: string;
 	imageUrl: string;
@@ -235,6 +243,7 @@ export type GalleryItem = {
 };
 
 export type Advertisement = {
+	translations?: Translations;
 	id?: number;
 	title: string;
 	imageUrl: string;
@@ -253,6 +262,7 @@ export type Advertisement = {
 };
 
 export type Driver = {
+	translations?: Translations;
 	id?: number;
 	name: string;
 	description: string;

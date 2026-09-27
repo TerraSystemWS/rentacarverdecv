@@ -4,7 +4,8 @@ import React, { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { Advertisement } from "@/lib/api/types";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { tr, trList } from "@/lib/i18n/translate";
 
 const SESSION_KEY = "racv_popup_ad_dismissed";
 
@@ -13,6 +14,7 @@ const SESSION_KEY = "racv_popup_ad_dismissed";
 // carregamento inicial da página.
 const AdPopup: React.FC = () => {
 	const t = useTranslations("ads");
+	const locale = useLocale();
 	const [ad, setAd] = useState<Advertisement | null>(null);
 	const [visible, setVisible] = useState(false);
 
@@ -74,7 +76,7 @@ const AdPopup: React.FC = () => {
 				</button>
 				<a href={ad.linkUrl || "#"} onClick={handleClick}>
 					{/* eslint-disable-next-line @next/next/no-img-element */}
-					<img src={imageSrc} alt={ad.title} style={{ maxWidth: "90vw", maxHeight: "85vh", borderRadius: 8, display: "block" }} />
+					<img src={imageSrc} alt={tr(ad, "title", locale)} style={{ maxWidth: "90vw", maxHeight: "85vh", borderRadius: 8, display: "block" }} />
 				</a>
 			</div>
 		</div>

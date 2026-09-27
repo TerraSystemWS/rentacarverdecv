@@ -5,6 +5,7 @@ import { Advertisement, MediaAsset } from "@/lib/api/types";
 import { Upload, AlertTriangle, Images } from "lucide-react";
 import { API_BASE_URL } from "@/lib/api/endpoints";
 import MediaPicker from "@/app/dashboard/_components/MediaPicker";
+import TranslationFields from "@/app/ui/dash/TranslationFields";
 
 // Proporção recomendada por posicionamento — usada para avisar (não
 // bloquear) quando a imagem carregada não bate certo, em vez de deixar o
@@ -37,6 +38,7 @@ export default function AdForm({
         placement: initialData?.placement || "BANNER",
         active: initialData?.active ?? true,
         priority: initialData?.priority || 0,
+        translations: initialData?.translations || {},
     });
 
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -226,6 +228,12 @@ export default function AdForm({
                     </div>
                 </div>
             </div>
+
+            <TranslationFields
+                value={formData.translations}
+                onChange={(translations) => setFormData((prev) => ({ ...prev, translations }))}
+                fields={[{ key: "title", label: "Título", source: formData.title }]}
+            />
 
             <div className="flex justify-end gap-3 pt-6 border-t border-gray-100">
                 <button type="button" onClick={onCancel} disabled={isSubmitting} className="rounded-lg px-5 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors">Cancelar</button>

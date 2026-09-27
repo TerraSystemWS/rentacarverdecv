@@ -5,6 +5,7 @@ import { Driver, MediaAsset } from "@/lib/api/types";
 import { Images } from "lucide-react";
 import { API_BASE_URL } from "@/lib/api/endpoints";
 import MediaPicker from "@/app/dashboard/_components/MediaPicker";
+import TranslationFields from "@/app/ui/dash/TranslationFields";
 
 interface DriverFormProps {
     initialData?: Partial<Driver>;
@@ -24,6 +25,7 @@ export default function DriverForm({
         name: initialData?.name || "",
         imageUrl: initialData?.imageUrl || "",
         description: initialData?.description || "",
+        translations: initialData?.translations || {},
     });
 
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -136,6 +138,12 @@ export default function DriverForm({
                     </div>
                 </div>
             </div>
+
+            <TranslationFields
+                value={formData.translations}
+                onChange={(translations) => setFormData((prev) => ({ ...prev, translations }))}
+                fields={[{ key: "description", label: "Descrição", type: "textarea", source: formData.description }]}
+            />
 
             <div className="flex justify-end gap-3 pt-6 border-t border-gray-100">
                 <button type="button" onClick={onCancel} disabled={isSubmitting} className="rounded-lg px-5 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors">Cancelar</button>

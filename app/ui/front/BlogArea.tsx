@@ -11,12 +11,14 @@ import { useState, useEffect } from "react";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
 import { Post as BlogPost } from "@/lib/api/types";
 import Link from "next/link";
-import { useFormatter, useTranslations } from "next-intl";
+import { useFormatter, useLocale, useTranslations } from "next-intl";
+import { tr, trList } from "@/lib/i18n/translate";
 
 export default function BlogArea() {
 	const t = useTranslations("blogArea");
 	const tv = useTranslations("vehicle");
 	const format = useFormatter();
+	const locale = useLocale();
 	const [posts, setPosts] = useState<BlogPost[]>([]);
 
 	useEffect(() => {
@@ -94,7 +96,7 @@ export default function BlogArea() {
 										<Link href={`/posts/${post.slug}`}>
 											<img
 												src={getImageSrc(post.imageUrl)}
-												alt={post.title}
+												alt={tr(post, "title", locale)}
 												className="w-full h-48 object-cover"
 											/>
 										</Link>
@@ -110,7 +112,7 @@ export default function BlogArea() {
 										</div>
 										<h2 className="entry-title text-lg font-semibold mb-2">
 											<Link href={`/posts/${post.slug}`} className="hover:text-red-500">
-												{post.title}
+												{tr(post, "title", locale)}
 											</Link>
 										</h2>
 										<div className="flex gap-4 text-gray-500 text-sm">

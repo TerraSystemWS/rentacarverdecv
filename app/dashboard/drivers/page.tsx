@@ -11,6 +11,7 @@ import DriverForm from "./_components/driver-form";
 import { useAuth } from "@/app/auth/AuthContext";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
 import { Driver } from "@/lib/api/types";
+import TranslationFields from "@/app/ui/dash/TranslationFields";
 
 export default function DriversPage() {
     const { authFetch } = useAuth();
@@ -115,6 +116,7 @@ export default function DriversPage() {
             const formData = new FormData();
             formData.append("name", data.name);
             formData.append("description", data.description);
+            formData.append("translations", JSON.stringify(data.translations ?? {}));
 
             if (image) {
                 formData.append("image", image);

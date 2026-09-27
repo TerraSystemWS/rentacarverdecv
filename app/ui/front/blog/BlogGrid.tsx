@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { useFormatter, useTranslations } from "next-intl";
+import { useFormatter, useLocale, useTranslations } from "next-intl";
 
 export type AuthorInfo =
 	| string
@@ -26,6 +26,7 @@ export type AuthorInfo =
 
 import { Post } from "@/lib/api/types";
 import { API_BASE_URL } from "@/lib/api/endpoints";
+import { tr, trList } from "@/lib/i18n/translate";
 
 interface BlogPostProps {
 	post: Post;
@@ -34,6 +35,7 @@ interface BlogPostProps {
 const BlogPost: React.FC<BlogPostProps> = ({ post }) => {
 	const t = useTranslations("posts");
 	const format = useFormatter();
+	const locale = useLocale();
 	const postHref = `/posts/${post.slug}`;
 	const formattedDate = post.createdAt ? format.dateTime(new Date(post.createdAt), { day: "2-digit", month: "short" }) : "";
 
@@ -50,7 +52,7 @@ const BlogPost: React.FC<BlogPostProps> = ({ post }) => {
 		<article className="post">
 			<figure className="post-thumb">
 				<Link href={postHref}>
-					<img src={getImageSrc(post.imageUrl)} alt={post.title} />
+					<img src={getImageSrc(post.imageUrl)} alt={tr(post, "title", locale)} />
 				</Link>
 			</figure>
 
@@ -64,7 +66,7 @@ const BlogPost: React.FC<BlogPostProps> = ({ post }) => {
 				</div>
 
 				<h2 className="entry-title">
-					<Link href={postHref}>{post.title}</Link>
+					<Link href={postHref}>{tr(post, "title", locale)}</Link>
 				</h2>
 
 				<div className="entry-footer">

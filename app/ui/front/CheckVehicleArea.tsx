@@ -10,6 +10,7 @@ import { dateFnsLocale, PICKER_DATE_FORMAT } from "@/lib/i18n/dateLocale";
 import { useVehicleTerms } from "@/lib/i18n/useVehicleTerms";
 import { localDateString, parseLocalDate } from "@/lib/utils/cvTime";
 import { useRentalLocations } from "@/lib/api/useRentalLocations";
+import { tr, trList } from "@/lib/i18n/translate";
 
 interface FormData {
 	localRetirada: string;
@@ -118,7 +119,7 @@ const CheckVehicleArea = () => {
 											>
 												<option value="">{locationsLoading ? t("loadingLocations") : t("chooseLocation")}</option>
 												{locations.map((l) => (
-													<option key={l.id} value={l.id}>{l.name}</option>
+													<option key={l.id} value={l.id}>{tr(l, "name", locale)}</option>
 												))}
 											</select>
 										</div>
@@ -171,7 +172,7 @@ const CheckVehicleArea = () => {
 											>
 												<option value="">{locationsLoading ? t("loadingLocations") : t("sameAsPickup")}</option>
 												{locations.map((l) => (
-													<option key={l.id} value={l.id}>{l.name}</option>
+													<option key={l.id} value={l.id}>{tr(l, "name", locale)}</option>
 												))}
 											</select>
 										</div>

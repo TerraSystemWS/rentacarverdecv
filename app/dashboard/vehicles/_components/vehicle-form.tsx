@@ -23,6 +23,7 @@ const DEFAULT_EXTERNAL_FEATURES = [
 ];
 
 import { API_BASE_URL } from "@/lib/api/endpoints";
+import TranslationFields from "@/app/ui/dash/TranslationFields";
 
 export default function VehicleForm({
     initialData,
@@ -51,6 +52,7 @@ export default function VehicleForm({
         deposit: initialData?.deposit || 110,
         internalFeatures: initialData?.internalFeatures || [],
         externalFeatures: initialData?.externalFeatures || [],
+        translations: initialData?.translations || {},
     });
 
     const [selectedImages, setSelectedImages] = useState<File[]>([]);
@@ -336,6 +338,15 @@ export default function VehicleForm({
                     />
                 </div>
             </div>
+
+            <TranslationFields
+                value={formData.translations}
+                onChange={(translations) => setFormData((prev) => ({ ...prev, translations }))}
+                fields={[
+                    { key: "internalFeatures", label: "Equipamento interior", type: "lines", source: (formData.internalFeatures ?? []).join("\n") },
+                    { key: "externalFeatures", label: "Equipamento exterior", type: "lines", source: (formData.externalFeatures ?? []).join("\n") },
+                ]}
+            />
 
             <div className="flex justify-end gap-3 pt-6 border-t border-gray-100 sticky bottom-0 bg-white pb-2">
                 <button type="button" onClick={onCancel} disabled={isSubmitting} className="rounded-lg px-5 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors">Cancelar</button>

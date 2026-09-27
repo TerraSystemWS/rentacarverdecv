@@ -29,6 +29,7 @@ import { useAuth } from "@/app/auth/AuthContext";
 import { API_BASE_URL } from "@/lib/api/endpoints";
 import { cvToIso, localDateString, parseLocalDate } from "@/lib/utils/cvTime";
 import { useRentalLocations } from "@/lib/api/useRentalLocations";
+import { tr, trList } from "@/lib/i18n/translate";
 
 interface VehicleSingleProps {
 	vehicle: Vehicle;
@@ -239,10 +240,10 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 										<div className="col-md-6">
 											<h3 className="features-title">{t("internalFeatures")}</h3>
 											<ul className="features-list">
-												{vehicle.internalFeatures?.map((feature, idx) => (
+												{trList(vehicle, "internalFeatures", locale).map((feature, idx) => (
 													<li key={idx}>{feature}</li>
 												))}
-												{(!vehicle.internalFeatures || vehicle.internalFeatures.length === 0) && (
+												{trList(vehicle, "internalFeatures", locale).length === 0 && (
 													<li className="text-muted-foreground opacity-50 italic">{t("none")}</li>
 												)}
 											</ul>
@@ -250,10 +251,10 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 										<div className="col-md-6">
 											<h3 className="features-title">{t("externalFeatures")}</h3>
 											<ul className="features-list">
-												{vehicle.externalFeatures?.map((feature, idx) => (
+												{trList(vehicle, "externalFeatures", locale).map((feature, idx) => (
 													<li key={idx}>{feature}</li>
 												))}
-												{(!vehicle.externalFeatures || vehicle.externalFeatures.length === 0) && (
+												{trList(vehicle, "externalFeatures", locale).length === 0 && (
 													<li className="text-muted-foreground opacity-50 italic">{t("none")}</li>
 												)}
 											</ul>
@@ -302,7 +303,7 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 													>
 														<option value="">{locationsLoading ? tSearch("loadingLocations") : tSearch("chooseLocation")}</option>
 														{locations.map((l) => (
-															<option key={l.id} value={l.id}>{l.name}</option>
+															<option key={l.id} value={l.id}>{tr(l, "name", locale)}</option>
 														))}
 													</select>
 												</div>
@@ -320,7 +321,7 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 													>
 														<option value="">{locationsLoading ? tSearch("loadingLocations") : tSearch("chooseLocation")}</option>
 														{locations.map((l) => (
-															<option key={l.id} value={l.id}>{l.name}</option>
+															<option key={l.id} value={l.id}>{tr(l, "name", locale)}</option>
 														))}
 													</select>
 												</div>

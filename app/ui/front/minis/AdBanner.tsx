@@ -7,7 +7,8 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Advertisement } from "@/lib/api/types";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { tr, trList } from "@/lib/i18n/translate";
 
 // Banner da página principal com as campanhas BANNER criadas no dashboard.
 // Substitui o Revolution Slider do template para estes banners porque:
@@ -21,6 +22,7 @@ import { useTranslations } from "next-intl";
 // @layer — o CSS legado do template mexe em img/a).
 export default function AdBanner({ ads }: { ads: Advertisement[] }) {
 	const t = useTranslations("ads");
+	const locale = useLocale();
 	const src = (url: string) => (url?.startsWith("/uploads") ? `${API_BASE_URL}${url}` : url);
 
 	function registerClick(id?: number) {
@@ -43,7 +45,7 @@ export default function AdBanner({ ads }: { ads: Advertisement[] }) {
 				{ads.map((ad) => {
 					const image = src(ad.imageUrl);
 					const external = ad.linkUrl?.startsWith("http");
-					const title = (ad.title || "").replace(/\s*\n\s*/g, " ").trim();
+					const title = tr(ad, "title", locale).replace(/\s*\n\s*/g, " ").trim();
 					return (
 						<SwiperSlide key={ad.id}>
 							<div className="hb-slide">

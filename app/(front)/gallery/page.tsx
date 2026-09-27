@@ -4,10 +4,12 @@ import { useEffect, useState } from "react";
 import PageHeader from "@/app/ui/front/PageHeader";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
 import { GalleryItem } from "@/lib/api/types";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { tr, trList } from "@/lib/i18n/translate";
 
 export default function GalleryPage() {
     const t = useTranslations("gallery");
+    const locale = useLocale();
     const [items, setItems] = useState<GalleryItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeCategory, setActiveCategory] = useState("Tudo");
@@ -94,7 +96,7 @@ export default function GalleryPage() {
                                     >
                                         <img
                                             src={`${API_BASE_URL}${item.imageUrl}`}
-                                            alt={item.title || t("imageAlt")}
+                                            alt={tr(item, "title", locale) || t("imageAlt")}
                                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-end p-6">
@@ -102,11 +104,11 @@ export default function GalleryPage() {
                                                 {item.category ? catLabel(item.category) : ""}
                                             </span>
                                             <h4 className="text-white font-bold text-lg leading-tight">
-                                                {item.title}
+                                                {tr(item, "title", locale)}
                                             </h4>
                                             {item.description && (
                                                 <p className="text-gray-300 text-xs line-clamp-2 mt-2">
-                                                    {item.description}
+                                                    {tr(item, "description", locale)}
                                                 </p>
                                             )}
                                         </div>
