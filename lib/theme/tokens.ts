@@ -23,7 +23,7 @@ export type ThemeToken = {
 	cssVar: string;
 	label: string;
 	hint: string;
-	group: "Ações" | "Cor principal" | "Rodapé" | "Texto" | "Fundos" | "Destaque e fotos";
+	group: "Ações" | "Botões secundários" | "Cor principal" | "Rodapé" | "Texto" | "Fundos" | "Destaque e fotos";
 	/** Valor no tema Atlântico (o padrão, igual ao v2.css). */
 	default: string;
 };
@@ -33,7 +33,10 @@ export const THEME_TOKENS: ThemeToken[] = [
 	{ key: "primaryDark", cssVar: "--v2-green-dark", group: "Ações", label: "Botões (rato por cima)", hint: "Botões ao passar o rato e ligações", default: "#2a8b46" },
 	{ key: "onPrimary", cssVar: "--v2-on-primary", group: "Ações", label: "Texto dos botões", hint: "Texto sobre a cor dos botões", default: "#ffffff" },
 
-	{ key: "brand", cssVar: "--v2-ocean", group: "Cor principal", label: "Cor principal", hint: "Barra do topo, cabeçalho das páginas, botões secundários", default: "#0b4f6c" },
+	{ key: "secondary", cssVar: "--v2-secondary", group: "Botões secundários", label: "Botões secundários", hint: "\"Ver todas\", Filtrar/Limpar, paginação, separador ativo do perfil", default: "#0b4f6c" },
+	{ key: "onSecondary", cssVar: "--v2-on-secondary", group: "Botões secundários", label: "Texto dos botões secundários", hint: "", default: "#ffffff" },
+
+	{ key: "brand", cssVar: "--v2-ocean", group: "Cor principal", label: "Cor principal", hint: "Barra do topo e cabeçalho das páginas", default: "#0b4f6c" },
 	{ key: "brandLight", cssVar: "--v2-ocean-light", group: "Cor principal", label: "Cor principal clara", hint: "Início do degradê do cabeçalho das páginas", default: "#1d7390" },
 	{ key: "onBrand", cssVar: "--v2-on-brand", group: "Cor principal", label: "Texto sobre a cor principal", hint: "Títulos do cabeçalho das páginas e ícones do topo", default: "#ffffff" },
 	{ key: "onBrandMuted", cssVar: "--v2-on-brand-muted", group: "Cor principal", label: "Texto secundário sobre a cor principal", hint: "Telefone/email do topo e descrição das páginas", default: "#d7ebf0" },
@@ -53,6 +56,7 @@ export const THEME_TOKENS: ThemeToken[] = [
 
 	{ key: "accent", cssVar: "--v2-sun", group: "Destaque e fotos", label: "Destaque", hint: "Tempos de carro, marcadores do rodapé, foco do teclado", default: "#f2b233" },
 	{ key: "onAccent", cssVar: "--v2-on-accent", group: "Destaque e fotos", label: "Texto sobre o destaque", hint: "", default: "#3a2a00" },
+	{ key: "glow", cssVar: "--v2-glow", group: "Destaque e fotos", label: "Brilho do cabeçalho", hint: "Luz suave no canto do cabeçalho das páginas; igual à cor principal para não ter brilho", default: "#f2b233" },
 	{ key: "overlay", cssVar: "--v2-overlay", group: "Destaque e fotos", label: "Sombra sobre as fotos", hint: "Escura: o texto sobre as fotos é sempre branco", default: "#083a50" },
 ];
 
@@ -97,6 +101,7 @@ export function contrastRatio(a: string, b: string): number {
 export const CONTRAST_PAIRS: { text: string; bg: string; label: string; min: number }[] = [
 	// Texto dos botões é grande e em negrito; o verde do logo com branco dá 2,97:1.
 	{ text: "onPrimary", bg: "primary", label: "Texto dos botões sobre os botões", min: 2.9 },
+	{ text: "onSecondary", bg: "secondary", label: "Texto dos botões secundários", min: 4.5 },
 	{ text: "onBrand", bg: "brand", label: "Texto sobre a cor principal", min: 4.5 },
 	{ text: "onBrandMuted", bg: "brand", label: "Texto secundário sobre a cor principal", min: 3 },
 	{ text: "onFooter", bg: "footer", label: "Títulos do rodapé", min: 4.5 },
