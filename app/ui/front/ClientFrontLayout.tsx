@@ -6,6 +6,7 @@ import Header from "./minis/Header";
 import Footer from "./footer";
 import AdPopup from "./AdPopup";
 import { useTranslations } from "next-intl";
+import "./v2/v2.css";
 
 export default function ClientFrontLayout({
     children,
@@ -39,12 +40,13 @@ export default function ClientFrontLayout({
     // desmontar e montar a página de novo: perdia-se o que o utilizador já
     // tinha feito (ex: formulário preenchido, "subscrição cancelada") e os
     // pedidos iniciais de cada página eram feitos duas vezes.
+    // .site-v2: novo visual do site público (branch newUI) — ver v2/v2.css.
     return (
-        <>
+        <div className="site-v2">
             {!loading && <Header />}
             <main>{children}</main>
             {!loading && <Footer />}
             {!loading && <AdPopup />}
-        </>
+        </div>
     );
 }

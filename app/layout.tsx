@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Exo, Roboto_Slab } from "next/font/google";
+import { Exo, Roboto_Slab, Bricolage_Grotesque, Figtree } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
 import Providers from "./providers";
@@ -13,6 +13,17 @@ const exo = Exo({
 	variable: "--font-exo",
 });
 
+// Letras do novo visual do site público (newUI): títulos e texto.
+const bricolage = Bricolage_Grotesque({
+	subsets: ["latin"],
+	display: "swap",
+	variable: "--font-display",
+});
+const figtree = Figtree({
+	subsets: ["latin"],
+	display: "swap",
+	variable: "--font-text",
+});
 const robotoSlab = Roboto_Slab({
 	subsets: ["latin"],
 	display: "swap",
@@ -62,7 +73,7 @@ export default async function RootLayout({
 			<head>
 				<GoogleAnalytics />
 			</head>
-			<body className={`antialiased ${exo.variable} ${robotoSlab.variable}`}>
+			<body className={`antialiased ${exo.variable} ${robotoSlab.variable} ${bricolage.variable} ${figtree.variable}`}>
 				<NextIntlClientProvider>
 					<Providers>{children}</Providers>
 				</NextIntlClientProvider>

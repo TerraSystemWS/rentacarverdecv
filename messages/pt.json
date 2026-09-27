@@ -534,5 +534,56 @@
 	},
 	"home": {
 		"dividerAlt": "Carro na estrada"
+	},
+	"v2": {
+		"photoPending": "Foto do cliente: {name}",
+		"promos": "Promoções",
+		"hero": {
+			"title": "Santiago ao seu ritmo",
+			"lead": "Aluguer de carros na Praia, com levantamento na nossa agência ou no aeroporto Nelson Mandela.",
+			"photoAlt": "Paisagem da ilha de Santiago",
+			"searchLabel": "Procurar carros disponíveis",
+			"submit": "Ver carros disponíveis"
+		},
+		"places": {
+			"title": "Para onde ir a partir da Praia",
+			"lead": "Alguns destinos de Santiago a menos de duas horas de carro da nossa agência.",
+			"note": "Tempos de carro aproximados a partir da agência, na Cidadela (Praia).",
+			"tarrafal": {
+				"name": "Tarrafal",
+				"time": "cerca de 1h30",
+				"text": "Praia de areia clara e água calma no norte da ilha."
+			},
+			"cidadeVelha": {
+				"name": "Cidade Velha",
+				"time": "cerca de 20 min",
+				"text": "A primeira cidade colonial dos trópicos, Património Mundial da UNESCO."
+			},
+			"serraMalagueta": {
+				"name": "Serra Malagueta",
+				"time": "cerca de 1h",
+				"text": "Parque natural com trilhos de montanha e vistas sobre o interior."
+			},
+			"assomada": {
+				"name": "Assomada",
+				"time": "cerca de 45 min",
+				"text": "Mercado animado no coração de Santa Catarina."
+			}
+		},
+		"why": {
+			"title": "Porquê a Rent a Car Verde",
+			"airport": {
+				"title": "No aeroporto ou na agência",
+				"text": "Levante e devolva o carro no aeroporto Nelson Mandela ou na nossa agência, na Praia."
+			},
+			"payment": {
+				"title": "Pagamento online seguro",
+				"text": "Pague a reserva com cartão vinti4, Visa, Mastercard ou American Express."
+			},
+			"electric": {
+				"title": "Carros elétricos",
+				"text": "Parte da frota é elétrica: menos ruído e zero emissões nas estradas da ilha."
+			}
+		}
 	}
 }

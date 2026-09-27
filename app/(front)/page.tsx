@@ -1,47 +1,28 @@
 "use client";
 
-import MainSlider from "../ui/front/minis/mainSlider";
-import CheckVehicleArea from "../ui/front/CheckVehicleArea";
 import PopularVehicleBlock from "../ui/front/PopularVehicleBlock";
-import RegularVehicleBlock from "../ui/front/RegularVehicleBlock";
-import FunFactsBlock from "../ui/front/FunFactsBlock";
 import DriverBlock from "../ui/front/DriverBlock";
-import AppBlock from "../ui/front/AppBlock";
 import CompanyBrandBlock from "../ui/front/CompanyBrandBlock";
 import BlogArea from "../ui/front/BlogArea";
-import { useContent } from "../context/ContentContext";
-import { useTranslations } from "next-intl";
+import HomeHero from "../ui/front/v2/HomeHero";
+import PromoStrip from "../ui/front/v2/PromoStrip";
+import Places from "../ui/front/v2/Places";
+import WhyUs from "../ui/front/v2/WhyUs";
+
+// Novo visual (newUI): foto de Santiago com a pesquisa no topo, promoções,
+// viaturas, destinos da ilha e porquê nós. Saem o slide do template, o bloco
+// escuro de pesquisa, a faixa escura dos números, a lista repetida de
+// viaturas e o bloco da app (a app não existe).
 
 const Home = () => {
-	const { content } = useContent();
-	const t = useTranslations("home");
-
 	return (
 		<>
-			<MainSlider />
-			{/* Divider */}
-			<div className="vehicle-section-divider night-rider">
-				<div className="contoiner-fluid">
-					<div className="row">
-						<div className="col-md-12">
-							<div className="section-divider-content">
-								<div className="vehicle-border">
-									<img src="/assets/images/block-car01.png" alt={t("dividerAlt")} />
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			{/* fim do divider */}
-			<CheckVehicleArea />
-			{/* <!-- /.vehicle-multi-border --> */}
-			<div className="vehicle-multi-border yellow-black"></div>
+			<HomeHero />
+			<PromoStrip />
 			<PopularVehicleBlock />
-			<RegularVehicleBlock />
-			<FunFactsBlock content={content?.home.funFacts} />
+			<Places />
+			<WhyUs />
 			<DriverBlock />
-			<AppBlock content={content?.home.app} />
 			<CompanyBrandBlock />
 			<BlogArea />
 		</>

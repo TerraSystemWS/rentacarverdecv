@@ -534,5 +534,56 @@
 	},
 	"home": {
 		"dividerAlt": "Car on the road"
+	},
+	"v2": {
+		"photoPending": "Client photo: {name}",
+		"promos": "Offers",
+		"hero": {
+			"title": "Santiago at your own pace",
+			"lead": "Car hire in Praia, with pick-up at our office or at Nelson Mandela airport.",
+			"photoAlt": "Landscape of Santiago island",
+			"searchLabel": "Search available cars",
+			"submit": "See available cars"
+		},
+		"places": {
+			"title": "Where to go from Praia",
+			"lead": "A few Santiago destinations less than two hours' drive from our office.",
+			"note": "Approximate driving times from our office in Cidadela (Praia).",
+			"tarrafal": {
+				"name": "Tarrafal",
+				"time": "about 1h30",
+				"text": "A light-sand beach with calm water in the north of the island."
+			},
+			"cidadeVelha": {
+				"name": "Cidade Velha",
+				"time": "about 20 min",
+				"text": "The first colonial town in the tropics, a UNESCO World Heritage Site."
+			},
+			"serraMalagueta": {
+				"name": "Serra Malagueta",
+				"time": "about 1h",
+				"text": "A nature park with mountain trails and views over the interior."
+			},
+			"assomada": {
+				"name": "Assomada",
+				"time": "about 45 min",
+				"text": "A lively market in the heart of Santa Catarina."
+			}
+		},
+		"why": {
+			"title": "Why Rent a Car Verde",
+			"airport": {
+				"title": "At the airport or our office",
+				"text": "Pick up and return the car at Nelson Mandela airport or at our office in Praia."
+			},
+			"payment": {
+				"title": "Secure online payment",
+				"text": "Pay for your booking with a vinti4, Visa, Mastercard or American Express card."
+			},
+			"electric": {
+				"title": "Electric cars",
+				"text": "Part of our fleet is electric: quieter, with zero emissions on the island's roads."
+			}
+		}
 	}
 }
