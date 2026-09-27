@@ -5,9 +5,11 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { CheckCircle2, MailX, Loader2 } from "lucide-react";
 import { API_BASE_URL, endpoints } from "@/lib/api/endpoints";
+import { useTranslations } from "next-intl";
 
 export default function UnsubscribeForm() {
 	const search = useSearchParams();
+	const t = useTranslations("unsubscribe");
 	const email = search.get("email") ?? "";
 	const token = search.get("token") ?? "";
 	const [state, setState] = useState<"idle" | "busy" | "done" | "error">("idle");
@@ -31,7 +33,7 @@ export default function UnsubscribeForm() {
 	if (!email || !token) {
 		return (
 			<div className={card}>
-				<p className="text-slate-600">Link incompleto. Use o link &quot;Cancelar a subscrição&quot; do email que recebeu.</p>
+				<p className="text-slate-600">{t("incompleteLink")}</p>
 			</div>
 		);
 	}
@@ -40,11 +42,11 @@ export default function UnsubscribeForm() {
 		return (
 			<div className={card}>
 				<CheckCircle2 className="w-12 h-12 mx-auto text-emerald-600" />
-				<h2 className="text-xl font-bold text-slate-900">Subscrição cancelada</h2>
+				<h2 className="text-xl font-bold text-slate-900">{t("doneTitle")}</h2>
 				<p className="text-slate-600 text-sm">
-					<strong>{email}</strong> deixou de receber as novidades da Rent a Car Verde.
+					{t.rich("doneText", { email, strong: (chunks) => <strong>{chunks}</strong> })}
 				</p>
-				<Link href="/" className="btn-racv inline-block px-8">Voltar ao site</Link>
+				<Link href="/" className="btn-racv inline-block px-8">{t("backToSite")}</Link>
 			</div>
 		);
 	}
@@ -52,16 +54,16 @@ export default function UnsubscribeForm() {
 	return (
 		<div className={card}>
 			<MailX className="w-12 h-12 mx-auto text-slate-400" />
-			<h2 className="text-xl font-bold text-slate-900">Cancelar a subscrição?</h2>
+			<h2 className="text-xl font-bold text-slate-900">{t("confirmTitle")}</h2>
 			<p className="text-slate-600 text-sm">
-				<strong>{email}</strong> vai deixar de receber as novidades da Rent a Car Verde por email.
+				{t.rich("confirmText", { email, strong: (chunks) => <strong>{chunks}</strong> })}
 			</p>
 			{state === "error" && (
-				<p className="text-sm font-semibold text-red-600">Não foi possível cancelar — o link pode ser inválido. Contacte-nos em reservas@rentacarverde.cv.</p>
+				<p role="alert" className="text-sm font-semibold text-red-600">{t("error")}</p>
 			)}
 			<button onClick={cancel} disabled={state === "busy"} className="btn-racv px-8 inline-flex items-center gap-2 disabled:opacity-50">
 				{state === "busy" && <Loader2 className="w-4 h-4 animate-spin" />}
-				Cancelar subscrição
+				{t("button")}
 			</button>
 		</div>
 	);

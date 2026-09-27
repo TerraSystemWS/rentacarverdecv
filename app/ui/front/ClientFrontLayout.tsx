@@ -5,6 +5,7 @@ import { ShieldAlert } from "lucide-react";
 import Header from "./minis/Header";
 import Footer from "./footer";
 import AdPopup from "./AdPopup";
+import { useTranslations } from "next-intl";
 
 export default function ClientFrontLayout({
     children,
@@ -12,6 +13,7 @@ export default function ClientFrontLayout({
     children: React.ReactNode;
 }) {
     const { content, loading } = useContent();
+    const t = useTranslations("maintenance");
 
     if (!loading && content?.settings?.maintenanceMode === 1) {
         return (
@@ -19,13 +21,13 @@ export default function ClientFrontLayout({
                 <div className="w-24 h-24 bg-amber-50 text-amber-500 rounded-3xl flex items-center justify-center mb-8 animate-bounce">
                     <ShieldAlert size={48} />
                 </div>
-                <h1 className="text-4xl font-black text-gray-900 mb-4 tracking-tight">Estamos em Manutenção</h1>
+                <h1 className="text-4xl font-black text-gray-900 mb-4 tracking-tight">{t("title")}</h1>
                 <p className="text-xl text-gray-500 max-w-lg mx-auto font-medium leading-relaxed">
-                    Voltaremos em breve com novidades. <br />
-                    Agradecemos a sua paciência.
+                    {t("line1")} <br />
+                    {t("line2")}
                 </p>
                 <div className="mt-12 pt-8 border-t border-gray-100 w-full max-w-xs">
-                    <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">Rent-A-Car Verde</p>
+                    <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">Rent a Car Verde</p>
                 </div>
             </div>
         );

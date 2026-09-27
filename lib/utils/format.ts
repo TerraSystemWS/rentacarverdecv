@@ -13,9 +13,10 @@ export function fmtDateTime(iso: string) {
 	}
 }
 
-export function fmtMoney(amount: number, currency: string) {
+// locale: tag BCP 47 (ex: "en-GB") — por omissão pt-PT (dashboard).
+export function fmtMoney(amount: number, currency: string, locale = "pt-PT") {
 	try {
-		return new Intl.NumberFormat("pt-PT", {
+		return new Intl.NumberFormat(locale, {
 			style: "currency",
 			currency,
 		}).format(amount);

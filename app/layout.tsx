@@ -5,7 +5,7 @@ import Script from "next/script";
 import Providers from "./providers";
 import GoogleAnalytics from "./ui/GoogleAnalytics";
 import { NextIntlClientProvider } from "next-intl";
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 const exo = Exo({
 	subsets: ["latin"],
@@ -19,19 +19,21 @@ const robotoSlab = Roboto_Slab({
 	variable: "--font-roboto-slab",
 });
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+	const t = await getTranslations("meta");
+	return {
 	title: {
-		template: '%s | Verde CV Rent a Car',
-		default: 'Verde CV Rent a Car | Aluguer de Carros em Cabo Verde',
+		template: '%s | Rent a Car Verde',
+		default: t("defaultTitle"),
 	},
-	description: 'A melhor experiência de aluguer de viaturas comerciais e de passageiros em Cabo Verde.',
+	description: t("description"),
 	openGraph: {
-		title: 'Verde CV Rent a Car',
-		description: 'A melhor experiência de aluguer de viaturas comerciais e de passageiros em Cabo Verde.',
+		title: 'Rent a Car Verde',
+		description: t("description"),
 		url: 'https://rentacarverdecv.com', // Placeholder URL
 		siteName: 'Verde CV',
 		images: [{ url: '/assets/images/slider/1.jpg', width: 1200, height: 630 }], // Placeholder OGP image
-		locale: 'pt_PT',
+		locale: t("ogLocale"),
 		type: 'website',
 	},
 	robots: {
@@ -45,7 +47,8 @@ export const metadata: Metadata = {
 			'max-snippet': -1,
 		},
 	},
-};
+	};
+}
 
 export default async function RootLayout({
 	children,

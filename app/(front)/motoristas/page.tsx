@@ -1,6 +1,7 @@
 import PageHeader from "@/app/ui/front/PageHeader";
 import { Driver } from "@/lib/api/types";
 import { endpoints, API_BASE_URL, SERVER_API_BASE_URL } from "@/lib/api/endpoints";
+import { getTranslations } from "next-intl/server";
 
 async function getDrivers(): Promise<Driver[]> {
 	try {
@@ -20,17 +21,18 @@ function getImageSrc(url?: string | null) {
 
 export default async function MotoristasPage() {
 	const drivers = await getDrivers();
+	const t = await getTranslations("driversPage");
 
 	return (
 		<>
-			<PageHeader titulo="Home / Motoristas" descricao="Os Nossos Motoristas" />
+			<PageHeader titulo={t("title")} descricao={t("desc")} />
 
 			<div className="available-block vehicle-padding bg-gray-color">
 				<div className="container">
 					<div className="row">
 						{drivers.length === 0 ? (
 							<div className="col-md-12 text-center py-20 text-muted-foreground">
-								Sem motoristas disponíveis no momento.
+								{t("empty")}
 							</div>
 						) : (
 							drivers.map((driver) => (

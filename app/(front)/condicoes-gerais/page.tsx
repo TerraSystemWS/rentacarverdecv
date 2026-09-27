@@ -3,11 +3,12 @@ import PageHeader from "@/app/ui/front/PageHeader";
 import RichText from "@/app/ui/front/RichText";
 import LegalUnavailable from "@/app/ui/front/LegalUnavailable";
 import { getLegalPage } from "@/lib/api/content";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = {
-	title: "Condições Gerais de Aluguer | Rent a Car Verde",
-	description: "Termos do contrato de aluguer de viaturas celebrado entre a Rent a Car Verde e o locatário.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+	const t = await getTranslations("legal");
+	return { title: t("conditionsTitle"), description: t("conditionsMeta") };
+}
 
 export const revalidate = 60;
 
@@ -16,9 +17,10 @@ export const revalidate = 60;
 // (api: content-defaults/condicoes-gerais.html).
 export default async function CondicoesGeraisPage() {
 	const html = await getLegalPage("conditions");
+	const t = await getTranslations("legal");
 	return (
 		<div className="bg-slate-100 min-h-screen pb-20">
-			<PageHeader titulo="Condições Gerais de Aluguer" descricao="Termos do contrato de aluguer" />
+			<PageHeader titulo={t("conditionsTitle")} descricao={t("conditionsDesc")} />
 			<div className="container mx-auto px-4 mt-10 max-w-4xl">
 				<article className="bg-white border border-slate-200 rounded-xl p-6 sm:p-10 shadow-sm">
 					{html ? <RichText html={html} /> : <LegalUnavailable />}

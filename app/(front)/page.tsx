@@ -10,9 +10,11 @@ import AppBlock from "../ui/front/AppBlock";
 import CompanyBrandBlock from "../ui/front/CompanyBrandBlock";
 import BlogArea from "../ui/front/BlogArea";
 import { useContent } from "../context/ContentContext";
+import { useTranslations } from "next-intl";
 
 const Home = () => {
 	const { content } = useContent();
+	const t = useTranslations("home");
 
 	return (
 		<>
@@ -24,7 +26,7 @@ const Home = () => {
 						<div className="col-md-12">
 							<div className="section-divider-content">
 								<div className="vehicle-border">
-									<img src="/assets/images/block-car01.png" alt="car-item" />
+									<img src="/assets/images/block-car01.png" alt={t("dividerAlt")} />
 								</div>
 							</div>
 						</div>

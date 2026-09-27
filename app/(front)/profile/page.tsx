@@ -11,12 +11,19 @@ import { fmtDateTime, fmtMoney } from "@/lib/utils/format";
 import { Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import PageHeader from "@/app/ui/front/PageHeader";
 import MyDataForm from "@/app/ui/front/profile/MyDataForm";
+import { useLocale, useTranslations } from "next-intl";
+import { localeTags, isLocale } from "@/i18n/config";
 
 const HISTORY_PAGE_SIZE = 6;
 
 export default function ProfilePage() {
     const { isAuthenticated, isLoading, logout, user } = useAuth();
     const router = useRouter();
+    const t = useTranslations("profile");
+    const tStatus = useTranslations("bookingStatus");
+    const tc = useTranslations("common");
+    const locale = useLocale();
+    const money = (v: number) => fmtMoney(v, "CVE", isLocale(locale) ? localeTags[locale] : "pt-PT");
 
     const [bookings, setBookings] = useState<BookingRow[]>([]);
     const [invoices, setInvoices] = useState<Invoice[]>([]);
@@ -74,7 +81,7 @@ export default function ProfilePage() {
                     authFetch(endpoints.bookings.me),
                     authFetch(endpoints.invoices.mine),
                 ]);
-                if (!bookingsRes.ok) throw new Error("Erro ao pesquisar reservas");
+                if (!bookingsRes.ok) throw new Error(t("loadError"));
                 setBookings(await bookingsRes.json());
                 if (invoicesRes.ok) {
                     setInvoices(await invoicesRes.json());
@@ -101,15 +108,16 @@ export default function ProfilePage() {
     const activeBookings = bookings.filter(b => b.status === "PENDENTE" || b.status === "APROVADA" || b.status === "PAGA" || b.status === "EM_CURSO");
 
     function getStatusBadge(status: string) {
-        switch (status) {
-            case "PENDENTE": return <span className="px-2 py-1 bg-amber-100 text-amber-800 rounded text-xs font-bold uppercase tracking-wider">Pendente</span>;
-            case "APROVADA": return <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-bold uppercase tracking-wider">Aprovada</span>;
-            case "PAGA": return <span className="px-2 py-1 bg-violet-100 text-violet-800 rounded text-xs font-bold uppercase tracking-wider">Paga</span>;
-            case "EM_CURSO": return <span className="px-2 py-1 bg-indigo-100 text-indigo-800 rounded text-xs font-bold uppercase tracking-wider">Em Curso</span>;
-            case "CONCLUÍDA": return <span className="px-2 py-1 bg-emerald-100 text-emerald-800 rounded text-xs font-bold uppercase tracking-wider">Concluída</span>;
-            case "CANCELADA": return <span className="px-2 py-1 bg-red-100 text-red-800 rounded text-xs font-bold uppercase tracking-wider">Cancelada</span>;
-            default: return <span className="px-2 py-1 bg-gray-100 text-gray-800 rounded text-xs font-bold uppercase tracking-wider">{status}</span>;
-        }
+        const styles: Record<string, string> = {
+            PENDENTE: "bg-amber-100 text-amber-800",
+            APROVADA: "bg-blue-100 text-blue-800",
+            PAGA: "bg-violet-100 text-violet-800",
+            EM_CURSO: "bg-indigo-100 text-indigo-800",
+            "CONCLUÍDA": "bg-emerald-100 text-emerald-800",
+            CANCELADA: "bg-red-100 text-red-800",
+        };
+        const label = tStatus.has(status) ? tStatus(status) : status;
+        return <span className={`px-2 py-1 rounded text-xs font-bold uppercase tracking-wider ${styles[status] ?? "bg-gray-100 text-gray-800"}`}>{label}</span>;
     }
 
     const renderBookingsList = (list: BookingRow[], emptyMsg: string) => {
@@ -123,27 +131,27 @@ export default function ProfilePage() {
                     <div key={b.id} className="bg-white border text-left border-slate-200 rounded-lg p-5 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow">
                         <div>
                             <div className="flex justify-between items-start mb-4">
-                                <h3 className="font-bold text-slate-900 text-lg">{b.vehicle_title || "Veículo não especificado"}</h3>
+                                <h3 className="font-bold text-slate-900 text-lg">{b.vehicle_title || t("vehicleUnknown")}</h3>
                                 {getStatusBadge(b.status)}
                             </div>
 
                             <div className="space-y-2 text-sm text-slate-700 mb-6">
-                                <p><span className="font-semibold text-slate-800">Início:</span> {fmtDateTime(b.start_at)}</p>
-                                <p><span className="font-semibold text-slate-800">Fim:</span> {fmtDateTime(b.end_at)}</p>
-                                <p><span className="font-semibold text-slate-800">Criado a:</span> {fmtDateTime(b.created_at)}</p>
+                                <p><span className="font-semibold text-slate-800">{t("start")}</span> {fmtDateTime(b.start_at)}</p>
+                                <p><span className="font-semibold text-slate-800">{t("end")}</span> {fmtDateTime(b.end_at)}</p>
+                                <p><span className="font-semibold text-slate-800">{t("createdAt")}</span> {fmtDateTime(b.created_at)}</p>
                             </div>
                         </div>
 
                         <div className="pt-4 border-t border-slate-200 flex justify-between items-center">
-                            <span className="text-slate-600 font-medium">Total Estimado</span>
-                            <span className="text-lg font-black text-slate-900">{fmtMoney(b.grand_total, "CVE")}</span>
+                            <span className="text-slate-600 font-medium">{t("estimatedTotal")}</span>
+                            <span className="text-lg font-black text-slate-900">{money(b.grand_total)}</span>
                         </div>
                         {(b.status === "PENDENTE" || b.status === "APROVADA") && b.payment_status !== "SUCCESS" && (
                             <Link
                                 href={`/payment/${b.id}`}
                                 className="btn-racv mt-3 w-full text-center text-sm"
                             >
-                                Pagar agora
+                                {t("payNow")}
                             </Link>
                         )}
                         {invoiceFor(b.id) && (
@@ -151,7 +159,7 @@ export default function ProfilePage() {
                                 onClick={() => handleDownloadInvoice(invoiceFor(b.id)!.id)}
                                 className="invoice-download-btn mt-3 w-full text-center text-sm font-bold border border-green-400 bg-green-50 rounded-lg py-2 hover:bg-green-100 transition-colors"
                             >
-                                Descarregar Fatura-Recibo
+                                {t("downloadInvoice")}
                             </button>
                         )}
                         {b.payment_status === "SUCCESS" && (
@@ -159,7 +167,7 @@ export default function ProfilePage() {
                                 href={`/payment/result?status=success&id=${b.id}`}
                                 className="invoice-download-btn mt-2 block w-full text-center text-sm font-bold border border-slate-300 bg-white rounded-lg py-2 hover:bg-slate-50 transition-colors"
                             >
-                                Ver recibo do pagamento
+                                {t("viewReceipt")}
                             </Link>
                         )}
                     </div>
@@ -170,20 +178,20 @@ export default function ProfilePage() {
 
     return (
         <div className="bg-slate-100 min-h-screen pb-20">
-            <PageHeader titulo={`Olá, ${(user as any)?.username || 'Cliente'}!`} descricao="Bem-vindo à sua Área de Cliente" />
+            <PageHeader titulo={t("hello", { name: (user as any)?.username || t("customer") })} descricao={t("welcome")} />
 
             <div className="container mx-auto px-4 mt-10 max-w-6xl">
 
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                     <div>
-                        <h2 className="text-xl font-bold text-slate-900">A Minha Conta</h2>
-                        <p className="text-slate-600 text-sm">Faça a gestão dos seus alugueres e histórico no nosso sistema.</p>
+                        <h2 className="text-xl font-bold text-slate-900">{t("myAccount")}</h2>
+                        <p className="text-slate-600 text-sm">{t("accountDesc")}</p>
                     </div>
                     <button
                         onClick={() => logout()}
                         className="w-full sm:w-auto btn-racv"
                     >
-                        Terminar Sessão
+                        {t("signOut")}
                     </button>
                 </div>
 
@@ -192,13 +200,13 @@ export default function ProfilePage() {
                         onClick={() => setTab("bookings")}
                         className={`px-4 py-2 rounded-lg text-sm font-bold border transition-colors ${tab === "bookings" ? "bg-green-600 border-green-600" : "bg-white border-slate-200 hover:bg-slate-50"}`}
                     >
-                        As Minhas Reservas
+                        {t("tabBookings")}
                     </button>
                     <button
                         onClick={() => setTab("data")}
                         className={`px-4 py-2 rounded-lg text-sm font-bold border transition-colors ${tab === "data" ? "bg-green-600 border-green-600" : "bg-white border-slate-200 hover:bg-slate-50"}`}
                     >
-                        Os Meus Dados
+                        {t("tabData")}
                     </button>
                 </div>
 
@@ -216,15 +224,15 @@ export default function ProfilePage() {
                     <div className="space-y-12">
                         <section>
                             <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                                Reservas Ativas
+                                {t("active")}
                                 <span className="bg-green-100 text-green-900 text-xs py-1 px-2 rounded-full">{activeBookings.length}</span>
                             </h2>
-                            {renderBookingsList(activeBookings, "Não tem nenhuma reserva a decorrer ou pendente.")}
+                            {renderBookingsList(activeBookings, t("noActive"))}
                         </section>
 
                         <section>
                             <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                                Histórico de Reservas
+                                {t("history")}
                                 <span className="bg-slate-200 text-slate-800 text-xs py-1 px-2 rounded-full">{history?.total_elements ?? 0}</span>
                             </h2>
 
@@ -234,13 +242,14 @@ export default function ProfilePage() {
                                 </div>
                             ) : (
                                 <>
-                                    {renderBookingsList(history?.content ?? [], "Ainda não tem histórico de alugueres concluídos ou cancelados.")}
+                                    {renderBookingsList(history?.content ?? [], t("noHistory"))}
 
                                     {history && history.total_pages > 1 && (
                                         <div className="flex justify-center items-center gap-2 mt-8">
                                             <button
                                                 onClick={() => fetchHistory(history.page - 1)}
                                                 disabled={history.page === 0}
+                                                aria-label={tc("previousPage")}
                                                 className="p-2 rounded-lg border border-slate-200 bg-white text-slate-700 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors"
                                             >
                                                 <ChevronLeft size={16} />
@@ -260,6 +269,7 @@ export default function ProfilePage() {
                                             <button
                                                 onClick={() => fetchHistory(history.page + 1)}
                                                 disabled={history.page >= history.total_pages - 1}
+                                                aria-label={tc("nextPage")}
                                                 className="p-2 rounded-lg border border-slate-200 bg-white text-slate-700 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors"
                                             >
                                                 <ChevronRight size={16} />

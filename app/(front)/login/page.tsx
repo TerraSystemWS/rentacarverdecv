@@ -5,10 +5,13 @@ import { useAuth } from "@/app/auth/AuthContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
+import { useLocale, useTranslations } from "next-intl";
 
 export default function LoginPage() {
 	const { login, isLoading, isAuthenticated, user } = useAuth();
 	const router = useRouter();
+	const t = useTranslations("auth");
+	const locale = useLocale();
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -21,7 +24,7 @@ export default function LoginPage() {
 		if (typeof window !== "undefined") {
 			const urlParams = new URLSearchParams(window.location.search);
 			if (urlParams.get("registered") === "true") {
-				setSuccessMsg("Conta criada com sucesso! Faça login para continuar.");
+				setSuccessMsg(t("registered"));
 			}
 		}
 	}, []);
@@ -45,12 +48,12 @@ export default function LoginPage() {
 		setErr(null);
 
 		if (!email || !password) {
-			setErr("Preencha todos os campos");
+			setErr(t("fillAll"));
 			return;
 		}
 
 		if (!turnstileToken) {
-			setErr("Por favor, resolva o desafio de segurança (Captcha).");
+			setErr(t("captcha"));
 			return;
 		}
 
@@ -58,7 +61,7 @@ export default function LoginPage() {
 			await login(email, password, turnstileToken);
 			// O useEffect acima cuidará do redirecionamento assim que o estado mudar
 		} catch (error: any) {
-			setErr(error?.message || "Email ou senha inválidos");
+			setErr(error?.message || t("invalidLogin"));
 			// Token do Turnstile é de uso único — sem isto, uma tentativa
 			// falhada obrigava a recarregar a página para tentar de novo.
 			turnstileRef.current?.reset();
@@ -71,18 +74,19 @@ export default function LoginPage() {
 		<div className="min-h-[80vh] w-full bg-slate-50 py-12 px-4 sm:px-6 lg:px-8 flex flex-col justify-center items-center">
 			<div className="w-full max-w-sm mx-auto bg-white rounded-xl shadow-md p-6 sm:p-8 border border-slate-200">
 				<h1 className="text-2xl font-bold text-slate-800 mb-6 text-center">
-					Login
+					{t("loginTitle")}
 				</h1>
 
 				<form onSubmit={onSubmit} className="space-y-4">
 					<div>
-						<label className="block text-sm font-medium text-slate-700 mb-1">
-							Email
+						<label htmlFor="login-email" className="block text-sm font-medium text-slate-700 mb-1">
+							{t("email")}
 						</label>
 						<input
+							id="login-email"
 							type="email"
 							className="w-full rounded-lg border border-slate-300 p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all"
-							placeholder="seu@email.com"
+							placeholder={t("emailPlaceholder")}
 							value={email}
 							onChange={(e) => setEmail(e.target.value)}
 							autoComplete="email"
@@ -90,10 +94,11 @@ export default function LoginPage() {
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium text-slate-700 mb-1">
-							Senha
+						<label htmlFor="login-password" className="block text-sm font-medium text-slate-700 mb-1">
+							{t("password")}
 						</label>
 						<input
+							id="login-password"
 							className="w-full rounded-lg border border-slate-300 p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all"
 							placeholder="••••••••"
 							type="password"
@@ -104,7 +109,7 @@ export default function LoginPage() {
 					</div>
 
 					{err && (
-						<div className="bg-red-50 text-red-600 text-sm p-3 rounded-md border border-red-100">
+						<div role="alert" className="bg-red-50 text-red-600 text-sm p-3 rounded-md border border-red-100">
 							{err}
 						</div>
 					)}
@@ -120,7 +125,7 @@ export default function LoginPage() {
 							ref={turnstileRef}
 							siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
 							onSuccess={(token) => setTurnstileToken(token)}
-							options={{ theme: "light" }}
+							options={{ theme: "light", language: locale }}
 						/>
 					</div>
 
@@ -129,13 +134,13 @@ export default function LoginPage() {
 						disabled={isLoading}
 						className="w-full btn-racv mt-4"
 					>
-						{isLoading ? "A entrar..." : "Entrar"}
+						{isLoading ? t("signingIn") : t("signIn")}
 					</button>
 
 					<div className="text-center text-sm text-slate-600 mt-4">
-						Ainda não tem conta?{" "}
+						{t("noAccount")}{" "}
 						<Link href="/register" className="text-indigo-600 hover:text-indigo-700 font-semibold">
-							Criar Conta
+							{t("createAccount")}
 						</Link>
 					</div>
 				</form>

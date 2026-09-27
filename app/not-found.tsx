@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import NotFoundContent from "@/app/ui/front/NotFoundContent";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = {
-	title: "Página não encontrada",
-	robots: { index: false, follow: true },
-};
+export async function generateMetadata(): Promise<Metadata> {
+	const t = await getTranslations("notFound");
+	return { title: t("metaTitle"), robots: { index: false, follow: true } };
+}
 
 // Fallback fora do layout público (normalmente os endereços desconhecidos
 // passam por app/(front)/[...notFound] e mostram a 404 com o cabeçalho do

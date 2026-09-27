@@ -1,45 +1,53 @@
 import { ContentProvider } from "@/app/context/ContentContext";
 import ClientFrontLayout from "../ui/front/ClientFrontLayout";
+import type { Metadata, Viewport } from "next";
+import { getTranslations } from "next-intl/server";
 
-export const metadata = {
-	title: {
-		default: "Rent a Car Verde",
-		template: "%s — Rent a Car Verde",
-	},
-	description: "Rentacarverde — rent your car in the easy way",
-	keywords: ["car", "rent", "cabo verde", "aluguer de carros"],
-	robots: {
-		index: true,
-		follow: true,
-		googleBot: {
+export const viewport: Viewport = { width: "device-width", initialScale: 1 };
+
+// Metadados do site público na língua escolhida (ver i18n/). "absolute": as
+// páginas sem título próprio mostram este tal como está (sem o template).
+export async function generateMetadata(): Promise<Metadata> {
+	const t = await getTranslations("meta");
+	return {
+		title: {
+			absolute: t("defaultTitle"),
+			template: "%s | Rent a Car Verde",
+		},
+		description: t("description"),
+		keywords: ["rent a car", "car hire", "aluguer de carros", "location de voitures", "cabo verde", "cape verde", "praia"],
+		robots: {
 			index: true,
 			follow: true,
-			noimageindex: false,
-			"max-video-preview": -1,
-			"max-image-preview": "large",
-			"max-snippet": -1,
-		},
-	},
-	authors: [{ name: "Rent-a-Car Verde" }],
-	viewport: "width=device-width, initial-scale=1",
-	icons: { icon: "/favicon.ico" },
-	openGraph: {
-		title: "Rent a Car Verde",
-		description: "Alugue o seu carro ideal em Cabo Verde com Rent a Car Verde",
-		url: "https://www.rentacarverde.cv",
-		siteName: "Rent a Car Verde",
-		images: [
-			{
-				url: "/assets/images/og-image.png",
-				width: 1200,
-				height: 630,
-				alt: "Rent a Car Verde",
+			googleBot: {
+				index: true,
+				follow: true,
+				noimageindex: false,
+				"max-video-preview": -1,
+				"max-image-preview": "large",
+				"max-snippet": -1,
 			},
-		],
-		locale: "pt_PT",
-		type: "website",
-	},
-};
+		},
+		authors: [{ name: "Rent a Car Verde" }],
+		icons: { icon: "/favicon.ico" },
+		openGraph: {
+			title: "Rent a Car Verde",
+			description: t("description"),
+			url: "https://www.rentacarverde.cv",
+			siteName: "Rent a Car Verde",
+			images: [
+				{
+					url: "/assets/images/og-image.png",
+					width: 1200,
+					height: 630,
+					alt: "Rent a Car Verde",
+				},
+			],
+			locale: t("ogLocale"),
+			type: "website",
+		},
+	};
+}
 
 export default function FrontLayout({
 	children,

@@ -6,6 +6,7 @@ import { endpoints } from "@/lib/api/endpoints";
 import { CustomerProfile } from "@/lib/api/types";
 import { COUNTRIES, DEFAULT_COUNTRY_CODE, countryName } from "@/lib/countries";
 import { CheckCircle2, AlertTriangle, Loader2, IdCard, Trash2 } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 
 type FormState = {
 	fullName: string;
@@ -47,6 +48,9 @@ export default function MyDataForm() {
 	const [loading, setLoading] = useState(true);
 	const [saving, setSaving] = useState(false);
 	const [saved, setSaved] = useState(false);
+	const [saveError, setSaveError] = useState(false);
+	const t = useTranslations("myData");
+	const locale = useLocale();
 
 	// Foto da carta de condução — upload próprio, separado do resto do
 	// formulário (a própria seleção do ficheiro já envia, ver
@@ -118,12 +122,12 @@ export default function MyDataForm() {
 			const res = await authFetch(endpoints.auth.licensePhoto, { method: "POST", body: formData });
 			if (!res.ok) {
 				const body = await res.json().catch(() => null);
-				throw new Error(body?.message || "Falha ao enviar a foto");
+				throw new Error(body?.message || t("photo.uploadError"));
 			}
 			setLicensePhotoPreview(URL.createObjectURL(file));
 			setHasLicensePhoto(true);
 		} catch (err: any) {
-			setLicensePhotoError(err.message || "Falha ao enviar a foto");
+			setLicensePhotoError(err.message || t("photo.uploadError"));
 		} finally {
 			setLicensePhotoBusy(false);
 		}
@@ -138,7 +142,7 @@ export default function MyDataForm() {
 			setLicensePhotoPreview(null);
 			setHasLicensePhoto(false);
 		} catch {
-			setLicensePhotoError("Falha ao remover a foto");
+			setLicensePhotoError(t("photo.removeError"));
 		} finally {
 			setLicensePhotoBusy(false);
 		}
@@ -160,6 +164,7 @@ export default function MyDataForm() {
 	async function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
 		setSaving(true);
+		setSaveError(false);
 		try {
 			// Datas vazias têm de ir como null (não ""), senão o backend falha a
 			// desserializar "" como LocalDate.
@@ -177,7 +182,7 @@ export default function MyDataForm() {
 			setComplete(data.profileComplete);
 			setSaved(true);
 		} catch {
-			// falha silenciosa aceitável aqui — o utilizador pode tentar de novo
+			setSaveError(true);
 		} finally {
 			setSaving(false);
 		}
@@ -191,10 +196,20 @@ export default function MyDataForm() {
 		);
 	}
 
+	// Nomes dos países na língua do visitante (o valor gravado continua o
+	// código ISO + nome em PT, usado no contrato e na fatura).
+	const regionNames = (() => {
+		try { return new Intl.DisplayNames([locale], { type: "region" }); } catch { return null; }
+	})();
+	const countries = COUNTRIES
+		.map((c) => ({ ...c, label: (locale !== "pt" && regionNames?.of(c.alpha2)) || c.name }))
+		.sort((a, b) => a.label.localeCompare(b.label, locale));
+
 	const field = (label: string, name: keyof FormState, type: string = "text", required = false) => (
 		<div>
-			<label className="block text-xs font-bold uppercase tracking-wide text-slate-600 mb-1.5">{label}</label>
+			<label htmlFor={`mydata-${name}`} className="block text-xs font-bold uppercase tracking-wide text-slate-600 mb-1.5">{label}</label>
 			<input
+				id={`mydata-${name}`}
 				type={type}
 				name={name}
 				value={form[name]}
@@ -216,78 +231,79 @@ export default function MyDataForm() {
 			{complete ? (
 				<div className="flex items-center gap-2 mb-6 text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-3 text-sm font-semibold">
 					<CheckCircle2 className="w-5 h-5 shrink-0" />
-					Os seus dados estão completos — já pode reservar viaturas.
+					{t("complete")}
 				</div>
 			) : (
 				<div className="flex items-center gap-2 mb-6 text-amber-900 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-sm font-semibold">
 					<AlertTriangle className="w-5 h-5 shrink-0" />
-					Complete os campos obrigatórios (*) para poder reservar uma viatura — são os dados exigidos no contrato de aluguer.
+					{t("incomplete")}
 				</div>
 			)}
 
 			<form onSubmit={handleSubmit} className="styled-form space-y-6">
 				<div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
-					{sectionTitle("Contacto e Morada")}
+					{sectionTitle(t("sections.contact"))}
 					<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-						{field("Nome completo *", "fullName", "text", true)}
-						{field("Telefone *", "phone", "tel", true)}
-						{field("Morada *", "address", "text", true)}
-						{field("Cidade *", "city", "text", true)}
+						{field(t("fields.fullName"), "fullName", "text", true)}
+						{field(t("fields.phone"), "phone", "tel", true)}
+						{field(t("fields.address"), "address", "text", true)}
+						{field(t("fields.city"), "city", "text", true)}
 						<div>
-							{field("Código postal", "zipCode")}
-							<p className="text-[11px] text-slate-500 mt-1">Se não tiver, deixe em branco.</p>
+							{field(t("fields.zipCode"), "zipCode")}
+							<p className="text-[11px] text-slate-500 mt-1">{t("fields.zipHint")}</p>
 						</div>
 						<div>
-							<label className="block text-xs font-bold uppercase tracking-wide text-slate-600 mb-1.5">País *</label>
+							<label htmlFor="mydata-countryCode" className="block text-xs font-bold uppercase tracking-wide text-slate-600 mb-1.5">{t("fields.country")}</label>
 							<select
+								id="mydata-countryCode"
 								name="countryCode"
 								value={form.countryCode}
 								onChange={handleCountryChange}
 								required
 								className="w-full px-3 py-2.5 text-sm text-slate-900 outline-none transition-shadow"
 							>
-								{COUNTRIES.map((c) => (
-									<option key={c.code} value={c.code}>{c.name}</option>
+								{countries.map((c) => (
+									<option key={c.code} value={c.code}>{c.label}</option>
 								))}
 							</select>
 						</div>
-						{field("Nacionalidade", "nationality")}
+						{field(t("fields.nationality"), "nationality")}
 					</div>
 				</div>
 
 				<div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
-					{sectionTitle("Nascimento")}
+					{sectionTitle(t("sections.birth"))}
 					<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-						{field("Data de nascimento *", "birthDate", "date", true)}
-						{field("Natural de", "placeOfBirth")}
+						{field(t("fields.birthDate"), "birthDate", "date", true)}
+						{field(t("fields.placeOfBirth"), "placeOfBirth")}
 					</div>
 				</div>
 
 				<div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
-					{sectionTitle("BI / Passaporte")}
+					{sectionTitle(t("sections.id"))}
 					<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-						{field("Nº do documento *", "idNumber", "text", true)}
-						{field("Emitido por", "idIssuedBy")}
-						{field("Data de emissão", "idIssuedAt", "date")}
-						{field("Válido até *", "idExpiresAt", "date", true)}
+						{field(t("fields.idNumber"), "idNumber", "text", true)}
+						{field(t("fields.idIssuedBy"), "idIssuedBy")}
+						{field(t("fields.idIssuedAt"), "idIssuedAt", "date")}
+						{field(t("fields.idExpiresAt"), "idExpiresAt", "date", true)}
 					</div>
 				</div>
 
 				<div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
-					{sectionTitle("Carta de Condução")}
+					{sectionTitle(t("sections.license"))}
 					<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-						{field("Nº da carta *", "licenseNumber", "text", true)}
-						{field("Emitida por", "licenseIssuedBy")}
-						{field("Data de emissão", "licenseIssuedAt", "date")}
-						{field("Válida até *", "licenseExpiresAt", "date", true)}
+						{field(t("fields.licenseNumber"), "licenseNumber", "text", true)}
+						{field(t("fields.licenseIssuedBy"), "licenseIssuedBy")}
+						{field(t("fields.licenseIssuedAt"), "licenseIssuedAt", "date")}
+						{field(t("fields.licenseExpiresAt"), "licenseExpiresAt", "date", true)}
 					</div>
 
 					<div className="mt-5 pt-5 border-t border-slate-200">
-						<label className="block text-xs font-bold uppercase tracking-wide text-slate-600 mb-2">Foto da carta</label>
+						<label className="block text-xs font-bold uppercase tracking-wide text-slate-600 mb-2">{t("photo.label")}</label>
 						<div className="flex items-center gap-4">
 							<div className="w-24 h-24 rounded-lg overflow-hidden border border-slate-300 bg-white flex items-center justify-center shrink-0">
 								{licensePhotoPreview ? (
-									<img src={licensePhotoPreview} alt="Foto da carta de condução" className="w-full h-full object-cover" />
+									<img src={licensePhotoPreview} alt={t("photo.alt")} className="w-full h-full object-cover" />
 								) : (
 									<IdCard className="w-8 h-8 text-slate-300" />
 								)}
@@ -300,7 +316,7 @@ export default function MyDataForm() {
 										onClick={() => document.getElementById("license-photo-upload")?.click()}
 										className="h-9 px-4 transition-colors font-semibold disabled:opacity-50"
 									>
-										{licensePhotoBusy ? "A enviar..." : hasLicensePhoto ? "Substituir foto" : "Enviar foto"}
+										{licensePhotoBusy ? t("photo.uploading") : hasLicensePhoto ? t("photo.replace") : t("photo.upload")}
 									</button>
 									{hasLicensePhoto && (
 										<button
@@ -310,11 +326,11 @@ export default function MyDataForm() {
 											className="text-red-600 flex items-center gap-1.5 h-9 px-3 transition-colors font-semibold disabled:opacity-50"
 										>
 											<Trash2 className="w-3.5 h-3.5" />
-											Remover
+											{t("photo.remove")}
 										</button>
 									)}
 								</div>
-								<p className="text-[11px] text-slate-500">JPEG ou PNG, até 5MB.</p>
+								<p className="text-[11px] text-slate-500">{t("photo.hint")}</p>
 								{licensePhotoError && <p className="text-[11px] text-red-600 font-semibold">{licensePhotoError}</p>}
 							</div>
 							<input id="license-photo-upload" type="file" accept="image/jpeg,image/png" onChange={handleLicensePhotoSelect} className="hidden" />
@@ -324,9 +340,10 @@ export default function MyDataForm() {
 
 				<div className="flex items-center gap-4 pt-2">
 					<button type="submit" disabled={saving} className="btn-racv px-8">
-						{saving ? "A guardar..." : "Guardar Dados"}
+						{saving ? t("saving") : t("save")}
 					</button>
-					{saved && <span className="text-emerald-700 text-sm font-semibold">Guardado com sucesso!</span>}
+					{saved && <span role="status" className="text-emerald-700 text-sm font-semibold">{t("saved")}</span>}
+					{saveError && <span role="alert" className="text-red-600 text-sm font-semibold">{t("saveError")}</span>}
 				</div>
 			</form>
 		</div>

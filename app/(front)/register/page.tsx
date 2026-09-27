@@ -5,9 +5,12 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { API_BASE_URL } from "@/lib/api/endpoints";
 import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
+import { useLocale, useTranslations } from "next-intl";
 
 export default function RegisterPage() {
     const router = useRouter();
+    const t = useTranslations("auth");
+    const locale = useLocale();
 
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
@@ -26,22 +29,22 @@ export default function RegisterPage() {
         setErr(null);
 
         if (!username || !email || !password || !confirmPassword) {
-            setErr("Preencha todos os campos");
+            setErr(t("fillAll"));
             return;
         }
 
         if (password.length < 8) {
-            setErr("A senha deve ter pelo menos 8 caracteres");
+            setErr(t("passwordTooShort"));
             return;
         }
 
         if (!turnstileToken) {
-            setErr("Por favor, resolva o desafio de segurança (Captcha).");
+            setErr(t("captcha"));
             return;
         }
 
         if (password !== confirmPassword) {
-            setErr("As senhas não coincidem");
+            setErr(t("passwordsDontMatch"));
             return;
         }
 
@@ -58,13 +61,13 @@ export default function RegisterPage() {
 
             if (!res.ok) {
                 const data = await res.json();
-                throw new Error(data.error || "Erro ao criar conta");
+                throw new Error(data.error || t("registerError"));
             }
 
             // Sucesso! Redireciona para o login
             router.push("/login?registered=true");
         } catch (error: any) {
-            setErr(error?.message || "Erro ao registar utilizador");
+            setErr(error?.message || t("registerError"));
             // Token do Turnstile é de uso único — sem isto, uma tentativa
             // falhada obrigava a recarregar a página para tentar de novo.
             turnstileRef.current?.reset();
@@ -78,18 +81,20 @@ export default function RegisterPage() {
         <div className="min-h-[80vh] w-full bg-slate-50 py-12 px-4 sm:px-6 lg:px-8 flex flex-col justify-center items-center">
             <div className="w-full max-w-md mx-auto bg-white rounded-xl shadow-md p-6 sm:p-8 border border-slate-200">
                 <h1 className="text-2xl font-bold text-slate-800 mb-2 text-center">
-                    Criar Conta
+                    {t("registerTitle")}
                 </h1>
-                <p className="text-slate-500 text-center mb-6 text-sm">Registe-se para gerir as suas reservas.</p>
+                <p className="text-slate-500 text-center mb-6 text-sm">{t("registerSubtitle")}</p>
 
                 <form onSubmit={onSubmit} className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">
-                            Nome de Utilizador (Username)
+                        <label htmlFor="reg-username" className="block text-sm font-medium text-slate-700 mb-1">
+                            {t("username")}
                         </label>
                         <input
+                            id="reg-username"
+                            autoComplete="username"
                             className="w-full rounded-lg border border-slate-300 p-2.5 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
-                            placeholder="johndoe"
+                            placeholder={t("usernamePlaceholder")}
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             required
@@ -97,13 +102,15 @@ export default function RegisterPage() {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">
-                            Email
+                        <label htmlFor="reg-email" className="block text-sm font-medium text-slate-700 mb-1">
+                            {t("email")}
                         </label>
                         <input
+                            id="reg-email"
+                            autoComplete="email"
                             type="email"
                             className="w-full rounded-lg border border-slate-300 p-2.5 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
-                            placeholder="john@example.com"
+                            placeholder={t("emailPlaceholder")}
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
@@ -111,10 +118,12 @@ export default function RegisterPage() {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">
-                            Senha
+                        <label htmlFor="reg-password" className="block text-sm font-medium text-slate-700 mb-1">
+                            {t("password")}
                         </label>
                         <input
+                            id="reg-password"
+                            autoComplete="new-password"
                             className="w-full rounded-lg border border-slate-300 p-2.5 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
                             placeholder="••••••••"
                             type="password"
@@ -122,14 +131,16 @@ export default function RegisterPage() {
                             onChange={(e) => setPassword(e.target.value)}
                             required
                         />
-                        <p className="text-xs text-slate-400 mt-1">Mínimo 8 caracteres</p>
+                        <p className="text-xs text-slate-400 mt-1">{t("passwordHint")}</p>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">
-                            Confirmar Senha
+                        <label htmlFor="reg-password2" className="block text-sm font-medium text-slate-700 mb-1">
+                            {t("confirmPassword")}
                         </label>
                         <input
+                            id="reg-password2"
+                            autoComplete="new-password"
                             className="w-full rounded-lg border border-slate-300 p-2.5 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
                             placeholder="••••••••"
                             type="password"
@@ -146,11 +157,11 @@ export default function RegisterPage() {
                             onChange={(e) => setNewsletter(e.target.checked)}
                             className="mt-1"
                         />
-                        <span>Quero receber novidades e promoções da Rent a Car Verde por email.</span>
+                        <span>{t("newsletter")}</span>
                     </label>
 
                     {err && (
-                        <div className="bg-red-50 text-red-600 text-sm p-3 rounded-md border border-red-100">
+                        <div role="alert" className="bg-red-50 text-red-600 text-sm p-3 rounded-md border border-red-100">
                             {err}
                         </div>
                     )}
@@ -160,7 +171,7 @@ export default function RegisterPage() {
                             ref={turnstileRef}
                             siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
                             onSuccess={(token) => setTurnstileToken(token)}
-                            options={{ theme: "light" }}
+                            options={{ theme: "light", language: locale }}
                         />
                     </div>
 
@@ -169,11 +180,11 @@ export default function RegisterPage() {
                         disabled={isLoading}
                         className="w-full btn-racv mt-4"
                     >
-                        {isLoading ? "A Registar..." : "Registar"}
+                        {isLoading ? t("registering") : t("register")}
                     </button>
 
                     <div className="text-center text-sm text-slate-600 mt-4">
-                        Já tem conta? <Link href="/login" className="text-green-600 hover:text-green-700 font-semibold">Faça Login</Link>
+                        {t("hasAccount")} <Link href="/login" className="text-green-600 hover:text-green-700 font-semibold">{t("goLogin")}</Link>
                     </div>
                 </form>
             </div>
