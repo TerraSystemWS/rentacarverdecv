@@ -1,6 +1,8 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { useLocale } from "next-intl";
+import { localizeContent } from "@/lib/i18n/contentFields";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
 
 interface SiteContent {
@@ -60,7 +62,14 @@ interface ContentContextType {
 const ContentContext = createContext<ContentContextType | null>(null);
 
 export const ContentProvider = ({ children }: { children: React.ReactNode }) => {
-    const [content, setContent] = useState<SiteContent | null>(null);
+    const [rawContent, setContent] = useState<SiteContent | null>(null);
+    const locale = useLocale();
+    // Textos editáveis na língua escolhida (traduções em content.i18n — ver
+    // lib/i18n/contentFields.ts).
+    const content = useMemo(
+        () => (rawContent ? localizeContent(rawContent as unknown as Record<string, unknown>, locale) as unknown as SiteContent : null),
+        [rawContent, locale],
+    );
     const [loading, setLoading] = useState(true);
 
     const refreshContent = async () => {
