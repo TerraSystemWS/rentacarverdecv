@@ -20,6 +20,7 @@ export type ApiError = {
 };
 
 import { API_BASE_URL } from "@/lib/api/endpoints";
+import { clientLocale } from "@/lib/i18n/clientLocale";
 
 const API_BASE = API_BASE_URL;
 
@@ -103,6 +104,8 @@ export async function authFetch(
 	const url = `${API_BASE}${path.startsWith("/") ? path : `/${path}`}`;
 
 	const headers = new Headers(init.headers);
+	// Mensagens da API e emails na língua escolhida no site.
+	if (!headers.has("Accept-Language")) headers.set("Accept-Language", clientLocale());
 
 	// define JSON se houver body e não for FormData
 	if (

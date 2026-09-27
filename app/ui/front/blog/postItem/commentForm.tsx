@@ -4,6 +4,7 @@
 import React, { useState } from "react";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
 import { useTranslations } from "next-intl";
+import { clientLocale } from "@/lib/i18n/clientLocale";
 
 interface Props {
 	postSlug: string;
@@ -31,7 +32,7 @@ const CommentForm = ({ postSlug }: Props) => {
 		try {
 			const res = await fetch(`${API_BASE_URL}${endpoints.comments.create(postSlug)}`, {
 				method: "POST",
-				headers: { "Content-Type": "application/json" },
+				headers: { "Content-Type": "application/json", "Accept-Language": clientLocale() },
 				body: JSON.stringify({
 					authorName: form.name.trim(),
 					authorEmail: form.email.trim(),

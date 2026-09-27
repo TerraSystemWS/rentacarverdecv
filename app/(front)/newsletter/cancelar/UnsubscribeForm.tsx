@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { CheckCircle2, MailX, Loader2 } from "lucide-react";
 import { API_BASE_URL, endpoints } from "@/lib/api/endpoints";
 import { useTranslations } from "next-intl";
+import { clientLocale } from "@/lib/i18n/clientLocale";
 
 export default function UnsubscribeForm() {
 	const search = useSearchParams();
@@ -19,7 +20,7 @@ export default function UnsubscribeForm() {
 		try {
 			const res = await fetch(`${API_BASE_URL}${endpoints.subscribers.unsubscribe}`, {
 				method: "POST",
-				headers: { "Content-Type": "application/json" },
+				headers: { "Content-Type": "application/json", "Accept-Language": clientLocale() },
 				body: JSON.stringify({ email, token }),
 			});
 			setState(res.ok ? "done" : "error");

@@ -54,7 +54,9 @@ export default function RegisterPage() {
             const res = await fetch(`${API_BASE_URL}/auth/register`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    // Língua da conta (emails) e das mensagens de erro.
+                    "Accept-Language": locale,
                 },
                 body: JSON.stringify({ username, email, password, turnstileToken, newsletter })
             });
