@@ -4,6 +4,7 @@ import FSideBar from "@/app/ui/front/minis/FSidebar";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 const Header = () => {
 	const router = useRouter();
@@ -48,6 +49,9 @@ const Header = () => {
 						<div className="col-md-6 col-sm-5">
 							<div className="header-content-right">
 								<ul className="header-top-menu">
+									<li>
+										<LanguageSwitcher />
+									</li>
 									<li>
 										<a
 											href="#"

@@ -635,3 +635,24 @@ a.hb-caption:hover { opacity: 1; background: rgba(34, 107, 60, 0.75); color: #ff
    o ícone do template fica à esquerda da seta nativa em vez de por cima dela. */
 .input:has(> select) > i.fa { right: 34px !important; pointer-events: none; }
 .input > select.form-controller { padding-right: 56px; -webkit-appearance: none; appearance: none; }
+
+/* Seletor de língua no topo do cabeçalho (LanguageSwitcher). O style.css do
+   template estiliza todos os <button>, por isso as regras aqui são completas. */
+.lang-switcher { display: inline-flex; align-items: center; gap: 2px; vertical-align: middle; padding: 17px 6px 17px 0; }
+.header-top-area .lang-switcher button {
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  padding: 4px 7px;
+  font-family: "Exo", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+  color: #9ca3af;
+  cursor: pointer;
+}
+.header-top-area .lang-switcher button:hover { color: #ffffff !important; }
+.header-top-area .lang-switcher button.is-active { color: #3baa4e; }
+.header-top-area .lang-switcher button:focus-visible { outline: 2px solid #3baa4e; outline-offset: 1px; }

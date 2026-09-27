@@ -4,6 +4,8 @@ import "./globals.css";
 import Script from "next/script";
 import Providers from "./providers";
 import GoogleAnalytics from "./ui/GoogleAnalytics";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale } from "next-intl/server";
 
 const exo = Exo({
 	subsets: ["latin"],
@@ -45,18 +47,22 @@ export const metadata: Metadata = {
 	},
 };
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: {
 	children: React.ReactNode;
 }) {
+	// Língua do site público (cookie NEXT_LOCALE ou língua do browser) — ver i18n/.
+	const locale = await getLocale();
 	return (
-		<html lang="pt">
+		<html lang={locale}>
 			<head>
 				<GoogleAnalytics />
 			</head>
 			<body className={`antialiased ${exo.variable} ${robotoSlab.variable}`}>
-				<Providers>{children}</Providers>
+				<NextIntlClientProvider>
+					<Providers>{children}</Providers>
+				</NextIntlClientProvider>
 
 				{/* jQuery primeiro */}
 				<Script
