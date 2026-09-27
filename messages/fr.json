@@ -599,5 +599,37 @@
 		"facts": {
 			"label": "Rent a Car Verde en chiffres"
 		}
+	},
+	"reviews": {
+		"sectionTitle": "Ce que disent nos clients",
+		"sectionLead": "Avis de clients qui ont loué chez nous, écrits après avoir rendu la voiture.",
+		"average": "{average} sur 5",
+		"basedOn": "{count, plural, one {# avis} other {# avis}}",
+		"stars": "{n, plural, one {# étoile} other {# étoiles}}",
+		"rented": "A loué {vehicle}",
+		"write": "Donner mon avis",
+		"edit": "Modifier mon avis",
+		"pending": "Avis envoyé — en attente de validation",
+		"published": "Avis publié",
+		"rejected": "Avis non publié — vous pouvez le corriger",
+		"formTitle": "Donner votre avis sur la réservation n° {id}",
+		"formVehicle": "{vehicle}",
+		"ratingLabel": "Combien d’étoiles donnez-vous à cette location ?",
+		"commentLabel": "Votre commentaire",
+		"commentHint": "Comment s’est passée la location ? Voiture, accueil, prise en charge et retour. 10 caractères minimum.",
+		"nameLabel": "Nom affiché sur le site",
+		"nameHint": "Vous pouvez n’indiquer que votre prénom et une initiale.",
+		"cityLabel": "D’où venez-vous (facultatif)",
+		"cityPlaceholder": "Ex. : Lyon, France",
+		"submit": "Envoyer mon avis",
+		"update": "Enregistrer",
+		"sending": "Envoi...",
+		"cancel": "Annuler",
+		"close": "Fermer",
+		"thanksTitle": "Merci pour votre avis !",
+		"thanksText": "Il apparaîtra sur le site après vérification par notre équipe.",
+		"errorGeneric": "Votre avis n’a pas pu être envoyé. Réessayez.",
+		"ratingRequired": "Choisissez de 1 à 5 étoiles.",
+		"notFound": "Cette réservation ne figure pas dans votre historique."
 	}
 }

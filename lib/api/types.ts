@@ -75,6 +75,41 @@ export type DestinationPlace = {
 	imageCount: number;
 };
 
+/** Avaliações dos clientes (testemunhos) — só as APPROVED aparecem no site. */
+export type ReviewStatus = "PENDING" | "APPROVED" | "REJECTED";
+
+export type PublicReview = {
+	id: number;
+	rating: number;
+	comment: string;
+	displayName: string;
+	city: string | null;
+	vehicle: string | null;
+	locale: string;
+	createdAt: string;
+};
+
+export type PublicReviews = { average: number; count: number; items: PublicReview[] };
+
+export type MyReview = {
+	id: number;
+	bookingId: number;
+	rating: number;
+	comment: string;
+	displayName: string;
+	city: string | null;
+	status: ReviewStatus;
+	createdAt: string;
+};
+
+export type AdminReview = MyReview & {
+	locale: string;
+	customerEmail: string | null;
+	customerName: string | null;
+	vehicle: string | null;
+	moderatedAt: string | null;
+};
+
 /** Tema de cores do site público (Definições → Aparência); cores em lib/theme/tokens.ts. */
 export type SiteTheme = {
 	id: number;
@@ -397,7 +432,7 @@ export type PostComment = {
 
 export type AppNotification = {
 	id: number;
-	type: "BOOKING" | "CONTACT_MESSAGE";
+	type: "BOOKING" | "CONTACT_MESSAGE" | "REVIEW";
 	title: string;
 	body: string | null;
 	linkUrl: string | null;

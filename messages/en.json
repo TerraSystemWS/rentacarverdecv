@@ -599,5 +599,37 @@
 		"facts": {
 			"label": "Rent a Car Verde in numbers"
 		}
+	},
+	"reviews": {
+		"sectionTitle": "What our customers say",
+		"sectionLead": "Reviews from people who rented with us, written after returning the car.",
+		"average": "{average} out of 5",
+		"basedOn": "{count, plural, one {# review} other {# reviews}}",
+		"stars": "{n, plural, one {# star} other {# stars}}",
+		"rented": "Rented a {vehicle}",
+		"write": "Review",
+		"edit": "Edit review",
+		"pending": "Review sent — awaiting approval",
+		"published": "Review published",
+		"rejected": "Review not published — you can correct it",
+		"formTitle": "Review booking #{id}",
+		"formVehicle": "{vehicle}",
+		"ratingLabel": "How many stars would you give this rental?",
+		"commentLabel": "Your comment",
+		"commentHint": "How did it go? The car, service, pick-up and return. At least 10 characters.",
+		"nameLabel": "Name shown on the website",
+		"nameHint": "You can use just your first name and initial.",
+		"cityLabel": "Where are you from (optional)",
+		"cityPlaceholder": "E.g. Lisbon, Portugal",
+		"submit": "Send review",
+		"update": "Save changes",
+		"sending": "Sending...",
+		"cancel": "Cancel",
+		"close": "Close",
+		"thanksTitle": "Thank you for your review!",
+		"thanksText": "It will appear on the website after our team checks it.",
+		"errorGeneric": "Your review couldn't be sent. Please try again.",
+		"ratingRequired": "Choose from 1 to 5 stars.",
+		"notFound": "This booking isn't in your history."
 	}
 }

@@ -599,5 +599,37 @@
 		"facts": {
 			"label": "A Rent a Car Verde em números"
 		}
+	},
+	"reviews": {
+		"sectionTitle": "O que dizem os nossos clientes",
+		"sectionLead": "Avaliações de quem já alugou connosco, depois de devolver o carro.",
+		"average": "{average} de 5",
+		"basedOn": "{count, plural, one {# avaliação} other {# avaliações}}",
+		"stars": "{n, plural, one {# estrela} other {# estrelas}}",
+		"rented": "Alugou {vehicle}",
+		"write": "Avaliar",
+		"edit": "Editar avaliação",
+		"pending": "Avaliação enviada — a aguardar aprovação",
+		"published": "Avaliação publicada",
+		"rejected": "Avaliação não publicada — pode corrigi-la",
+		"formTitle": "Avaliar a reserva #{id}",
+		"formVehicle": "{vehicle}",
+		"ratingLabel": "Quantas estrelas dá ao aluguer?",
+		"commentLabel": "O seu comentário",
+		"commentHint": "Como correu o aluguer? Carro, atendimento, levantamento e devolução. Mínimo 10 caracteres.",
+		"nameLabel": "Nome a mostrar no site",
+		"nameHint": "Pode usar só o primeiro nome e a inicial.",
+		"cityLabel": "De onde é (opcional)",
+		"cityPlaceholder": "Ex.: Lisboa, Portugal",
+		"submit": "Enviar avaliação",
+		"update": "Guardar alterações",
+		"sending": "A enviar...",
+		"cancel": "Cancelar",
+		"close": "Fechar",
+		"thanksTitle": "Obrigado pela sua avaliação!",
+		"thanksText": "Vai aparecer no site depois de revista pela nossa equipa.",
+		"errorGeneric": "Não foi possível enviar a avaliação. Tente de novo.",
+		"ratingRequired": "Escolha de 1 a 5 estrelas.",
+		"notFound": "Esta reserva não está no seu histórico."
 	}
 }

@@ -6,11 +6,13 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { authFetch } from "@/app/auth/api";
 import { endpoints } from "@/lib/api/endpoints";
-import { BookingRow, Invoice, PagedBookings } from "@/lib/api/types";
+import { BookingRow, Invoice, MyReview, PagedBookings } from "@/lib/api/types";
 import { fmtDateTime, fmtMoney } from "@/lib/utils/format";
 import { Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import PageHeader from "@/app/ui/front/PageHeader";
 import MyDataForm from "@/app/ui/front/profile/MyDataForm";
+import ReviewDialog from "@/app/ui/front/reviews/ReviewDialog";
+import { StarsView } from "@/app/ui/front/reviews/Stars";
 import { useLocale, useTranslations } from "next-intl";
 import { localeTags, isLocale } from "@/i18n/config";
 
@@ -20,6 +22,7 @@ export default function ProfilePage() {
     const { isAuthenticated, isLoading, logout, user } = useAuth();
     const router = useRouter();
     const t = useTranslations("profile");
+    const tr = useTranslations("reviews");
     const tStatus = useTranslations("bookingStatus");
     const tc = useTranslations("common");
     const locale = useLocale();
@@ -38,6 +41,13 @@ export default function ProfilePage() {
     const [historyLoading, setHistoryLoading] = useState(true);
 
     const invoiceFor = (bookingId: number) => invoices.find((inv) => inv.bookingId === bookingId);
+
+    // Avaliações: uma por reserva CONCLUÍDA. O email pós-devolução traz
+    // ?avaliar=<id da reserva>&estrelas=<1-5> e abre logo o formulário.
+    const [myReviews, setMyReviews] = useState<MyReview[]>([]);
+    const [reviewTarget, setReviewTarget] = useState<{ bookingId: number; vehicle?: string; customerName?: string; initialRating?: number } | null>(null);
+    const [reviewLinkHandled, setReviewLinkHandled] = useState(false);
+    const reviewFor = (bookingId: number) => myReviews.find((r) => r.bookingId === bookingId);
 
     async function handleDownloadInvoice(invoiceId: number) {
         try {
@@ -77,10 +87,14 @@ export default function ProfilePage() {
             setFetchLoading(true);
             setErr(null);
             try {
-                const [bookingsRes, invoicesRes] = await Promise.all([
+                const [bookingsRes, invoicesRes, reviewsRes] = await Promise.all([
                     authFetch(endpoints.bookings.me),
                     authFetch(endpoints.invoices.mine),
+                    authFetch(endpoints.reviews.mine),
                 ]);
+                if (reviewsRes.ok) {
+                    setMyReviews(await reviewsRes.json());
+                }
                 if (!bookingsRes.ok) throw new Error(t("loadError"));
                 setBookings(await bookingsRes.json());
                 if (invoicesRes.ok) {
@@ -96,6 +110,25 @@ export default function ProfilePage() {
         fetchMyBookings();
         fetchHistory(0);
     }, [isAuthenticated, fetchHistory]);
+
+    // Link do email: abre o formulário da reserva (quando o histórico já chegou).
+    useEffect(() => {
+        if (reviewLinkHandled || fetchLoading || historyLoading) return;
+        const params = new URLSearchParams(window.location.search);
+        const id = Number(params.get("avaliar"));
+        setReviewLinkHandled(true);
+        if (!id) return;
+        const b = [...bookings, ...(history?.content ?? [])].find((x) => x.id === id);
+        const stars = Number(params.get("estrelas"));
+        setTab("bookings");
+        setReviewTarget({
+            bookingId: id,
+            vehicle: b?.vehicle_title,
+            customerName: b?.customer_name,
+            initialRating: stars >= 1 && stars <= 5 ? stars : undefined,
+        });
+        window.history.replaceState(null, "", window.location.pathname);
+    }, [reviewLinkHandled, fetchLoading, historyLoading, bookings, history]);
 
     if (isLoading || (!isAuthenticated && !isLoading)) {
         return (
@@ -162,6 +195,32 @@ export default function ProfilePage() {
                                 {t("downloadInvoice")}
                             </button>
                         )}
+                        {b.status === "CONCLUÍDA" && (() => {
+                            const rv = reviewFor(b.id);
+                            if (rv?.status === "APPROVED") {
+                                return (
+                                    <p className="rv-profile-state rv-profile-state--ok mt-3">
+                                        <StarsView value={rv.rating} size={15} /> {tr("published")}
+                                    </p>
+                                );
+                            }
+                            return (
+                                <>
+                                    {rv && (
+                                        <p className={`rv-profile-state mt-3 ${rv.status === "REJECTED" ? "rv-profile-state--warn" : ""}`}>
+                                            {rv.status === "REJECTED" ? tr("rejected") : tr("pending")}
+                                        </p>
+                                    )}
+                                    <button
+                                        type="button"
+                                        onClick={() => setReviewTarget({ bookingId: b.id, vehicle: b.vehicle_title, customerName: b.customer_name })}
+                                        className="btn-racv mt-3 w-full text-center text-sm"
+                                    >
+                                        {rv ? tr("edit") : tr("write")}
+                                    </button>
+                                </>
+                            );
+                        })()}
                         {b.payment_status === "SUCCESS" && (
                             <Link
                                 href={`/payment/result?status=success&id=${b.id}`}
@@ -282,6 +341,18 @@ export default function ProfilePage() {
                     </div>
                 )}
             </div>
+
+            {reviewTarget && (
+                <ReviewDialog
+                    bookingId={reviewTarget.bookingId}
+                    vehicle={reviewTarget.vehicle}
+                    customerName={reviewTarget.customerName}
+                    initialRating={reviewTarget.initialRating}
+                    existing={reviewFor(reviewTarget.bookingId) ?? null}
+                    onClose={() => setReviewTarget(null)}
+                    onSaved={(saved) => setMyReviews((prev) => [saved, ...prev.filter((r) => r.bookingId !== saved.bookingId)])}
+                />
+            )}
         </div>
     );
 }
