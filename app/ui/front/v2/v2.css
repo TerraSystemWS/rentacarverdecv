@@ -293,6 +293,13 @@
 .site-v2 .profile-tabs button.v2-tab:focus-visible { outline: 3px solid var(--v2-sun); outline-offset: 2px; }
 .site-v2 .payment-brands--on-light { background: var(--v2-ocean-deep); border-radius: 16px; padding: 10px 18px; }
 
+/* ---------- Números (FunFactsBlock) e app (AppBlock): só cores ---------- */
+.site-v2 .fun-facts-block > .bg-black\/50 { background-color: rgba(8, 58, 80, 0.72); }
+.site-v2 .fun-facts-block .milestone-counter .stat-count { color: var(--v2-sun); }
+.site-v2 .app-block.bg-gray-color { background-color: var(--v2-sea) !important; }
+.site-v2 .app-block .mobile-app-details .title { color: var(--v2-ocean) !important; }
+.site-v2 .app-block .mobile-app-details .top-subtitle { color: var(--v2-green-dark); }
+
 @media (max-width: 991px) {
   .site-v2 .v2-search { grid-template-columns: 1fr 1fr; }
   .site-v2 .v2-search > :first-child { grid-column: 1 / -1; }
