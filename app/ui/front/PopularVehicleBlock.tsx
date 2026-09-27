@@ -148,7 +148,7 @@ export default function PopularVehicleBlock() {
 				<div className="block mt-6 md:hidden text-center">
 					<Link
 						href="/cars"
-						className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+						className="view-all-btn inline-block"
 					>
 						{tv("viewAll")}
 					</Link>

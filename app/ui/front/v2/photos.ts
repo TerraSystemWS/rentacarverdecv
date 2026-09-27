@@ -7,9 +7,10 @@ export const CV_PHOTOS: Record<CvPhotoKey, string | null> = {
 	cidadeVelha: null,
 	serraMalagueta: null,
 	assomada: null,
+	pages: null, // faixa no topo das páginas interiores (Viaturas, Contacto…): horizontal, ≥ 2000 px
 };
 
-export type CvPhotoKey = "hero" | "tarrafal" | "cidadeVelha" | "serraMalagueta" | "assomada";
+export type CvPhotoKey = "hero" | "tarrafal" | "cidadeVelha" | "serraMalagueta" | "assomada" | "pages";
 
 export function cvPhotoSrc(key: CvPhotoKey): string | null {
 	const file = CV_PHOTOS[key];

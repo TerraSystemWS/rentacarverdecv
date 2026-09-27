@@ -6,6 +6,7 @@ import { authFetch } from "@/app/auth/api";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
 import { CompanyProfile } from "@/lib/api/types";
 import { useTranslations } from "next-intl";
+import PageHeader from "@/app/ui/front/PageHeader";
 
 const Contact = () => {
 	const { content } = useContent();
@@ -65,16 +66,7 @@ const Contact = () => {
 	return (
 		<>
 			{/* ====== Cabeçalho da Página ====== */}
-			<div className="page-header nevy-bg">
-				<div className="container">
-					<div className="row">
-						<div className="col-md-12">
-							<h2 className="page-title">{data.headerTitle}</h2>
-							<p className="page-description yellow-color">{data.headerSubtitle}</p>
-						</div>
-					</div>
-				</div>
-			</div>
+			<PageHeader titulo={data.headerTitle} descricao={data.headerSubtitle} />
 
 			{/* ====== Contacte-nos ====== */}
 			<div className="contact-us-area mr-top-60">
