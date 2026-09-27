@@ -20,6 +20,7 @@ import {
 	Megaphone,
 	UserSquare2,
 	MapPin,
+	MapPinned,
 	X,
 	LogOut,
 	User as UserIcon,
@@ -59,6 +60,7 @@ const groups: Group[] = [
 		items: [
 			{ label: "Blog", href: "/dashboard/posts", icon: FileText },
 			{ label: "Galeria", href: "/dashboard/gallery", icon: Image },
+			{ label: "Destinos", href: "/dashboard/destination-places", icon: MapPinned },
 			{ label: "Parceiros", href: "/dashboard/partners", icon: Handshake },
 			{ label: "Media Library", href: "/dashboard/media", icon: Images },
 		],

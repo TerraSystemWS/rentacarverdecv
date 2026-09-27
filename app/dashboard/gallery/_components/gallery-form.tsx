@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { GalleryItem, MediaAsset } from "@/lib/api/types";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { DestinationPlace, GalleryItem, MediaAsset } from "@/lib/api/types";
 import { Upload, Images } from "lucide-react";
-import { API_BASE_URL } from "@/lib/api/endpoints";
+import { API_BASE_URL, endpoints } from "@/lib/api/endpoints";
+import { useAuth } from "@/app/auth/AuthContext";
 import MediaPicker from "@/app/dashboard/_components/MediaPicker";
 import TranslationFields from "@/app/ui/dash/TranslationFields";
 
@@ -12,7 +14,6 @@ interface GalleryFormProps {
     onSubmit: (data: GalleryItem, image?: File) => void;
     onCancel: () => void;
     isSubmitting?: boolean;
-    placeSuggestions?: string[];
     error?: string | null;
 }
 
@@ -24,7 +25,6 @@ export default function GalleryForm({
     onSubmit,
     onCancel,
     isSubmitting = false,
-    placeSuggestions = [],
     error,
 }: GalleryFormProps) {
     const [formData, setFormData] = useState<GalleryItem>({
@@ -34,10 +34,21 @@ export default function GalleryForm({
         category: initialData?.category || "Geral",
         description: initialData?.description || "",
         translations: initialData?.translations || {},
-        place: initialData?.place || "",
-        travelTime: initialData?.travelTime || "",
+        placeId: initialData?.placeId ?? null,
     });
     const isDestination = formData.category === DESTINATIONS;
+
+    // Locais dos Destinos (Conteúdo → Destinos): o local escolhe-se desta lista.
+    const { authFetch } = useAuth();
+    const [places, setPlaces] = useState<DestinationPlace[] | null>(null);
+    useEffect(() => {
+        if (!isDestination || places) return;
+        authFetch(endpoints.destinationPlaces.dashboard)
+            .then((res) => (res.ok ? res.json() : []))
+            .then((data: DestinationPlace[]) => setPlaces(data))
+            .catch(() => setPlaces([]));
+    }, [isDestination, places, authFetch]);
+    const selectedPlace = places?.find((p) => p.id === formData.placeId) ?? null;
 
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(initialData?.imageUrl || null);
@@ -48,8 +59,8 @@ export default function GalleryForm({
         setFormData((prev) => ({
             ...prev,
             [name]: value,
-            // Local e tempo só existem nos Destinos: limpa-os ao mudar de categoria.
-            ...(name === "category" && value !== DESTINATIONS ? { place: "", travelTime: "" } : {}),
+            // O local só existe nos Destinos: limpa-o ao mudar de categoria.
+            ...(name === "category" && value !== DESTINATIONS ? { placeId: null } : {}),
         }));
     };
 
@@ -119,35 +130,32 @@ export default function GalleryForm({
                     </div>
 
                     {isDestination && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div className="space-y-2">
+                        <div className="space-y-2">
+                            <div className="flex items-center justify-between gap-3">
                                 <label htmlFor="gallery-place" className="text-sm font-medium text-gray-700">Local *</label>
-                                <input
-                                    id="gallery-place"
-                                    name="place"
-                                    list="gallery-place-suggestions"
-                                    required
-                                    value={formData.place}
-                                    onChange={handleChange}
-                                    className="w-full rounded-lg border border-gray-300 p-2.5 outline-none focus:ring-2 focus:ring-blue-500/20"
-                                    placeholder="Ex: Tarrafal"
-                                />
-                                <datalist id="gallery-place-suggestions">
-                                    {placeSuggestions.map((p) => <option key={p} value={p} />)}
-                                </datalist>
+                                <Link href="/dashboard/destination-places" className="text-xs font-semibold text-blue-600 hover:underline">
+                                    Gerir locais
+                                </Link>
                             </div>
-                            <div className="space-y-2">
-                                <label htmlFor="gallery-travel-time" className="text-sm font-medium text-gray-700">Tempo de carro desde a agência</label>
-                                <input
-                                    id="gallery-travel-time"
-                                    name="travelTime"
-                                    value={formData.travelTime}
-                                    onChange={handleChange}
-                                    className="w-full rounded-lg border border-gray-300 p-2.5 outline-none focus:ring-2 focus:ring-blue-500/20"
-                                    placeholder="Ex: 1h30 ou 20 min"
-                                />
-                                <p className="text-xs text-gray-500">No site aparece como &quot;cerca de 1h30&quot;.</p>
-                            </div>
+                            <select
+                                id="gallery-place"
+                                required
+                                value={formData.placeId ?? ""}
+                                onChange={(e) => setFormData((prev) => ({ ...prev, placeId: e.target.value ? Number(e.target.value) : null }))}
+                                className="w-full rounded-lg border border-gray-300 p-2.5 outline-none focus:ring-2 focus:ring-blue-500/20"
+                            >
+                                <option value="">{places === null ? "A carregar locais..." : "Escolha o local"}</option>
+                                {places?.map((p) => (
+                                    <option key={p.id} value={p.id}>
+                                        {p.name}{p.active ? "" : " (inativo)"}
+                                    </option>
+                                ))}
+                            </select>
+                            <p className="text-xs text-gray-500">
+                                {selectedPlace?.travelTime
+                                    ? `Tempo de carro: cerca de ${selectedPlace.travelTime} (definido no local).`
+                                    : "O tempo de carro define-se no local, em Conteúdo → Destinos."}
+                            </p>
                         </div>
                     )}
 

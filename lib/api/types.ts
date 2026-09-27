@@ -64,6 +64,17 @@ export type RentalLocation = {
 	sortOrder: number;
 };
 
+/** Local dos Destinos (Conteúdo → Destinos): Tarrafal, Cidade Velha… */
+export type DestinationPlace = {
+	translations?: Translations;
+	id: number;
+	name: string;
+	travelTime: string | null;
+	active: boolean;
+	sortOrder: number;
+	imageCount: number;
+};
+
 export type UserRow = {
 	id: string; // UUID in backend
 	full_name: string;
@@ -239,9 +250,12 @@ export type GalleryItem = {
 	imageUrl: string;
 	category?: string;
 	description?: string;
-	/** Só na categoria "Destinos": local (ex: Tarrafal) e tempo de carro desde a agência (ex: "1h30"). */
-	place?: string;
-	travelTime?: string;
+	/** Só na categoria "Destinos": local da lista Conteúdo → Destinos (placeId ao gravar). */
+	placeId?: number | null;
+	/** Nome, traduções e tempo de carro do local (só leitura, vêm do local). */
+	place?: string | null;
+	placeTranslations?: Translations | null;
+	travelTime?: string | null;
 	createdAt?: string;
 };
 

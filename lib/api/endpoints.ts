@@ -87,6 +87,13 @@ export const endpoints = {
 			`/public/vouchers/validate?code=${encodeURIComponent(code)}${vehicleId ? `&vehicleId=${vehicleId}` : ""}`,
 	},
 	// Locais de levantamento/devolução (Operações → Locais).
+	destinationPlaces: {
+		list: "/public/destination-places",
+		dashboard: "/dashboard/destination-places",
+		create: "/dashboard/destination-places",
+		update: (id: number) => `/dashboard/destination-places/${id}`,
+		delete: (id: number) => `/dashboard/destination-places/${id}`,
+	},
 	locations: {
 		list: "/public/locations",
 		dashboard: "/dashboard/locations",

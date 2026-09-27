@@ -111,10 +111,6 @@ export default function GalleryPage() {
         (item.place?.toLowerCase() || "").includes(searchQuery.toLowerCase())
     );
 
-    // Locais já usados nos Destinos: sugeridos no formulário para não haver
-    // "Tarrafal" e "tarrafal" como locais diferentes na galeria do site.
-    const placeSuggestions = Array.from(new Set(items.map((i) => i.place?.trim()).filter((p): p is string => !!p))).sort((a, b) => a.localeCompare(b, "pt"));
-
     const getImageSrc = (url: string) => {
         if (!url) return "/assets/images/dummy.png";
         if (url.startsWith('blob:') || url.startsWith('data:')) return url;
@@ -228,7 +224,6 @@ export default function GalleryPage() {
                 onSubmit={handleSubmit}
                 initialData={editingItem}
                 isSubmitting={isSubmitting}
-                placeSuggestions={placeSuggestions}
                 error={saveError}
                 title={editingItem ? "Editar Imagem" : "Nova Imagem"}
             />

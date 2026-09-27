@@ -4,7 +4,7 @@ import { Suspense, useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import PageHeader from "@/app/ui/front/PageHeader";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
-import { GalleryItem } from "@/lib/api/types";
+import { DestinationPlace, GalleryItem } from "@/lib/api/types";
 import { useLocale, useTranslations } from "next-intl";
 import { tr } from "@/lib/i18n/translate";
 
@@ -26,12 +26,14 @@ function GalleryContent() {
     // inicial abrem a galeria já filtrada e o link pode ser partilhado.
     const urlCategory = searchParams.get("category");
     const activeCategory = urlCategory && CATEGORIES.includes(urlCategory) ? urlCategory : "Tudo";
-    const activePlace = activeCategory === DESTINATIONS ? searchParams.get("place") || "" : "";
+    // ?place=<id do local> (lista Conteúdo → Destinos no dashboard).
+    const activePlace = activeCategory === DESTINATIONS ? Number(searchParams.get("place")) || 0 : 0;
+    const [places, setPlaces] = useState<DestinationPlace[]>([]);
 
-    const setFilters = (category: string, place = "") => {
+    const setFilters = (category: string, placeId = 0) => {
         const params = new URLSearchParams();
         if (category !== "Tudo") params.set("category", category);
-        if (place) params.set("place", place);
+        if (placeId) params.set("place", String(placeId));
         const qs = params.toString();
         router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
     };
@@ -62,12 +64,20 @@ function GalleryContent() {
         fetchGallery();
     }, [activeCategory]);
 
-    const places = activeCategory === DESTINATIONS
-        ? Array.from(new Set(items.map((i) => i.place?.trim()).filter((p): p is string => !!p))).sort((a, b) => a.localeCompare(b, "pt"))
+    // Sub-filtros: locais ativos com imagens, pela ordem definida no dashboard.
+    useEffect(() => {
+        if (activeCategory !== DESTINATIONS || places.length > 0) return;
+        fetch(`${API_BASE_URL}${endpoints.destinationPlaces.list}`)
+            .then((res) => (res.ok ? res.json() : []))
+            .then((data: DestinationPlace[]) => setPlaces(Array.isArray(data) ? data : []))
+            .catch(() => setPlaces([]));
+    }, [activeCategory, places.length]);
+
+    const placeFilters = activeCategory === DESTINATIONS
+        ? places.filter((p) => items.some((i) => i.placeId === p.id))
         : [];
-    const visibleItems = activePlace
-        ? items.filter((i) => (i.place || "").toLowerCase() === activePlace.toLowerCase())
-        : items;
+    const placeLabel = (p: DestinationPlace) => tr(p, "name", locale);
+    const visibleItems = activePlace ? items.filter((i) => i.placeId === activePlace) : items;
 
     return (
         <main>
@@ -96,19 +106,19 @@ function GalleryContent() {
                                     </button>
                                 ))}
                             </div>
-                            {places.length > 0 && (
+                            {placeFilters.length > 0 && (
                                 <div className="gallery-filter gallery-filter--places flex flex-wrap justify-center gap-3 mt-6" role="group" aria-label={t("placesLabel")}>
-                                    {["", ...places].map((place) => (
+                                    {[null, ...placeFilters].map((place) => (
                                         <button
-                                            key={place || "all"}
-                                            onClick={() => setFilters(DESTINATIONS, place)}
-                                            aria-pressed={activePlace.toLowerCase() === place.toLowerCase()}
-                                            className={`px-[28px] py-[9px] rounded-[25px] font-['Exo',sans-serif] font-bold text-[14px] transition-all duration-300 ${activePlace.toLowerCase() === place.toLowerCase()
+                                            key={place?.id ?? "all"}
+                                            onClick={() => setFilters(DESTINATIONS, place?.id ?? 0)}
+                                            aria-pressed={activePlace === (place?.id ?? 0)}
+                                            className={`px-[28px] py-[9px] rounded-[25px] font-['Exo',sans-serif] font-bold text-[14px] transition-all duration-300 ${activePlace === (place?.id ?? 0)
                                                 ? "bg-[#3baa4e] text-white shadow-lg"
                                                 : "bg-gray-100 !text-gray-800 hover:bg-gray-200 hover:!text-black"
                                                 }`}
                                         >
-                                            {place || t("allPlaces")}
+                                            {place ? placeLabel(place) : t("allPlaces")}
                                         </button>
                                     ))}
                                 </div>
@@ -148,7 +158,7 @@ function GalleryContent() {
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-end p-6">
                                             <span className="text-green-400 text-xs font-bold uppercase tracking-widest mb-2">
                                                 {item.category === DESTINATIONS && item.place
-                                                    ? item.place
+                                                    ? (locale !== "pt" && item.placeTranslations?.[locale as "en" | "fr"]?.name?.trim()) || item.place
                                                     : item.category ? catLabel(item.category) : ""}
                                             </span>
                                             <h4 className="text-white font-bold text-lg leading-tight">

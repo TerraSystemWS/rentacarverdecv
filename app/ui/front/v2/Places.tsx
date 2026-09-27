@@ -36,7 +36,7 @@ function pickDestinations(items: GalleryItem[], max: number): GalleryItem[] {
 	const firstPerPlace: GalleryItem[] = [];
 	const rest: GalleryItem[] = [];
 	for (const item of shuffled) {
-		const key = (item.place || "").toLowerCase();
+		const key = String(item.placeId ?? "");
 		if (seen.has(key)) rest.push(item);
 		else {
 			seen.add(key);
@@ -46,8 +46,12 @@ function pickDestinations(items: GalleryItem[], max: number): GalleryItem[] {
 	return [...firstPerPlace, ...rest].slice(0, max);
 }
 
-const galleryHref = (place?: string) =>
-	`/gallery?category=${encodeURIComponent(DESTINATIONS)}${place ? `&place=${encodeURIComponent(place)}` : ""}`;
+const galleryHref = (placeId?: number | null) =>
+	`/gallery?category=${encodeURIComponent(DESTINATIONS)}${placeId ? `&place=${placeId}` : ""}`;
+
+/** Nome do local na língua do site (traduções feitas em Conteúdo → Destinos). */
+const placeName = (item: GalleryItem, locale: string) =>
+	(locale !== "pt" && item.placeTranslations?.[locale as "en" | "fr"]?.name?.trim()) || item.place || "";
 
 export default function Places() {
 	const t = useTranslations("v2.places");
@@ -60,7 +64,7 @@ export default function Places() {
 		fetch(`${API_BASE_URL}${endpoints.gallery.list}?category=${encodeURIComponent(DESTINATIONS)}`)
 			.then((res) => (res.ok ? res.json() : []))
 			.then((data: GalleryItem[]) => {
-				if (!cancelled) setCards(pickDestinations(Array.isArray(data) ? data.filter((i) => i.place) : [], MAX_CARDS));
+				if (!cancelled) setCards(pickDestinations(Array.isArray(data) ? data.filter((i) => i.placeId) : [], MAX_CARDS));
 			})
 			.catch(() => {
 				if (!cancelled) setCards([]);
@@ -91,16 +95,17 @@ export default function Places() {
 					{fromGallery
 						? fromGallery.map((item) => {
 								const text = tr(item, "description", locale) || tr(item, "title", locale);
+								const name = placeName(item, locale);
 								return (
 									<Link
 										key={item.id}
-										href={galleryHref(item.place)}
+										href={galleryHref(item.placeId)}
 										className="v2-place"
-										aria-label={t("openGallery", { place: item.place ?? "" })}
+										aria-label={t("openGallery", { place: name })}
 									>
 										<div className="v2-photo">
 											{/* eslint-disable-next-line @next/next/no-img-element */}
-											<img src={`${API_BASE_URL}${item.imageUrl}`} alt={tr(item, "title", locale) || item.place || ""} loading="lazy" />
+											<img src={`${API_BASE_URL}${item.imageUrl}`} alt={tr(item, "title", locale) || name} loading="lazy" />
 										</div>
 										<div className="v2-place__body">
 											{item.travelTime && (
@@ -108,7 +113,7 @@ export default function Places() {
 													<Clock size={14} aria-hidden="true" /> {t("about", { time: item.travelTime })}
 												</span>
 											)}
-											<h3>{item.place}</h3>
+											<h3>{name}</h3>
 											{text && <p>{text}</p>}
 										</div>
 									</Link>
