@@ -328,7 +328,18 @@
 .site-v2 main .button.nevy-bg:hover { background-color: var(--v2-green-dark) !important; color: var(--v2-on-primary) !important; }
 .site-v2 .view-all-btn { background-color: var(--v2-secondary) !important; color: var(--v2-on-secondary) !important; }
 .site-v2 .view-all-btn:hover { background-color: var(--v2-green-dark) !important; color: var(--v2-on-primary) !important; }
-.site-v2 .pagination-link .pagination li.active button { background-color: var(--v2-secondary); border-color: var(--v2-secondary); color: var(--v2-on-secondary); }
+/* Paginação (/cars): o template pinta os botões de branco — sem isto só a página ativa se via */
+.site-v2 .pagination-link .pagination li button {
+  background-color: var(--v2-white); border: 1px solid var(--v2-line); color: var(--v2-heading) !important;
+  font-family: var(--v2-display); font-weight: 700; transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.site-v2 .pagination-link .pagination li button i { color: inherit !important; }
+.site-v2 .pagination-link .pagination li:not(.active):not(.disabled) button:hover {
+  background-color: var(--v2-sea); border-color: var(--v2-secondary);
+}
+.site-v2 .pagination-link .pagination li button:focus-visible { outline: 3px solid var(--v2-sun); outline-offset: 2px; }
+.site-v2 .pagination-link .pagination li.disabled button { opacity: 0.4; cursor: default; }
+.site-v2 .pagination-link .pagination li.active button { background-color: var(--v2-secondary); border-color: var(--v2-secondary); color: var(--v2-on-secondary) !important; }
 .site-v2 main .text-indigo-600 { color: var(--v2-green-dark) !important; }
 .site-v2 .nf-title { color: var(--v2-heading); }
 
