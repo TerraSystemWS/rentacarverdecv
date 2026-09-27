@@ -87,6 +87,15 @@ export const endpoints = {
 			`/public/vouchers/validate?code=${encodeURIComponent(code)}${vehicleId ? `&vehicleId=${vehicleId}` : ""}`,
 	},
 	// Locais de levantamento/devolução (Operações → Locais).
+	themes: {
+		active: "/public/theme",
+		preview: (id: number) => `/public/themes/${id}`,
+		dashboard: "/dashboard/themes",
+		create: "/dashboard/themes",
+		update: (id: number) => `/dashboard/themes/${id}`,
+		activate: (id: number) => `/dashboard/themes/${id}/activate`,
+		delete: (id: number) => `/dashboard/themes/${id}`,
+	},
 	destinationPlaces: {
 		list: "/public/destination-places",
 		dashboard: "/dashboard/destination-places",

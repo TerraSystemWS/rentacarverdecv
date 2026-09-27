@@ -8,6 +8,7 @@ import { endpoints } from "@/lib/api/endpoints";
 import { CompanyProfile } from "@/lib/api/types";
 import TopNav from "@/app/ui/dash/topNav";
 import PageShell from "@/app/ui/dash/PageShell";
+import AppearanceCard from "./appearance/_components/appearance-card";
 import Link from "next/link";
 
 export default function SettingsPage() {
@@ -124,6 +125,9 @@ export default function SettingsPage() {
 
             <PageShell>
                 <div className="max-w-4xl mx-auto space-y-8">
+                    {/* Aparência: tema de cores do site público */}
+                    <AppearanceCard />
+
                     {/* Modo de Manutenção */}
                     <div className="bg-white p-8 rounded-[32px] shadow-sm border border-gray-100">
                         <div className="flex items-center justify-between mb-8">

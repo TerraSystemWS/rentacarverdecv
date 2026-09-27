@@ -75,6 +75,17 @@ export type DestinationPlace = {
 	imageCount: number;
 };
 
+/** Tema de cores do site público (Definições → Aparência); cores em lib/theme/tokens.ts. */
+export type SiteTheme = {
+	id: number;
+	name: string;
+	description: string | null;
+	colors: Record<string, string>;
+	builtIn: boolean;
+	active: boolean;
+	updatedAt: string | null;
+};
+
 export type UserRow = {
 	id: string; // UUID in backend
 	full_name: string;
