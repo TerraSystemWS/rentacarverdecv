@@ -12,13 +12,20 @@ interface GalleryFormProps {
     onSubmit: (data: GalleryItem, image?: File) => void;
     onCancel: () => void;
     isSubmitting?: boolean;
+    placeSuggestions?: string[];
+    error?: string | null;
 }
+
+/** Categoria cujas imagens aparecem em "Para onde ir a partir da Praia" (página inicial). */
+const DESTINATIONS = "Destinos";
 
 export default function GalleryForm({
     initialData,
     onSubmit,
     onCancel,
     isSubmitting = false,
+    placeSuggestions = [],
+    error,
 }: GalleryFormProps) {
     const [formData, setFormData] = useState<GalleryItem>({
         id: initialData?.id,
@@ -27,7 +34,10 @@ export default function GalleryForm({
         category: initialData?.category || "Geral",
         description: initialData?.description || "",
         translations: initialData?.translations || {},
+        place: initialData?.place || "",
+        travelTime: initialData?.travelTime || "",
     });
+    const isDestination = formData.category === DESTINATIONS;
 
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(initialData?.imageUrl || null);
@@ -38,6 +48,8 @@ export default function GalleryForm({
         setFormData((prev) => ({
             ...prev,
             [name]: value,
+            // Local e tempo só existem nos Destinos: limpa-os ao mudar de categoria.
+            ...(name === "category" && value !== DESTINATIONS ? { place: "", travelTime: "" } : {}),
         }));
     };
 
@@ -97,8 +109,47 @@ export default function GalleryForm({
                             <option value="Frota">Nossa Frota</option>
                             <option value="Eventos">Eventos</option>
                             <option value="Cabo Verde">Cabo Verde</option>
+                            <option value={DESTINATIONS}>Destinos</option>
                         </select>
+                        {isDestination && (
+                            <p className="text-xs text-gray-500">
+                                As imagens de Destinos aparecem na página inicial em &quot;Para onde ir a partir da Praia&quot; e na galeria, agrupadas por local.
+                            </p>
+                        )}
                     </div>
+
+                    {isDestination && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <label htmlFor="gallery-place" className="text-sm font-medium text-gray-700">Local *</label>
+                                <input
+                                    id="gallery-place"
+                                    name="place"
+                                    list="gallery-place-suggestions"
+                                    required
+                                    value={formData.place}
+                                    onChange={handleChange}
+                                    className="w-full rounded-lg border border-gray-300 p-2.5 outline-none focus:ring-2 focus:ring-blue-500/20"
+                                    placeholder="Ex: Tarrafal"
+                                />
+                                <datalist id="gallery-place-suggestions">
+                                    {placeSuggestions.map((p) => <option key={p} value={p} />)}
+                                </datalist>
+                            </div>
+                            <div className="space-y-2">
+                                <label htmlFor="gallery-travel-time" className="text-sm font-medium text-gray-700">Tempo de carro desde a agência</label>
+                                <input
+                                    id="gallery-travel-time"
+                                    name="travelTime"
+                                    value={formData.travelTime}
+                                    onChange={handleChange}
+                                    className="w-full rounded-lg border border-gray-300 p-2.5 outline-none focus:ring-2 focus:ring-blue-500/20"
+                                    placeholder="Ex: 1h30 ou 20 min"
+                                />
+                                <p className="text-xs text-gray-500">No site aparece como &quot;cerca de 1h30&quot;.</p>
+                            </div>
+                        </div>
+                    )}
 
                     <div className="space-y-2">
                         <label className="text-sm font-medium text-gray-700">Descrição (opcional)</label>
@@ -158,6 +209,10 @@ export default function GalleryForm({
                     { key: "description", label: "Descrição", type: "textarea", source: formData.description },
                 ]}
             />
+
+            {error && (
+                <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">{error}</p>
+            )}
 
             <div className="flex justify-end gap-3 pt-6 border-t border-gray-100">
                 <button type="button" onClick={onCancel} disabled={isSubmitting} className="rounded-lg px-5 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors">Cancelar</button>

@@ -10,6 +10,8 @@ interface GalleryDialogProps {
     onSubmit: (data: GalleryItem, image?: File) => void;
     initialData?: Partial<GalleryItem>;
     isSubmitting?: boolean;
+    placeSuggestions?: string[];
+    error?: string | null;
     title: string;
 }
 
@@ -19,6 +21,8 @@ export default function GalleryDialog({
     onSubmit,
     initialData,
     isSubmitting,
+    placeSuggestions,
+    error,
     title,
 }: GalleryDialogProps) {
     if (!isOpen) return null;
@@ -45,6 +49,8 @@ export default function GalleryDialog({
                         onSubmit={onSubmit}
                         onCancel={onClose}
                         isSubmitting={isSubmitting}
+                        placeSuggestions={placeSuggestions}
+                        error={error}
                     />
                 </div>
             </div>

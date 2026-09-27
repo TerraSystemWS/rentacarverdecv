@@ -284,11 +284,15 @@
 			"Tudo": "Tudo",
 			"Frota": "Frota",
 			"Eventos": "Eventos",
-			"Cabo Verde": "Cabo Verde"
+			"Cabo Verde": "Cabo Verde",
+			"Destinos": "Destinos"
 		},
 		"loading": "A carregar imagens...",
 		"empty": "Nenhuma imagem disponível nesta categoria.",
-		"imageAlt": "Imagem da galeria"
+		"imageAlt": "Imagem da galeria",
+		"allPlaces": "Todos os locais",
+		"placesLabel": "Filtrar destinos por local",
+		"travelTime": "cerca de {time} de carro"
 	},
 	"posts": {
 		"title": "Novidades",
@@ -568,7 +572,10 @@
 				"name": "Assomada",
 				"time": "cerca de 45 min",
 				"text": "Mercado animado no coração de Santa Catarina."
-			}
+			},
+			"about": "cerca de {time}",
+			"seeAll": "Ver todos os destinos",
+			"openGallery": "Ver fotos de {place} na galeria"
 		},
 		"why": {
 			"title": "Porquê a Rent a Car Verde",

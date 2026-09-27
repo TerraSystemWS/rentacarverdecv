@@ -18,6 +18,7 @@ export default function GalleryPage() {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [editingItem, setEditingItem] = useState<GalleryItem | undefined>();
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [saveError, setSaveError] = useState<string | null>(null);
 
     const fetchItems = async () => {
         try {
@@ -39,11 +40,13 @@ export default function GalleryPage() {
 
     const handleCreate = () => {
         setEditingItem(undefined);
+        setSaveError(null);
         setIsDialogOpen(true);
     };
 
     const handleEdit = (item: GalleryItem) => {
         setEditingItem(item);
+        setSaveError(null);
         setIsDialogOpen(true);
     };
 
@@ -72,6 +75,7 @@ export default function GalleryPage() {
 
     const handleSubmit = async (data: GalleryItem, image?: File) => {
         setIsSubmitting(true);
+        setSaveError(null);
         try {
             const formData = new FormData();
             formData.append("galleryItem", JSON.stringify(data));
@@ -90,6 +94,9 @@ export default function GalleryPage() {
             if (res.ok) {
                 fetchItems();
                 setIsDialogOpen(false);
+            } else {
+                const body = await res.json().catch(() => null);
+                setSaveError(body?.message || "Não foi possível guardar a imagem.");
             }
         } catch (error) {
             console.error("Error saving gallery item:", error);
@@ -100,8 +107,13 @@ export default function GalleryPage() {
 
     const filteredItems = items.filter((item) =>
         (item.title?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
-        (item.category?.toLowerCase() || "").includes(searchQuery.toLowerCase())
+        (item.category?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
+        (item.place?.toLowerCase() || "").includes(searchQuery.toLowerCase())
     );
+
+    // Locais já usados nos Destinos: sugeridos no formulário para não haver
+    // "Tarrafal" e "tarrafal" como locais diferentes na galeria do site.
+    const placeSuggestions = Array.from(new Set(items.map((i) => i.place?.trim()).filter((p): p is string => !!p))).sort((a, b) => a.localeCompare(b, "pt"));
 
     const getImageSrc = (url: string) => {
         if (!url) return "/assets/images/dummy.png";
@@ -187,7 +199,7 @@ export default function GalleryPage() {
                                             </div>
                                             <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm">
                                                 <span className="text-[10px] font-black uppercase tracking-wider text-blue-600">
-                                                    {item.category}
+                                                    {item.category}{item.place ? ` · ${item.place}` : ""}
                                                 </span>
                                             </div>
                                         </div>
@@ -216,6 +228,8 @@ export default function GalleryPage() {
                 onSubmit={handleSubmit}
                 initialData={editingItem}
                 isSubmitting={isSubmitting}
+                placeSuggestions={placeSuggestions}
+                error={saveError}
                 title={editingItem ? "Editar Imagem" : "Nova Imagem"}
             />
         </div>

@@ -284,11 +284,15 @@
 			"Tudo": "All",
 			"Frota": "Fleet",
 			"Eventos": "Events",
-			"Cabo Verde": "Cape Verde"
+			"Cabo Verde": "Cape Verde",
+			"Destinos": "Destinations"
 		},
 		"loading": "Loading images...",
 		"empty": "No images in this category.",
-		"imageAlt": "Gallery image"
+		"imageAlt": "Gallery image",
+		"allPlaces": "All places",
+		"placesLabel": "Filter destinations by place",
+		"travelTime": "about {time} by car"
 	},
 	"posts": {
 		"title": "News",
@@ -568,7 +572,10 @@
 				"name": "Assomada",
 				"time": "about 45 min",
 				"text": "A lively market in the heart of Santa Catarina."
-			}
+			},
+			"about": "about {time}",
+			"seeAll": "See all destinations",
+			"openGallery": "See photos of {place} in the gallery"
 		},
 		"why": {
 			"title": "Why Rent a Car Verde",

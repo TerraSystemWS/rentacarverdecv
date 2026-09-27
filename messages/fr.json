@@ -284,11 +284,15 @@
 			"Tudo": "Tout",
 			"Frota": "Flotte",
 			"Eventos": "Événements",
-			"Cabo Verde": "Cap-Vert"
+			"Cabo Verde": "Cap-Vert",
+			"Destinos": "Destinations"
 		},
 		"loading": "Chargement des images...",
 		"empty": "Aucune image dans cette catégorie.",
-		"imageAlt": "Image de la galerie"
+		"imageAlt": "Image de la galerie",
+		"allPlaces": "Tous les lieux",
+		"placesLabel": "Filtrer les destinations par lieu",
+		"travelTime": "environ {time} en voiture"
 	},
 	"posts": {
 		"title": "Actualités",
@@ -568,7 +572,10 @@
 				"name": "Assomada",
 				"time": "environ 45 min",
 				"text": "Un marché animé au cœur de Santa Catarina."
-			}
+			},
+			"about": "environ {time}",
+			"seeAll": "Voir toutes les destinations",
+			"openGallery": "Voir les photos de {place} dans la galerie"
 		},
 		"why": {
 			"title": "Pourquoi Rent a Car Verde",

@@ -239,6 +239,9 @@ export type GalleryItem = {
 	imageUrl: string;
 	category?: string;
 	description?: string;
+	/** Só na categoria "Destinos": local (ex: Tarrafal) e tempo de carro desde a agência (ex: "1h30"). */
+	place?: string;
+	travelTime?: string;
 	createdAt?: string;
 };
 
