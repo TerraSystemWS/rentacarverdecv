@@ -1,16 +1,21 @@
 import { MetadataRoute } from 'next';
 import { SERVER_API_BASE_URL, endpoints } from '@/lib/api/endpoints';
 
+// Regenerado de hora a hora (ISR). Com cache: 'no-store' o Next tentava gerá-lo
+// estático no build, a chamada falhava e o sitemap ficava sempre só com as
+// páginas fixas (sem viaturas, posts nem páginas legais).
+export const revalidate = 3600;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = 'https://rentacarverde.cv';
 
     try {
         // Fetch all vehicles
-        const vehiclesReq = await fetch(`${SERVER_API_BASE_URL}${endpoints.vehicles.list(100)}`, { cache: 'no-store' });
+        const vehiclesReq = await fetch(`${SERVER_API_BASE_URL}${endpoints.vehicles.list(100)}`, { next: { revalidate: 3600 } });
         const vehicles = await vehiclesReq.json();
 
         // Fetch all posts
-        const postsReq = await fetch(`${SERVER_API_BASE_URL}${endpoints.posts.list}`, { cache: 'no-store' });
+        const postsReq = await fetch(`${SERVER_API_BASE_URL}${endpoints.posts.list}`, { next: { revalidate: 3600 } });
         const posts = await postsReq.json();
 
         // Map vehicles to sitemap entries
@@ -42,7 +47,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         console.error("Error generating sitemap:", e);
         // Fallback to static routes
         return [
-            '', '/cars', '/about', '/contact', '/posts', '/gallery'
+            '', '/cars', '/about', '/contact', '/posts', '/gallery', '/condicoes-gerais', '/politica-cancelamento'
         ].map((route) => ({
             url: `${baseUrl}${route}`,
             lastModified: new Date(),
