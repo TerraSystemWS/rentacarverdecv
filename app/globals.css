@@ -630,3 +630,8 @@ a.hb-caption:hover { opacity: 1; background: rgba(34, 107, 60, 0.75); color: #ff
 
 /* Logo do cabeçalho (logo_b.svg): o SVG tem 243×99 de tamanho natural. */
 .header-nav-area .site-logo img { height: 72px; width: auto; max-width: 100%; }
+
+/* Campos .input do template com <select> (ex.: locais de levantamento/devolução):
+   o ícone do template fica à esquerda da seta nativa em vez de por cima dela. */
+.input:has(> select) > i.fa { right: 34px !important; pointer-events: none; }
+.input > select.form-controller { padding-right: 56px; -webkit-appearance: none; appearance: none; }
