@@ -4,32 +4,31 @@ import PopularVehicleBlock from "../ui/front/PopularVehicleBlock";
 import DriverBlock from "../ui/front/DriverBlock";
 import CompanyBrandBlock from "../ui/front/CompanyBrandBlock";
 import BlogArea from "../ui/front/BlogArea";
-import FunFactsBlock from "../ui/front/FunFactsBlock";
-import AppBlock from "../ui/front/AppBlock";
 import { useContent } from "../context/ContentContext";
 import HomeHero from "../ui/front/v2/HomeHero";
 import PromoStrip from "../ui/front/v2/PromoStrip";
 import Places from "../ui/front/v2/Places";
 import WhyUs from "../ui/front/v2/WhyUs";
+import FactsStrip from "../ui/front/v2/FactsStrip";
 
 // Novo visual (newUI): foto de Santiago com a pesquisa no topo, promoções,
 // viaturas, destinos da ilha e porquê nós. Saem o slide do template, o bloco
 // escuro de pesquisa e a lista repetida de viaturas (os banners, os locais e
 // a lista de viaturas continuam a ser usados noutros blocos). Os números
-// (/public/stats) e a app ficam: são editáveis no dashboard (Conteúdo).
+// (/public/stats + Conteúdo → home.funFacts) passam para a FactsStrip, logo
+// abaixo da pesquisa. O bloco da app (AppBlock) fica fora por agora.
 
 const Home = () => {
 	const { content } = useContent();
 	return (
 		<>
 			<HomeHero />
+			<FactsStrip content={content?.home.funFacts} />
 			<PromoStrip />
 			<PopularVehicleBlock />
 			<Places />
-			<FunFactsBlock content={content?.home.funFacts} />
 			<WhyUs />
 			<DriverBlock />
-			<AppBlock content={content?.home.app} />
 			<CompanyBrandBlock />
 			<BlogArea />
 		</>

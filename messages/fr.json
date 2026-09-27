@@ -584,6 +584,9 @@
 				"title": "Voitures électriques",
 				"text": "Une partie de la flotte est électrique : moins de bruit et zéro émission sur les routes de l'île."
 			}
+		},
+		"facts": {
+			"label": "Rent a Car Verde en chiffres"
 		}
 	}
 }

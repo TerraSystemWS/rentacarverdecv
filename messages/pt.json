@@ -584,6 +584,9 @@
 				"title": "Carros elétricos",
 				"text": "Parte da frota é elétrica: menos ruído e zero emissões nas estradas da ilha."
 			}
+		},
+		"facts": {
+			"label": "A Rent a Car Verde em números"
 		}
 	}
 }
