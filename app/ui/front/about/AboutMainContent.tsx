@@ -1,5 +1,8 @@
 // components/AboutMainContent.jsx
+"use client";
+
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 interface AboutMainContentProps {
 	content?: {
@@ -12,13 +15,14 @@ interface AboutMainContentProps {
 }
 
 export default function AboutMainContent({ content }: AboutMainContentProps) {
-	// Fallback content if none provided
-	const data = content || {
-		mainTitle: "Por que \nnos escolher",
-		mainSubtitle: "Excelência e confiança em serviços de aluguel de veículos",
-		bigTitle: "Melhor serviço de aluguel de veículos — aproveite cada viagem com conforto",
-		p1: "Fundada em [ano de fundação], nossa empresa se dedica a oferecer serviços de aluguel de veículos com qualidade, segurança e conforto. Atendemos clientes em todo o país, garantindo que cada experiência seja prática e agradável, seja para viagens de negócios, lazer ou transporte diário.",
-		p2: "Nossa frota é moderna e regularmente inspecionada, com veículos para todas as necessidades e orçamentos. Com uma equipe treinada e comprometida, oferecemos suporte rápido e personalizado, assegurando a melhor experiência de mobilidade para cada cliente. Nossa missão é transformar cada viagem em um momento seguro e eficiente, sempre com transparência e responsabilidade."
+	const t = useTranslations("about");
+	// Textos de recurso (se a API de conteúdos falhar).
+	const data = {
+		mainTitle: content?.mainTitle || t("mainTitle"),
+		mainSubtitle: content?.mainSubtitle || t("mainSubtitle"),
+		bigTitle: content?.bigTitle || t("bigTitle"),
+		p1: content?.p1 || t("p1"),
+		p2: content?.p2 || t("p2"),
 	};
 
 	return (
@@ -55,7 +59,7 @@ export default function AboutMainContent({ content }: AboutMainContentProps) {
 								<div className="col-md-6">
 									<Image
 										src="/assets/images/about/rentcv_art.png"
-										alt="imagem sobre nós"
+										alt={t("imageAlt")}
 										width={555}
 										height={350}
 										className="img-fluid rounded-3xl object-cover shadow-lg shadow-black/10"

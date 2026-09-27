@@ -1,5 +1,7 @@
 import React from "react";
 import { Vehicle } from "@/lib/api/types";
+import { useTranslations } from "next-intl";
+import { useVehicleTerms } from "@/lib/i18n/useVehicleTerms";
 
 export interface CarFilters {
 	q: string;
@@ -29,6 +31,8 @@ interface SideSearchProps {
 // template estático (marcas/modelos fictícios, botão "Filtrar" que não fazia
 // nada, action="#").
 const SideSearch: React.FC<SideSearchProps> = ({ vehicles, filters, onChange }) => {
+	const t = useTranslations("filters");
+	const term = useVehicleTerms();
 	const distinct = (values: (string | undefined)[]) =>
 		Array.from(new Set(values.filter((v): v is string => !!v && v.trim().length > 0))).sort();
 
@@ -47,14 +51,15 @@ const SideSearch: React.FC<SideSearchProps> = ({ vehicles, filters, onChange }) 
 	return (
 		<div className="vehicle-sidebar">
 			<form onSubmit={handleSubmit} className="advance-search-query">
-				<h2 className="form-title">Filtros</h2>
+				<h2 className="form-title">{t("title")}</h2>
 				<div className="form-content available-filter">
 					{/* Pesquisa Rápida */}
 					<div className="form-group">
 						<div className="input">
 							<input
 								type="text"
-								placeholder="Pesquisa rápida (marca, modelo)"
+								placeholder={t("quickSearch")}
+								aria-label={t("quickSearch")}
 								className="calendar form-controller"
 								value={filters.q}
 								onChange={(e) => onChange({ ...filters, q: e.target.value })}
@@ -64,14 +69,15 @@ const SideSearch: React.FC<SideSearchProps> = ({ vehicles, filters, onChange }) 
 
 					{/* Preço */}
 					<div className="form-group">
-						<label>Preço por dia (CVE)</label>
+						<label>{t("pricePerDay")}</label>
 						<div className="input">
 							<div className="row">
 								<div className="col-xs-6">
 									<input
 										type="number"
 										min={0}
-										placeholder="Mín."
+										placeholder={t("min")}
+										aria-label={`${t("pricePerDay")} ${t("min")}`}
 										className="calendar form-controller min"
 										value={filters.minPrice}
 										onChange={(e) => onChange({ ...filters, minPrice: e.target.value })}
@@ -81,7 +87,8 @@ const SideSearch: React.FC<SideSearchProps> = ({ vehicles, filters, onChange }) 
 									<input
 										type="number"
 										min={0}
-										placeholder="Máx."
+										placeholder={t("max")}
+										aria-label={`${t("pricePerDay")} ${t("max")}`}
 										className="calendar form-controller"
 										value={filters.maxPrice}
 										onChange={(e) => onChange({ ...filters, maxPrice: e.target.value })}
@@ -95,7 +102,7 @@ const SideSearch: React.FC<SideSearchProps> = ({ vehicles, filters, onChange }) 
 					<div className="advance-filters">
 						{classTypes.length > 0 && (
 							<>
-								<label>Categoria</label>
+								<label>{t("category")}</label>
 								<ul className="checkbox-content">
 									{classTypes.map((c) => (
 										<li key={c}>
@@ -105,7 +112,7 @@ const SideSearch: React.FC<SideSearchProps> = ({ vehicles, filters, onChange }) 
 												checked={filters.classTypes.includes(c)}
 												onChange={() => onChange({ ...filters, classTypes: toggle(filters.classTypes, c) })}
 											/>
-											<label htmlFor={`class-${c}`}>{c}</label>
+											<label htmlFor={`class-${c}`}>{term(c)}</label>
 										</li>
 									))}
 								</ul>
@@ -114,7 +121,7 @@ const SideSearch: React.FC<SideSearchProps> = ({ vehicles, filters, onChange }) 
 
 						{fuelTypes.length > 0 && (
 							<>
-								<label>Combustível</label>
+								<label>{t("fuel")}</label>
 								<ul className="checkbox-content">
 									{fuelTypes.map((f) => (
 										<li key={f}>
@@ -124,7 +131,7 @@ const SideSearch: React.FC<SideSearchProps> = ({ vehicles, filters, onChange }) 
 												checked={filters.fuelTypes.includes(f)}
 												onChange={() => onChange({ ...filters, fuelTypes: toggle(filters.fuelTypes, f) })}
 											/>
-											<label htmlFor={`fuel-${f}`}>{f}</label>
+											<label htmlFor={`fuel-${f}`}>{term(f)}</label>
 										</li>
 									))}
 								</ul>
@@ -133,7 +140,7 @@ const SideSearch: React.FC<SideSearchProps> = ({ vehicles, filters, onChange }) 
 
 						{gearboxes.length > 0 && (
 							<>
-								<label>Câmbio</label>
+								<label>{t("gearbox")}</label>
 								<ul className="checkbox-content">
 									{gearboxes.map((g) => (
 										<li key={g}>
@@ -143,7 +150,7 @@ const SideSearch: React.FC<SideSearchProps> = ({ vehicles, filters, onChange }) 
 												checked={filters.gearboxes.includes(g)}
 												onChange={() => onChange({ ...filters, gearboxes: toggle(filters.gearboxes, g) })}
 											/>
-											<label htmlFor={`gearbox-${g}`}>{g}</label>
+											<label htmlFor={`gearbox-${g}`}>{term(g)}</label>
 										</li>
 									))}
 								</ul>
@@ -154,10 +161,10 @@ const SideSearch: React.FC<SideSearchProps> = ({ vehicles, filters, onChange }) 
 					{/* Botões */}
 					<div className="filter-button">
 						<button type="button" className="button nevy-bg" onClick={() => onChange({ ...filters })}>
-							Filtrar
+							{t("apply")}
 						</button>
 						<button type="button" className="button nevy-bg" onClick={() => onChange({ ...emptyFilters })}>
-							Resetar
+							{t("reset")}
 						</button>
 					</div>
 				</div>

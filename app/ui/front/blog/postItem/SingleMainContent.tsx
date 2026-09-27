@@ -1,6 +1,7 @@
 import Image from "next/image";
 import React from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export type LinkItem = { label: string; href: string };
 export type GalleryItem = { src: string; alt?: string; href?: string };
@@ -53,6 +54,7 @@ const SingleMainContent: React.FC<SingleMainContentProps> = ({
 	gallery = [],
 	socialLinks,
 }) => {
+	const t = useTranslations("posts");
 	// Mantendo exatamente as classes do seu HTML original para o CSS existente funcionar
 	return (
 		<div className="single-main-content">
@@ -67,7 +69,7 @@ const SingleMainContent: React.FC<SingleMainContentProps> = ({
 							{/* Usando a imagem do autor ou o fallback do seu HTML original */}
 							<img
 								src={author.avatarUrl || "assets/images/author.jpg"}
-								alt="author"
+								alt={t("authorAlt")}
 							/>
 						</div>
 
@@ -81,7 +83,7 @@ const SingleMainContent: React.FC<SingleMainContentProps> = ({
 						<div className="post-navigation block-navigation-area yellow-theme">
 							<div className="item-navigation pull-right">
 								{navigation?.prevUrl ? (
-									<Link href={navigation.prevUrl} className="previous-item" title="Novidade anterior">
+									<Link href={navigation.prevUrl} className="previous-item" title={t("previous")} aria-label={t("previous")}>
 										<i className="fa fa-angle-left"></i>
 									</Link>
 								) : (
@@ -90,7 +92,7 @@ const SingleMainContent: React.FC<SingleMainContentProps> = ({
 									</span>
 								)}
 								{navigation?.nextUrl ? (
-									<Link href={navigation.nextUrl} className="next-item" title="Próxima novidade">
+									<Link href={navigation.nextUrl} className="next-item" title={t("next")} aria-label={t("next")}>
 										<i className="fa fa-angle-right"></i>
 									</Link>
 								) : (
@@ -110,13 +112,13 @@ const SingleMainContent: React.FC<SingleMainContentProps> = ({
 				<div className="single-post">
 					<div className="entry-meta">
 						<div className="entry-date">
-							<div className="meta-title">Date</div>
+							<div className="meta-title">{t("date")}</div>
 							<span>{date}</span>
 						</div>
 
 						{categories.length > 0 && (
 							<div className="entry-category">
-								<div className="meta-title">Category</div>
+								<div className="meta-title">{t("category")}</div>
 								{categories.map((cat, idx) => (
 									<React.Fragment key={idx}>
 										<Link href={cat.href}>{cat.label}</Link>
@@ -128,7 +130,7 @@ const SingleMainContent: React.FC<SingleMainContentProps> = ({
 
 						{tags.length > 0 && (
 							<div className="entry-tag">
-								<div className="meta-title">Tag</div>
+								<div className="meta-title">{t("tag")}</div>
 								{tags.map((tag, idx) => (
 									<React.Fragment key={idx}>
 										<Link href={tag.href}>{tag.label}</Link>
@@ -160,7 +162,7 @@ const SingleMainContent: React.FC<SingleMainContentProps> = ({
 				</div>
 
 				<div className="entry-share">
-					<span className="meta-name">Share:</span>
+					<span className="meta-name">{t("share")}</span>
 					{socialLinks?.instagram && (
 						<Link href={socialLinks.instagram}>
 							<i className="fa fa-instagram"></i>

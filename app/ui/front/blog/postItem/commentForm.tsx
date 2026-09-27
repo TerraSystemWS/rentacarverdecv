@@ -3,12 +3,14 @@
 
 import React, { useState } from "react";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
+import { useTranslations } from "next-intl";
 
 interface Props {
 	postSlug: string;
 }
 
 const CommentForm = ({ postSlug }: Props) => {
+	const t = useTranslations("comments");
 	const [form, setForm] = useState({
 		name: "",
 		email: "",
@@ -52,7 +54,7 @@ const CommentForm = ({ postSlug }: Props) => {
 			<div className="comments-main-content bg-white-color">
 				<div className="row">
 					<div className="col-md-12">
-						<h3 className="comment-reply-title">Deixe um comentario</h3>
+						<h3 className="comment-reply-title">{t("title")}</h3>
 					</div>
 				</div>
 
@@ -65,7 +67,8 @@ const CommentForm = ({ postSlug }: Props) => {
 										<input
 											type="text"
 											name="name"
-											placeholder="Nome*"
+											placeholder={t("name")}
+											aria-label={t("name")}
 											className="form-controllar"
 											value={form.name}
 											onChange={handleChange}
@@ -79,7 +82,8 @@ const CommentForm = ({ postSlug }: Props) => {
 										<input
 											type="email"
 											name="email"
-											placeholder="Email*"
+											placeholder={t("email")}
+											aria-label={t("email")}
 											className="form-controllar"
 											value={form.email}
 											onChange={handleChange}
@@ -94,7 +98,8 @@ const CommentForm = ({ postSlug }: Props) => {
 											name="message"
 											id="message"
 											rows={3}
-											placeholder="Escreva um comentário...."
+											placeholder={t("message")}
+											aria-label={t("message")}
 											className="form-controllar"
 											value={form.message}
 											onChange={handleChange}
@@ -105,12 +110,12 @@ const CommentForm = ({ postSlug }: Props) => {
 
 								{status === "sent" && (
 									<div className="col-md-12">
-										<p style={{ color: "#2e7d32" }}>Comentário publicado, obrigado!</p>
+										<p style={{ color: "#2e7d32" }}>{t("sent")}</p>
 									</div>
 								)}
 								{status === "error" && (
 									<div className="col-md-12">
-										<p style={{ color: "#c62828" }}>Não foi possível publicar o comentário. Tente de novo.</p>
+										<p style={{ color: "#c62828" }}>{t("error")}</p>
 									</div>
 								)}
 
@@ -122,7 +127,7 @@ const CommentForm = ({ postSlug }: Props) => {
 											className="button nevy-bg"
 											disabled={status === "sending"}
 										>
-											{status === "sending" ? "A publicar..." : "Postar o comentario"}
+											{status === "sending" ? t("submitting") : t("submit")}
 										</button>
 									</p>
 								</div>

@@ -1,11 +1,13 @@
 import React from "react";
 import { PostComment } from "@/lib/api/types";
+import { useFormatter } from "next-intl";
 
 interface Props {
 	comment: PostComment;
 }
 
 const CommentItem: React.FC<Props> = ({ comment }) => {
+	const format = useFormatter();
 	return (
 		<li className="comment">
 			<div className="comment-body">
@@ -17,7 +19,7 @@ const CommentItem: React.FC<Props> = ({ comment }) => {
 					</div>
 					<div className="comment-metadata">
 						<b className="author">{comment.authorName}</b>
-						<span className="date">{new Date(comment.createdAt).toLocaleDateString("pt-PT")}</span>
+						<span className="date">{format.dateTime(new Date(comment.createdAt), { dateStyle: "medium" })}</span>
 					</div>
 				</div>
 				<div className="comment-details">

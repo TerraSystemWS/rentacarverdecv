@@ -5,9 +5,11 @@ import { useContent } from "@/app/context/ContentContext";
 import { authFetch } from "@/app/auth/api";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
 import { CompanyProfile } from "@/lib/api/types";
+import { useTranslations } from "next-intl";
 
 const Contact = () => {
 	const { content } = useContent();
+	const t = useTranslations("contact");
 	const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
 	const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 	const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -24,7 +26,7 @@ const Contact = () => {
 		e.preventDefault();
 		if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
 			setStatus("error");
-			setErrorMsg("Preencha o nome, o email e a mensagem.");
+			setErrorMsg(t("missingFields"));
 			return;
 		}
 		setStatus("sending");
@@ -37,26 +39,27 @@ const Contact = () => {
 			});
 			if (!res.ok) {
 				const body = await res.json().catch(() => null);
-				throw new Error(body?.message || "Não foi possível enviar a mensagem.");
+				throw new Error(body?.message || t("sendError"));
 			}
 			setStatus("sent");
 			setForm({ name: "", email: "", subject: "", message: "" });
 		} catch (err: any) {
 			setStatus("error");
-			setErrorMsg(err?.message || "Não foi possível enviar a mensagem. Tente novamente.");
+			setErrorMsg(err?.message || t("sendError"));
 		}
 	}
 
-	const data = content?.contact || {
-		headerTitle: "Contacto",
-		headerSubtitle: "Fale connosco",
-		directTitle: "Contacte-nos em direto",
-		address: "Cidadela - Rua da Independência, em frente ao 4° paragem de autocarro, a 40 m de Direção Geral Dos Transportes Rodoviário",
-		phone: "+238 5810945",
-		email: "reservas@rentacarverde.cv",
-		mapTitle: "Mapa & Direções",
-		mapSubtitle: "Encontre a nossa localização",
-		mapDesc: "Descubra como chegar até nós a partir da sua localização atual",
+	const c = content?.contact;
+	const data = {
+		headerTitle: c?.headerTitle || t("headerTitle"),
+		headerSubtitle: c?.headerSubtitle || t("headerSubtitle"),
+		directTitle: c?.directTitle || t("directTitle"),
+		address: c?.address || t("address"),
+		phone: c?.phone || "+238 5810945",
+		email: c?.email || "reservas@rentacarverde.cv",
+		mapTitle: c?.mapTitle || t("mapTitle"),
+		mapSubtitle: c?.mapSubtitle || t("mapSubtitle"),
+		mapDesc: c?.mapDesc || t("mapDesc"),
 	};
 
 	return (
@@ -91,21 +94,21 @@ const Contact = () => {
 							<div className="contact-us-content-left">
 								<div className="contact">
 									<h4>
-										<i className="fa fa-map-marker"></i> Morada
+										<i className="fa fa-map-marker"></i> {t("addressLabel")}
 									</h4>
 									<p>{data.address}</p>
 								</div>
 
 								<div className="contact">
 									<h4>
-										<i className="fa fa-phone"></i> Telefone
+										<i className="fa fa-phone"></i> {t("phoneLabel")}
 									</h4>
 									<p>{data.phone}</p>
 								</div>
 
 								<div className="contact">
 									<h4>
-										<i className="fa fa-envelope"></i> Email
+										<i className="fa fa-envelope"></i> {t("emailLabel")}
 									</h4>
 									<p>{data.email}</p>
 								</div>
@@ -113,7 +116,7 @@ const Contact = () => {
 								{(company?.facebookUrl || company?.twitterUrl || company?.instagramUrl || company?.whatsappUrl) && (
 									<div className="contact">
 										<h4>
-											<i className="fa fa-user-circle"></i> Redes sociais
+											<i className="fa fa-user-circle"></i> {t("social")}
 										</h4>
 										<div className="social-icon">
 											{company?.facebookUrl && (
@@ -146,15 +149,16 @@ const Contact = () => {
 						<div className="col-md-8">
 							<div className="contact-us-content-right">
 								<form onSubmit={handleSubmit}>
-									<h3 className="from-title">Tem alguma questão?</h3>
+									<h3 className="from-title">{t("formTitle")}</h3>
 									<i className="fa fa-paper-plane" aria-hidden="true"></i>
 									<div className="input-content clearfix">
-										<h4>Envie-nos um email</h4>
+										<h4>{t("formSubtitle")}</h4>
 										<div className="row">
 											<div className="col-sm-6">
 												<input
 													type="text"
-													placeholder="Nome*"
+													placeholder={t("name")}
+													aria-label={t("name")}
 													className="form-control"
 													value={form.name}
 													onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -164,7 +168,8 @@ const Contact = () => {
 											<div className="col-sm-6">
 												<input
 													type="email"
-													placeholder="Email*"
+													placeholder={t("email")}
+													aria-label={t("email")}
 													className="form-control Email"
 													value={form.email}
 													onChange={(e) => setForm({ ...form, email: e.target.value })}
@@ -174,7 +179,8 @@ const Contact = () => {
 											<div className="col-md-12">
 												<input
 													type="text"
-													placeholder="Assunto"
+													placeholder={t("subject")}
+													aria-label={t("subject")}
 													className="form-control website"
 													value={form.subject}
 													onChange={(e) => setForm({ ...form, subject: e.target.value })}
@@ -184,7 +190,8 @@ const Contact = () => {
 												<textarea
 													rows={2}
 													cols={80}
-													placeholder="A sua mensagem"
+													placeholder={t("message")}
+													aria-label={t("message")}
 													value={form.message}
 													onChange={(e) => setForm({ ...form, message: e.target.value })}
 													required
@@ -193,7 +200,7 @@ const Contact = () => {
 										</div>
 										{status === "sent" && (
 											<p className="yellow-color" style={{ marginTop: 10 }}>
-												Mensagem enviada! Entraremos em contacto em breve.
+												{t("sent")}
 											</p>
 										)}
 										{status === "error" && errorMsg && (
@@ -202,7 +209,7 @@ const Contact = () => {
 										<div className="subimt-button clearfix">
 											<input
 												type="submit"
-												value={status === "sending" ? "A enviar..." : "Enviar"}
+												value={status === "sending" ? t("sending") : t("send")}
 												className="submit yellow-button"
 												disabled={status === "sending"}
 											/>
@@ -226,6 +233,7 @@ const Contact = () => {
 							</div>
 							<div className="header-map-content">
 								<iframe
+									title={t("mapFrameTitle")}
 									height="550"
 									src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5108.505257123504!2d-23.541741246858468!3d14.910647058540935!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x935993ef308ba19%3A0xc205e3171f9678ea!2sRent%20A%20Car%20Verde!5e1!3m2!1spt-PT!2spt!4v1758321179322!5m2!1spt-PT!2spt"
 									allowFullScreen

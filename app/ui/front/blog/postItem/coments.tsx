@@ -4,12 +4,14 @@ import React, { useEffect, useState } from "react";
 import CommentItem from "./comentItem";
 import { PostComment } from "@/lib/api/types";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
+import { useTranslations } from "next-intl";
 
 interface Props {
 	postSlug: string;
 }
 
 const Comments: React.FC<Props> = ({ postSlug }) => {
+	const t = useTranslations("comments");
 	const [comments, setComments] = useState<PostComment[]>([]);
 
 	useEffect(() => {
@@ -28,13 +30,13 @@ const Comments: React.FC<Props> = ({ postSlug }) => {
 			<div className="comments-main-content">
 				<div className="row">
 					<div className="col-md-12">
-						<h3 className="comments-title">{comments.length} Comentários</h3>
+						<h3 className="comments-title">{t("count", { count: comments.length })}</h3>
 					</div>
 				</div>
 				<div className="row">
 					<div className="col-md-12">
 						{comments.length === 0 ? (
-							<p className="opacity-70">Seja o primeiro a comentar esta novidade.</p>
+							<p className="opacity-70">{t("first")}</p>
 						) : (
 							<ol className="comment-list">
 								{comments.map((c) => (

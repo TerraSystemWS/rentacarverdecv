@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import { useFormatter, useTranslations } from "next-intl";
 
 export type AuthorInfo =
 	| string
@@ -31,8 +32,10 @@ interface BlogPostProps {
 }
 
 const BlogPost: React.FC<BlogPostProps> = ({ post }) => {
+	const t = useTranslations("posts");
+	const format = useFormatter();
 	const postHref = `/posts/${post.slug}`;
-	const formattedDate = post.createdAt ? new Date(post.createdAt).toLocaleDateString('pt-PT', { day: '2-digit', month: 'short' }) : "";
+	const formattedDate = post.createdAt ? format.dateTime(new Date(post.createdAt), { day: "2-digit", month: "short" }) : "";
 
 	const getImageSrc = (url: string | undefined | null) => {
 		if (!url) return "/assets/images/blog/blog-1.jpg";
@@ -56,7 +59,7 @@ const BlogPost: React.FC<BlogPostProps> = ({ post }) => {
 					<span className="entry-date nevy-bg">{formattedDate}</span>
 					<span className="entry-author green-bg">
 						<i className="fa fa-user" />
-						{post.author || "Admin"}
+						{post.author || t("defaultAuthor")}
 					</span>
 				</div>
 

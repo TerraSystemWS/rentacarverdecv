@@ -7,6 +7,7 @@ import CommentForm from "@/app/ui/front/blog/postItem/commentForm";
 import { endpoints, API_BASE_URL, SERVER_API_BASE_URL } from "@/lib/api/endpoints";
 import { Post } from "@/lib/api/types";
 import { notFound } from "next/navigation";
+import { getFormatter, getTranslations } from "next-intl/server";
 
 type BlogSinglePageProps = {
 	params: Promise<{
@@ -16,6 +17,8 @@ type BlogSinglePageProps = {
 
 const BlogSinglePage = async ({ params }: BlogSinglePageProps) => {
 	const { slug } = await params;
+	const t = await getTranslations("posts");
+	const format = await getFormatter();
 
 	if (!slug) {
 		return notFound();
@@ -53,7 +56,7 @@ const BlogSinglePage = async ({ params }: BlogSinglePageProps) => {
 		<main>
 			<PageHeader
 				titulo={post.title}
-				descricao={post.summary || "Leia mais sobre esta novidade."}
+				descricao={post.summary || t("readMore")}
 			/>
 
 			<div className="blog-single-block bg-gray-color pd-btm-60">
@@ -63,9 +66,9 @@ const BlogSinglePage = async ({ params }: BlogSinglePageProps) => {
 						<div className="col-md-8">
 							<SingleMainContent
 								title={post.title}
-								author={{ name: post.author || "Admin", role: "Author", avatarUrl: "/assets/images/default-avatar.png" }}
+								author={{ name: post.author || t("defaultAuthor"), role: t("authorRole"), avatarUrl: "/assets/images/default-avatar.png" }}
 								coverImageUrl={post.imageUrl?.startsWith('/uploads') ? `${API_BASE_URL}${post.imageUrl}` : (post.imageUrl || "/assets/images/blog/blog-1.jpg")}
-								date={post.createdAt ? new Date(post.createdAt).toLocaleDateString() : ""}
+								date={post.createdAt ? format.dateTime(new Date(post.createdAt), { dateStyle: "long" }) : ""}
 								categories={[]}
 								tags={[]}
 								contentHtml={textToHtml(post.content)}

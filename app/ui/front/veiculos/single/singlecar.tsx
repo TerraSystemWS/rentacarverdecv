@@ -4,7 +4,10 @@ import React, { useState, useEffect } from "react";
 import Swal from 'sweetalert2';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
-import { ptBR } from 'date-fns/locale';
+import { useLocale, useTranslations } from "next-intl";
+import { dateFnsLocale, PICKER_DATE_FORMAT } from "@/lib/i18n/dateLocale";
+import { useVehicleTerms } from "@/lib/i18n/useVehicleTerms";
+import { useFormatPrice } from "@/lib/i18n/format";
 import VehicleGallery from "./veiculoGalery";
 import PopularVehicleBlock from "../../PopularVehicleBlock";
 import { endpoints } from "@/lib/api/endpoints";
@@ -33,6 +36,12 @@ interface VehicleSingleProps {
 
 const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 	const { user, isAuthenticated, authFetch } = useAuth();
+	const t = useTranslations("carDetail");
+	const tv = useTranslations("vehicle");
+	const tSearch = useTranslations("search");
+	const locale = useLocale();
+	const term = useVehicleTerms();
+	const price = useFormatPrice();
 	const [formData, setFormData] = useState({
 		pickupLocation: "",
 		returnLocation: "",
@@ -90,16 +99,16 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 	})) || [];
 
 	const overview = [
-		{ label: "Classe", value: vehicle.classType, icon: Car },
-		{ label: "Câmbio", value: vehicle.gearbox, icon: Settings2 },
-		{ label: "Quilometragem", value: vehicle.mileage, icon: Gauge },
-		{ label: "Lugares", value: vehicle.maxPassengers, icon: UsersIcon },
-		{ label: "Combustível", value: vehicle.fuelType, icon: Fuel },
-		{ label: "Bagagem", value: vehicle.maxLuggage, icon: Briefcase },
-		{ label: "Consumo", value: vehicle.fuelUsage, icon: Zap },
-		{ label: "Portas", value: vehicle.doors, icon: DoorOpen },
-		{ label: "Cilindrada", value: vehicle.engineCapacity, icon: Cpu },
-		{ label: "Depósito", value: vehicle.deposit ? `${vehicle.deposit} CVE` : "N/A", icon: Wallet },
+		{ label: t("specs.class"), value: term(vehicle.classType), icon: Car },
+		{ label: t("specs.gearbox"), value: term(vehicle.gearbox), icon: Settings2 },
+		{ label: t("specs.mileage"), value: vehicle.mileage, icon: Gauge },
+		{ label: t("specs.seats"), value: vehicle.maxPassengers, icon: UsersIcon },
+		{ label: t("specs.fuel"), value: term(vehicle.fuelType), icon: Fuel },
+		{ label: t("specs.luggage"), value: vehicle.maxLuggage, icon: Briefcase },
+		{ label: t("specs.consumption"), value: vehicle.fuelUsage, icon: Zap },
+		{ label: t("specs.doors"), value: vehicle.doors, icon: DoorOpen },
+		{ label: t("specs.engine"), value: vehicle.engineCapacity, icon: Cpu },
+		{ label: t("specs.deposit"), value: vehicle.deposit ? `${vehicle.deposit} CVE` : "", icon: Wallet },
 	];
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -115,12 +124,12 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		if (!isAuthenticated || !user?.id) {
-			setMessage({ type: 'error', text: "Apenas utilizadores logados podem fazer reservas." });
+			setMessage({ type: 'error', text: t("errors.loginRequired") });
 			return;
 		}
 
 		if (!formData.startDate || !formData.endDate || !formData.pickupLocation || !formData.returnLocation) {
-			setMessage({ type: 'error', text: "Por favor preencha todos os campos obrigatórios." });
+			setMessage({ type: 'error', text: t("errors.requiredFields") });
 			return;
 		}
 
@@ -129,12 +138,12 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 		const end = new Date(cvToIso(formData.endDate, formData.endTime));
 
 		if (start >= end) {
-			setMessage({ type: 'error', text: "A data de devolução deve ser posterior à data de levantamento." });
+			setMessage({ type: 'error', text: t("errors.returnBeforePickup") });
 			return;
 		}
 
 		if (rangeOverlapsBooking(start, end)) {
-			setMessage({ type: 'error', text: "Este veículo já está reservado para o período selecionado. Escolha outras datas." });
+			setMessage({ type: 'error', text: t("errors.alreadyBooked") });
 			return;
 		}
 
@@ -157,26 +166,26 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 
 			if (res.ok) {
 				const bookingData = await res.json();
-				setMessage({ type: 'success', text: "Reserva efetuada! Redirecionando para o pagamento..." });
+				setMessage({ type: 'success', text: t("success") });
 
 				// Redirect to payment page after a short delay
 				setTimeout(() => {
 					window.location.href = `/payment/${bookingData.id}`;
 				}, 1500);
 			} else {
-				const errorData = await res.json().catch(() => ({ message: "Erro ao processar reserva." }));
+				const errorData = await res.json().catch(() => ({ message: t("errors.generic") }));
 				if (errorData.code === "PROFILE_INCOMPLETE") {
 					setMessage({
 						type: 'error',
-						text: `${errorData.message} Vá a "O Meu Perfil > Os Meus Dados" para completar.`,
+						text: t("errors.profileIncomplete", { message: errorData.message }),
 					});
 				} else {
-					setMessage({ type: 'error', text: errorData.message || "Ocorreu um erro ao processar a reserva." });
+					setMessage({ type: 'error', text: errorData.message || t("errors.generic") });
 				}
 			}
 		} catch (error) {
 			console.error("Booking error:", error);
-			setMessage({ type: 'error', text: "Erro de conexão com o servidor." });
+			setMessage({ type: 'error', text: t("errors.connection") });
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -198,14 +207,14 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 									</div>
 									<div className="tb-cell mb-block">
 										<h2 className="pull-right rent-price">
-											Aluguer/Dia: {vehicle.pricePerDay?.toLocaleString('pt-CV', { style: 'currency', currency: 'CVE' })}
+											{t("pricePerDay", { price: price(vehicle.pricePerDay) })}
 										</h2>
 									</div>
 								</div>
 
 								{/* Overview */}
 								<div className="vehicle-overview">
-									<h3 className="overview-title">Detalhes do Veículo</h3>
+									<h3 className="overview-title">{t("details")}</h3>
 									<ul className="grid grid-cols-2 md:grid-cols-3 gap-6">
 										{overview.map((item, idx) => {
 											const Icon = item.icon;
@@ -216,7 +225,7 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 													</div>
 													<div className="flex flex-col">
 														<span className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold">{item.label}</span>
-														<span className="text-sm font-extrabold text-foreground leading-tight">{item.value || "N/A"}</span>
+														<span className="text-sm font-extrabold text-foreground leading-tight">{item.value || tv("notAvailable")}</span>
 													</div>
 												</li>
 											);
@@ -228,24 +237,24 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 								<div className="vehicle-internal-features">
 									<div className="row">
 										<div className="col-md-6">
-											<h3 className="features-title">Funções Internas</h3>
+											<h3 className="features-title">{t("internalFeatures")}</h3>
 											<ul className="features-list">
 												{vehicle.internalFeatures?.map((feature, idx) => (
 													<li key={idx}>{feature}</li>
 												))}
 												{(!vehicle.internalFeatures || vehicle.internalFeatures.length === 0) && (
-													<li className="text-muted-foreground opacity-50 italic">Nenhuma</li>
+													<li className="text-muted-foreground opacity-50 italic">{t("none")}</li>
 												)}
 											</ul>
 										</div>
 										<div className="col-md-6">
-											<h3 className="features-title">Funções Externas</h3>
+											<h3 className="features-title">{t("externalFeatures")}</h3>
 											<ul className="features-list">
 												{vehicle.externalFeatures?.map((feature, idx) => (
 													<li key={idx}>{feature}</li>
 												))}
 												{(!vehicle.externalFeatures || vehicle.externalFeatures.length === 0) && (
-													<li className="text-muted-foreground opacity-50 italic">Nenhuma</li>
+													<li className="text-muted-foreground opacity-50 italic">{t("none")}</li>
 												)}
 											</ul>
 										</div>
@@ -262,11 +271,11 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 						<div className="col-md-4">
 							<div className="vehicle-sidebar pd-zero">
 								<form className="advance-search-query search-query-two" onSubmit={handleSubmit}>
-									<h2 className="form-title">Faça uma Reserva</h2>
+									<h2 className="form-title">{t("bookTitle")}</h2>
 									<div className="form-content available-filter">
 
 										{message && (
-											<div className={`p - 4 mb - 4 text - sm rounded - lg ${message.type === 'success' ? 'bg-green-100 text-green-800 border border-green-200' : 'bg-red-100 text-red-800 border border-red-200'} `}>
+											<div role={message.type === 'error' ? 'alert' : 'status'} className={`p-4 mb-4 text-sm rounded-lg ${message.type === 'success' ? 'bg-green-100 text-green-800 border border-green-200' : 'bg-red-100 text-red-800 border border-red-200'}`}>
 												{message.text}
 											</div>
 										)}
@@ -274,13 +283,13 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 										{!isAuthenticated && (
 											<div className="p-4 mb-6 bg-amber-50 border border-amber-200 rounded-lg text-amber-800 text-sm">
 												<i className="fa fa-info-circle mr-2"></i>
-												Deverá fazer <strong>Login</strong> para realizar uma reserva.
+												{t.rich("loginRequired", { strong: (chunks) => <a href="/login"><strong>{chunks}</strong></a> })}
 											</div>
 										)}
 
 										<div className="regular-search">
 											<div className="form-group">
-												<label className="text-uppercase">Local de levantamento</label>
+												<label className="text-uppercase">{t("pickupLocation")}</label>
 												<div className="input">
 													<i className="fa fa-map-marker"></i>
 													<select
@@ -291,14 +300,14 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 														required
 														disabled={!isAuthenticated || locationsLoading}
 													>
-														<option value="">{locationsLoading ? "A carregar locais..." : "Escolha o local"}</option>
+														<option value="">{locationsLoading ? tSearch("loadingLocations") : tSearch("chooseLocation")}</option>
 														{locations.map((l) => (
 															<option key={l.id} value={l.id}>{l.name}</option>
 														))}
 													</select>
 												</div>
 
-												<label className="text-uppercase">Local de devolução</label>
+												<label className="text-uppercase">{t("returnLocation")}</label>
 												<div className="input">
 													<i className="fa fa-map-marker"></i>
 													<select
@@ -309,14 +318,14 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 														required
 														disabled={!isAuthenticated || locationsLoading}
 													>
-														<option value="">{locationsLoading ? "A carregar locais..." : "Escolha o local"}</option>
+														<option value="">{locationsLoading ? tSearch("loadingLocations") : tSearch("chooseLocation")}</option>
 														{locations.map((l) => (
 															<option key={l.id} value={l.id}>{l.name}</option>
 														))}
 													</select>
 												</div>
 
-												<label>Data de levantamento</label>
+												<label>{t("pickupDate")}</label>
 												<div className="input relative">
 													<i className="fa fa-calendar absolute right-3 top-3 text-gray-400 z-10 pointer-events-none"></i>
 													<DatePicker
@@ -327,18 +336,18 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 																startDate: date ? localDateString(date) : ""
 															}));
 														}}
-														dateFormat="dd/MM/yyyy"
-														locale={ptBR}
+														dateFormat={PICKER_DATE_FORMAT}
+														locale={dateFnsLocale(locale)}
 														minDate={new Date()}
 														excludeDateIntervals={bookedIntervals}
 														className="form-controller w-full bg-transparent"
-														placeholderText="dd/mm/aaaa"
+														placeholderText={tSearch("datePlaceholder")}
 														required
 														disabled={!isAuthenticated}
 													/>
 												</div>
 
-												<label>Data de devolução</label>
+												<label>{t("returnDate")}</label>
 												<div className="input relative">
 													<i className="fa fa-calendar absolute right-3 top-3 text-gray-400 z-10 pointer-events-none"></i>
 													<DatePicker
@@ -349,12 +358,12 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 																endDate: date ? localDateString(date) : ""
 															}));
 														}}
-														dateFormat="dd/MM/yyyy"
-														locale={ptBR}
+														dateFormat={PICKER_DATE_FORMAT}
+														locale={dateFnsLocale(locale)}
 														minDate={formData.startDate ? parseLocalDate(formData.startDate) ?? new Date() : new Date()}
 														excludeDateIntervals={bookedIntervals}
 														className="form-controller w-full bg-transparent"
-														placeholderText="dd/mm/aaaa"
+														placeholderText={tSearch("datePlaceholder")}
 														required
 														disabled={!isAuthenticated}
 													/>
@@ -362,7 +371,7 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 
 												<div className="row">
 													<div className="col-xs-6">
-														<label>Hora Levantamento</label>
+														<label>{t("pickupTime")}</label>
 														<div className="input">
 															<i className="fa fa-clock-o"></i>
 															<input
@@ -377,7 +386,7 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 														</div>
 													</div>
 													<div className="col-xs-6">
-														<label>Hora Devolução</label>
+														<label>{t("returnTime")}</label>
 														<div className="input">
 															<i className="fa fa-clock-o"></i>
 															<input
@@ -405,7 +414,7 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 													className="w-5 h-5 mr-3 text-green-600 rounded focus:ring-green-500 cursor-pointer"
 												/>
 												<label htmlFor="hasExtraDriver" className="text-gray-700 m-0 cursor-pointer select-none">
-													Adicionar condutor extra <span className="text-green-600 font-bold">(+3300 CVE / dia)</span>
+													{t("extraDriver")} <span className="text-green-600 font-bold">{t("extraDriverPrice")}</span>
 												</label>
 											</div>
 										</div>
@@ -416,7 +425,7 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 												className="button yellow-button w-full disabled:opacity-50"
 												disabled={isSubmitting || !isAuthenticated}
 											>
-												{isSubmitting ? "Processando..." : "Reserve Agora"}
+												{isSubmitting ? t("submitting") : t("submit")}
 											</button>
 										</div>
 									</div>

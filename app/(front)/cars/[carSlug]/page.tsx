@@ -4,32 +4,36 @@ import { Vehicle } from "@/lib/api/types";
 import { API_BASE_URL, SERVER_API_BASE_URL } from "@/lib/api/endpoints";
 import { Metadata } from "next";
 import { permanentRedirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 
 export async function generateMetadata({ params }: { params: Promise<{ carSlug: string }> }): Promise<Metadata> {
 	const { carSlug } = await params;
+	const t = await getTranslations("carPage");
 
 	try {
 		const res = await fetch(`${SERVER_API_BASE_URL}/public/vehicles/${carSlug}`, { cache: 'no-store' });
-		if (!res.ok) return { title: 'Veículo não encontrado' };
+		if (!res.ok) return { title: t("notFound") };
 
 		const vehicle: Vehicle = await res.json();
+		const vars = { name: `${vehicle.make} ${vehicle.model}`, price: String(vehicle.pricePerDay ?? "") };
 
 		return {
-			title: `Alugar ${vehicle.make} ${vehicle.model}`,
-			description: `Alugue este impecável ${vehicle.make} ${vehicle.model} por apenas ${vehicle.pricePerDay} CVE/dia. Reserve já com a Verde CV!`,
+			title: t("metaTitle", vars),
+			description: t("metaDescription", vars),
 			openGraph: {
-				title: `Alugar ${vehicle.make} ${vehicle.model} | Verde CV`,
-				description: `Alugue este impecável ${vehicle.make} ${vehicle.model} por apenas ${vehicle.pricePerDay} CVE/dia.`,
+				title: `${t("metaTitle", vars)} | Rent a Car Verde`,
+				description: t("metaDescription", vars),
 				images: vehicle.images?.[0] ? [{ url: `${API_BASE_URL}${vehicle.images[0].url}` }] : []
 			}
 		};
 	} catch (e) {
-		return { title: 'Veículo' };
+		return { title: t("vehicle") };
 	}
 }
 
 export default async function CarSlug({ params }: { params: Promise<{ carSlug: string }> }) {
 	const { carSlug } = await params;
+	const t = await getTranslations("carPage");
 	let vehicle: Vehicle | null = null;
 
 	try {
@@ -51,7 +55,7 @@ export default async function CarSlug({ params }: { params: Promise<{ carSlug: s
 
 	return (
 		<div>
-			<PageHeader titulo={vehicle ? `${vehicle.make} ${vehicle.model}` : "Veículo não encontrado"} descricao="Sobre a Rent-A-Car Verde" />
+			<PageHeader titulo={vehicle ? `${vehicle.make} ${vehicle.model}` : t("notFound")} descricao={t("headerDesc")} />
 
 			{vehicle && (
 				<script
@@ -62,7 +66,7 @@ export default async function CarSlug({ params }: { params: Promise<{ carSlug: s
 							"@type": "Product",
 							"name": `${vehicle.make} ${vehicle.model}`,
 							"image": vehicle.images?.[0]?.url ? `${API_BASE_URL}${vehicle.images[0].url}` : "",
-							"description": `Alugue este ${vehicle.make} ${vehicle.model}`,
+							"description": t("ldDescription", { name: `${vehicle.make} ${vehicle.model}` }),
 							"offers": {
 								"@type": "Offer",
 								"price": vehicle.pricePerDay,
@@ -78,7 +82,7 @@ export default async function CarSlug({ params }: { params: Promise<{ carSlug: s
 				<VehicleSingle vehicle={vehicle} />
 			) : (
 				<div className="container py-20 text-center text-muted-foreground">
-					Veículo não encontrado.
+					{t("notFoundText")}
 				</div>
 			)}
 		</div>

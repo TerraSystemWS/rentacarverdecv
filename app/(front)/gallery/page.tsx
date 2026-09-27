@@ -4,13 +4,17 @@ import { useEffect, useState } from "react";
 import PageHeader from "@/app/ui/front/PageHeader";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
 import { GalleryItem } from "@/lib/api/types";
+import { useTranslations } from "next-intl";
 
 export default function GalleryPage() {
+    const t = useTranslations("gallery");
     const [items, setItems] = useState<GalleryItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeCategory, setActiveCategory] = useState("Tudo");
 
+    // Valores em PT (como na BD / API); o rótulo segue a língua.
     const categories = ["Tudo", "Frota", "Eventos", "Cabo Verde"];
+    const catLabel = (c: string) => (t.has(`categories.${c}`) ? t(`categories.${c}`) : c);
 
     useEffect(() => {
         const fetchGallery = async () => {
@@ -37,8 +41,8 @@ export default function GalleryPage() {
     return (
         <main>
             <PageHeader
-                titulo="A Nossa Galeria"
-                descricao="Explore as nossas fotos, frota e momentos especiais."
+                titulo={t("title")}
+                descricao={t("desc")}
             />
 
             <div className="gallery-section pd-90 bg-white">
@@ -51,12 +55,13 @@ export default function GalleryPage() {
                                     <button
                                         key={cat}
                                         onClick={() => setActiveCategory(cat)}
+                                        aria-pressed={activeCategory === cat}
                                         className={`px-[60px] py-[15px] rounded-[25px] font-['Exo',sans-serif] font-black uppercase text-[16px] tracking-[0.035em] transition-all duration-300 ${activeCategory === cat
                                             ? "bg-[#3baa4e] text-white shadow-lg"
                                             : "bg-gray-100 !text-gray-800 hover:bg-gray-200 hover:!text-black"
                                             }`}
                                     >
-                                        {cat}
+                                        {catLabel(cat)}
                                     </button>
                                 ))}
                             </div>
@@ -70,14 +75,14 @@ export default function GalleryPage() {
                                 <div className="flex flex-col items-center gap-4">
                                     <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin" />
                                     <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">
-                                        A carregar momentos...
+                                        {t("loading")}
                                     </p>
                                 </div>
                             </div>
                         ) : items.length === 0 ? (
                             <div className="py-20 text-center">
                                 <p className="text-gray-400 font-bold">
-                                    Nenhuma imagem disponível nesta categoria.
+                                    {t("empty")}
                                 </p>
                             </div>
                         ) : (
@@ -89,12 +94,12 @@ export default function GalleryPage() {
                                     >
                                         <img
                                             src={`${API_BASE_URL}${item.imageUrl}`}
-                                            alt={item.title || "Gallery"}
+                                            alt={item.title || t("imageAlt")}
                                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-end p-6">
                                             <span className="text-green-400 text-xs font-bold uppercase tracking-widest mb-2">
-                                                {item.category}
+                                                {item.category ? catLabel(item.category) : ""}
                                             </span>
                                             <h4 className="text-white font-bold text-lg leading-tight">
                                                 {item.title}

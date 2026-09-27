@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Post } from "@/lib/api/types";
 import { API_BASE_URL } from "@/lib/api/endpoints";
 import AdSlot from "../AdSlot";
+import { useFormatter, useTranslations } from "next-intl";
 
 interface BlogSidebarProps {
 	recentPosts: Post[];
@@ -12,6 +13,8 @@ interface BlogSidebarProps {
 }
 
 const BlogSidebar: React.FC<BlogSidebarProps> = ({ recentPosts, currentSlug }) => {
+	const t = useTranslations("posts");
+	const format = useFormatter();
 	const getImageSrc = (url?: string | null) => {
 		if (!url) return "/assets/images/blog/blog-two.png";
 		if (url.startsWith("/uploads")) return `${API_BASE_URL}${url}`;
@@ -25,10 +28,10 @@ const BlogSidebar: React.FC<BlogSidebarProps> = ({ recentPosts, currentSlug }) =
 			<div className="blog-content-right nevy-bg">
 				{/* Posts Recentes */}
 				<div className="widget widget_popular_posts clearfix">
-					<h4 className="widget-title">Novidades Recentes</h4>
+					<h4 className="widget-title">{t("recent")}</h4>
 					<div className="widget-content">
 						{others.length === 0 && (
-							<p className="text-sm opacity-60">Sem outras novidades por agora.</p>
+							<p className="text-sm opacity-60">{t("noOthers")}</p>
 						)}
 						{others.map((post) => (
 							<div className="post-content clearfix" key={post.id}>
@@ -42,7 +45,7 @@ const BlogSidebar: React.FC<BlogSidebarProps> = ({ recentPosts, currentSlug }) =
 										<Link href={`/posts/${post.slug}`}>{post.title}</Link>
 									</h5>
 									<span className="post-date">
-										{post.createdAt ? new Date(post.createdAt).toLocaleDateString("pt-PT") : ""}
+										{post.createdAt ? format.dateTime(new Date(post.createdAt), { dateStyle: "medium" }) : ""}
 									</span>
 								</div>
 							</div>
