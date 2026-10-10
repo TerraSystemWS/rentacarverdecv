@@ -156,7 +156,7 @@ function Receipt({ summary, company }: { summary: PaymentSummary | null; company
 			<div className="flex flex-wrap items-center justify-between gap-3 print:hidden">
 				<PaymentBrands onLight />
 				<div className="flex gap-2">
-					<button onClick={() => window.print()} className="h-10 px-4 border border-slate-300 rounded-lg text-sm font-semibold flex items-center gap-2 hover:bg-slate-50">
+					<button onClick={() => window.print()} className="receipt-print-btn h-10 px-4 text-sm font-semibold flex items-center gap-2">
 						<Printer className="w-4 h-4" /> {t("print")}
 					</button>
 					<Link href="/profile" className="btn-racv px-6">{t("myBookings")}</Link>

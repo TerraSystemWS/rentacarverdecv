@@ -294,6 +294,27 @@
   color: #334155 !important;
 }
 
+/*
+ * Mesmo problema de layer no botão "Imprimir" do resultado do pagamento:
+ * "button{color:#fff;border:0;padding:12px 40px;border-radius:25px}" do CSS
+ * legado deixava texto branco sobre fundo branco. O :hover do legado tem
+ * !important, por isso o :hover daqui também precisa.
+ */
+.receipt-print-btn {
+  color: #0f172a; /* slate-900 */
+  background-color: #ffffff;
+  border: 1px solid #94a3b8; /* slate-400 */
+  border-radius: 0.5rem;
+  padding: 0 1rem;
+  text-transform: none;
+}
+
+.receipt-print-btn:hover {
+  background-color: #f1f5f9; /* slate-100 */
+  border-color: #0f172a;
+  color: #0f172a !important;
+}
+
 .license-photo-actions button.text-red-600 {
   color: #dc2626 !important; /* red-600 */
   border-color: #fecaca; /* red-200 */
