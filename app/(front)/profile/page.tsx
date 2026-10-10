@@ -34,6 +34,14 @@ export default function ProfilePage() {
     const [err, setErr] = useState<string | null>(null);
     const [tab, setTab] = useState<"bookings" | "data">("bookings");
 
+    // /profile?tab=dados abre logo "Os Meus Dados" (link do erro "complete os
+    // seus dados" ao reservar e do resumo do pagamento).
+    useEffect(() => {
+        if (new URLSearchParams(window.location.search).get("tab") === "dados") {
+            setTab("data");
+        }
+    }, []);
+
     // Histórico paginado — só pede ao servidor as 6 reservas da página atual;
     // o resto só é pedido quando o cliente clica "2, 3, ..." (ver
     // /dashboard/bookings/me/history no backend).

@@ -236,7 +236,7 @@
 			"requiredFields": "Please fill in all required fields.",
 			"returnBeforePickup": "The return date must be after the pick-up date.",
 			"alreadyBooked": "This vehicle is already booked for those dates. Please choose other dates.",
-			"profileIncomplete": "{message} Go to \"My profile > My details\" to complete it.",
+			"profileIncomplete": "{message} <link>Complete my details now</link>",
 			"generic": "Something went wrong while processing your booking.",
 			"connection": "Couldn't reach the server. Please try again."
 		},

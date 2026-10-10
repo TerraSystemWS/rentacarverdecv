@@ -236,7 +236,7 @@
 			"requiredFields": "Preencha todos os campos obrigatórios.",
 			"returnBeforePickup": "A data de devolução tem de ser posterior à de levantamento.",
 			"alreadyBooked": "Este veículo já está reservado nesse período. Escolha outras datas.",
-			"profileIncomplete": "{message} Vá a \"O Meu Perfil > Os Meus Dados\" para completar.",
+			"profileIncomplete": "{message} <link>Completar os meus dados agora</link>",
 			"generic": "Ocorreu um erro ao processar a reserva.",
 			"connection": "Não foi possível ligar ao servidor. Tente de novo."
 		},

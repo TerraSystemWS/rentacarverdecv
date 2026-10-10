@@ -126,7 +126,7 @@ export default function PaymentPage() {
 								<br />
 								{countryName(summary.billingCountryCode)}
 							</p>
-							<Link href="/profile" className="text-xs font-semibold text-green-700 hover:underline">
+							<Link href="/profile?tab=dados" className="text-xs font-semibold text-green-700 hover:underline">
 								{t("changeInProfile")}
 							</Link>
 							{!summary.profileComplete && (

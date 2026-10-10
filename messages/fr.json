@@ -236,7 +236,7 @@
 			"requiredFields": "Veuillez remplir tous les champs obligatoires.",
 			"returnBeforePickup": "La date de restitution doit être postérieure à la date de prise en charge.",
 			"alreadyBooked": "Ce véhicule est déjà réservé pour cette période. Veuillez choisir d'autres dates.",
-			"profileIncomplete": "{message} Allez dans « Mon profil > Mes informations » pour les compléter.",
+			"profileIncomplete": "{message} <link>Compléter mes informations maintenant</link>",
 			"generic": "Une erreur s'est produite lors du traitement de la réservation.",
 			"connection": "Impossible de joindre le serveur. Veuillez réessayer."
 		},

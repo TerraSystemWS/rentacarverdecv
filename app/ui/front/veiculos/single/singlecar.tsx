@@ -53,7 +53,7 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 		hasExtraDriver: false,
 	});
 	const [isSubmitting, setIsSubmitting] = useState(false);
-	const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+	const [message, setMessage] = useState<{ type: 'success' | 'error', text: React.ReactNode } | null>(null);
 	const [bookedIntervals, setBookedIntervals] = useState<{ start: Date; end: Date }[]>([]);
 	const { locations, loading: locationsLoading } = useRentalLocations();
 
@@ -178,7 +178,10 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 				if (errorData.code === "PROFILE_INCOMPLETE") {
 					setMessage({
 						type: 'error',
-						text: t("errors.profileIncomplete", { message: errorData.message }),
+						text: t.rich("errors.profileIncomplete", {
+							message: errorData.message,
+							link: (chunks) => <a href="/profile?tab=dados" className="font-bold underline">{chunks}</a>,
+						}),
 					});
 				} else {
 					setMessage({ type: 'error', text: errorData.message || t("errors.generic") });
