@@ -351,7 +351,7 @@
 		"createdAt": "Criada a:",
 		"estimatedTotal": "Total estimado",
 		"payNow": "Pagar agora",
-		"downloadInvoice": "Descarregar fatura-recibo",
+		"downloadInvoice": "Descarregar recibo",
 		"viewReceipt": "Ver recibo do pagamento"
 	},
 	"myData": {
@@ -460,7 +460,7 @@
 		"tryAgain": "Tentar novamente",
 		"needHelp": "Precisa de ajuda?",
 		"receiptTitle": "Recibo de pagamento",
-		"receiptText": "Pagamento efetuado com sucesso — a sua reserva está confirmada. A fatura-recibo está disponível no seu perfil.",
+		"receiptText": "Pagamento efetuado com sucesso — a sua reserva está confirmada. O recibo está disponível no seu perfil.",
 		"reference": "Referência do pagamento",
 		"paymentDate": "Data do pagamento",
 		"service": "Serviço",
@@ -511,9 +511,9 @@
 		"news": "Novidades"
 	},
 	"invoiceCheck": {
-		"title": "Verificação de fatura",
+		"title": "Verificação de recibo",
 		"desc": "Confirme a autenticidade de um documento emitido pela Rent a Car Verde",
-		"openFromQr": "Este link deve ser aberto a partir do QR code impresso no rodapé de uma fatura da Rent a Car Verde. Digitalize o código com a câmara do telemóvel para verificar a autenticidade do documento.",
+		"openFromQr": "Este link deve ser aberto a partir do QR code impresso no rodapé de um recibo da Rent a Car Verde. Digitalize o código com a câmara do telemóvel para verificar a autenticidade do documento.",
 		"validTitle": "Documento autêntico",
 		"validText": "Este documento foi emitido pela Rent a Car Verde e não foi alterado.",
 		"number": "N.º do documento",
@@ -524,7 +524,7 @@
 		"total": "Total",
 		"issuedAt": "Data de emissão",
 		"invalidTitle": "Documento inválido",
-		"invalidText": "Não foi possível confirmar a autenticidade deste documento — o código não corresponde a nenhuma fatura emitida pela Rent a Car Verde, ou os valores foram alterados. Contacte <email>reservas@rentacarverde.cv</email> se acredita que isto é um erro."
+		"invalidText": "Não foi possível confirmar a autenticidade deste documento — o código não corresponde a nenhum recibo emitido pela Rent a Car Verde, ou os valores foram alterados. Contacte <email>reservas@rentacarverde.cv</email> se acredita que isto é um erro."
 	},
 	"meta": {
 		"defaultTitle": "Rent a Car Verde | Aluguer de carros em Cabo Verde",

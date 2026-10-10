@@ -351,7 +351,7 @@
 		"createdAt": "Created on:",
 		"estimatedTotal": "Estimated total",
 		"payNow": "Pay now",
-		"downloadInvoice": "Download invoice-receipt",
+		"downloadInvoice": "Download receipt",
 		"viewReceipt": "View payment receipt"
 	},
 	"myData": {
@@ -460,7 +460,7 @@
 		"tryAgain": "Try again",
 		"needHelp": "Need help?",
 		"receiptTitle": "Payment receipt",
-		"receiptText": "Payment successful — your booking is confirmed. The invoice-receipt is available in your profile.",
+		"receiptText": "Payment successful — your booking is confirmed. The receipt is available in your profile.",
 		"reference": "Payment reference",
 		"paymentDate": "Payment date",
 		"service": "Service",
@@ -511,9 +511,9 @@
 		"news": "News"
 	},
 	"invoiceCheck": {
-		"title": "Invoice verification",
+		"title": "Receipt verification",
 		"desc": "Check that a document issued by Rent a Car Verde is genuine",
-		"openFromQr": "This link should be opened from the QR code printed at the bottom of a Rent a Car Verde invoice. Scan the code with your phone camera to check the document.",
+		"openFromQr": "This link should be opened from the QR code printed at the bottom of a Rent a Car Verde receipt. Scan the code with your phone camera to check the document.",
 		"validTitle": "Genuine document",
 		"validText": "This document was issued by Rent a Car Verde and hasn't been altered.",
 		"number": "Document no.",
@@ -524,7 +524,7 @@
 		"total": "Total",
 		"issuedAt": "Issue date",
 		"invalidTitle": "Invalid document",
-		"invalidText": "We couldn't confirm this document — the code doesn't match any invoice issued by Rent a Car Verde, or the amounts have been altered. Contact <email>reservas@rentacarverde.cv</email> if you think this is a mistake."
+		"invalidText": "We couldn't confirm this document — the code doesn't match any receipt issued by Rent a Car Verde, or the amounts have been altered. Contact <email>reservas@rentacarverde.cv</email> if you think this is a mistake."
 	},
 	"meta": {
 		"defaultTitle": "Rent a Car Verde | Car hire in Cape Verde",

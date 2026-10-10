@@ -351,7 +351,7 @@
 		"createdAt": "Créée le :",
 		"estimatedTotal": "Total estimé",
 		"payNow": "Payer maintenant",
-		"downloadInvoice": "Télécharger la facture-reçu",
+		"downloadInvoice": "Télécharger le reçu",
 		"viewReceipt": "Voir le reçu de paiement"
 	},
 	"myData": {
@@ -460,7 +460,7 @@
 		"tryAgain": "Réessayer",
 		"needHelp": "Besoin d'aide ?",
 		"receiptTitle": "Reçu de paiement",
-		"receiptText": "Paiement réussi — votre réservation est confirmée. La facture-reçu est disponible dans votre profil.",
+		"receiptText": "Paiement réussi — votre réservation est confirmée. Le reçu est disponible dans votre profil.",
 		"reference": "Référence du paiement",
 		"paymentDate": "Date du paiement",
 		"service": "Service",
@@ -511,9 +511,9 @@
 		"news": "Actualités"
 	},
 	"invoiceCheck": {
-		"title": "Vérification de facture",
+		"title": "Vérification de reçu",
 		"desc": "Vérifiez l'authenticité d'un document émis par Rent a Car Verde",
-		"openFromQr": "Ce lien doit être ouvert depuis le QR code imprimé en bas d'une facture Rent a Car Verde. Scannez le code avec l'appareil photo de votre téléphone pour vérifier le document.",
+		"openFromQr": "Ce lien doit être ouvert depuis le QR code imprimé en bas d'un reçu Rent a Car Verde. Scannez le code avec l'appareil photo de votre téléphone pour vérifier le document.",
 		"validTitle": "Document authentique",
 		"validText": "Ce document a été émis par Rent a Car Verde et n'a pas été modifié.",
 		"number": "N° du document",
@@ -524,7 +524,7 @@
 		"total": "Total",
 		"issuedAt": "Date d'émission",
 		"invalidTitle": "Document invalide",
-		"invalidText": "Impossible de confirmer l'authenticité de ce document — le code ne correspond à aucune facture émise par Rent a Car Verde, ou les montants ont été modifiés. Contactez <email>reservas@rentacarverde.cv</email> si vous pensez qu'il s'agit d'une erreur."
+		"invalidText": "Impossible de confirmer l'authenticité de ce document — le code ne correspond à aucun reçu émis par Rent a Car Verde, ou les montants ont été modifiés. Contactez <email>reservas@rentacarverde.cv</email> si vous pensez qu'il s'agit d'une erreur."
 	},
 	"meta": {
 		"defaultTitle": "Rent a Car Verde | Location de voitures au Cap-Vert",
