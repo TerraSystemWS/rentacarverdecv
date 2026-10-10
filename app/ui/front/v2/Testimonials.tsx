@@ -2,7 +2,7 @@
 
 import { Quote } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
-import type { PublicReviews } from "@/lib/api/types";
+import type { PublicReview, PublicReviews } from "@/lib/api/types";
 import { StarsView } from "../reviews/Stars";
 
 // "O que dizem os nossos clientes": avaliações aprovadas no dashboard
@@ -31,24 +31,30 @@ export default function Testimonials({ data }: { data: PublicReviews | null }) {
 				</div>
 
 				<ul className="v2-testimonials__list">
-					{data.items.map((r) => (
-						<li key={r.id} className="v2-testimonial">
-							<Quote size={28} aria-hidden="true" className="v2-testimonial__mark" />
-							<StarsView value={r.rating} size={16} />
-							<blockquote lang={r.locale} className="v2-testimonial__text">{r.comment}</blockquote>
-							<footer className="v2-testimonial__who">
-								<span className="v2-testimonial__avatar" aria-hidden="true">{r.displayName.trim().charAt(0).toUpperCase()}</span>
-								<span>
-									<strong>{r.displayName}</strong>
-									<span className="v2-testimonial__meta">
-										{[r.city, r.vehicle ? t("rented", { vehicle: r.vehicle }) : null].filter(Boolean).join(" · ")}
-									</span>
-								</span>
-							</footer>
-						</li>
-					))}
+					{data.items.map((r) => <TestimonialCard key={r.id} review={r} />)}
 				</ul>
 			</div>
 		</section>
+	);
+}
+
+// Um testemunho; também usado na página de cada carro (VehicleReviews).
+export function TestimonialCard({ review: r }: { review: PublicReview }) {
+	const t = useTranslations("reviews");
+	return (
+		<li className="v2-testimonial">
+			<Quote size={28} aria-hidden="true" className="v2-testimonial__mark" />
+			<StarsView value={r.rating} size={16} />
+			<blockquote lang={r.locale} className="v2-testimonial__text">{r.comment}</blockquote>
+			<footer className="v2-testimonial__who">
+				<span className="v2-testimonial__avatar" aria-hidden="true">{r.displayName.trim().charAt(0).toUpperCase()}</span>
+				<span>
+					<strong>{r.displayName}</strong>
+					<span className="v2-testimonial__meta">
+						{[r.city, r.vehicle ? t("rented", { vehicle: r.vehicle }) : null].filter(Boolean).join(" · ")}
+					</span>
+				</span>
+			</footer>
+		</li>
 	);
 }

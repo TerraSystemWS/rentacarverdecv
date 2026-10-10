@@ -10,6 +10,7 @@ import { useVehicleTerms } from "@/lib/i18n/useVehicleTerms";
 import { useFormatPrice } from "@/lib/i18n/format";
 import VehicleGallery from "./veiculoGalery";
 import PopularVehicleBlock from "../../PopularVehicleBlock";
+import VehicleReviews from "../../reviews/VehicleReviews";
 import { endpoints } from "@/lib/api/endpoints";
 import {
 	Car,
@@ -439,6 +440,8 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 					</div>
 				</div>
 			</div>
+
+			{vehicle.id && <VehicleReviews vehicleId={vehicle.id} average={vehicle.ratingAverage} />}
 
 			<PopularVehicleBlock />
 		</>

@@ -5,6 +5,7 @@ import { API_BASE_URL } from "@/lib/api/endpoints";
 import { useTranslations } from "next-intl";
 import { useVehicleTerms } from "@/lib/i18n/useVehicleTerms";
 import { useFormatPrice } from "@/lib/i18n/format";
+import { VehicleRating } from "../reviews/Stars";
 
 type CarroProps = {
 	car: Vehicle;
@@ -35,6 +36,7 @@ const Carro: React.FC<CarroProps> = ({ car }) => {
 				<h2 className="vehicle-title text-xl font-semibold mb-2">
 					<a href={`/cars/${car.slug ?? car.id}`}>{car.make} {car.model}</a>
 				</h2>
+				<VehicleRating average={car.ratingAverage} count={car.ratingCount} className="mb-2" />
 				<div className="vehicle-meta mt-auto flex flex-col gap-3">
 					<div className="flex items-center gap-4 text-gray-600 text-[11px] font-bold uppercase tracking-wider">
 						<div className="flex items-center gap-1.5">

@@ -89,6 +89,7 @@ export const endpoints = {
 	// Locais de levantamento/devolução (Operações → Locais).
 	reviews: {
 		public: (limit = 9) => `/public/reviews?limit=${limit}`,
+		forVehicle: (vehicleId: number, limit = 6) => `/public/reviews?vehicleId=${vehicleId}&limit=${limit}`,
 		mine: "/dashboard/reviews/mine",
 		dashboard: "/dashboard/reviews",
 		status: (id: number) => `/dashboard/reviews/${id}/status`,

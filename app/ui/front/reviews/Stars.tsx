@@ -1,7 +1,7 @@
 "use client";
 
 import { Star } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 
 /** Estrelas só para ver (avaliações publicadas). */
 export function StarsView({ value, size = 18 }: { value: number; size?: number }) {
@@ -12,6 +12,24 @@ export function StarsView({ value, size = 18 }: { value: number; size?: number }
 			{[1, 2, 3, 4, 5].map((i) => (
 				<Star key={i} size={size} aria-hidden="true" className={i <= rounded ? "rv-star rv-star--on" : "rv-star"} />
 			))}
+		</span>
+	);
+}
+
+/**
+ * Média de um carro nos cartões e na página do carro. A API só manda
+ * ratingAverage depois de 3 clientes diferentes (VehicleRatingService);
+ * sem média não mostra nada.
+ */
+export function VehicleRating({ average, count, className = "" }: { average?: number | null; count?: number | null; className?: string }) {
+	const t = useTranslations("reviews");
+	const format = useFormatter();
+	if (average == null) return null;
+	const avg = format.number(average, { maximumFractionDigits: 1, minimumFractionDigits: 1 });
+	return (
+		<span className={`rv-card-rating ${className}`} role="img" aria-label={t("ratingShort", { average: avg, count: count ?? 0 })}>
+			<StarsView value={average} size={14} />
+			<span aria-hidden="true"><strong>{avg}</strong> ({count ?? 0})</span>
 		</span>
 	);
 }

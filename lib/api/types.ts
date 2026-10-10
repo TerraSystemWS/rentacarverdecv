@@ -262,6 +262,9 @@ export type Vehicle = {
 	deposit?: number;
 	internalFeatures?: string[];
 	externalFeatures?: string[];
+	// Média das avaliações aprovadas; null até 3 clientes diferentes avaliarem.
+	ratingAverage?: number | null;
+	ratingCount?: number | null;
 };
 
 export type Partner = {

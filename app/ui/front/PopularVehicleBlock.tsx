@@ -12,6 +12,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { Vehicle } from "@/lib/api/types";
 import { Settings2, Fuel } from "lucide-react";
+import { VehicleRating } from "./reviews/Stars";
 import { authFetch } from "@/app/auth/api";
 import { endpoints } from "@/lib/api/endpoints";
 
@@ -119,6 +120,7 @@ export default function PopularVehicleBlock() {
 										<h3 className="vehicle-title text-xl font-semibold">
 											<Link href={`/cars/${vehicle.slug ?? vehicle.id}`}>{vehicle.make} {vehicle.model}</Link>
 										</h3>
+										<VehicleRating average={vehicle.ratingAverage} count={vehicle.ratingCount} className="mt-1" />
 										<div className="vehicle-meta flex flex-col items-center gap-2 mt-3">
 											<div className="flex items-center gap-4 text-gray-500 text-xs font-bold uppercase tracking-wider">
 												<div className="flex items-center gap-1.5">

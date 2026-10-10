@@ -601,6 +601,9 @@
 		}
 	},
 	"reviews": {
+		"vehicleSectionTitle": "Reviews of this car",
+		"vehicleSectionLead": "What customers who rented this car say.",
+		"ratingShort": "{average} out of 5, {count, plural, one {# review} other {# reviews}}",
 		"sectionTitle": "What our customers say",
 		"sectionLead": "Reviews from people who rented with us, written after returning the car.",
 		"average": "{average} out of 5",

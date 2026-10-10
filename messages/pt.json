@@ -601,6 +601,9 @@
 		}
 	},
 	"reviews": {
+		"vehicleSectionTitle": "Avaliações deste carro",
+		"vehicleSectionLead": "Opiniões de quem já alugou este carro.",
+		"ratingShort": "{average} de 5, {count, plural, one {# avaliação} other {# avaliações}}",
 		"sectionTitle": "O que dizem os nossos clientes",
 		"sectionLead": "Avaliações de quem já alugou connosco, depois de devolver o carro.",
 		"average": "{average} de 5",

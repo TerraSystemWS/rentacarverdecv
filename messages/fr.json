@@ -601,6 +601,9 @@
 		}
 	},
 	"reviews": {
+		"vehicleSectionTitle": "Avis sur cette voiture",
+		"vehicleSectionLead": "Ce qu’en disent les clients qui l’ont louée.",
+		"ratingShort": "{average} sur 5, {count, plural, one {# avis} other {# avis}}",
 		"sectionTitle": "Ce que disent nos clients",
 		"sectionLead": "Avis de clients qui ont loué chez nous, écrits après avoir rendu la voiture.",
 		"average": "{average} sur 5",
