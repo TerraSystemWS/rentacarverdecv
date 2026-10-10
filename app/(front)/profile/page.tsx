@@ -187,56 +187,59 @@ export default function ProfilePage() {
                             <span className="text-slate-600 font-medium">{t("estimatedTotal")}</span>
                             <span className="v2-card__amount v2-card__amount--sm">{money(b.grand_total)}</span>
                         </div>
-                        {(b.status === "PENDENTE" || b.status === "APROVADA") && b.payment_status !== "SUCCESS" && (
-                            <Link
-                                href={`/payment/${b.id}`}
-                                className="btn-racv mt-3 w-full text-center text-sm"
-                            >
-                                {t("payNow")}
-                            </Link>
-                        )}
-                        {invoiceFor(b.id) && (
-                            <button
-                                onClick={() => handleDownloadInvoice(invoiceFor(b.id)!.id)}
-                                className="invoice-download-btn mt-3 w-full text-center text-sm font-bold border border-green-400 bg-green-50 rounded-lg py-2 hover:bg-green-100 transition-colors"
-                            >
-                                {t("downloadInvoice")}
-                            </button>
-                        )}
-                        {b.status === "CONCLUÍDA" && (() => {
-                            const rv = reviewFor(b.id);
-                            if (rv?.status === "APPROVED") {
-                                return (
-                                    <p className="rv-profile-state rv-profile-state--ok mt-3">
-                                        <StarsView value={rv.rating} size={15} /> {tr("published")}
-                                    </p>
-                                );
-                            }
-                            return (
-                                <>
-                                    {rv && (
-                                        <p className={`rv-profile-state mt-3 ${rv.status === "REJECTED" ? "rv-profile-state--warn" : ""}`}>
-                                            {rv.status === "REJECTED" ? tr("rejected") : tr("pending")}
+                        {/* gap no contentor: o CSS legado zera as margens dos botões */}
+                        <div className="mt-3 flex flex-col gap-3 empty:hidden">
+                            {(b.status === "PENDENTE" || b.status === "APROVADA") && b.payment_status !== "SUCCESS" && (
+                                <Link
+                                    href={`/payment/${b.id}`}
+                                    className="btn-racv w-full text-center text-sm"
+                                >
+                                    {t("payNow")}
+                                </Link>
+                            )}
+                            {invoiceFor(b.id) && (
+                                <button
+                                    onClick={() => handleDownloadInvoice(invoiceFor(b.id)!.id)}
+                                    className="invoice-download-btn w-full text-center text-sm font-bold border border-green-400 bg-green-50 rounded-lg py-2 hover:bg-green-100 transition-colors"
+                                >
+                                    {t("downloadInvoice")}
+                                </button>
+                            )}
+                            {b.status === "CONCLUÍDA" && (() => {
+                                const rv = reviewFor(b.id);
+                                if (rv?.status === "APPROVED") {
+                                    return (
+                                        <p className="rv-profile-state rv-profile-state--ok">
+                                            <StarsView value={rv.rating} size={15} /> {tr("published")}
                                         </p>
-                                    )}
-                                    <button
-                                        type="button"
-                                        onClick={() => setReviewTarget({ bookingId: b.id, vehicle: b.vehicle_title, customerName: b.customer_name })}
-                                        className="btn-racv mt-3 w-full text-center text-sm"
-                                    >
-                                        {rv ? tr("edit") : tr("write")}
-                                    </button>
-                                </>
-                            );
-                        })()}
-                        {b.payment_status === "SUCCESS" && (
-                            <Link
-                                href={`/payment/result?status=success&id=${b.id}`}
-                                className="invoice-download-btn mt-2 block w-full text-center text-sm font-bold border border-slate-300 bg-white rounded-lg py-2 hover:bg-slate-50 transition-colors"
-                            >
-                                {t("viewReceipt")}
-                            </Link>
-                        )}
+                                    );
+                                }
+                                return (
+                                    <>
+                                        {rv && (
+                                            <p className={`rv-profile-state ${rv.status === "REJECTED" ? "rv-profile-state--warn" : ""}`}>
+                                                {rv.status === "REJECTED" ? tr("rejected") : tr("pending")}
+                                            </p>
+                                        )}
+                                        <button
+                                            type="button"
+                                            onClick={() => setReviewTarget({ bookingId: b.id, vehicle: b.vehicle_title, customerName: b.customer_name })}
+                                            className="btn-racv w-full text-center text-sm"
+                                        >
+                                            {rv ? tr("edit") : tr("write")}
+                                        </button>
+                                    </>
+                                );
+                            })()}
+                            {b.payment_status === "SUCCESS" && (
+                                <Link
+                                    href={`/payment/result?status=success&id=${b.id}`}
+                                    className="invoice-download-btn block w-full text-center text-sm font-bold border border-slate-300 bg-white rounded-lg py-2 hover:bg-slate-50 transition-colors"
+                                >
+                                    {t("viewReceipt")}
+                                </Link>
+                            )}
+                        </div>
                     </div>
                 ))}
             </div>
