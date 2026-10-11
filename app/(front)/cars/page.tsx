@@ -9,6 +9,7 @@ import { authFetch } from "@/app/auth/api";
 import { endpoints } from "@/lib/api/endpoints";
 import { sameVehicleTerm } from "@/lib/i18n/useVehicleTerms";
 import { useTranslations } from "next-intl";
+import { rememberedVoucher } from "@/lib/voucherParam";
 
 const PAGE_SIZE = 9;
 
@@ -30,6 +31,12 @@ function CarsContent() {
 		classTypes: searchParams.get("class") ? [searchParams.get("class") as string] : [],
 		fuelTypes: searchParams.get("fuel") ? [searchParams.get("fuel") as string] : [],
 	}));
+
+	// Link do email da campanha (/cars?voucher=…): guarda o código para o
+	// formulário de reserva da viatura escolhida.
+	useEffect(() => {
+		rememberedVoucher();
+	}, []);
 
 	useEffect(() => {
 		const fetchVehicles = async () => {

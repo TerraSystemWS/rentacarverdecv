@@ -13,7 +13,7 @@ import { Voucher, Vehicle } from "@/lib/api/types";
 const emptyForm: {
 	code: string; discountPercent: number; scope: Voucher["scope"]; vehicleId: number | undefined;
 	classType: string; active: boolean; maxUses: number | undefined; maxUsesPerCustomer: number | undefined;
-	validFrom: string; validUntil: string;
+	validFrom: string; validUntil: string; notifySubscribers: boolean;
 } = {
 	code: "",
 	discountPercent: 10,
@@ -25,6 +25,7 @@ const emptyForm: {
 	maxUsesPerCustomer: undefined,
 	validFrom: "",
 	validUntil: "",
+	notifySubscribers: true,
 };
 
 export default function VouchersPage() {
@@ -75,6 +76,15 @@ export default function VouchersPage() {
 		}
 	};
 
+	// Classes existentes na frota, com o nº de viaturas de cada uma.
+	const vehicleClasses = Object.entries(
+		vehicles.reduce<Record<string, number>>((acc, v) => {
+			const cls = v.classType?.trim();
+			if (cls) acc[cls] = (acc[cls] ?? 0) + 1;
+			return acc;
+		}, {}),
+	).sort(([a], [b]) => a.localeCompare(b, "pt"));
+
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setIsSubmitting(true);
@@ -90,6 +100,7 @@ export default function VouchersPage() {
 				maxUsesPerCustomer: form.maxUsesPerCustomer ? Number(form.maxUsesPerCustomer) : null,
 				validFrom: form.validFrom ? new Date(form.validFrom).toISOString() : null,
 				validUntil: form.validUntil ? new Date(form.validUntil).toISOString() : null,
+				notifySubscribers: form.notifySubscribers,
 			};
 			const created = await apiFetch<Voucher>(endpoints.vouchers.create, {
 				method: "POST",
@@ -160,6 +171,21 @@ export default function VouchersPage() {
 											? `${row.validFrom ? new Date(row.validFrom).toLocaleDateString("pt-PT") : "—"} a ${row.validUntil ? new Date(row.validUntil).toLocaleDateString("pt-PT") : "—"}`
 											: "Sem limite"}
 										{row.maxUsesPerCustomer ? ` · máx. ${row.maxUsesPerCustomer}/cliente` : ""}
+									</span>
+								),
+							},
+							{
+								key: "newsletter",
+								label: "Email",
+								// O envio corre em segundo plano (1 s entre emails): sentAt sem
+								// nº de destinatários = ainda a enviar.
+								render: (row: Voucher) => (
+									<span className="text-xs text-zinc-500">
+										{row.newsletterSentAt
+											? row.newsletterRecipients != null
+												? `Enviado a ${row.newsletterRecipients} subscritor${row.newsletterRecipients === 1 ? "" : "es"}`
+												: "A enviar…"
+											: "—"}
 									</span>
 								),
 							},
@@ -253,12 +279,19 @@ export default function VouchersPage() {
 							{form.scope === "CLASS" && (
 								<div>
 									<label className="text-xs font-bold uppercase text-zinc-500">Classe</label>
-									<input
+									{/* Só as classes que existem na frota — o voucher compara com a
+									    classe de cada viatura, um nome escrito à mão podia não bater com nenhuma. */}
+									<select
 										className="w-full mt-1 rounded-lg border border-zinc-200 px-3 py-2"
 										value={form.classType}
 										onChange={(e) => setForm({ ...form, classType: e.target.value })}
 										required
-									/>
+									>
+										<option value="" disabled>{vehicleClasses.length ? "Escolhe uma classe" : "Nenhuma viatura tem classe definida"}</option>
+										{vehicleClasses.map(([cls, count]) => (
+											<option key={cls} value={cls}>{cls} ({count} viatura{count === 1 ? "" : "s"})</option>
+										))}
+									</select>
 								</div>
 							)}
 							<div>
@@ -302,6 +335,18 @@ export default function VouchersPage() {
 									/>
 								</div>
 							</div>
+							<label className="flex items-start gap-3 rounded-lg border border-zinc-200 p-3 cursor-pointer">
+								<input
+									type="checkbox"
+									className="mt-0.5 h-4 w-4"
+									checked={form.notifySubscribers}
+									onChange={(e) => setForm({ ...form, notifySubscribers: e.target.checked })}
+								/>
+								<span>
+									<span className="block text-sm font-bold text-zinc-700 dark:text-zinc-200">Enviar por email aos subscritores</span>
+									<span className="block text-[11px] text-zinc-400">Campanha com o código e o desconto, na língua de cada subscritor. Só sai se o voucher estiver ativo.</span>
+								</span>
+							</label>
 							<button
 								type="submit"
 								disabled={isSubmitting}

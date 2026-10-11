@@ -265,6 +265,8 @@ export type Vehicle = {
 	// Média das avaliações aprovadas; null até 3 clientes diferentes avaliarem.
 	ratingAverage?: number | null;
 	ratingCount?: number | null;
+	// Maior desconto de um voucher ativo para esta viatura (faixa "Desconto de x%").
+	discountPercent?: number | null;
 };
 
 export type Partner = {
@@ -357,6 +359,10 @@ export type Voucher = {
 	validUntil?: string | null;
 	maxUsesPerCustomer?: number | null;
 	usable?: boolean;
+	// Campanha por email aos subscritores (enviada pelo servidor ao criar o voucher).
+	notifySubscribers?: boolean;
+	newsletterSentAt?: string | null;
+	newsletterRecipients?: number | null;
 };
 
 export type Invoice = {

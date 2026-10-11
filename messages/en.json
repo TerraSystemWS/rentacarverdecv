@@ -127,7 +127,8 @@
 		"previous": "Previous",
 		"next": "Next",
 		"gearbox": "Gearbox",
-		"fuel": "Fuel"
+		"fuel": "Fuel",
+		"discount": "{percent}% off"
 	},
 	"popularVehicles": {
 		"subtitle": "Most popular services",
@@ -240,7 +241,15 @@
 			"generic": "Something went wrong while processing your booking.",
 			"connection": "Couldn't reach the server. Please try again."
 		},
-		"success": "Booking confirmed! Redirecting to payment..."
+		"success": "Booking confirmed! Redirecting to payment...",
+		"voucher": {
+			"label": "Promo code",
+			"placeholder": "E.g. SUMMER25",
+			"apply": "Apply",
+			"applied": "Code {code} applied: -{percent}%",
+			"invalid": "Invalid voucher code.",
+			"estimate": "Estimated total ({days, plural, one {# day} other {# days}})"
+		}
 	},
 	"about": {
 		"headerTitle": "About Us",
@@ -352,7 +361,12 @@
 		"estimatedTotal": "Estimated total",
 		"payNow": "Pay now",
 		"downloadInvoice": "Download receipt",
-		"viewReceipt": "View payment receipt"
+		"viewReceipt": "View payment receipt",
+		"cancelBooking": "Cancel booking",
+		"cancelConfirm": "Cancel this booking? The dates will be released for other customers.",
+		"cancelYes": "Yes, cancel",
+		"cancelNo": "Keep it",
+		"cancelError": "The booking could not be cancelled."
 	},
 	"myData": {
 		"complete": "Your details are complete — you can now book vehicles.",

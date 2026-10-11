@@ -127,7 +127,8 @@
 		"previous": "Précédent",
 		"next": "Suivant",
 		"gearbox": "Boîte de vitesses",
-		"fuel": "Carburant"
+		"fuel": "Carburant",
+		"discount": "-{percent} % de réduction"
 	},
 	"popularVehicles": {
 		"subtitle": "Services les plus populaires",
@@ -240,7 +241,15 @@
 			"generic": "Une erreur s'est produite lors du traitement de la réservation.",
 			"connection": "Impossible de joindre le serveur. Veuillez réessayer."
 		},
-		"success": "Réservation effectuée ! Redirection vers le paiement..."
+		"success": "Réservation effectuée ! Redirection vers le paiement...",
+		"voucher": {
+			"label": "Code promo",
+			"placeholder": "Ex : ETE25",
+			"apply": "Appliquer",
+			"applied": "Code {code} appliqué : -{percent} %",
+			"invalid": "Code promo invalide.",
+			"estimate": "Total estimé ({days, plural, one {# jour} other {# jours}})"
+		}
 	},
 	"about": {
 		"headerTitle": "À propos",
@@ -352,7 +361,12 @@
 		"estimatedTotal": "Total estimé",
 		"payNow": "Payer maintenant",
 		"downloadInvoice": "Télécharger le reçu",
-		"viewReceipt": "Voir le reçu de paiement"
+		"viewReceipt": "Voir le reçu de paiement",
+		"cancelBooking": "Annuler la réservation",
+		"cancelConfirm": "Annuler cette réservation ? Les dates seront libérées pour d’autres clients.",
+		"cancelYes": "Oui, annuler",
+		"cancelNo": "La garder",
+		"cancelError": "Impossible d’annuler la réservation."
 	},
 	"myData": {
 		"complete": "Vos informations sont complètes — vous pouvez maintenant réserver un véhicule.",

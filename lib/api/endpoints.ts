@@ -49,6 +49,7 @@ export const endpoints = {
 		completed: "/dashboard/bookings/completed",
 		me: "/dashboard/bookings/me",
 		meHistory: (page = 0, size = 6) => `/dashboard/bookings/me/history?page=${page}&size=${size}`,
+		cancelMine: (id: number) => `/dashboard/bookings/me/${id}/cancel`,
 		create: "/dashboard/bookings",
 		update: (id: number) => `/dashboard/bookings/${id}`,
 		updateStatus: (id: number) => `/dashboard/bookings/${id}/status`,

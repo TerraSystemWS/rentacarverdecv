@@ -1,5 +1,6 @@
 import { Vehicle } from "@/lib/api/types";
 import { Settings2, Fuel } from "lucide-react";
+import DiscountRibbon from "./DiscountRibbon";
 
 import { API_BASE_URL } from "@/lib/api/endpoints";
 import { useTranslations } from "next-intl";
@@ -27,7 +28,8 @@ const Carro: React.FC<CarroProps> = ({ car }) => {
 
 	return (
 		<div className="vehicle-content theme-yellow vehicle-card-light h-full flex flex-col">
-			<div className="vehicle-thumbnail">
+			<div className="vehicle-thumbnail relative">
+				<DiscountRibbon percent={car.discountPercent} />
 				<a href={`/cars/${car.slug ?? car.id}`}>
 					<img src={firstImage} alt={`${car.make} ${car.model}`} className="w-full !h-48 !object-cover" />
 				</a>

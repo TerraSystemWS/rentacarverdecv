@@ -127,7 +127,8 @@
 		"previous": "Anterior",
 		"next": "Seguinte",
 		"gearbox": "Caixa",
-		"fuel": "Combustível"
+		"fuel": "Combustível",
+		"discount": "Desconto de {percent}%"
 	},
 	"popularVehicles": {
 		"subtitle": "Serviços mais populares",
@@ -240,7 +241,15 @@
 			"generic": "Ocorreu um erro ao processar a reserva.",
 			"connection": "Não foi possível ligar ao servidor. Tente de novo."
 		},
-		"success": "Reserva feita! A redirecionar para o pagamento..."
+		"success": "Reserva feita! A redirecionar para o pagamento...",
+		"voucher": {
+			"label": "Código promocional",
+			"placeholder": "Ex: VERAO25",
+			"apply": "Aplicar",
+			"applied": "Código {code} aplicado: -{percent}%",
+			"invalid": "Código de voucher inválido.",
+			"estimate": "Total estimado ({days, plural, one {# dia} other {# dias}})"
+		}
 	},
 	"about": {
 		"headerTitle": "Sobre Nós",
@@ -352,7 +361,12 @@
 		"estimatedTotal": "Total estimado",
 		"payNow": "Pagar agora",
 		"downloadInvoice": "Descarregar recibo",
-		"viewReceipt": "Ver recibo do pagamento"
+		"viewReceipt": "Ver recibo do pagamento",
+		"cancelBooking": "Cancelar reserva",
+		"cancelConfirm": "Cancelar esta reserva? As datas ficam livres para outros clientes.",
+		"cancelYes": "Sim, cancelar",
+		"cancelNo": "Manter",
+		"cancelError": "Não foi possível cancelar a reserva."
 	},
 	"myData": {
 		"complete": "Os seus dados estão completos — já pode reservar viaturas.",

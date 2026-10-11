@@ -12,6 +12,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { Vehicle } from "@/lib/api/types";
 import { Settings2, Fuel } from "lucide-react";
+import DiscountRibbon from "./veiculos/DiscountRibbon";
 import { authFetch } from "@/app/auth/api";
 import { endpoints } from "@/lib/api/endpoints";
 import { API_BASE_URL } from "@/lib/api/endpoints";
@@ -104,7 +105,8 @@ const RegularVehicleBlock: React.FC = () => {
 								{vehicles.map((vehicle) => (
 									<SwiperSlide key={vehicle.id} className="h-auto">
 										<div className="vehicle-content bg-white rounded-lg overflow-hidden shadow hover:shadow-lg transition h-full flex flex-col">
-											<div className="vehicle-thumbnail">
+											<div className="vehicle-thumbnail relative">
+												<DiscountRibbon percent={vehicle.discountPercent} />
 												<Link href={`/cars/${vehicle.slug ?? vehicle.id}`}>
 													<img
 														src={vehicle.images && vehicle.images.length > 0 ? getImageSrc(vehicle.images[0].url) : ""}

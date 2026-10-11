@@ -526,3 +526,18 @@
   background: #111827; color: #ffffff; font: 600 14px/1.2 system-ui, sans-serif;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
+
+/* Faixa "Desconto de x%" nos cartões e na página da viatura (DiscountRibbon). */
+.racv-discount {
+  position: absolute; top: 12px; left: 0; z-index: 2;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px 6px 12px; border-radius: 0 999px 999px 0;
+  background: var(--v2-sun, #f2b233); color: var(--v2-on-accent, #3a2a00);
+  font-size: 12px; font-weight: 800; letter-spacing: .3px; line-height: 1.2;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .18);
+  pointer-events: none;
+}
+.racv-discount--inline {
+  position: static; border-radius: 999px; padding: 6px 14px; margin: 0 0 10px;
+  box-shadow: none; font-size: 13px;
+}

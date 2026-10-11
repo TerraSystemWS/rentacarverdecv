@@ -31,6 +31,8 @@ import { API_BASE_URL } from "@/lib/api/endpoints";
 import { cvToIso, localDateString, parseLocalDate } from "@/lib/utils/cvTime";
 import { useRentalLocations } from "@/lib/api/useRentalLocations";
 import { tr, trList } from "@/lib/i18n/translate";
+import { rememberedVoucher } from "@/lib/voucherParam";
+import DiscountRibbon from "../DiscountRibbon";
 
 interface VehicleSingleProps {
 	vehicle: Vehicle;
@@ -57,6 +59,63 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 	const [message, setMessage] = useState<{ type: 'success' | 'error', text: React.ReactNode } | null>(null);
 	const [bookedIntervals, setBookedIntervals] = useState<{ start: Date; end: Date }[]>([]);
 	const { locations, loading: locationsLoading } = useRentalLocations();
+
+	// Código promocional: validado pela API (/public/vouchers/validate) só para
+	// mostrar o desconto antes de reservar; quem o aplica de facto é a criação
+	// da reserva (VoucherService.redeem), que volta a validar tudo.
+	const [voucherInput, setVoucherInput] = useState("");
+	const [voucher, setVoucher] = useState<{ code: string; percent: number } | null>(null);
+	const [voucherError, setVoucherError] = useState<string | null>(null);
+	const [voucherChecking, setVoucherChecking] = useState(false);
+
+	const applyVoucher = async (raw: string) => {
+		const code = raw.trim().toUpperCase();
+		setVoucherError(null);
+		if (!code) {
+			setVoucher(null);
+			return;
+		}
+		setVoucherChecking(true);
+		try {
+			const res = await authFetch(endpoints.vouchers.validate(code, vehicle.id));
+			const data = await res.json().catch(() => ({}));
+			if (res.ok && data.discountPercent) {
+				setVoucher({ code, percent: data.discountPercent });
+			} else {
+				setVoucher(null);
+				setVoucherError(data.message || t("voucher.invalid"));
+			}
+		} catch {
+			setVoucher(null);
+			setVoucherError(t("errors.connection"));
+		} finally {
+			setVoucherChecking(false);
+		}
+	};
+
+	// Código vindo do link do email (?voucher=…) — pré-preenchido e já validado.
+	useEffect(() => {
+		if (!vehicle.id) return;
+		const code = rememberedVoucher();
+		if (code) {
+			setVoucherInput(code);
+			applyVoucher(code);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [vehicle.id]);
+
+	// Total estimado, com as mesmas contas da API (dias inteiros, mínimo 1;
+	// condutor extra 3300 CVE/dia; desconto do voucher sobre o total).
+	const estimate = (() => {
+		if (!formData.startDate || !formData.endDate || !vehicle.pricePerDay) return null;
+		const start = new Date(cvToIso(formData.startDate, formData.startTime));
+		const end = new Date(cvToIso(formData.endDate, formData.endTime));
+		if (!(end > start)) return null;
+		const days = Math.max(1, Math.floor((end.getTime() - start.getTime()) / 86_400_000));
+		const base = Number(vehicle.pricePerDay) * days + (formData.hasExtraDriver ? 3300 * days : 0);
+		const total = voucher ? base * (100 - voucher.percent) / 100 : base;
+		return { days, base, total };
+	})();
 
 	// Com os locais carregados, pré-seleciona o primeiro para levantamento e
 	// devolução (o cliente pode mudar qualquer um).
@@ -162,7 +221,9 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 					endDate: end.toISOString(),
 					hasExtraDriver: formData.hasExtraDriver,
 					pickupLocationId: Number(formData.pickupLocation),
-					returnLocationId: Number(formData.returnLocation)
+					returnLocationId: Number(formData.returnLocation),
+					// Escrito mas não "Aplicado" também vai — a API valida e responde com o erro.
+					voucherCode: voucherInput.trim() ? voucherInput.trim().toUpperCase() : undefined
 				})
 			});
 
@@ -278,6 +339,7 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 								<form className="advance-search-query search-query-two" onSubmit={handleSubmit}>
 									<h2 className="form-title">{t("bookTitle")}</h2>
 									<div className="form-content available-filter">
+										<DiscountRibbon percent={vehicle.discountPercent} inline />
 
 										{message && (
 											<div role={message.type === 'error' ? 'alert' : 'status'} className={`p-4 mb-4 text-sm rounded-lg ${message.type === 'success' ? 'bg-green-100 text-green-800 border border-green-200' : 'bg-red-100 text-red-800 border border-red-200'}`}>
@@ -423,6 +485,60 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 												</label>
 											</div>
 										</div>
+
+										<div className="mt-4">
+											<label htmlFor="voucherCode" className="text-uppercase">{t("voucher.label")}</label>
+											<div className="flex gap-2">
+												<div className="input flex-1">
+													<i className="fa fa-tag"></i>
+													<input
+														id="voucherCode"
+														type="text"
+														value={voucherInput}
+														onChange={(e) => {
+															setVoucherInput(e.target.value.toUpperCase());
+															setVoucher(null);
+															setVoucherError(null);
+														}}
+														onKeyDown={(e) => {
+															if (e.key === "Enter") {
+																e.preventDefault();
+																applyVoucher(voucherInput);
+															}
+														}}
+														placeholder={t("voucher.placeholder")}
+														className="form-controller uppercase tracking-wider"
+														autoComplete="off"
+														disabled={!isAuthenticated}
+													/>
+												</div>
+												<button
+													type="button"
+													onClick={() => applyVoucher(voucherInput)}
+													disabled={!isAuthenticated || voucherChecking || !voucherInput.trim()}
+													// "!": o CSS legado põe todos os botões deste formulário a branco.
+													className="h-12 self-start px-4 rounded-lg border border-green-600 !bg-white !text-green-700 font-bold !text-sm hover:!bg-green-50 disabled:opacity-50"
+												>
+													{voucherChecking ? "…" : t("voucher.apply")}
+												</button>
+											</div>
+											{voucher && (
+												<p role="status" className="mt-2 text-sm font-semibold text-green-700">
+													{t("voucher.applied", { code: voucher.code, percent: voucher.percent })}
+												</p>
+											)}
+											{voucherError && <p role="alert" className="mt-2 text-sm text-red-700">{voucherError}</p>}
+										</div>
+
+										{estimate && (
+											<div className="mt-4 p-3 rounded-lg bg-green-50 border border-green-200 flex justify-between items-baseline">
+												<span className="text-sm text-gray-700">{t("voucher.estimate", { days: estimate.days })}</span>
+												<span className="text-right">
+													{voucher && <span className="block text-xs text-gray-500 line-through">{price(estimate.base)}</span>}
+													<span className="font-black text-green-700 text-lg">{price(estimate.total)}</span>
+												</span>
+											</div>
+										)}
 
 										<div className="check-vehicle-footer">
 											<button

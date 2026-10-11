@@ -57,6 +57,33 @@ export default function ProfilePage() {
     const [reviewLinkHandled, setReviewLinkHandled] = useState(false);
     const reviewFor = (bookingId: number) => myReviews.find((r) => r.bookingId === bookingId);
 
+    // Cancelar uma reserva ainda não paga (PENDENTE/APROVADA). Confirmação em
+    // dois passos no próprio cartão; a API recusa se já estiver paga ou com um
+    // pagamento Vinti4 a decorrer. Cores com "!": o CSS legado pinta todos os
+    // <button> de branco a 11px.
+    const [confirmCancelId, setConfirmCancelId] = useState<number | null>(null);
+    const [cancellingId, setCancellingId] = useState<number | null>(null);
+    const [cancelError, setCancelError] = useState<{ id: number; message: string } | null>(null);
+
+    async function handleCancelBooking(id: number) {
+        setCancellingId(id);
+        setCancelError(null);
+        try {
+            const res = await authFetch(endpoints.bookings.cancelMine(id), { method: "POST" });
+            if (!res.ok) {
+                const data = await res.json().catch(() => ({}));
+                throw new Error(data.message || t("cancelError"));
+            }
+            setBookings((prev) => prev.filter((b) => b.id !== id));
+            setConfirmCancelId(null);
+            fetchHistory(0);
+        } catch (e) {
+            setCancelError({ id, message: (e as Error).message || t("cancelError") });
+        } finally {
+            setCancellingId(null);
+        }
+    }
+
     async function handleDownloadInvoice(invoiceId: number) {
         try {
             const res = await authFetch(endpoints.invoices.pdf(invoiceId));
@@ -196,6 +223,42 @@ export default function ProfilePage() {
                                 >
                                     {t("payNow")}
                                 </Link>
+                            )}
+                            {(b.status === "PENDENTE" || b.status === "APROVADA") && b.payment_status !== "SUCCESS" && (
+                                confirmCancelId === b.id ? (
+                                    <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm" role="group" aria-label={t("cancelConfirm")}>
+                                        <p className="mb-2 font-semibold text-red-800">{t("cancelConfirm")}</p>
+                                        <div className="flex gap-2">
+                                            <button
+                                                type="button"
+                                                onClick={() => handleCancelBooking(b.id)}
+                                                disabled={cancellingId === b.id}
+                                                className="flex-1 whitespace-nowrap rounded-lg !bg-red-600 !px-2 py-2 !font-bold !text-white !text-sm hover:!bg-red-700 disabled:opacity-60"
+                                            >
+                                                {cancellingId === b.id ? <Loader2 className="mx-auto h-4 w-4 animate-spin" /> : t("cancelYes")}
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => setConfirmCancelId(null)}
+                                                disabled={cancellingId === b.id}
+                                                className="flex-1 whitespace-nowrap rounded-lg border border-slate-300 !bg-white !px-2 py-2 !font-bold !text-slate-700 !text-sm hover:!bg-slate-50"
+                                            >
+                                                {t("cancelNo")}
+                                            </button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <button
+                                        type="button"
+                                        onClick={() => { setConfirmCancelId(b.id); setCancelError(null); }}
+                                        className="w-full rounded-lg border border-red-300 !bg-white py-2 text-center !text-sm !font-bold !text-red-700 hover:!bg-red-50 transition-colors"
+                                    >
+                                        {t("cancelBooking")}
+                                    </button>
+                                )
+                            )}
+                            {cancelError?.id === b.id && (
+                                <p role="alert" className="text-sm text-red-700">{cancelError.message}</p>
                             )}
                             {invoiceFor(b.id) && (
                                 <button
