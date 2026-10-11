@@ -21,7 +21,9 @@ export default function BookingsPage() {
 	// Reservas CONCLUÍDAS (pagas, levantadas e devolvidas) saem da lista ativa
 	// e ficam numa aba própria, normalmente oculta — já não podem ser editadas
 	// nem apagadas (o backend bloqueia com 409, ver DashboardController).
-	const [tab, setTab] = useState<"active" | "completed">("active");
+	// CANCELADAS também saem de "Ativas" para a sua própria aba.
+	type Tab = "active" | "completed" | "cancelled";
+	const [tab, setTab] = useState<Tab>("active");
 
 	// Dialog State
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -200,14 +202,16 @@ export default function BookingsPage() {
 		}
 	}
 
-	async function fetchBookings(activeTab: "active" | "completed" = tab) {
+	async function fetchBookings(activeTab: Tab = tab) {
 		setLoading(true);
 		setErr(null);
 		try {
 			const data = await apiFetch<BookingRow[]>(
-				activeTab === "completed" ? endpoints.bookings.completed : endpoints.bookings.list(100)
+				activeTab === "completed" ? endpoints.bookings.completed
+					: activeTab === "cancelled" ? endpoints.bookings.cancelled
+					: endpoints.bookings.list(100)
 			);
-			setRows(data);
+			setRows(activeTab === "active" ? data.filter(b => b.status !== "CANCELADA") : data);
 		} catch (e: any) {
 			setErr(e?.message || "Erro ao carregar reservas.");
 		} finally {
@@ -221,9 +225,9 @@ export default function BookingsPage() {
 				method: "PUT",
 				body: JSON.stringify({ status: newStatus }),
 			});
-			if (newStatus === "CONCLUÍDA") {
-				// Sai da lista ativa assim que é concluída — passa a viver só na
-				// aba "Concluídas" (normalmente oculta).
+			if (newStatus === "CONCLUÍDA" || newStatus === "CANCELADA") {
+				// Sai da lista ativa assim que é concluída/cancelada — passa a
+				// viver só na aba "Concluídas"/"Canceladas".
 				setRows(prev => prev.filter(r => r.id !== id));
 			} else {
 				// Usa a resposta completa do backend (não só o estado) para
@@ -321,6 +325,13 @@ export default function BookingsPage() {
 						>
 							<Lock size={12} />
 							Concluídas
+						</button>
+						<button
+							onClick={() => setTab("cancelled")}
+							className={`px-4 py-2 rounded-lg text-xs font-extrabold uppercase tracking-tight transition-colors flex items-center gap-1.5 ${tab === "cancelled" ? "bg-primary text-white shadow-lg shadow-primary/20" : "bg-zinc-100 text-zinc-500 hover:bg-zinc-200"}`}
+						>
+							<Ban size={12} />
+							Canceladas
 						</button>
 					</div>
 
