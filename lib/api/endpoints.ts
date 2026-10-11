@@ -32,6 +32,8 @@ export const endpoints = {
 	users: {
 		list: (limit = 100) => `/dashboard/users?limit=${limit}`,
 		create: "/dashboard/users",
+		setActive: (id: string) => `/dashboard/users/${id}/active`,
+		anonymize: (id: string) => `/dashboard/users/${id}/anonymize`,
 	},
 	vehicles: {
 		list: (limit = 100) => `/public/vehicles?limit=${limit}`,

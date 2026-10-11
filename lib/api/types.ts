@@ -129,6 +129,8 @@ export type UserRow = {
 	is_active: boolean;
 	created_at: string;
 	roles?: string[];
+	// Cliente "apagado" no painel: dados pessoais anonimizados, reservas mantidas.
+	anonymized_at?: string | null;
 };
 
 export type VehicleRow = {

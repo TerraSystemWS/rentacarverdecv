@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { Users, Plus, Shield, User as UserIcon } from "lucide-react";
+import { Users, Plus, Shield, User as UserIcon, Ban, CheckCircle2, UserX } from "lucide-react";
+import Swal from "sweetalert2";
 import TopNav from "@/app/ui/dash/topNav";
 import PageShell from "@/app/ui/dash/PageShell";
 import DataTable from "@/app/ui/dash/DataTable";
@@ -13,6 +14,10 @@ import type { UserRow } from "@/lib/api/types";
 import { fmtDateTime } from "@/lib/utils/format";
 
 type TabType = "customers" | "admins";
+
+function escapeHtml(s: string) {
+	return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
+}
 
 export default function UsersPage() {
 	const [rows, setRows] = useState<UserRow[]>([]);
@@ -55,6 +60,66 @@ export default function UsersPage() {
 			return !isStaffOrAdmin;
 		});
 	}, [rows, activeTab]);
+
+	// Atualiza a linha com a resposta da API (mantém a data já formatada).
+	const replaceRow = (updated: UserRow) =>
+		setRows(prev => prev.map(r => r.id === updated.id ? { ...updated, created_at: r.created_at } : r));
+
+	async function handleToggleActive(u: UserRow) {
+		const disabling = u.is_active;
+		const result = await Swal.fire({
+			title: disabling ? "Desativar conta?" : "Reativar conta?",
+			text: disabling
+				? `${u.full_name} deixa de conseguir entrar e é desligado já de todas as sessões (site e app). As reservas não mudam.`
+				: `${u.full_name} volta a conseguir entrar com a palavra-passe que tinha.`,
+			icon: disabling ? "warning" : "question",
+			showCancelButton: true,
+			confirmButtonColor: disabling ? "#d33" : "#3baa4e",
+			cancelButtonColor: "#71717a",
+			confirmButtonText: disabling ? "Sim, desativar" : "Sim, reativar",
+			cancelButtonText: "Voltar",
+		});
+		if (!result.isConfirmed) return;
+		try {
+			replaceRow(await apiFetch<UserRow>(endpoints.users.setActive(u.id), {
+				method: "PATCH",
+				body: JSON.stringify({ active: !u.is_active }),
+			}));
+		} catch (e: any) {
+			Swal.fire({ icon: "error", title: "Erro", text: e?.message || "Não foi possível alterar a conta.", confirmButtonColor: "#3085d6" });
+		}
+	}
+
+	// Irreversível: pede para escrever APAGAR.
+	async function handleAnonymize(u: UserRow) {
+		const result = await Swal.fire({
+			title: "Apagar dados do cliente?",
+			html: `<p style="text-align:left;font-size:14px;line-height:1.5">Os dados pessoais de <b>${escapeHtml(u.full_name)}</b> (nome, email, telefone, morada, documentos e foto da carta) são <b>apagados para sempre</b> e a conta fica desativada.</p>`
+				+ `<p style="text-align:left;font-size:14px;line-height:1.5;margin-top:8px">As reservas e os recibos ficam guardados como <i>Cliente removido</i>, para a contabilidade. <b>Não é possível desfazer.</b></p>`
+				+ `<p style="font-size:13px;margin-top:12px">Escreva <b>APAGAR</b> para confirmar:</p>`,
+			input: "text",
+			inputPlaceholder: "APAGAR",
+			icon: "warning",
+			showCancelButton: true,
+			confirmButtonColor: "#d33",
+			cancelButtonColor: "#71717a",
+			confirmButtonText: "Apagar dados",
+			cancelButtonText: "Voltar",
+			preConfirm: (value: string) => {
+				if ((value || "").trim().toUpperCase() !== "APAGAR") {
+					Swal.showValidationMessage("Escreva APAGAR para confirmar.");
+					return false;
+				}
+				return true;
+			},
+		});
+		if (!result.isConfirmed) return;
+		try {
+			replaceRow(await apiFetch<UserRow>(endpoints.users.anonymize(u.id), { method: "POST" }));
+		} catch (e: any) {
+			Swal.fire({ icon: "error", title: "Erro", text: e?.message || "Não foi possível apagar os dados.", confirmButtonColor: "#3085d6" });
+		}
+	}
 
 	const handleCreateAdmin = async (userData: any) => {
 		setIsSubmitting(true);
@@ -158,8 +223,45 @@ export default function UsersPage() {
 						columns={[
 							{ key: "full_name", label: "Utilizador / Nome" },
 							{ key: "email", label: "Email" },
-							{ key: "is_active", label: "Status" },
+							{
+								key: "is_active",
+								label: "Estado",
+								render: (u: UserRow) => {
+									const [label, cls] = u.anonymized_at
+										? ["Removido", "bg-zinc-100 text-zinc-500"]
+										: u.is_active ? ["Ativo", "bg-emerald-50 text-emerald-600"] : ["Desativado", "bg-red-50 text-red-600"];
+									return <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider ${cls}`}>{label}</span>;
+								},
+							},
 							{ key: "created_at", label: "Registado em" },
+							{
+								key: "actions",
+								label: "Ações",
+								render: (u: UserRow) => {
+									if (u.anonymized_at) return <span className="text-xs text-zinc-400">—</span>;
+									const isAdmin = u.roles?.some(r => r === "ROLE_ADMIN" || r === "ROLE_STAFF");
+									return (
+										<div className="flex justify-end gap-2">
+											<button
+												onClick={() => handleToggleActive(u)}
+												className={`p-2 rounded-lg transition-colors ${u.is_active ? "text-zinc-500 hover:bg-amber-50 hover:text-amber-600" : "text-zinc-500 hover:bg-emerald-50 hover:text-emerald-600"}`}
+												title={u.is_active ? "Desativar conta" : "Reativar conta"}
+											>
+												{u.is_active ? <Ban size={18} /> : <CheckCircle2 size={18} />}
+											</button>
+											{!isAdmin && (
+												<button
+													onClick={() => handleAnonymize(u)}
+													className="p-2 rounded-lg text-zinc-500 hover:bg-red-50 hover:text-red-600 transition-colors"
+													title="Apagar dados do cliente (anonimizar)"
+												>
+													<UserX size={18} />
+												</button>
+											)}
+										</div>
+									);
+								},
+							},
 						]}
 						rows={filteredRows as any}
 					/>
