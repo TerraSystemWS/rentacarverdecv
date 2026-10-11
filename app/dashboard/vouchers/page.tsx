@@ -9,6 +9,7 @@ import DataTable from "@/app/ui/dash/DataTable";
 import { apiFetch } from "@/lib/api/client";
 import { endpoints } from "@/lib/api/endpoints";
 import { Voucher, Vehicle } from "@/lib/api/types";
+import { CV_TIME_ZONE, cvToIso } from "@/lib/utils/cvTime";
 
 const emptyForm: {
 	code: string; discountPercent: number; scope: Voucher["scope"]; vehicleId: number | undefined;
@@ -27,6 +28,20 @@ const emptyForm: {
 	validUntil: "",
 	notifySubscribers: true,
 };
+
+const cvDay = (iso: string) => new Date(iso).toLocaleDateString("pt-PT", { timeZone: CV_TIME_ZONE });
+
+// Porque é que o voucher (não) pode ser usado agora — mesma ordem do
+// Voucher.isUsable() da API. Só "Utilizável" dá desconto e mostra a faixa no site.
+function voucherState(v: Voucher): { label: string; className: string } {
+	const now = new Date();
+	const day = cvDay;
+	if (!v.active) return { label: "Desativado", className: "bg-zinc-100 text-zinc-500" };
+	if (v.maxUses != null && (v.usedCount ?? 0) >= v.maxUses) return { label: "Esgotado", className: "bg-zinc-100 text-zinc-500" };
+	if (v.validFrom && new Date(v.validFrom) > now) return { label: `Agendado · a partir de ${day(v.validFrom)}`, className: "bg-amber-50 text-amber-700" };
+	if (v.validUntil && new Date(v.validUntil) < now) return { label: "Expirado", className: "bg-red-50 text-red-600" };
+	return { label: "Utilizável", className: "bg-emerald-50 text-emerald-600" };
+}
 
 export default function VouchersPage() {
 	const [vouchers, setVouchers] = useState<Voucher[]>([]);
@@ -98,8 +113,10 @@ export default function VouchersPage() {
 				active: form.active,
 				maxUses: form.maxUses ? Number(form.maxUses) : null,
 				maxUsesPerCustomer: form.maxUsesPerCustomer ? Number(form.maxUsesPerCustomer) : null,
-				validFrom: form.validFrom ? new Date(form.validFrom).toISOString() : null,
-				validUntil: form.validUntil ? new Date(form.validUntil).toISOString() : null,
+				// Dias inteiros em hora de Cabo Verde: "até 14/10" vale até ao fim do dia 14
+				// (antes ficava 14/10 00:00 UTC e o voucher acabava no início do dia).
+				validFrom: form.validFrom ? cvToIso(form.validFrom, "00:00") : null,
+				validUntil: form.validUntil ? new Date(new Date(cvToIso(form.validUntil, "23:59")).getTime() + 59_999).toISOString() : null,
 				notifySubscribers: form.notifySubscribers,
 			};
 			const created = await apiFetch<Voucher>(endpoints.vouchers.create, {
@@ -168,7 +185,7 @@ export default function VouchersPage() {
 								render: (row: Voucher) => (
 									<span className="text-xs text-zinc-500">
 										{row.validFrom || row.validUntil
-											? `${row.validFrom ? new Date(row.validFrom).toLocaleDateString("pt-PT") : "—"} a ${row.validUntil ? new Date(row.validUntil).toLocaleDateString("pt-PT") : "—"}`
+											? `${row.validFrom ? cvDay(row.validFrom) : "—"} a ${row.validUntil ? cvDay(row.validUntil) : "—"}`
 											: "Sem limite"}
 										{row.maxUsesPerCustomer ? ` · máx. ${row.maxUsesPerCustomer}/cliente` : ""}
 									</span>
@@ -192,11 +209,14 @@ export default function VouchersPage() {
 							{
 								key: "active",
 								label: "Estado",
-								render: (row: Voucher) => (
-									<span className={`inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider ${row.usable ? "bg-emerald-50 text-emerald-600" : "bg-zinc-100 text-zinc-500"}`}>
-										{row.usable ? "Utilizável" : "Indisponível"}
-									</span>
-								),
+								render: (row: Voucher) => {
+									const st = voucherState(row);
+									return (
+										<span className={`inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider ${st.className}`}>
+											{st.label}
+										</span>
+									);
+								},
 							},
 							{
 								key: "actions",
