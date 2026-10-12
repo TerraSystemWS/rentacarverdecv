@@ -1,8 +1,8 @@
 "use client";
 
 import FSideBar from "@/app/ui/front/minis/FSidebar";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { useTranslations } from "next-intl";
@@ -14,6 +14,25 @@ const Header = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [isPesquisaOpen, setIsPesquisaOpen] = useState(false);
 	const [searchQuery, setSearchQuery] = useState("");
+	// Menu do site em telemóvel. Era aberto pelo jQuery do template
+	// (carrent.min.js), que no Next.js não chega a correr; agora é estado React
+	// com as mesmas classes menuopen/menuclose do CSS do template.
+	const [isNavOpen, setIsNavOpen] = useState(false);
+	const pathname = usePathname();
+	const navState = isNavOpen ? "menuopen" : "menuclose";
+
+	// Fecha o menu ao mudar de página.
+	useEffect(() => {
+		setIsNavOpen(false);
+	}, [pathname]);
+
+	const navLinks = [
+		{ href: "/", label: tn("home") },
+		{ href: "/cars", label: tn("cars") },
+		{ href: "/about", label: tn("about") },
+		{ href: "/posts", label: tn("news") },
+		{ href: "/contact", label: tn("contact") },
+	];
 
 	function handleSearch(e: React.FormEvent) {
 		e.preventDefault();
@@ -142,21 +161,11 @@ const Header = () => {
 								<div className="menu-wrapper">
 									<div className="menu-content">
 										<ul className="menu-list">
-											<li>
-												<Link href="/">{tn("home")}</Link>
-											</li>
-											<li>
-												<Link href="/cars">{tn("cars")}</Link>
-											</li>
-											<li>
-												<Link href="/about">{tn("about")}</Link>
-											</li>
-											<li>
-												<Link href="/posts">{tn("news")}</Link>
-											</li>
-											<li>
-												<Link href="/contact">{tn("contact")}</Link>
-											</li>
+											{navLinks.map((l) => (
+												<li key={l.href}>
+													<Link href={l.href}>{l.label}</Link>
+												</li>
+											))}
 										</ul>
 									</div>
 								</div>
@@ -164,23 +173,39 @@ const Header = () => {
 
 							{/* Mobile */}
 							<div className="mobile-menu-main hidden-md hidden-lg">
-								<div className="menucontent overlaybg"></div>
+								<div
+									className={`menucontent overlaybg ${navState}`}
+									onClick={() => setIsNavOpen(false)}
+								></div>
 								<div className="menuexpandermain slideRight">
 									<a
-										href=""
-										id="navtoggole-main"
-										className="animated-arrow slideLeft menuclose"
+										href="#"
+										role="button"
+										aria-label={t("openMenu")}
+										aria-expanded={isNavOpen}
+										className={`animated-arrow slideLeft ${navState}`}
+										onClick={(e) => {
+											e.preventDefault();
+											setIsNavOpen((v) => !v);
+										}}
 									>
 										<span></span>
 									</a>
 								</div>
 
-								<div id="mobile-main-nav" className="mb-navigation slideLeft">
+								<div className={`mb-navigation slideLeft ${navState}`}>
 									<div className="menu-wrapper">
-										<div
-											id="main-mobile-container"
-											className="menu-content clearfix"
-										></div>
+										<div className="menu-content clearfix">
+											<ul className="menu-list">
+												{navLinks.map((l) => (
+													<li key={l.href} className={pathname === l.href ? "current-menu-item" : undefined}>
+														<Link href={l.href} onClick={() => setIsNavOpen(false)}>
+															{l.label}
+														</Link>
+													</li>
+												))}
+											</ul>
+										</div>
 									</div>
 								</div>
 							</div>
