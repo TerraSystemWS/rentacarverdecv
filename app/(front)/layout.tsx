@@ -86,11 +86,6 @@ export default async function FrontLayout({
 			<link rel="stylesheet" href="/assets/css/style.css" />
 			<link rel="stylesheet" href="/assets/css/color-schemer.css" />
 
-			{/* Revolution Slider CSS */}
-			<link rel="stylesheet" href="/assets/revolution/css/settings.css" />
-			<link rel="stylesheet" href="/assets/revolution/css/layers.css" />
-			<link rel="stylesheet" href="/assets/revolution/css/navigation.css" />
-
 			<ContentProvider>
 				<ClientFrontLayout>{children}</ClientFrontLayout>
 			</ContentProvider>
