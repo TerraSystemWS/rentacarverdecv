@@ -32,6 +32,8 @@ const robotoSlab = Roboto_Slab({
 export async function generateMetadata(): Promise<Metadata> {
 	const t = await getTranslations("meta");
 	return {
+	// Base dos URLs relativos (ex.: /og-image.png) nas pré-visualizações de links.
+	metadataBase: new URL('https://www.rentacarverde.cv'),
 	title: {
 		template: '%s | Rent a Car Verde',
 		default: t("defaultTitle"),
@@ -40,9 +42,9 @@ export async function generateMetadata(): Promise<Metadata> {
 	openGraph: {
 		title: 'Rent a Car Verde',
 		description: t("description"),
-		url: 'https://rentacarverdecv.com', // Placeholder URL
-		siteName: 'Verde CV',
-		images: [{ url: '/assets/images/slider/1.jpg', width: 1200, height: 630 }], // Placeholder OGP image
+		url: 'https://www.rentacarverde.cv',
+		siteName: 'Rent a Car Verde',
+		images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Rent a Car Verde' }],
 		locale: t("ogLocale"),
 		type: 'website',
 	},

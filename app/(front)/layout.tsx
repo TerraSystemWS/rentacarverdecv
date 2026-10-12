@@ -40,7 +40,7 @@ export async function generateMetadata(): Promise<Metadata> {
 			siteName: "Rent a Car Verde",
 			images: [
 				{
-					url: "/assets/images/og-image.png",
+					url: "/og-image.png",
 					width: 1200,
 					height: 630,
 					alt: "Rent a Car Verde",
