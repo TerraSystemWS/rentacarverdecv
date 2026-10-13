@@ -12,6 +12,7 @@ import { countryName } from "@/lib/countries";
 import { fmtDateTime, fmtMoney } from "@/lib/utils/format";
 import PageHeader from "@/app/ui/front/PageHeader";
 import PaymentBrands from "@/app/ui/front/payment/PaymentBrands";
+import UnpaidExpiryNotice from "@/app/ui/front/payment/UnpaidExpiryNotice";
 import { useLocale, useTranslations } from "next-intl";
 import { localeTags, isLocale } from "@/i18n/config";
 
@@ -92,6 +93,12 @@ export default function PaymentPage() {
 					<div role="alert" className="flex items-center gap-2 mb-6 text-red-800 bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm font-semibold">
 						<AlertTriangle className="w-5 h-5 shrink-0" />
 						{error}
+					</div>
+				)}
+
+				{summary?.expiresAt && summary.payable && (
+					<div className="mb-6">
+						<UnpaidExpiryNotice expiresAt={summary.expiresAt} />
 					</div>
 				)}
 

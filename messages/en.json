@@ -680,5 +680,14 @@
 		"thanksText": "We received your report and will look into it.",
 		"tooMany": "You have sent several reports. Please try again later.",
 		"errorGeneric": "Could not send. Please try again."
+	},
+	"unpaidExpiry": {
+		"long": "This booking is not paid yet. If it is not paid by {time} ({left} from now), it is cancelled automatically and the vehicle becomes available to other customers.",
+		"short": "Unpaid: cancelled automatically at {time} ({left} from now).",
+		"expired": "The payment deadline has passed. The booking will be cancelled automatically shortly.",
+		"formNote": "Unpaid bookings are cancelled automatically 2 hours after they are made. Pay right after booking to secure the vehicle.",
+		"hoursMinutes": "{h} h {m} min",
+		"minutes": "{m} min",
+		"lessThanMinute": "less than 1 min"
 	}
 }

@@ -13,6 +13,7 @@ import PageHeader from "@/app/ui/front/PageHeader";
 import MyDataForm from "@/app/ui/front/profile/MyDataForm";
 import ReviewDialog from "@/app/ui/front/reviews/ReviewDialog";
 import { StarsView } from "@/app/ui/front/reviews/Stars";
+import UnpaidExpiryNotice from "@/app/ui/front/payment/UnpaidExpiryNotice";
 import { useLocale, useTranslations } from "next-intl";
 import { localeTags, isLocale } from "@/i18n/config";
 
@@ -208,6 +209,11 @@ export default function ProfilePage() {
                                 <p><span className="font-semibold text-slate-800">{t("end")}</span> {fmtDateTime(b.end_at)}</p>
                                 <p><span className="font-semibold text-slate-800">{t("createdAt")}</span> {fmtDateTime(b.created_at)}</p>
                             </div>
+                            {b.expires_at && (
+                                <div className="-mt-3 mb-4">
+                                    <UnpaidExpiryNotice expiresAt={b.expires_at} compact />
+                                </div>
+                            )}
                         </div>
 
                         <div className="pt-4 border-t border-slate-200 flex justify-between items-center">

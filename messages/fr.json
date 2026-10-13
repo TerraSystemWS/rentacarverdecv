@@ -680,5 +680,14 @@
 		"thanksText": "Nous avons reçu votre signalement et allons l'examiner.",
 		"tooMany": "Vous avez envoyé plusieurs signalements. Réessayez plus tard.",
 		"errorGeneric": "Envoi impossible. Réessayez."
+	},
+	"unpaidExpiry": {
+		"long": "Cette réservation n'est pas encore payée. Si elle n'est pas payée avant {time} (dans {left}), elle est annulée automatiquement et le véhicule redevient disponible pour d'autres clients.",
+		"short": "Non payée : annulée automatiquement à {time} (dans {left}).",
+		"expired": "Le délai de paiement est dépassé. La réservation va être annulée automatiquement dans quelques instants.",
+		"formNote": "Les réservations non payées sont annulées automatiquement 2 heures après leur création. Payez juste après la réservation pour garantir le véhicule.",
+		"hoursMinutes": "{h} h {m} min",
+		"minutes": "{m} min",
+		"lessThanMinute": "moins d'1 min"
 	}
 }

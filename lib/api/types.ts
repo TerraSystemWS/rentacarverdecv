@@ -164,6 +164,8 @@ export type BookingRow = {
 	picked_up_at?: string | null;
 	returned_at?: string | null;
 	has_license_photo?: boolean;
+	/** Reserva por pagar: hora a que o servidor a cancela automaticamente. */
+	expires_at?: string | null;
 };
 
 export type PagedBookings = {
@@ -473,6 +475,8 @@ export type PaymentSummary = {
 	billingPostCode: string | null;
 	billingCountryCode: string | null;
 	profileComplete: boolean;
+	/** Reserva por pagar: hora a que o servidor a cancela automaticamente. */
+	expiresAt?: string | null;
 	lastAttempt?: {
 		merchantRef: string;
 		status: string;

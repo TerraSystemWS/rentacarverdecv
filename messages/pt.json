@@ -680,5 +680,14 @@
 		"thanksText": "Recebemos o seu reporte e vamos analisá-lo.",
 		"tooMany": "Já enviou vários reportes. Tente de novo mais tarde.",
 		"errorGeneric": "Não foi possível enviar. Tente de novo."
+	},
+	"unpaidExpiry": {
+		"long": "Esta reserva ainda não está paga. Se não for paga até {time} (daqui a {left}), é cancelada automaticamente e a viatura fica livre para outros clientes.",
+		"short": "Por pagar: cancelada automaticamente às {time} (daqui a {left}).",
+		"expired": "O prazo para pagar terminou. A reserva vai ser cancelada automaticamente dentro de momentos.",
+		"formNote": "As reservas não pagas são canceladas automaticamente 2 horas depois de feitas. Pague logo a seguir para garantir a viatura.",
+		"hoursMinutes": "{h} h {m} min",
+		"minutes": "{m} min",
+		"lessThanMinute": "menos de 1 min"
 	}
 }

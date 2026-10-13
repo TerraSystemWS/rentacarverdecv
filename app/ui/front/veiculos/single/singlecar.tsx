@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { useLocale, useTranslations } from "next-intl";
+import { Clock } from "lucide-react";
 import { dateFnsLocale, PICKER_DATE_FORMAT } from "@/lib/i18n/dateLocale";
 import { useVehicleTerms } from "@/lib/i18n/useVehicleTerms";
 import { useFormatPrice } from "@/lib/i18n/format";
@@ -43,6 +44,7 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 	const t = useTranslations("carDetail");
 	const tv = useTranslations("vehicle");
 	const tSearch = useTranslations("search");
+	const tExpiry = useTranslations("unpaidExpiry");
 	const locale = useLocale();
 	const term = useVehicleTerms();
 	const price = useFormatPrice();
@@ -539,6 +541,12 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 												</span>
 											</div>
 										)}
+
+										{/* O servidor cancela as reservas por pagar ao fim de 2 h (BookingExpiryService). */}
+										<p className="mt-4 mb-0 flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">
+											<Clock className="h-4 w-4 mt-0.5 shrink-0" aria-hidden="true" />
+											<span>{tExpiry("formNote")}</span>
+										</p>
 
 										<div className="check-vehicle-footer">
 											<button
