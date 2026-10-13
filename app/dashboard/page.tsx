@@ -149,15 +149,6 @@ export default function DashboardHome() {
 								/>
 							</div>
 
-							{/* Ocupação da frota */}
-							<div className="mt-12">
-								<h3 className="text-xl font-extrabold text-zinc-900 dark:text-zinc-50 mb-6 tracking-tight flex items-center gap-2">
-									<Gauge className="w-5 h-5 text-primary" />
-									Ocupação da Frota
-								</h3>
-								<FleetOccupancy />
-							</div>
-
 							{/* Revenue Overview Section - Full Width */}
 							<div className="mt-12">
 								<RevenueOverview
@@ -165,6 +156,15 @@ export default function DashboardHome() {
 									revenueByStatus={data.revenueByStatus}
 									totalIncome={data.totalIncome}
 								/>
+							</div>
+
+							{/* Ocupação da frota */}
+							<div className="mt-12">
+								<h3 className="text-xl font-extrabold text-zinc-900 dark:text-zinc-50 mb-6 tracking-tight flex items-center gap-2">
+									<Gauge className="w-5 h-5 text-primary" />
+									Ocupação da Frota
+								</h3>
+								<FleetOccupancy />
 							</div>
 
 							<div className="mt-12 grid gap-8 lg:grid-cols-2">
