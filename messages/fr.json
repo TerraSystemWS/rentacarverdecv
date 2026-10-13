@@ -648,5 +648,37 @@
 		"errorGeneric": "Votre avis n’a pas pu être envoyé. Réessayez.",
 		"ratingRequired": "Choisissez de 1 à 5 étoiles.",
 		"notFound": "Cette réservation ne figure pas dans votre historique."
+	},
+	"feedback": {
+		"open": "Signaler un problème",
+		"title": "Signaler un problème ou une suggestion",
+		"intro": "Vous avez trouvé une erreur, quelque chose qui ne fonctionne pas bien, ou vous avez une idée d'amélioration ? Dites-le-nous.",
+		"typeLabel": "Type",
+		"type": {
+			"BUG": "Erreur",
+			"PROBLEM": "Problème",
+			"IMPROVEMENT": "Amélioration"
+		},
+		"summaryLabel": "Résumé",
+		"summaryPlaceholder": "Ex. : le bouton de paiement ne répond pas",
+		"descriptionLabel": "Description",
+		"descriptionPlaceholder": "Ce que vous avez fait, ce que vous attendiez et ce qui s'est passé.",
+		"screenshotLabel": "Capture d'écran (facultatif)",
+		"screenshotPick": "Choisir une image",
+		"screenshotRemove": "Retirer",
+		"screenshotHint": "PNG, JPEG ou WebP, 5 Mo maximum.",
+		"screenshotInvalid": "L'image doit être PNG, JPEG ou WebP, 5 Mo maximum.",
+		"emailLabel": "Votre e-mail (facultatif)",
+		"emailHint": "Uniquement pour vous répondre, si nécessaire.",
+		"context": "Nous joignons automatiquement la page, le navigateur et la version du site pour mieux comprendre le problème.",
+		"contextLoggedIn": "Nous joignons automatiquement la page, le navigateur, la version du site et votre compte ({email}).",
+		"submit": "Envoyer",
+		"sending": "Envoi…",
+		"cancel": "Annuler",
+		"close": "Fermer",
+		"thanksTitle": "Merci !",
+		"thanksText": "Nous avons reçu votre signalement et allons l'examiner.",
+		"tooMany": "Vous avez envoyé plusieurs signalements. Réessayez plus tard.",
+		"errorGeneric": "Envoi impossible. Réessayez."
 	}
 }

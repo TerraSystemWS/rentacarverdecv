@@ -91,6 +91,10 @@ export const endpoints = {
 			`/public/vouchers/validate?code=${encodeURIComponent(code)}${vehicleId ? `&vehicleId=${vehicleId}` : ""}`,
 	},
 	// Locais de levantamento/devolução (Operações → Locais).
+	// Reportar bug/problema/melhoria (site, painel e app) — multipart.
+	feedback: {
+		create: "/public/feedback",
+	},
 	reviews: {
 		public: (limit = 9) => `/public/reviews?limit=${limit}`,
 		forVehicle: (vehicleId: number, limit = 6) => `/public/reviews?vehicleId=${vehicleId}&limit=${limit}`,

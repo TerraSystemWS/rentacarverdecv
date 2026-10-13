@@ -648,5 +648,37 @@
 		"errorGeneric": "Não foi possível enviar a avaliação. Tente de novo.",
 		"ratingRequired": "Escolha de 1 a 5 estrelas.",
 		"notFound": "Esta reserva não está no seu histórico."
+	},
+	"feedback": {
+		"open": "Reportar um problema",
+		"title": "Reportar um problema ou sugestão",
+		"intro": "Encontrou um erro, algo que não funciona bem ou tem uma ideia para melhorar? Diga-nos.",
+		"typeLabel": "Tipo",
+		"type": {
+			"BUG": "Erro",
+			"PROBLEM": "Problema",
+			"IMPROVEMENT": "Melhoria"
+		},
+		"summaryLabel": "Resumo",
+		"summaryPlaceholder": "Ex.: o botão de pagar não responde",
+		"descriptionLabel": "Descrição",
+		"descriptionPlaceholder": "O que fez, o que esperava que acontecesse e o que aconteceu.",
+		"screenshotLabel": "Captura de ecrã (opcional)",
+		"screenshotPick": "Escolher imagem",
+		"screenshotRemove": "Remover",
+		"screenshotHint": "PNG, JPEG ou WebP, até 5 MB.",
+		"screenshotInvalid": "A imagem tem de ser PNG, JPEG ou WebP, até 5 MB.",
+		"emailLabel": "O seu email (opcional)",
+		"emailHint": "Só para lhe respondermos, se for preciso.",
+		"context": "Juntamos automaticamente a página, o browser e a versão do site, para nos ajudar a perceber o problema.",
+		"contextLoggedIn": "Juntamos automaticamente a página, o browser, a versão do site e a sua conta ({email}).",
+		"submit": "Enviar",
+		"sending": "A enviar…",
+		"cancel": "Cancelar",
+		"close": "Fechar",
+		"thanksTitle": "Obrigado!",
+		"thanksText": "Recebemos o seu reporte e vamos analisá-lo.",
+		"tooMany": "Já enviou vários reportes. Tente de novo mais tarde.",
+		"errorGeneric": "Não foi possível enviar. Tente de novo."
 	}
 }

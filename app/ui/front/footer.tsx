@@ -7,6 +7,7 @@ import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
 import { authFetch } from "@/app/auth/api";
 import { CompanyProfile, Translations } from "@/lib/api/types";
 import PaymentBrands from "@/app/ui/front/payment/PaymentBrands";
+import FeedbackButton from "@/app/ui/feedback/FeedbackButton";
 import { useLocale, useTranslations } from "next-intl";
 import { tr, trList } from "@/lib/i18n/translate";
 
@@ -222,6 +223,8 @@ const Footer = () => {
 									<p className="copyright">
 										{t("copyright", { year: new Date().getFullYear() })}{" "}
 										<Link href="https://terrasystem.cv">terrasystem.cv</Link>
+										{" · "}
+										<FeedbackButton source="SITE" />
 									</p>
 
 								</div>

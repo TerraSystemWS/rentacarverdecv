@@ -648,5 +648,37 @@
 		"errorGeneric": "Your review couldn't be sent. Please try again.",
 		"ratingRequired": "Choose from 1 to 5 stars.",
 		"notFound": "This booking isn't in your history."
+	},
+	"feedback": {
+		"open": "Report a problem",
+		"title": "Report a problem or suggestion",
+		"intro": "Found a bug, something that doesn't work well, or have an idea to improve? Let us know.",
+		"typeLabel": "Type",
+		"type": {
+			"BUG": "Bug",
+			"PROBLEM": "Problem",
+			"IMPROVEMENT": "Improvement"
+		},
+		"summaryLabel": "Summary",
+		"summaryPlaceholder": "E.g.: the pay button does nothing",
+		"descriptionLabel": "Description",
+		"descriptionPlaceholder": "What you did, what you expected and what happened.",
+		"screenshotLabel": "Screenshot (optional)",
+		"screenshotPick": "Choose image",
+		"screenshotRemove": "Remove",
+		"screenshotHint": "PNG, JPEG or WebP, up to 5 MB.",
+		"screenshotInvalid": "The image must be PNG, JPEG or WebP, up to 5 MB.",
+		"emailLabel": "Your email (optional)",
+		"emailHint": "Only so we can reply, if needed.",
+		"context": "We automatically include the page, browser and site version to help us understand the problem.",
+		"contextLoggedIn": "We automatically include the page, browser, site version and your account ({email}).",
+		"submit": "Send",
+		"sending": "Sending…",
+		"cancel": "Cancel",
+		"close": "Close",
+		"thanksTitle": "Thank you!",
+		"thanksText": "We received your report and will look into it.",
+		"tooMany": "You have sent several reports. Please try again later.",
+		"errorGeneric": "Could not send. Please try again."
 	}
 }

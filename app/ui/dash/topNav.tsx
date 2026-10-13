@@ -7,6 +7,7 @@ import { LogOut, User as UserIcon, Search, Menu } from "lucide-react";
 import { useSidebar } from "@/app/context/SidebarContext";
 import NotificationBell from "./NotificationBell";
 import MessagesButton from "./MessagesButton";
+import FeedbackButton from "@/app/ui/feedback/FeedbackButton";
 
 export default function TopNav({
 	title,
@@ -73,6 +74,7 @@ export default function TopNav({
 			<div className="flex items-center gap-3 md:gap-6">
 				{right}
 				<div className="flex items-center gap-2 md:gap-4 border-l border-border/30 pl-2 md:pl-6">
+					<FeedbackButton source="DASHBOARD" variant="icon" />
 					<MessagesButton />
 					<NotificationBell />
 
