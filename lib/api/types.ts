@@ -144,6 +144,33 @@ export type VehicleRow = {
 	created_at: string;
 };
 
+/** Painel > Ocupação da frota (GET /dashboard/fleet-occupancy). */
+export type VehicleOccupancy = {
+	vehicle_id: number;
+	name: string;
+	license_plate: string | null;
+	image_url: string | null;
+	status: string;
+	rented_days: number;
+	occupancy_percent: number;
+	revenue: number;
+	bookings: number;
+	rented_now: boolean;
+	last_return_at: string | null;
+	/** null = nunca alugada. */
+	idle_days: number | null;
+	next_start_at: string | null;
+};
+
+export type FleetOccupancy = {
+	days: number;
+	from: string;
+	to: string;
+	occupancy_percent: number;
+	revenue: number;
+	vehicles: VehicleOccupancy[];
+};
+
 export type BookingRow = {
 	id: number;
 	vehicle_id: number;

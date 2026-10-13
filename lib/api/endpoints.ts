@@ -28,6 +28,7 @@ export const endpoints = {
 	},
 	dashboard: {
 		summary: "/dashboard/summary",
+		fleetOccupancy: (days: number) => `/dashboard/fleet-occupancy?days=${days}`,
 	},
 	users: {
 		list: (limit = 100) => `/dashboard/users?limit=${limit}`,

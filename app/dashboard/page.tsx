@@ -8,6 +8,7 @@ import PageShell from "@/app/ui/dash/PageShell";
 import StatCard, { computeTrend } from "@/app/ui/dash/StatCard";
 import RevenueOverview from "@/app/dashboard/_components/RevenueOverview";
 import CashflowDetails from "@/app/dashboard/_components/CashflowDetails";
+import FleetOccupancy from "@/app/dashboard/_components/FleetOccupancy";
 
 import { endpoints } from "@/lib/api/endpoints";
 import type { DashboardSummary } from "@/lib/api/types";
@@ -20,7 +21,8 @@ import {
 	MessageCircle,
 	ArrowRight,
 	TrendingUp,
-	Loader2
+	Loader2,
+	Gauge
 } from "lucide-react";
 
 export default function DashboardHome() {
@@ -145,6 +147,15 @@ export default function DashboardHome() {
 									cancelledIncome={data.cancelledIncome ?? 0}
 									cancelledCount={data.cancelledCount ?? 0}
 								/>
+							</div>
+
+							{/* Ocupação da frota */}
+							<div className="mt-12">
+								<h3 className="text-xl font-extrabold text-zinc-900 dark:text-zinc-50 mb-6 tracking-tight flex items-center gap-2">
+									<Gauge className="w-5 h-5 text-primary" />
+									Ocupação da Frota
+								</h3>
+								<FleetOccupancy />
 							</div>
 
 							{/* Revenue Overview Section - Full Width */}
