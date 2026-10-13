@@ -46,6 +46,9 @@ export type DashboardSummary = {
 	weeklyIncome: number;
 	monthlyIncome: number;
 	pendingIncome: number;
+	/** Reservas canceladas sem pagamento: valor que não entrou. */
+	cancelledIncome?: number;
+	cancelledCount?: number;
 	monthlyRevenue: Record<string, number>;
 	revenueByStatus: Record<string, number>;
 };

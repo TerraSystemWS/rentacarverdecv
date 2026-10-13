@@ -142,6 +142,8 @@ export default function DashboardHome() {
 									weeklyIncome={data.weeklyIncome}
 									monthlyIncome={data.monthlyIncome}
 									pendingIncome={data.pendingIncome}
+									cancelledIncome={data.cancelledIncome ?? 0}
+									cancelledCount={data.cancelledCount ?? 0}
 								/>
 							</div>
 
