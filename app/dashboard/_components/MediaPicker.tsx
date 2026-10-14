@@ -42,7 +42,7 @@ export default function MediaPicker({ isOpen, category, onClose, onSelect }: Med
             <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[85vh] flex flex-col overflow-hidden">
                 <div className="flex items-center justify-between p-5 border-b border-gray-100">
                     <h3 className="text-lg font-black text-gray-900">Escolher da Media Library</h3>
-                    <button onClick={onClose} className="text-gray-400 hover:text-gray-700">
+                    <button type="button" onClick={onClose} className="text-gray-400 hover:text-gray-700">
                         <X size={22} />
                     </button>
                 </div>

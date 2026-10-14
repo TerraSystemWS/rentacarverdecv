@@ -12,8 +12,12 @@ interface SiteContent {
         mainTitle: string;
         mainSubtitle: string;
         bigTitle: string;
+        /** Um só bloco de texto (HTML). p1/p2 são os campos antigos (lidos se text estiver vazio). */
+        text?: string;
         p1: string;
         p2: string;
+        /** Imagens da Media Library, por ordem. */
+        images?: string[];
     };
     contact: {
         headerTitle: string;

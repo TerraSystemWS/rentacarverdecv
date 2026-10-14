@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Save, Loader2, Layout, Info, Phone, Home, ScrollText, Undo2 } from "lucide-react";
+import { Save, Loader2, Layout, Info, Phone, Home, ScrollText, Undo2, ImagePlus, X, ArrowLeft, ArrowRight } from "lucide-react";
 import Swal from "sweetalert2";
 import { useAuth } from "@/app/auth/AuthContext";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
 import TopNav from "@/app/ui/dash/topNav";
 import PageShell from "@/app/ui/dash/PageShell";
 import RichTextEditor from "@/app/ui/dash/RichTextEditor";
+import MediaPicker from "@/app/dashboard/_components/MediaPicker";
 import { getPath, setPath } from "@/lib/i18n/contentFields";
 
 export default function ContentPage() {
@@ -50,6 +51,23 @@ export default function ContentPage() {
     const setVal = (path: string, value: string) => setContent((prev: any) => setPath(prev, fullPath(path), value));
     // Texto PT de referência para quem traduz.
     const ptHint = (path: string) => (lang === "pt" ? undefined : String(getPath(content, path) ?? ""));
+
+    // "Sobre nós": um só bloco de texto. Enquanto não for gravado, começa com os
+    // dois parágrafos antigos juntos (p1 + p2), para não se perder nada.
+    const aboutText = (forLang: string) => {
+        const base = forLang === "pt" ? "about" : `i18n.${forLang}.about`;
+        const text = getPath(content, `${base}.text`);
+        if (typeof text === "string" && text.trim()) return text;
+        return [getPath(content, `${base}.p1`), getPath(content, `${base}.p2`)]
+            .filter((v): v is string => typeof v === "string" && v.trim().length > 0)
+            .map((v) => (/<[a-z][\s\S]*>/i.test(v) ? v : `<p>${v}</p>`))
+            .join("");
+    };
+    // Imagens do "Sobre nós" (iguais em todas as línguas).
+    const aboutImages: string[] = Array.isArray(getPath(content, "about.images")) ? (getPath(content, "about.images") as string[]) : [];
+    const setAboutImages = (images: string[]) => setContent((prev: any) => setPath(prev, "about.images", images));
+    const [pickerOpen, setPickerOpen] = useState(false);
+    const imgSrc = (url: string) => (url.startsWith("/uploads") ? `${API_BASE_URL}${url}` : url);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -211,24 +229,50 @@ export default function ContentPage() {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-xs font-black uppercase text-gray-400 tracking-widest pl-1">Parágrafo 1</label>
-                                    <PtReference html={ptHint("about.p1")} />
+                                    <label className="text-xs font-black uppercase text-gray-400 tracking-widest pl-1">Texto</label>
+                                    {lang !== "pt" && <PtReference html={aboutText("pt")} />}
                                     <RichTextEditor
-                                        key={`${lang}-about.p1`}
-                                        value={String(val("about.p1"))}
-                                        onChange={(html) => setVal("about.p1", html)}
-                                        minHeight={120}
+                                        key={`${lang}-about.text`}
+                                        value={aboutText(lang)}
+                                        onChange={(html) => setVal("about.text", html)}
+                                        minHeight={220}
                                     />
                                 </div>
 
-                                <div className="space-y-2">
-                                    <label className="text-xs font-black uppercase text-gray-400 tracking-widest pl-1">Parágrafo 2</label>
-                                    <PtReference html={ptHint("about.p2")} />
-                                    <RichTextEditor
-                                        key={`${lang}-about.p2`}
-                                        value={String(val("about.p2"))}
-                                        onChange={(html) => setVal("about.p2", html)}
-                                        minHeight={120}
+                                <div className="space-y-3">
+                                    <label className="text-xs font-black uppercase text-gray-400 tracking-widest pl-1">Imagens</label>
+                                    <p className="text-xs text-gray-500 pl-1 m-0">
+                                        Aparecem ao lado do texto, por esta ordem (iguais em todas as línguas). Sem imagens, fica a imagem por omissão.
+                                    </p>
+                                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                        {aboutImages.map((url, i) => (
+                                            <div key={url + i} className="relative group rounded-xl overflow-hidden border border-gray-200 bg-gray-50 aspect-[4/3]">
+                                                <img src={imgSrc(url)} alt="" className="w-full h-full object-cover" />
+                                                <div className="absolute inset-x-0 bottom-0 flex justify-between p-1.5 bg-black/40">
+                                                    <button type="button" disabled={i === 0} aria-label="Mover para a esquerda"
+                                                        onClick={() => { const a = [...aboutImages]; [a[i - 1], a[i]] = [a[i], a[i - 1]]; setAboutImages(a); }}
+                                                        className="p-1 rounded text-white disabled:opacity-30"><ArrowLeft size={14} /></button>
+                                                    <button type="button" aria-label="Remover imagem"
+                                                        onClick={() => setAboutImages(aboutImages.filter((_, j) => j !== i))}
+                                                        className="p-1 rounded text-white hover:bg-red-600"><X size={14} /></button>
+                                                    <button type="button" disabled={i === aboutImages.length - 1} aria-label="Mover para a direita"
+                                                        onClick={() => { const a = [...aboutImages]; [a[i + 1], a[i]] = [a[i], a[i + 1]]; setAboutImages(a); }}
+                                                        className="p-1 rounded text-white disabled:opacity-30"><ArrowRight size={14} /></button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                        {aboutImages.length < 12 && (
+                                            <button type="button" onClick={() => setPickerOpen(true)}
+                                                className="aspect-[4/3] rounded-xl border-2 border-dashed border-gray-300 text-gray-500 hover:border-primary hover:text-primary flex flex-col items-center justify-center gap-1 text-xs font-bold">
+                                                <ImagePlus size={22} />
+                                                Adicionar imagem
+                                            </button>
+                                        )}
+                                    </div>
+                                    <MediaPicker
+                                        isOpen={pickerOpen}
+                                        onClose={() => setPickerOpen(false)}
+                                        onSelect={(asset) => { setAboutImages([...aboutImages, asset.url]); setPickerOpen(false); }}
                                     />
                                 </div>
                             </div>

@@ -3,7 +3,7 @@
 // (ex: i18n.en.about.p1). Telefone, email, números e definições não se
 // traduzem.
 export const TRANSLATABLE_CONTENT_FIELDS = [
-	"about.headerTitle", "about.headerDesc", "about.mainTitle", "about.mainSubtitle", "about.bigTitle", "about.p1", "about.p2",
+	"about.headerTitle", "about.headerDesc", "about.mainTitle", "about.mainSubtitle", "about.bigTitle", "about.text", "about.p1", "about.p2",
 	"contact.headerTitle", "contact.headerSubtitle", "contact.directTitle", "contact.address",
 	"contact.mapTitle", "contact.mapSubtitle", "contact.mapDesc",
 	"home.app.topSubtitle", "home.app.title", "home.app.subtitle",
