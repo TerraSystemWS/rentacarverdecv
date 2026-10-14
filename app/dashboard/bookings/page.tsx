@@ -11,14 +11,14 @@ import { authFetch } from "@/app/auth/api";
 import { endpoints } from "@/lib/api/endpoints";
 import type { BookingRow } from "@/lib/api/types";
 import { useAuth } from "@/app/auth/AuthContext";
-import { levelOf } from "@/lib/auth/staffLevel";
+import { can } from "@/lib/auth/staffLevel";
 import { fmtDateTime, fmtMoney } from "@/lib/utils/format";
 import BookingDialog from "./_components/booking-dialog";
 import BookingForm from "./_components/booking-form";
 
 export default function BookingsPage() {
-	// Agentes não apagam reservas (a API recusa; o botão nem aparece).
-	const isAgent = levelOf(useAuth().user) === "AGENT";
+	// Apagar reservas: só com "bookings.delete" (a API recusa; o botão nem aparece).
+	const isAgent = !can(useAuth().user, "bookings.delete");
 	const [rows, setRows] = useState<BookingRow[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [err, setErr] = useState<string | null>(null);

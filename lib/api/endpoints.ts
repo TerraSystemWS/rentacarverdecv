@@ -32,6 +32,11 @@ export const endpoints = {
 	},
 	dashboard: {
 		summary: "/dashboard/summary",
+		roles: "/dashboard/roles",
+		role: (id: string) => `/dashboard/roles/${id}`,
+		permissions: "/dashboard/permissions",
+		appSettings: "/dashboard/app-settings",
+		appSetting: (key: string) => `/dashboard/app-settings/${encodeURIComponent(key)}`,
 		fleetOccupancy: (days: number) => `/dashboard/fleet-occupancy?days=${days}`,
 	},
 	users: {
@@ -45,6 +50,7 @@ export const endpoints = {
 		setLevel: (id: string) => `/dashboard/users/${id}/level`,
 		staffRequest: (id: string) => `/dashboard/users/${id}/staff-requests`,
 		staffRequests: "/dashboard/staff-requests",
+		assignableRoles: "/dashboard/roles/assignable",
 		staffRequestAction: (id: number, action: "accept" | "contest" | "vote" | "cancel") => `/dashboard/staff-requests/${id}/${action}`,
 	},
 	vehicles: {

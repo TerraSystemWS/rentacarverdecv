@@ -11,12 +11,12 @@ import VehicleForm from "./_components/vehicle-form";
 import { apiFetch } from "@/lib/api/client";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
 import { useAuth } from "@/app/auth/AuthContext";
-import { levelOf } from "@/lib/auth/staffLevel";
+import { can } from "@/lib/auth/staffLevel";
 import { Vehicle } from "@/lib/api/types";
 
 export default function VehiclesPage() {
-    // Agentes (só operações) não criam, editam, arquivam nem apagam viaturas.
-    const isAgent = levelOf(useAuth().user) === "AGENT";
+    // Criar, editar, arquivar e apagar viaturas: só com "vehicles.manage".
+    const isAgent = !can(useAuth().user, "vehicles.manage");
     const [vehicles, setVehicles] = useState<Vehicle[]>([]);
     const [loading, setLoading] = useState(true);
     const [err, setErr] = useState<string | null>(null);

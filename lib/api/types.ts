@@ -137,15 +137,21 @@ export type UserRow = {
 	// false = ainda não abriu o link do email de confirmação (não pode reservar).
 	email_verified?: boolean;
 	profile_complete?: boolean;
-	/** SUPERADMIN / ADMIN / AGENT / CLIENT (StaffPolicy na API). */
-	level?: "SUPERADMIN" | "ADMIN" | "AGENT" | "CLIENT";
+	/** Papel sem "ROLE_" (SUPERADMIN, ADMIN, AGENT, USER ou um papel criado na página Papéis e permissões). */
+	level?: string;
+	role_label?: string;
+	/** Nível na hierarquia (só se gerem contas de nível abaixo). */
+	rank?: number;
+	/** Papel com acesso ao painel. */
+	is_staff?: boolean;
 };
 
 /** Pedido de um Superadmin para desativar ou rebaixar outro (7 dias de período probatório). */
 export type StaffRequest = {
 	id: number;
 	action: "DEACTIVATE" | "DEMOTE";
-	new_level: "ADMIN" | "AGENT" | null;
+	new_level: string | null;
+	new_level_label: string | null;
 	target_id: string;
 	target_name: string;
 	target_email: string;
@@ -554,3 +560,21 @@ export type PaymentInitResponse = {
 	actionUrl: string;
 	fields: Record<string, string>;
 };
+
+/** Papel (página Papéis e permissões). */
+export type RoleRow = {
+	id: string;
+	name: string;
+	level: string;
+	label: string;
+	description: string | null;
+	rank: number;
+	system: boolean;
+	is_staff: boolean;
+	users: number;
+	permissions: string[];
+};
+
+export type PermissionRow = { code: string; label: string; description: string | null; group: string };
+
+export type AppSettingRow = { key: string; value: string; label: string; description: string | null };

@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 import { User, Mail, Lock, ShieldCheck, Shield } from "lucide-react";
-import { LEVEL_LABEL, type StaffLevel } from "@/lib/auth/staffLevel";
+import type { RoleRow } from "@/lib/api/types";
 
 interface UserFormProps {
     onSubmit: (data: any) => Promise<void>;
     onCancel: () => void;
     isSubmitting: boolean;
-    /** Níveis que quem está a criar pode dar (lib/auth/staffLevel.ts → creatableLevels). */
-    levels: StaffLevel[];
+    /** Papéis que quem está a criar pode dar (GET /dashboard/roles/assignable). */
+    levels: RoleRow[];
 }
 
 // Novo membro da equipa: Superadmin, Admin ou Agente (o nível escolhe-se aqui;
@@ -20,7 +20,7 @@ export default function UserForm({ onSubmit, onCancel, isSubmitting, levels }: U
         email: "",
         password: "",
         confirmPassword: "",
-        level: levels.includes("ADMIN") ? "ADMIN" : levels[0] ?? "AGENT",
+        level: levels.find((r) => r.level === "ADMIN")?.level ?? levels[levels.length - 1]?.level ?? "",
     });
 
     const [error, setError] = useState<string | null>(null);
@@ -68,17 +68,13 @@ export default function UserForm({ onSubmit, onCancel, isSubmitting, levels }: U
                             id="staff-level"
                             className="w-full rounded-lg border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-4 text-sm focus:border-blue-500 focus:bg-white focus:outline-none transition-all"
                             value={formData.level}
-                            onChange={(e) => setFormData({ ...formData, level: e.target.value as StaffLevel })}
+                            onChange={(e) => setFormData({ ...formData, level: e.target.value })}
                         >
-                            {levels.map((l) => <option key={l} value={l}>{LEVEL_LABEL[l]}</option>)}
+                            {levels.map((r) => <option key={r.id} value={r.level}>{r.label}</option>)}
                         </select>
                     </div>
                     <p className="text-[11px] text-gray-500 m-0">
-                        {formData.level === "AGENT"
-                            ? "Agente: só operações (reservas, clientes, mensagens e estado das viaturas)."
-                            : formData.level === "SUPERADMIN"
-                                ? "Superadmin: tudo, incluindo gerir Admins e Agentes. Só sai por pedido com período probatório."
-                                : "Admin: tudo menos gerir outros Admins e Superadmins."}
+                        {levels.find((r) => r.level === formData.level)?.description ?? ""}
                     </p>
                 </div>
 
@@ -159,7 +155,7 @@ export default function UserForm({ onSubmit, onCancel, isSubmitting, levels }: U
                     disabled={isSubmitting}
                     className="flex items-center gap-2 rounded-lg bg-primary px-6 py-2 text-sm font-extrabold text-white hover:bg-primary/90 disabled:opacity-50 shadow-lg shadow-primary/20 transition-all active:scale-95"
                 >
-                    {isSubmitting ? "A criar..." : `Criar ${LEVEL_LABEL[formData.level as StaffLevel]}`}
+                    {isSubmitting ? "A criar..." : `Criar ${levels.find((r) => r.level === formData.level)?.label ?? ""}`}
                 </button>
             </div>
         </form>

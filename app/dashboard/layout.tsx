@@ -1,6 +1,6 @@
 "use client";
 
-import { agentCanOpen, isStaffLevel, levelOf } from "@/lib/auth/staffLevel";
+import { canOpen, isStaff } from "@/lib/auth/staffLevel";
 import SideNav from "@/app/ui/dash/sidenav";
 import { useEffect, useMemo } from "react";
 import { useAuth } from "@/app/auth/AuthContext";
@@ -20,11 +20,10 @@ export default function DashboardLayout({
 	const pathname = usePathname();
 	const isLoginPage = pathname === DASH_LOGIN;
 
-	// Equipa: Superadmin, Admin ou Agente (lib/auth/staffLevel.ts). O Agente só
-	// abre as páginas de operações; nas outras volta ao Painel.
-	const level = useMemo(() => levelOf(user), [user]);
-	const isAdmin = isStaffLevel(level);
-	const agentBlocked = level === "AGENT" && !agentCanOpen(pathname);
+	// Equipa = permissão "dashboard.access"; cada página exige a sua permissão
+	// (lib/auth/staffLevel.ts). Sem ela, volta ao Painel.
+	const isAdmin = useMemo(() => isStaff(user), [user]);
+	const agentBlocked = isAdmin && !canOpen(user, pathname);
 
 	useEffect(() => {
 		if (isLoading) return;

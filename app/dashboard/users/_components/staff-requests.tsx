@@ -7,7 +7,6 @@ import { apiFetch } from "@/lib/api/client";
 import { endpoints } from "@/lib/api/endpoints";
 import type { StaffRequest } from "@/lib/api/types";
 import { fmtDateTime } from "@/lib/utils/format";
-import { LEVEL_LABEL } from "@/lib/auth/staffLevel";
 
 // Pedidos entre Superadmins para desativar ou rebaixar (StaffDeactivationService
 // na API): o visado aceita ou contesta; se contestar, votam os outros
@@ -22,7 +21,7 @@ const STATUS: Record<StaffRequest["status"], [string, string]> = {
 };
 
 export function describeRequest(r: StaffRequest) {
-	return r.action === "DEMOTE" ? `rebaixar para ${LEVEL_LABEL[r.new_level ?? "ADMIN"]}` : "desativar";
+	return r.action === "DEMOTE" ? `rebaixar para ${r.new_level_label ?? r.new_level}` : "desativar";
 }
 
 function escapeHtml(s: string) {

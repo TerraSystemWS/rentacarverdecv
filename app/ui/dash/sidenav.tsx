@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useRef, useState, useEffect, useMemo } from "react";
-import { agentCanOpen, levelOf } from "@/lib/auth/staffLevel";
+import { canOpen } from "@/lib/auth/staffLevel";
 import { useAuth } from "@/app/auth/AuthContext";
 import {
 	LayoutDashboard,
@@ -32,6 +32,7 @@ import {
 	Settings2,
 	Briefcase,
 	Archive,
+	ShieldCheck,
 } from "lucide-react";
 import { useSidebar } from "@/app/context/SidebarContext";
 
@@ -92,6 +93,7 @@ const allGroups: Group[] = [
 			{ label: "Utilizadores", href: "/dashboard/users", icon: Users },
 			{ label: "Mensagens", href: "/dashboard/messages", icon: MessageSquare },
 			{ label: "Arquivados", href: "/dashboard/archived", icon: Archive },
+			{ label: "Papéis e permissões", href: "/dashboard/roles", icon: ShieldCheck },
 			{ label: "Definições", href: "/dashboard/settings", icon: LayoutDashboard },
 		],
 	},
@@ -103,13 +105,10 @@ export default function SideNav() {
 	const { isOpen, close } = useSidebar();
 	const { user, logout } = useAuth();
 	const [isLoggingOut, setIsLoggingOut] = useState(false);
-	// Agentes só veem as páginas de operações (lib/auth/staffLevel.ts).
-	const isAgent = levelOf(user) === "AGENT";
+	// Cada um só vê as páginas para que tem permissão (lib/auth/staffLevel.ts).
 	const groups = useMemo(
-		() => isAgent
-			? allGroups.map((g) => ({ ...g, items: g.items.filter((i) => agentCanOpen(i.href)) })).filter((g) => g.items.length > 0)
-			: allGroups,
-		[isAgent],
+		() => allGroups.map((g) => ({ ...g, items: g.items.filter((i) => canOpen(user, i.href)) })).filter((g) => g.items.length > 0),
+		[user],
 	);
 
 	// Se a rota atual pertence a um grupo, abre já nesse grupo em vez de

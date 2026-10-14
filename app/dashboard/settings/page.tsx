@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { can } from "@/lib/auth/staffLevel";
 import { Settings, ShieldAlert, FileText, Loader2, Save, Share2 } from "lucide-react";
 import Swal from "sweetalert2";
 import { useAuth } from "@/app/auth/AuthContext";
@@ -12,7 +13,11 @@ import AppearanceCard from "./appearance/_components/appearance-card";
 import Link from "next/link";
 
 export default function SettingsPage() {
-    const { authFetch } = useAuth();
+    const { authFetch, user } = useAuth();
+    // Cada secção exige a sua permissão (papéis e permissões na base de dados).
+    const canContent = can(user, "content.manage");
+    const canCompany = can(user, "company.manage");
+    const canBackup = can(user, "backup.manage");
     const [content, setContent] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
@@ -46,9 +51,11 @@ export default function SettingsPage() {
     };
 
     useEffect(() => {
-        fetchContent();
-        fetchCompanyProfile();
-    }, []);
+        if (canContent) fetchContent();
+        else setLoading(false);
+        if (canCompany) fetchCompanyProfile();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [canContent, canCompany]);
 
     async function handleSaveSocial() {
         if (!companyProfile) return;
@@ -114,7 +121,7 @@ export default function SettingsPage() {
         );
     }
 
-    if (!content) return null;
+    if (!content && canContent) return null;
 
     return (
         <div className="pb-20">
@@ -125,6 +132,7 @@ export default function SettingsPage() {
 
             <PageShell>
                 <div className="max-w-4xl mx-auto space-y-8">
+                    {canContent && (<>
                     {/* Aparência: tema de cores do site público */}
                     <AppearanceCard />
 
@@ -162,6 +170,8 @@ export default function SettingsPage() {
                         )}
                     </div>
 
+                    </>)}
+                    {canCompany && (<>
                     {/* Redes Sociais */}
                     <div className="bg-white p-8 rounded-[32px] shadow-sm border border-gray-100">
                         <div className="flex items-center gap-4 mb-8">
@@ -229,6 +239,8 @@ export default function SettingsPage() {
                         )}
                     </div>
 
+                    </>)}
+                    {canContent && (<>
                     {/* Gestão de Conteúdo Link */}
                     <div className="bg-white p-8 rounded-[32px] shadow-sm border border-gray-100">
                         <div className="flex items-center justify-between mb-8">
@@ -252,6 +264,8 @@ export default function SettingsPage() {
                         </div>
                     </div>
 
+                    </>)}
+                    {canBackup && (<>
                     {/* Backups */}
                     <div className="bg-white p-8 rounded-[32px] shadow-sm border border-gray-100">
                         <div className="flex items-center gap-4 mb-8">
@@ -442,6 +456,7 @@ export default function SettingsPage() {
                             </div>
                         </div>
                     </div>
+                    </>)}
                 </div>
             </PageShell>
         </div>

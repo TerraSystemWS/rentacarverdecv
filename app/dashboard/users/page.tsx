@@ -11,10 +11,10 @@ import UserForm from "./_components/user-form";
 import CreateClientDialog from "./_components/create-client-dialog";
 import StaffRequests, { useStaffRequests } from "./_components/staff-requests";
 import { useAuth } from "@/app/auth/AuthContext";
-import { LEVEL_LABEL, canManage, creatableLevels, levelOf, levelOfRoles, type StaffLevel } from "@/lib/auth/staffLevel";
+import { can, canAny, canManage, canRequest, rankOf } from "@/lib/auth/staffLevel";
 import { apiFetch } from "@/lib/api/client";
 import { endpoints } from "@/lib/api/endpoints";
-import type { UserRow } from "@/lib/api/types";
+import type { RoleRow, UserRow } from "@/lib/api/types";
 import { fmtDateTime } from "@/lib/utils/format";
 
 type TabType = "customers" | "admins";
@@ -23,22 +23,24 @@ function escapeHtml(s: string) {
 	return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
 }
 
-// Nível de uma linha (a API devolve "level"; respostas antigas só trazem os papéis).
-const rowLevel = (u: UserRow): StaffLevel => u.level ?? levelOfRoles(u.roles);
+// Conta da equipa = papel com acesso ao painel (vem da API).
+const isTeam = (u: UserRow) => !!u.is_staff;
 
-const LEVEL_BADGE: Record<StaffLevel, string> = {
-	SUPERADMIN: "bg-purple-50 text-purple-700",
-	ADMIN: "bg-blue-50 text-blue-700",
-	AGENT: "bg-teal-50 text-teal-700",
-	CLIENT: "bg-zinc-100 text-zinc-500",
-};
+// Cor do papel pelo nível (os papéis e os níveis estão na base de dados).
+const rankBadge = (rank = 0) =>
+	rank >= 300 ? "bg-purple-50 text-purple-700" : rank >= 200 ? "bg-blue-50 text-blue-700" : rank > 0 ? "bg-teal-50 text-teal-700" : "bg-zinc-100 text-zinc-500";
 
 export default function UsersPage() {
 	const { user } = useAuth();
-	// Quem está a usar o painel: decide que botões aparecem (a API confirma sempre).
-	const myLevel = levelOf(user);
+	// Quem está a usar o painel: as permissões decidem que botões aparecem (a API confirma sempre).
 	const myId = String((user as any)?.id ?? "");
-	const { requests, reload: reloadRequests } = useStaffRequests(myLevel === "SUPERADMIN");
+	const { requests, reload: reloadRequests } = useStaffRequests(can(user, "staff.requests"));
+	// Papéis que esta conta pode dar (criar membro, mudar nível, rebaixar).
+	const [assignable, setAssignable] = useState<RoleRow[]>([]);
+	useEffect(() => {
+		if (!canAny(user, ["staff.manage", "staff.levels", "staff.requests"])) return;
+		apiFetch<RoleRow[]>(endpoints.users.assignableRoles).then(setAssignable).catch(() => setAssignable([]));
+	}, [user]);
 	const [rows, setRows] = useState<UserRow[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [err, setErr] = useState<string | null>(null);
@@ -74,7 +76,7 @@ export default function UsersPage() {
 	}, []);
 
 	const filteredRows = useMemo(() => {
-		return rows.filter((u) => (activeTab === "admins") === (rowLevel(u) !== "CLIENT"));
+		return rows.filter((u) => (activeTab === "admins") === isTeam(u));
 	}, [rows, activeTab]);
 
 	// Atualiza a linha com a resposta da API (mantém a data já formatada).
@@ -168,13 +170,13 @@ export default function UsersPage() {
 		}
 	}
 
-	// Promover/rebaixar Admins e Agentes (só Superadmin; um Superadmin só por pedido).
+	// Promover/rebaixar contas da equipa de nível abaixo ("staff.levels"); do mesmo nível só por pedido.
 	async function handleChangeLevel(u: UserRow) {
-		const current = rowLevel(u);
+		const current = u.level;
 		const { value: level } = await Swal.fire({
 			title: `Nível de ${escapeHtml(u.full_name)}`,
 			input: "select",
-			inputOptions: { SUPERADMIN: "Superadmin", ADMIN: "Admin", AGENT: "Agente" },
+			inputOptions: Object.fromEntries(assignable.map((r) => [r.level, r.label])),
 			inputValue: current,
 			text: "As sessões abertas desta conta terminam; o novo nível vale a partir do próximo login.",
 			showCancelButton: true,
@@ -192,12 +194,14 @@ export default function UsersPage() {
 		}
 	}
 
-	// Desativar ou rebaixar outro Superadmin: pedido com 7 dias de período probatório.
+	// Desativar ou rebaixar alguém do mesmo nível: pedido com período probatório.
 	async function handleStaffRequest(u: UserRow) {
+		const demotions = assignable.filter((r) => r.rank < (u.rank ?? 0))
+			.map((r) => `<option value="DEMOTE:${escapeHtml(r.level)}">Rebaixar para ${escapeHtml(r.label)}</option>`).join("");
 		const res = await Swal.fire({
-			title: "Pedido sobre um Superadmin",
-			html: `<p style="text-align:left;font-size:14px;line-height:1.5"><b>${escapeHtml(u.full_name)}</b> fica <b>7 dias em período probatório</b>: pode aceitar ou contestar. Se contestar, decidem os outros Superadmins (sem contar consigo). Sem decisão em 7 dias, o pedido aplica-se.</p>`
-				+ `<select id="sr-action" class="swal2-select" style="width:100%;margin:12px 0 0"><option value="DEACTIVATE">Desativar a conta</option><option value="DEMOTE:ADMIN">Rebaixar para Admin</option><option value="DEMOTE:AGENT">Rebaixar para Agente</option></select>`
+			title: `Pedido sobre ${escapeHtml(u.full_name)}`,
+			html: `<p style="text-align:left;font-size:14px;line-height:1.5"><b>${escapeHtml(u.full_name)}</b> fica em <b>período probatório</b>: pode aceitar ou contestar. Se contestar, decidem os outros do mesmo nível (sem contar consigo). Sem decisão no prazo, o pedido aplica-se.</p>`
+				+ `<select id="sr-action" class="swal2-select" style="width:100%;margin:12px 0 0"><option value="DEACTIVATE">Desativar a conta</option>${demotions}</select>`
 				+ `<textarea id="sr-reason" class="swal2-textarea" style="width:100%;margin:12px 0 0" placeholder="Motivo (obrigatório)"></textarea>`,
 			icon: "warning",
 			showCancelButton: true,
@@ -223,7 +227,7 @@ export default function UsersPage() {
 				body: JSON.stringify({ action, newLevel: newLevel ?? null, reason: res.value.reason }),
 			});
 			reloadRequests();
-			Swal.fire({ icon: "success", title: "Pedido feito", text: `${u.full_name} foi avisado e tem 7 dias para responder.`, confirmButtonColor: "#3baa4e" });
+			Swal.fire({ icon: "success", title: "Pedido feito", text: `${u.full_name} foi avisado e já pode responder.`, confirmButtonColor: "#3baa4e" });
 		} catch (e: any) {
 			Swal.fire({ icon: "error", title: "Erro", text: e?.message || "Não foi possível fazer o pedido.", confirmButtonColor: "#3085d6" });
 		}
@@ -307,7 +311,7 @@ export default function UsersPage() {
 							<UserPlus size={16} />
 							<span>Novo Cliente</span>
 						</button>
-						{creatableLevels(myLevel).length > 0 && (
+						{can(user, "staff.manage") && assignable.length > 0 && (
 							<button
 								onClick={() => setIsDialogOpen(true)}
 								className="flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2.5 text-xs font-extrabold uppercase tracking-tight text-zinc-700 hover:bg-zinc-50 transition-all active:scale-95"
@@ -332,7 +336,7 @@ export default function UsersPage() {
 						>
 							<div className="flex items-center gap-2">
 								<UserIcon size={14} />
-								Clientes ({rows.filter(u => rowLevel(u) === "CLIENT").length})
+								Clientes ({rows.filter(u => !isTeam(u)).length})
 							</div>
 							{activeTab === "customers" && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />}
 						</button>
@@ -343,13 +347,13 @@ export default function UsersPage() {
 						>
 							<div className="flex items-center gap-2">
 								<Shield size={14} />
-								Equipa ({rows.filter(u => rowLevel(u) !== "CLIENT").length})
+								Equipa ({rows.filter(isTeam).length})
 							</div>
 							{activeTab === "admins" && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />}
 						</button>
 					</div>
 
-					{myLevel === "SUPERADMIN" && activeTab === "admins" && (
+					{can(user, "staff.requests") && activeTab === "admins" && (
 						<StaffRequests requests={requests} onChanged={() => { reloadRequests(); fetchUsers(); }} />
 					)}
 
@@ -361,11 +365,10 @@ export default function UsersPage() {
 								key: "level",
 								label: "Nível",
 								render: (u: UserRow) => {
-									const l = rowLevel(u);
 									const pending = requests.some(r => r.target_id === u.id && (r.status === "PENDING" || r.status === "CONTESTED"));
 									return (
 										<div className="flex flex-wrap gap-1">
-											<span className={`inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider ${LEVEL_BADGE[l]}`}>{LEVEL_LABEL[l]}</span>
+											<span className={`inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider ${rankBadge(u.rank)}`}>{u.role_label ?? u.level}</span>
 											{pending && <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider bg-red-50 text-red-600">Período probatório</span>}
 										</div>
 									);
@@ -389,18 +392,18 @@ export default function UsersPage() {
 								label: "Ações",
 								render: (u: UserRow) => {
 									if (u.anonymized_at) return <span className="text-xs text-zinc-400">—</span>;
-									const l = rowLevel(u);
-									const manage = canManage(myLevel, l) && u.id !== myId;
-									const otherSuper = myLevel === "SUPERADMIN" && l === "SUPERADMIN" && u.id !== myId;
+									const team = isTeam(u);
+									const manage = canManage(user, u) && u.id !== myId;
+									const otherSuper = canRequest(user, u) && u.id !== myId;
 									const btn = "p-2 rounded-lg text-zinc-500 transition-colors";
 									const actions = [
-										u.email_verified === false && u.is_active && (l === "CLIENT" || manage) && (
+										u.email_verified === false && u.is_active && ((!team && can(user, "clients.create")) || manage) && (
 											<button key="resend" onClick={() => handleResendConfirmation(u)} className={`${btn} hover:bg-blue-50 hover:text-blue-600`} title="Reenviar o email de confirmação da conta"><MailCheck size={18} /></button>
 										),
 										u.is_active && manage && (
 											<button key="reset" onClick={() => handlePasswordReset(u)} className={`${btn} hover:bg-blue-50 hover:text-blue-600`} title="Enviar link para repor a palavra-passe"><KeyRound size={18} /></button>
 										),
-										myLevel === "SUPERADMIN" && (l === "ADMIN" || l === "AGENT") && u.id !== myId && (
+										can(user, "staff.levels") && team && (u.rank ?? 0) < rankOf(user) && u.id !== myId && (
 											<button key="level" onClick={() => handleChangeLevel(u)} className={`${btn} hover:bg-purple-50 hover:text-purple-600`} title="Mudar o nível (promover ou rebaixar)"><ArrowUpDown size={18} /></button>
 										),
 										otherSuper && u.is_active && !requests.some(r => r.target_id === u.id && (r.status === "PENDING" || r.status === "CONTESTED")) && (
@@ -411,7 +414,7 @@ export default function UsersPage() {
 												{u.is_active ? <Ban size={18} /> : <CheckCircle2 size={18} />}
 											</button>
 										),
-										l === "CLIENT" && manage && (
+										!team && manage && (
 											<button key="anon" onClick={() => handleAnonymize(u)} className={`${btn} hover:bg-red-50 hover:text-red-600`} title="Apagar dados do cliente (anonimizar)"><UserX size={18} /></button>
 										),
 									].filter(Boolean);
@@ -434,7 +437,7 @@ export default function UsersPage() {
 				title="Novo membro da equipa"
 			>
 				<UserForm
-					levels={creatableLevels(myLevel)}
+					levels={assignable}
 					onSubmit={handleCreateAdmin}
 					onCancel={() => setIsDialogOpen(false)}
 					isSubmitting={isSubmitting}

@@ -1,47 +1,62 @@
-// Níveis da equipa (mesmas regras que StaffPolicy na API, que é quem decide;
-// aqui só servem para mostrar ou esconder botões e menus).
-//   SUPERADMIN > ADMIN > AGENT > CLIENT
-export type StaffLevel = "SUPERADMIN" | "ADMIN" | "AGENT" | "CLIENT";
+// Permissões de quem está a usar o painel. Vêm da base de dados (papéis e
+// permissões, página Papéis e permissões) através do /auth/me; a API confirma
+// sempre (@PreAuthorize). Aqui só se decide que menus, páginas e botões aparecem.
 
-const RANK: Record<StaffLevel, number> = { CLIENT: 0, AGENT: 1, ADMIN: 2, SUPERADMIN: 3 };
+export type Me = { permissions?: string[]; rank?: number; level?: string; role_label?: string; roles?: string[] } | null | undefined;
 
-export const LEVEL_LABEL: Record<StaffLevel, string> = {
-	SUPERADMIN: "Superadmin",
-	ADMIN: "Admin",
-	AGENT: "Agente",
-	CLIENT: "Cliente",
-};
-
-export function rolesOf(me: any): string[] {
-	return me?.roles ?? me?.authorities?.map((a: any) => a.authority) ?? [];
+export function can(me: Me | any, permission: string): boolean {
+	return (me?.permissions ?? []).includes(permission);
 }
 
-export function levelOfRoles(roles: string[] | undefined | null): StaffLevel {
-	const r = roles ?? [];
-	if (r.includes("ROLE_SUPERADMIN")) return "SUPERADMIN";
-	if (r.includes("ROLE_ADMIN") || r.includes("ADMIN")) return "ADMIN";
-	if (r.includes("ROLE_AGENT")) return "AGENT";
-	return "CLIENT";
+export function canAny(me: Me | any, permissions: string[]): boolean {
+	return permissions.some((p) => can(me, p));
 }
 
-export const levelOf = (me: any): StaffLevel => levelOfRoles(rolesOf(me));
-export const isStaffLevel = (l: StaffLevel) => l !== "CLIENT";
+/** Equipa = quem entra no painel e na app. */
+export const isStaff = (me: Me | any) => can(me, "dashboard.access");
 
-/** Desativar/reativar, apagar dados, repor palavra-passe: só a níveis abaixo do seu (Admin ou Superadmin). */
-export function canManage(actor: StaffLevel, target: StaffLevel) {
-	return RANK[actor] >= RANK.ADMIN && RANK[actor] > RANK[target];
+export const rankOf = (me: Me | any): number => me?.rank ?? 0;
+
+/** Que permissão abre cada página do painel (a primeira que bate, por prefixo). */
+const PAGE_PERMISSIONS: [string, string[]][] = [
+	["/dashboard/bookings", ["bookings.view"]],
+	["/dashboard/calendar", ["bookings.view"]],
+	["/dashboard/vehicles", ["vehicles.view"]],
+	["/dashboard/locations", ["locations.manage"]],
+	["/dashboard/drivers", ["content.manage"]],
+	["/dashboard/posts", ["content.manage"]],
+	["/dashboard/gallery", ["content.manage"]],
+	["/dashboard/destination-places", ["content.manage"]],
+	["/dashboard/partners", ["content.manage"]],
+	["/dashboard/media", ["content.manage"]],
+	["/dashboard/reviews", ["reviews.manage"]],
+	["/dashboard/ads", ["marketing.manage"]],
+	["/dashboard/subscribers", ["marketing.manage"]],
+	["/dashboard/vouchers", ["vouchers.manage"]],
+	["/dashboard/invoices", ["finance.view"]],
+	["/dashboard/company-settings", ["company.manage"]],
+	["/dashboard/users", ["clients.view"]],
+	["/dashboard/messages", ["messages.manage"]],
+	["/dashboard/archived", ["archive.view"]],
+	["/dashboard/roles", ["roles.manage"]],
+	["/dashboard/settings", ["content.manage", "company.manage", "backup.manage"]],
+];
+
+export function canOpen(me: Me | any, pathname: string): boolean {
+	if (!isStaff(me)) return false;
+	const rule = PAGE_PERMISSIONS.find(([p]) => pathname === p || pathname.startsWith(p + "/"));
+	return rule ? canAny(me, rule[1]) : pathname === "/dashboard";
 }
 
-/** Níveis de equipa que cada um pode criar: Superadmin qualquer um, Admin só Agentes. */
-export function creatableLevels(actor: StaffLevel): StaffLevel[] {
-	if (actor === "SUPERADMIN") return ["SUPERADMIN", "ADMIN", "AGENT"];
-	if (actor === "ADMIN") return ["AGENT"];
-	return [];
+/** Linha da lista de contas: nível e se é da equipa (vêm da API). */
+type Row = { rank?: number; is_staff?: boolean };
+
+/** Desativar/reativar, apagar dados, repor palavra-passe: só contas de nível abaixo, com a permissão certa. */
+export function canManage(me: Me | any, row: Row): boolean {
+	return rankOf(me) > (row.rank ?? 0) && can(me, row.is_staff ? "staff.manage" : "clients.manage");
 }
 
-/** Páginas do painel abertas aos Agentes (só operações). */
-export const AGENT_PAGES = ["/dashboard", "/dashboard/bookings", "/dashboard/vehicles", "/dashboard/calendar", "/dashboard/messages", "/dashboard/users"];
-
-export function agentCanOpen(pathname: string) {
-	return AGENT_PAGES.some((p) => pathname === p || (p !== "/dashboard" && pathname.startsWith(p + "/")));
+/** Pedido com período probatório: alguém da equipa do mesmo nível. */
+export function canRequest(me: Me | any, row: Row): boolean {
+	return can(me, "staff.requests") && !!row.is_staff && rankOf(me) === (row.rank ?? 0);
 }
