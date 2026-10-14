@@ -40,7 +40,7 @@ export default function BlogArea() {
 		if (!url) return "/assets/images/blog/blog-two.png";
 		if (url.startsWith('blob:') || url.startsWith('data:')) return url;
 		if (url.startsWith('/uploads')) {
-			return `${API_BASE_URL}${url}`;
+			return `${API_BASE_URL}${url}?w=640`;
 		}
 		return url;
 	};

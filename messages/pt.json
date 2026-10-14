@@ -725,5 +725,15 @@
 		"resetSubmit": "Guardar a nova palavra-passe",
 		"resetDoneTitle": "Palavra-passe alterada",
 		"resetDone": "A nova palavra-passe ficou guardada. Por segurança, as sessões abertas noutros dispositivos foram terminadas. Inicie sessão com a nova palavra-passe."
+	},
+	"lightbox": {
+		"close": "Fechar",
+		"previous": "Imagem anterior",
+		"next": "Imagem seguinte",
+		"zoomIn": "Aumentar",
+		"zoomOut": "Diminuir",
+		"zoomHint": "Clique na imagem para ampliar",
+		"counter": "{current} de {total}",
+		"open": "Ver imagem em grande"
 	}
 }

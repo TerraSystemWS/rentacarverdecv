@@ -725,5 +725,15 @@
 		"resetSubmit": "Enregistrer le nouveau mot de passe",
 		"resetDoneTitle": "Mot de passe modifié",
 		"resetDone": "Votre nouveau mot de passe a été enregistré. Par sécurité, les sessions ouvertes sur d’autres appareils ont été fermées. Connectez-vous avec votre nouveau mot de passe."
+	},
+	"lightbox": {
+		"close": "Fermer",
+		"previous": "Image précédente",
+		"next": "Image suivante",
+		"zoomIn": "Agrandir",
+		"zoomOut": "Réduire",
+		"zoomHint": "Cliquez sur l’image pour l’agrandir",
+		"counter": "{current} sur {total}",
+		"open": "Voir l’image en grand"
 	}
 }

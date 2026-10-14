@@ -725,5 +725,15 @@
 		"resetSubmit": "Save the new password",
 		"resetDoneTitle": "Password changed",
 		"resetDone": "Your new password has been saved. For security, sessions open on other devices were ended. Sign in with your new password."
+	},
+	"lightbox": {
+		"close": "Close",
+		"previous": "Previous image",
+		"next": "Next image",
+		"zoomIn": "Zoom in",
+		"zoomOut": "Zoom out",
+		"zoomHint": "Click the image to zoom",
+		"counter": "{current} of {total}",
+		"open": "View larger image"
 	}
 }

@@ -151,7 +151,7 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 	const getImageSrc = (url: string) => {
 		if (!url) return "";
 		if (url.startsWith('/uploads')) {
-			return `${API_BASE_URL}${url} `;
+			return `${API_BASE_URL}${url}`;
 		}
 		return url;
 	};

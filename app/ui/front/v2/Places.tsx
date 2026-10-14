@@ -105,7 +105,7 @@ export default function Places() {
 									>
 										<div className="v2-photo">
 											{/* eslint-disable-next-line @next/next/no-img-element */}
-											<img src={`${API_BASE_URL}${item.imageUrl}`} alt={tr(item, "title", locale) || name} loading="lazy" />
+											<img src={`${API_BASE_URL}${item.imageUrl}?w=640`} alt={tr(item, "title", locale) || name} loading="lazy" />
 										</div>
 										<div className="v2-place__body">
 											{item.travelTime && (

@@ -35,7 +35,7 @@ const DriverBlock: React.FC = () => {
 	const getImageSrc = (url: string) => {
 		if (!url) return "";
 		if (url.startsWith('/uploads')) {
-			return `${API_BASE_URL}${url}`;
+			return `${API_BASE_URL}${url}?w=640`;
 		}
 		return url;
 	};

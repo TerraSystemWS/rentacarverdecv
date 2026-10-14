@@ -35,7 +35,7 @@ const CompanyBrandBlock: React.FC = () => {
 		if (!url) return "/assets/images/logo/logo-one.png";
 		if (url.startsWith('blob:') || url.startsWith('data:')) return url;
 		if (url.startsWith('/uploads')) {
-			return `${API_BASE_URL}${url}`;
+			return `${API_BASE_URL}${url}?w=320`;
 		}
 		return url;
 	};

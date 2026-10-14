@@ -193,7 +193,7 @@ const Footer = () => {
 													<Link href="/gallery">
 														<div className="relative w-full h-[70px]">
 															<img
-																src={`${API_BASE_URL}${item.imageUrl}`}
+																src={`${API_BASE_URL}${item.imageUrl}?w=320`}
 																alt={tr(item, "title", locale)}
 																className="object-cover w-full h-full"
 																style={{ width: '85px', height: '85px', objectFit: 'cover' }}

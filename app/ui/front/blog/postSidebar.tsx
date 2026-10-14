@@ -19,7 +19,7 @@ const BlogSidebar: React.FC<BlogSidebarProps> = ({ recentPosts, currentSlug }) =
 	const locale = useLocale();
 	const getImageSrc = (url?: string | null) => {
 		if (!url) return "/assets/images/blog/blog-two.png";
-		if (url.startsWith("/uploads")) return `${API_BASE_URL}${url}`;
+		if (url.startsWith("/uploads")) return `${API_BASE_URL}${url}?w=320`;
 		return url;
 	};
 

@@ -7,6 +7,7 @@ import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
 import { DestinationPlace, GalleryItem } from "@/lib/api/types";
 import { useLocale, useTranslations } from "next-intl";
 import { tr } from "@/lib/i18n/translate";
+import ImageLightbox from "@/app/ui/front/ImageLightbox";
 
 // Valores em PT (como na BD / API); o rótulo segue a língua.
 const CATEGORIES = ["Tudo", "Frota", "Eventos", "Cabo Verde", "Destinos"];
@@ -78,6 +79,9 @@ function GalleryContent() {
         : [];
     const placeLabel = (p: DestinationPlace) => tr(p, "name", locale);
     const visibleItems = activePlace ? items.filter((i) => i.placeId === activePlace) : items;
+    // Foto aberta em grande (lupa e setas para as outras da lista visível); null = fechada.
+    const [open, setOpen] = useState<number | null>(null);
+    const tl = useTranslations("lightbox");
 
     return (
         <main>
@@ -145,13 +149,16 @@ function GalleryContent() {
                             </div>
                         ) : (
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                                {visibleItems.map((item) => (
-                                    <div
+                                {visibleItems.map((item, idx) => (
+                                    <button
+                                        type="button"
                                         key={item.id}
-                                        className="group relative aspect-square rounded-2xl overflow-hidden bg-gray-100 shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
+                                        onClick={() => setOpen(idx)}
+                                        aria-label={`${tl("open")}: ${tr(item, "title", locale) || t("imageAlt")}`}
+                                        className="group relative block w-full p-0 border-0 text-left cursor-zoom-in aspect-square rounded-2xl overflow-hidden bg-gray-100 shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
                                     >
                                         <img
-                                            src={`${API_BASE_URL}${item.imageUrl}`}
+                                            src={`${API_BASE_URL}${item.imageUrl}?w=640`}
                                             alt={tr(item, "title", locale) || t("imageAlt")}
                                             className="!w-full !h-full !max-w-none object-cover transition-transform duration-700 group-hover:scale-110"
                                         />
@@ -175,9 +182,21 @@ function GalleryContent() {
                                                 </p>
                                             )}
                                         </div>
-                                    </div>
+                                    </button>
                                 ))}
                             </div>
+                        )}
+                        {open !== null && (
+                            <ImageLightbox
+                                images={visibleItems.map((item) => ({
+                                    src: `${API_BASE_URL}${item.imageUrl}`,
+                                    alt: tr(item, "title", locale) || t("imageAlt"),
+                                    caption: tr(item, "title", locale),
+                                }))}
+                                index={open}
+                                onClose={() => setOpen(null)}
+                                onIndexChange={setOpen}
+                            />
                         )}
                     </div>
                 </div>
