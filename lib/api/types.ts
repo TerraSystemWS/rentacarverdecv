@@ -137,6 +137,35 @@ export type UserRow = {
 	// false = ainda não abriu o link do email de confirmação (não pode reservar).
 	email_verified?: boolean;
 	profile_complete?: boolean;
+	/** SUPERADMIN / ADMIN / AGENT / CLIENT (StaffPolicy na API). */
+	level?: "SUPERADMIN" | "ADMIN" | "AGENT" | "CLIENT";
+};
+
+/** Pedido de um Superadmin para desativar ou rebaixar outro (7 dias de período probatório). */
+export type StaffRequest = {
+	id: number;
+	action: "DEACTIVATE" | "DEMOTE";
+	new_level: "ADMIN" | "AGENT" | null;
+	target_id: string;
+	target_name: string;
+	target_email: string;
+	requested_by_id: string;
+	requested_by_name: string;
+	reason: string;
+	status: "PENDING" | "CONTESTED" | "APPLIED" | "KEPT" | "CANCELLED";
+	contest_note: string | null;
+	created_at: string;
+	deadline_at: string;
+	resolved_at: string | null;
+	resolution: string | null;
+	votes_apply: number;
+	votes_keep: number;
+	voters: number;
+	my_vote: "DEACTIVATE" | "KEEP" | null;
+	can_accept: boolean;
+	can_contest: boolean;
+	can_vote: boolean;
+	can_cancel: boolean;
 };
 
 export type VehicleRow = {

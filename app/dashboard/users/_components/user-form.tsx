@@ -1,20 +1,26 @@
 "use client";
 
 import { useState } from "react";
-import { User, Mail, Lock, ShieldCheck } from "lucide-react";
+import { User, Mail, Lock, ShieldCheck, Shield } from "lucide-react";
+import { LEVEL_LABEL, type StaffLevel } from "@/lib/auth/staffLevel";
 
 interface UserFormProps {
     onSubmit: (data: any) => Promise<void>;
     onCancel: () => void;
     isSubmitting: boolean;
+    /** Níveis que quem está a criar pode dar (lib/auth/staffLevel.ts → creatableLevels). */
+    levels: StaffLevel[];
 }
 
-export default function UserForm({ onSubmit, onCancel, isSubmitting }: UserFormProps) {
+// Novo membro da equipa: Superadmin, Admin ou Agente (o nível escolhe-se aqui;
+// a API confirma se quem cria o pode dar).
+export default function UserForm({ onSubmit, onCancel, isSubmitting, levels }: UserFormProps) {
     const [formData, setFormData] = useState({
         username: "",
         email: "",
         password: "",
         confirmPassword: "",
+        level: levels.includes("ADMIN") ? "ADMIN" : levels[0] ?? "AGENT",
     });
 
     const [error, setError] = useState<string | null>(null);
@@ -28,8 +34,8 @@ export default function UserForm({ onSubmit, onCancel, isSubmitting }: UserFormP
             return;
         }
 
-        if (formData.password.length < 6) {
-            setError("A palavra-passe deve ter pelo menos 6 caracteres.");
+        if (formData.password.length < 8) {
+            setError("A palavra-passe deve ter pelo menos 8 caracteres.");
             return;
         }
 
@@ -38,6 +44,7 @@ export default function UserForm({ onSubmit, onCancel, isSubmitting }: UserFormP
                 username: formData.username,
                 email: formData.email,
                 password: formData.password,
+                level: formData.level,
             });
         } catch (err: any) {
             setError(err.message || "Ocorreu um erro ao criar o utilizador.");
@@ -53,6 +60,28 @@ export default function UserForm({ onSubmit, onCancel, isSubmitting }: UserFormP
             )}
 
             <div className="space-y-4">
+                <div className="space-y-1.5">
+                    <label htmlFor="staff-level" className="text-xs font-bold uppercase tracking-tight text-gray-400">Nível</label>
+                    <div className="relative">
+                        <Shield className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                        <select
+                            id="staff-level"
+                            className="w-full rounded-lg border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-4 text-sm focus:border-blue-500 focus:bg-white focus:outline-none transition-all"
+                            value={formData.level}
+                            onChange={(e) => setFormData({ ...formData, level: e.target.value as StaffLevel })}
+                        >
+                            {levels.map((l) => <option key={l} value={l}>{LEVEL_LABEL[l]}</option>)}
+                        </select>
+                    </div>
+                    <p className="text-[11px] text-gray-500 m-0">
+                        {formData.level === "AGENT"
+                            ? "Agente: só operações (reservas, clientes, mensagens e estado das viaturas)."
+                            : formData.level === "SUPERADMIN"
+                                ? "Superadmin: tudo, incluindo gerir Admins e Agentes. Só sai por pedido com período probatório."
+                                : "Admin: tudo menos gerir outros Admins e Superadmins."}
+                    </p>
+                </div>
+
                 <div className="space-y-1.5">
                     <label className="text-xs font-bold uppercase tracking-tight text-gray-400">Nome de Utilizador</label>
                     <div className="relative">
@@ -130,7 +159,7 @@ export default function UserForm({ onSubmit, onCancel, isSubmitting }: UserFormP
                     disabled={isSubmitting}
                     className="flex items-center gap-2 rounded-lg bg-primary px-6 py-2 text-sm font-extrabold text-white hover:bg-primary/90 disabled:opacity-50 shadow-lg shadow-primary/20 transition-all active:scale-95"
                 >
-                    {isSubmitting ? "A criar..." : "Criar Administrador"}
+                    {isSubmitting ? "A criar..." : `Criar ${LEVEL_LABEL[formData.level as StaffLevel]}`}
                 </button>
             </div>
         </form>

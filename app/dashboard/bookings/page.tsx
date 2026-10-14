@@ -10,11 +10,15 @@ import { apiFetch } from "@/lib/api/client";
 import { authFetch } from "@/app/auth/api";
 import { endpoints } from "@/lib/api/endpoints";
 import type { BookingRow } from "@/lib/api/types";
+import { useAuth } from "@/app/auth/AuthContext";
+import { levelOf } from "@/lib/auth/staffLevel";
 import { fmtDateTime, fmtMoney } from "@/lib/utils/format";
 import BookingDialog from "./_components/booking-dialog";
 import BookingForm from "./_components/booking-form";
 
 export default function BookingsPage() {
+	// Agentes não apagam reservas (a API recusa; o botão nem aparece).
+	const isAgent = levelOf(useAuth().user) === "AGENT";
 	const [rows, setRows] = useState<BookingRow[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [err, setErr] = useState<string | null>(null);
@@ -163,13 +167,15 @@ export default function BookingsPage() {
 				>
 					<Ban size={16} />
 				</button>
-				<button
-					onClick={() => handleDelete(b.id)}
-					className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
-					title="Eliminar"
-				>
-					<Trash2 size={16} />
-				</button>
+				{!isAgent && (
+					<button
+						onClick={() => handleDelete(b.id)}
+						className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+						title="Eliminar"
+					>
+						<Trash2 size={16} />
+					</button>
+				)}
 			</div>
 		);
 	}

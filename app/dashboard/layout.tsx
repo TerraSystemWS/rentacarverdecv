@@ -1,5 +1,6 @@
 "use client";
 
+import { agentCanOpen, isStaffLevel, levelOf } from "@/lib/auth/staffLevel";
 import SideNav from "@/app/ui/dash/sidenav";
 import { useEffect, useMemo } from "react";
 import { useAuth } from "@/app/auth/AuthContext";
@@ -19,13 +20,11 @@ export default function DashboardLayout({
 	const pathname = usePathname();
 	const isLoginPage = pathname === DASH_LOGIN;
 
-	const isAdmin = useMemo(() => {
-		const roles: string[] =
-			(user as any)?.roles ??
-			(user as any)?.authorities?.map((a: any) => a.authority) ??
-			[];
-		return roles.includes("ROLE_ADMIN") || roles.includes("ADMIN");
-	}, [user]);
+	// Equipa: Superadmin, Admin ou Agente (lib/auth/staffLevel.ts). O Agente só
+	// abre as páginas de operações; nas outras volta ao Painel.
+	const level = useMemo(() => levelOf(user), [user]);
+	const isAdmin = isStaffLevel(level);
+	const agentBlocked = level === "AGENT" && !agentCanOpen(pathname);
 
 	useEffect(() => {
 		if (isLoading) return;
@@ -47,7 +46,8 @@ export default function DashboardLayout({
 			router.replace(FRONT_HOME);
 			return;
 		}
-	}, [isLoading, isAuthenticated, isAdmin, isLoginPage, router]);
+		if (agentBlocked) router.replace("/dashboard");
+	}, [isLoading, isAuthenticated, isAdmin, agentBlocked, isLoginPage, router]);
 
 	// Página de login: mostra form (ou null se loading / já logado)
 	if (isLoginPage) {
@@ -56,7 +56,7 @@ export default function DashboardLayout({
 	}
 
 	// Outras páginas: bloqueia até validar auth + admin
-	if (isLoading || !isAuthenticated || !isAdmin) {
+	if (isLoading || !isAuthenticated || !isAdmin || agentBlocked) {
 		return null;
 	}
 

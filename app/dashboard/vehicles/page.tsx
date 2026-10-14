@@ -10,9 +10,13 @@ import VehicleDialog from "./_components/vehicle-dialog";
 import VehicleForm from "./_components/vehicle-form";
 import { apiFetch } from "@/lib/api/client";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
+import { useAuth } from "@/app/auth/AuthContext";
+import { levelOf } from "@/lib/auth/staffLevel";
 import { Vehicle } from "@/lib/api/types";
 
 export default function VehiclesPage() {
+    // Agentes (só operações) não criam, editam, arquivam nem apagam viaturas.
+    const isAgent = levelOf(useAuth().user) === "AGENT";
     const [vehicles, setVehicles] = useState<Vehicle[]>([]);
     const [loading, setLoading] = useState(true);
     const [err, setErr] = useState<string | null>(null);
@@ -194,7 +198,7 @@ export default function VehiclesPage() {
             <TopNav
                 title="Veículos"
                 subtitle="Gestão da frota"
-                right={
+                right={isAgent ? undefined : (
                     <button
                         onClick={handleOpenCreate}
                         className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-xs font-extrabold uppercase tracking-tight text-white hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 active:scale-95"
@@ -202,7 +206,7 @@ export default function VehiclesPage() {
                         <Plus size={16} />
                         <span>Novo Veículo</span>
                     </button>
-                }
+                )}
             />
 
             <PageShell>
@@ -289,7 +293,8 @@ export default function VehiclesPage() {
                             {
                                 key: "actions",
                                 label: "Ações",
-                                render: (row: Vehicle) => (
+                                // Agentes: só o estado (disponível/manutenção), na coluna Estado.
+                                render: (row: Vehicle) => isAgent ? <span className="text-xs text-zinc-400">—</span> : (
                                     <div className="flex justify-end gap-2">
                                         <button
                                             onClick={() => handleOpenEdit(row)}

@@ -1,5 +1,6 @@
 "use client";
 
+import { isStaffLevel, levelOf } from "@/lib/auth/staffLevel";
 import React, {
 	createContext,
 	useContext,
@@ -76,10 +77,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			window.removeEventListener("auth:unauthorized", handleUnauthorized);
 		};
 	}, []);
+	// Equipa (Superadmin, Admin ou Agente) entra no painel; clientes vão para o site.
 	function isAdmin(me: any) {
-		const roles: string[] =
-			me?.roles ?? me?.authorities?.map((a: any) => a.authority) ?? [];
-		return roles.includes("ROLE_ADMIN") || roles.includes("ADMIN");
+		return isStaffLevel(levelOf(me));
 	}
 
 	async function login(email: string, password: string, turnstileToken: string) {

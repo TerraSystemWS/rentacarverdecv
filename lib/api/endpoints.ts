@@ -42,6 +42,10 @@ export const endpoints = {
 		createClient: "/dashboard/users/clients",
 		resendConfirmation: (id: string) => `/dashboard/users/${id}/resend-confirmation`,
 		passwordReset: (id: string) => `/dashboard/users/${id}/password-reset`,
+		setLevel: (id: string) => `/dashboard/users/${id}/level`,
+		staffRequest: (id: string) => `/dashboard/users/${id}/staff-requests`,
+		staffRequests: "/dashboard/staff-requests",
+		staffRequestAction: (id: number, action: "accept" | "contest" | "vote" | "cancel") => `/dashboard/staff-requests/${id}/${action}`,
 	},
 	vehicles: {
 		list: (limit = 100) => `/public/vehicles?limit=${limit}`,

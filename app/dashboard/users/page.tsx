@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { Users, Plus, Shield, User as UserIcon, Ban, CheckCircle2, UserX, MailCheck, UserPlus, KeyRound } from "lucide-react";
+import { Users, Plus, Shield, User as UserIcon, Ban, CheckCircle2, UserX, MailCheck, UserPlus, KeyRound, ArrowUpDown, ShieldAlert } from "lucide-react";
 import Swal from "sweetalert2";
 import TopNav from "@/app/ui/dash/topNav";
 import PageShell from "@/app/ui/dash/PageShell";
@@ -9,6 +9,9 @@ import DataTable from "@/app/ui/dash/DataTable";
 import UserDialog from "./_components/user-dialog";
 import UserForm from "./_components/user-form";
 import CreateClientDialog from "./_components/create-client-dialog";
+import StaffRequests, { useStaffRequests } from "./_components/staff-requests";
+import { useAuth } from "@/app/auth/AuthContext";
+import { LEVEL_LABEL, canManage, creatableLevels, levelOf, levelOfRoles, type StaffLevel } from "@/lib/auth/staffLevel";
 import { apiFetch } from "@/lib/api/client";
 import { endpoints } from "@/lib/api/endpoints";
 import type { UserRow } from "@/lib/api/types";
@@ -20,7 +23,22 @@ function escapeHtml(s: string) {
 	return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
 }
 
+// Nível de uma linha (a API devolve "level"; respostas antigas só trazem os papéis).
+const rowLevel = (u: UserRow): StaffLevel => u.level ?? levelOfRoles(u.roles);
+
+const LEVEL_BADGE: Record<StaffLevel, string> = {
+	SUPERADMIN: "bg-purple-50 text-purple-700",
+	ADMIN: "bg-blue-50 text-blue-700",
+	AGENT: "bg-teal-50 text-teal-700",
+	CLIENT: "bg-zinc-100 text-zinc-500",
+};
+
 export default function UsersPage() {
+	const { user } = useAuth();
+	// Quem está a usar o painel: decide que botões aparecem (a API confirma sempre).
+	const myLevel = levelOf(user);
+	const myId = String((user as any)?.id ?? "");
+	const { requests, reload: reloadRequests } = useStaffRequests(myLevel === "SUPERADMIN");
 	const [rows, setRows] = useState<UserRow[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [err, setErr] = useState<string | null>(null);
@@ -56,11 +74,7 @@ export default function UsersPage() {
 	}, []);
 
 	const filteredRows = useMemo(() => {
-		return rows.filter((u) => {
-			const isStaffOrAdmin = u.roles?.some(r => r === "ROLE_ADMIN" || r === "ROLE_STAFF");
-			if (activeTab === "admins") return isStaffOrAdmin;
-			return !isStaffOrAdmin;
-		});
+		return rows.filter((u) => (activeTab === "admins") === (rowLevel(u) !== "CLIENT"));
 	}, [rows, activeTab]);
 
 	// Atualiza a linha com a resposta da API (mantém a data já formatada).
@@ -154,6 +168,67 @@ export default function UsersPage() {
 		}
 	}
 
+	// Promover/rebaixar Admins e Agentes (só Superadmin; um Superadmin só por pedido).
+	async function handleChangeLevel(u: UserRow) {
+		const current = rowLevel(u);
+		const { value: level } = await Swal.fire({
+			title: `Nível de ${escapeHtml(u.full_name)}`,
+			input: "select",
+			inputOptions: { SUPERADMIN: "Superadmin", ADMIN: "Admin", AGENT: "Agente" },
+			inputValue: current,
+			text: "As sessões abertas desta conta terminam; o novo nível vale a partir do próximo login.",
+			showCancelButton: true,
+			confirmButtonColor: "#3baa4e",
+			cancelButtonColor: "#71717a",
+			confirmButtonText: "Mudar nível",
+			cancelButtonText: "Voltar",
+			inputValidator: (v) => (v === current ? "Escolha um nível diferente." : null),
+		});
+		if (!level) return;
+		try {
+			replaceRow(await apiFetch<UserRow>(endpoints.users.setLevel(u.id), { method: "PATCH", body: JSON.stringify({ level }) }));
+		} catch (e: any) {
+			Swal.fire({ icon: "error", title: "Erro", text: e?.message || "Não foi possível mudar o nível.", confirmButtonColor: "#3085d6" });
+		}
+	}
+
+	// Desativar ou rebaixar outro Superadmin: pedido com 7 dias de período probatório.
+	async function handleStaffRequest(u: UserRow) {
+		const res = await Swal.fire({
+			title: "Pedido sobre um Superadmin",
+			html: `<p style="text-align:left;font-size:14px;line-height:1.5"><b>${escapeHtml(u.full_name)}</b> fica <b>7 dias em período probatório</b>: pode aceitar ou contestar. Se contestar, decidem os outros Superadmins (sem contar consigo). Sem decisão em 7 dias, o pedido aplica-se.</p>`
+				+ `<select id="sr-action" class="swal2-select" style="width:100%;margin:12px 0 0"><option value="DEACTIVATE">Desativar a conta</option><option value="DEMOTE:ADMIN">Rebaixar para Admin</option><option value="DEMOTE:AGENT">Rebaixar para Agente</option></select>`
+				+ `<textarea id="sr-reason" class="swal2-textarea" style="width:100%;margin:12px 0 0" placeholder="Motivo (obrigatório)"></textarea>`,
+			icon: "warning",
+			showCancelButton: true,
+			confirmButtonColor: "#d33",
+			cancelButtonColor: "#71717a",
+			confirmButtonText: "Fazer o pedido",
+			cancelButtonText: "Voltar",
+			preConfirm: () => {
+				const action = (document.getElementById("sr-action") as HTMLSelectElement).value;
+				const reason = (document.getElementById("sr-reason") as HTMLTextAreaElement).value.trim();
+				if (!reason) {
+					Swal.showValidationMessage("Escreva o motivo.");
+					return false;
+				}
+				return { action, reason };
+			},
+		});
+		if (!res.isConfirmed || !res.value) return;
+		const [action, newLevel] = (res.value.action as string).split(":");
+		try {
+			await apiFetch(endpoints.users.staffRequest(u.id), {
+				method: "POST",
+				body: JSON.stringify({ action, newLevel: newLevel ?? null, reason: res.value.reason }),
+			});
+			reloadRequests();
+			Swal.fire({ icon: "success", title: "Pedido feito", text: `${u.full_name} foi avisado e tem 7 dias para responder.`, confirmButtonColor: "#3baa4e" });
+		} catch (e: any) {
+			Swal.fire({ icon: "error", title: "Erro", text: e?.message || "Não foi possível fazer o pedido.", confirmButtonColor: "#3085d6" });
+		}
+	}
+
 	const handleClientCreated = (created: UserRow) => {
 		setRows(prev => [{ ...created, created_at: fmtDateTime(created.created_at) }, ...prev]);
 		setActiveTab("customers");
@@ -232,13 +307,15 @@ export default function UsersPage() {
 							<UserPlus size={16} />
 							<span>Novo Cliente</span>
 						</button>
-						<button
-							onClick={() => setIsDialogOpen(true)}
-							className="flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2.5 text-xs font-extrabold uppercase tracking-tight text-zinc-700 hover:bg-zinc-50 transition-all active:scale-95"
-						>
-							<Plus size={16} />
-							<span>Novo Administrador</span>
-						</button>
+						{creatableLevels(myLevel).length > 0 && (
+							<button
+								onClick={() => setIsDialogOpen(true)}
+								className="flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2.5 text-xs font-extrabold uppercase tracking-tight text-zinc-700 hover:bg-zinc-50 transition-all active:scale-95"
+							>
+								<Plus size={16} />
+								<span>Novo membro da equipa</span>
+							</button>
+						)}
 					</div>
 				}
 			/>
@@ -255,7 +332,7 @@ export default function UsersPage() {
 						>
 							<div className="flex items-center gap-2">
 								<UserIcon size={14} />
-								Clientes ({rows.filter(u => !u.roles?.some(r => r === "ROLE_ADMIN" || r === "ROLE_STAFF")).length})
+								Clientes ({rows.filter(u => rowLevel(u) === "CLIENT").length})
 							</div>
 							{activeTab === "customers" && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />}
 						</button>
@@ -266,16 +343,34 @@ export default function UsersPage() {
 						>
 							<div className="flex items-center gap-2">
 								<Shield size={14} />
-								Administradores ({rows.filter(u => u.roles?.some(r => r === "ROLE_ADMIN" || r === "ROLE_STAFF")).length})
+								Equipa ({rows.filter(u => rowLevel(u) !== "CLIENT").length})
 							</div>
 							{activeTab === "admins" && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />}
 						</button>
 					</div>
 
+					{myLevel === "SUPERADMIN" && activeTab === "admins" && (
+						<StaffRequests requests={requests} onChanged={() => { reloadRequests(); fetchUsers(); }} />
+					)}
+
 					<DataTable
 						columns={[
 							{ key: "full_name", label: "Utilizador / Nome" },
 							{ key: "email", label: "Email" },
+							...(activeTab === "admins" ? [{
+								key: "level",
+								label: "Nível",
+								render: (u: UserRow) => {
+									const l = rowLevel(u);
+									const pending = requests.some(r => r.target_id === u.id && (r.status === "PENDING" || r.status === "CONTESTED"));
+									return (
+										<div className="flex flex-wrap gap-1">
+											<span className={`inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider ${LEVEL_BADGE[l]}`}>{LEVEL_LABEL[l]}</span>
+											{pending && <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider bg-red-50 text-red-600">Período probatório</span>}
+										</div>
+									);
+								},
+							}] : []),
 							{
 								key: "is_active",
 								label: "Estado",
@@ -294,45 +389,37 @@ export default function UsersPage() {
 								label: "Ações",
 								render: (u: UserRow) => {
 									if (u.anonymized_at) return <span className="text-xs text-zinc-400">—</span>;
-									const isAdmin = u.roles?.some(r => r === "ROLE_ADMIN" || r === "ROLE_STAFF");
-									return (
-										<div className="flex justify-end gap-2">
-											{u.email_verified === false && u.is_active && (
-												<button
-													onClick={() => handleResendConfirmation(u)}
-													className="p-2 rounded-lg text-zinc-500 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-													title="Reenviar o email de confirmação da conta"
-												>
-													<MailCheck size={18} />
-												</button>
-											)}
-											{u.is_active && (
-												<button
-													onClick={() => handlePasswordReset(u)}
-													className="p-2 rounded-lg text-zinc-500 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-													title="Enviar link para repor a palavra-passe"
-												>
-													<KeyRound size={18} />
-												</button>
-											)}
-											<button
-												onClick={() => handleToggleActive(u)}
-												className={`p-2 rounded-lg transition-colors ${u.is_active ? "text-zinc-500 hover:bg-amber-50 hover:text-amber-600" : "text-zinc-500 hover:bg-emerald-50 hover:text-emerald-600"}`}
-												title={u.is_active ? "Desativar conta" : "Reativar conta"}
-											>
+									const l = rowLevel(u);
+									const manage = canManage(myLevel, l) && u.id !== myId;
+									const otherSuper = myLevel === "SUPERADMIN" && l === "SUPERADMIN" && u.id !== myId;
+									const btn = "p-2 rounded-lg text-zinc-500 transition-colors";
+									const actions = [
+										u.email_verified === false && u.is_active && (l === "CLIENT" || manage) && (
+											<button key="resend" onClick={() => handleResendConfirmation(u)} className={`${btn} hover:bg-blue-50 hover:text-blue-600`} title="Reenviar o email de confirmação da conta"><MailCheck size={18} /></button>
+										),
+										u.is_active && manage && (
+											<button key="reset" onClick={() => handlePasswordReset(u)} className={`${btn} hover:bg-blue-50 hover:text-blue-600`} title="Enviar link para repor a palavra-passe"><KeyRound size={18} /></button>
+										),
+										myLevel === "SUPERADMIN" && (l === "ADMIN" || l === "AGENT") && u.id !== myId && (
+											<button key="level" onClick={() => handleChangeLevel(u)} className={`${btn} hover:bg-purple-50 hover:text-purple-600`} title="Mudar o nível (promover ou rebaixar)"><ArrowUpDown size={18} /></button>
+										),
+										otherSuper && u.is_active && !requests.some(r => r.target_id === u.id && (r.status === "PENDING" || r.status === "CONTESTED")) && (
+											<button key="request" onClick={() => handleStaffRequest(u)} className={`${btn} hover:bg-red-50 hover:text-red-600`} title="Pedir desativação ou rebaixamento (período probatório de 7 dias)"><ShieldAlert size={18} /></button>
+										),
+										(manage || (otherSuper && !u.is_active)) && (
+											<button key="active" onClick={() => handleToggleActive(u)} className={`${btn} ${u.is_active ? "hover:bg-amber-50 hover:text-amber-600" : "hover:bg-emerald-50 hover:text-emerald-600"}`} title={u.is_active ? "Desativar conta" : "Reativar conta"}>
 												{u.is_active ? <Ban size={18} /> : <CheckCircle2 size={18} />}
 											</button>
-											{!isAdmin && (
-												<button
-													onClick={() => handleAnonymize(u)}
-													className="p-2 rounded-lg text-zinc-500 hover:bg-red-50 hover:text-red-600 transition-colors"
-													title="Apagar dados do cliente (anonimizar)"
-												>
-													<UserX size={18} />
-												</button>
-											)}
-										</div>
-									);
+										),
+										l === "CLIENT" && manage && (
+											<button key="anon" onClick={() => handleAnonymize(u)} className={`${btn} hover:bg-red-50 hover:text-red-600`} title="Apagar dados do cliente (anonimizar)"><UserX size={18} /></button>
+										),
+									].filter(Boolean);
+									if (actions.length === 0) return <span className="text-xs text-zinc-400">—</span>;
+									return (
+										<div className="flex justify-end gap-2">
+											{actions}
+										</div>									);
 								},
 							},
 						]}
@@ -344,9 +431,10 @@ export default function UsersPage() {
 			<UserDialog
 				isOpen={isDialogOpen}
 				onClose={() => setIsDialogOpen(false)}
-				title="Criar Novo Administrador"
+				title="Novo membro da equipa"
 			>
 				<UserForm
+					levels={creatableLevels(myLevel)}
 					onSubmit={handleCreateAdmin}
 					onCancel={() => setIsDialogOpen(false)}
 					isSubmitting={isSubmitting}

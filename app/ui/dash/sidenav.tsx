@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo } from "react";
+import { agentCanOpen, levelOf } from "@/lib/auth/staffLevel";
 import { useAuth } from "@/app/auth/AuthContext";
 import {
 	LayoutDashboard,
@@ -43,7 +44,7 @@ const rootItem: Item = { label: "Painel", href: "/dashboard", icon: LayoutDashbo
 // Grupos temáticos — clicar num grupo abre uma vista só com os seus itens
 // (tasks.md: "qd um grupo recebe um clique ele abre um subgroup onde o side
 // menu apenas tera esses menus e um ultimo 'Voltar'").
-const groups: Group[] = [
+const allGroups: Group[] = [
 	{
 		label: "Operações",
 		icon: Briefcase,
@@ -102,6 +103,14 @@ export default function SideNav() {
 	const { isOpen, close } = useSidebar();
 	const { user, logout } = useAuth();
 	const [isLoggingOut, setIsLoggingOut] = useState(false);
+	// Agentes só veem as páginas de operações (lib/auth/staffLevel.ts).
+	const isAgent = levelOf(user) === "AGENT";
+	const groups = useMemo(
+		() => isAgent
+			? allGroups.map((g) => ({ ...g, items: g.items.filter((i) => agentCanOpen(i.href)) })).filter((g) => g.items.length > 0)
+			: allGroups,
+		[isAgent],
+	);
 
 	// Se a rota atual pertence a um grupo, abre já nesse grupo em vez de
 	// obrigar o admin a navegar de novo pela raiz do menu depois de um refresh.
@@ -111,7 +120,7 @@ export default function SideNav() {
 	useEffect(() => {
 		const match = groups.find((g) => g.items.some((i) => pathname === i.href || pathname.startsWith(i.href + "/")));
 		if (match) setOpenGroup(match);
-	}, [pathname]);
+	}, [pathname, groups]);
 
 	const mountedRef = useRef(true);
 	useEffect(() => {

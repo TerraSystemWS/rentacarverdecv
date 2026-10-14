@@ -10,6 +10,8 @@ import StatCard, { computeTrend } from "@/app/ui/dash/StatCard";
 import RevenueOverview from "@/app/dashboard/_components/RevenueOverview";
 import CashflowDetails from "@/app/dashboard/_components/CashflowDetails";
 import FleetOccupancy from "@/app/dashboard/_components/FleetOccupancy";
+import { StaffRequestBanner } from "@/app/dashboard/users/_components/staff-requests";
+import { levelOf } from "@/lib/auth/staffLevel";
 
 import { endpoints } from "@/lib/api/endpoints";
 import type { DashboardSummary } from "@/lib/api/types";
@@ -28,7 +30,10 @@ import {
 
 export default function DashboardHome() {
 	const router = useRouter();
-	const { authFetch, isLoading, isAuthenticated } = useAuth();
+	const { authFetch, isLoading, isAuthenticated, user } = useAuth();
+	// Agentes (só operações) não veem valores nem a ocupação da frota.
+	const level = levelOf(user);
+	const isAgent = level === "AGENT";
 
 	const [data, setData] = useState<DashboardSummary | null>(null);
 	const [err, setErr] = useState<string | null>(null);
@@ -86,6 +91,8 @@ export default function DashboardHome() {
 
 			<PageShell>
 				<div className="max-w-7xl mx-auto space-y-10">
+					{/* Pedido de outro Superadmin para desativar/rebaixar esta conta: aceitar ou contestar. */}
+					<StaffRequestBanner enabled={level === "SUPERADMIN"} />
 					{isLoading || !data ? (
 						<div className="flex flex-col items-center justify-center min-h-[400px] gap-4 bg-white/50 rounded-3xl border border-dashed border-border/60">
 							<div className="relative">
@@ -135,6 +142,7 @@ export default function DashboardHome() {
 							</div>
 
 							{/* Cashflow Statistics Section */}
+							{!isAgent && (<>
 							<div className="mt-10">
 								<h3 className="text-xl font-extrabold text-zinc-900 dark:text-zinc-50 mb-6 tracking-tight flex items-center gap-2">
 									<TrendingUp className="w-5 h-5 text-primary" />
@@ -167,6 +175,7 @@ export default function DashboardHome() {
 								</h3>
 								<FleetOccupancy />
 							</div>
+							</>)}
 
 							<div className="mt-12 grid gap-8 lg:grid-cols-2">
 								<div className="card-solid p-8 group cursor-pointer overflow-hidden relative border-zinc-200 dark:border-zinc-800 shadow-sm transition-all duration-300 hover:shadow-md">
@@ -177,9 +186,11 @@ export default function DashboardHome() {
 											<Link href="/dashboard/bookings?novo=1" className="btn-primary h-12 inline-flex items-center">
 												Nova Reserva
 											</Link>
-											<Link href="/dashboard/vehicles?novo=1" className="btn-secondary h-12 inline-flex items-center">
-												Adicionar Veículo
-											</Link>
+											{!isAgent && (
+												<Link href="/dashboard/vehicles?novo=1" className="btn-secondary h-12 inline-flex items-center">
+													Adicionar Veículo
+												</Link>
+											)}
 										</div>
 									</div>
 								</div>
