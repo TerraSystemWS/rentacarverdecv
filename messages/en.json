@@ -717,6 +717,13 @@
 		"bannerText": "We sent you an email with a confirmation link. Can’t find it? Check your spam folder or request another one.",
 		"resend": "Resend the email",
 		"sending": "Sending…",
-		"resent": "We have sent a new confirmation email."
+		"resent": "We have sent a new confirmation email.",
+		"errorHelp": "If the link has expired, ask the Rent-A-Car Verde team for a new one (or, if you are a customer, request it in your account area).",
+		"resetTitle": "New password",
+		"resetSubtitle": "Choose a new password for the account {email}.",
+		"newPassword": "New password",
+		"resetSubmit": "Save the new password",
+		"resetDoneTitle": "Password changed",
+		"resetDone": "Your new password has been saved. For security, sessions open on other devices were ended. Sign in with your new password."
 	}
 }

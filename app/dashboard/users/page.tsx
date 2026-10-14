@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { Users, Plus, Shield, User as UserIcon, Ban, CheckCircle2, UserX, MailCheck, UserPlus } from "lucide-react";
+import { Users, Plus, Shield, User as UserIcon, Ban, CheckCircle2, UserX, MailCheck, UserPlus, KeyRound } from "lucide-react";
 import Swal from "sweetalert2";
 import TopNav from "@/app/ui/dash/topNav";
 import PageShell from "@/app/ui/dash/PageShell";
@@ -129,6 +129,28 @@ export default function UsersPage() {
 			Swal.fire({ icon: "success", title: "Email reenviado", text: res?.message, confirmButtonColor: "#3baa4e" });
 		} catch (e: any) {
 			Swal.fire({ icon: "error", title: "Erro", text: e?.message || "Não foi possível reenviar o email.", confirmButtonColor: "#3085d6" });
+		}
+	}
+
+	// Link por email para o utilizador escolher uma palavra-passe nova (válido 1 hora).
+	async function handlePasswordReset(u: UserRow) {
+		const result = await Swal.fire({
+			title: "Repor a palavra-passe?",
+			html: `<p style="text-align:left;font-size:14px;line-height:1.5">Enviamos para <b>${escapeHtml(u.email || "")}</b> um link para escolher uma palavra-passe nova.</p>`
+				+ `<p style="text-align:left;font-size:14px;line-height:1.5;margin-top:8px">O link é válido durante <b>1 hora</b> e só serve uma vez. A palavra-passe atual continua a funcionar até ser trocada; ao trocar, as sessões abertas noutros dispositivos terminam.</p>`,
+			icon: "question",
+			showCancelButton: true,
+			confirmButtonColor: "#3baa4e",
+			cancelButtonColor: "#71717a",
+			confirmButtonText: "Enviar link",
+			cancelButtonText: "Voltar",
+		});
+		if (!result.isConfirmed) return;
+		try {
+			const res = await apiFetch<{ message: string }>(endpoints.users.passwordReset(u.id), { method: "POST" });
+			Swal.fire({ icon: "success", title: "Link enviado", text: res?.message, confirmButtonColor: "#3baa4e" });
+		} catch (e: any) {
+			Swal.fire({ icon: "error", title: "Erro", text: e?.message || "Não foi possível enviar o link.", confirmButtonColor: "#3085d6" });
 		}
 	}
 
@@ -282,6 +304,15 @@ export default function UsersPage() {
 													title="Reenviar o email de confirmação da conta"
 												>
 													<MailCheck size={18} />
+												</button>
+											)}
+											{u.is_active && (
+												<button
+													onClick={() => handlePasswordReset(u)}
+													className="p-2 rounded-lg text-zinc-500 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+													title="Enviar link para repor a palavra-passe"
+												>
+													<KeyRound size={18} />
 												</button>
 											)}
 											<button

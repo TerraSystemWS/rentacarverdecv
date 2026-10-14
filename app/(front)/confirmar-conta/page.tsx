@@ -7,13 +7,16 @@ import { useTranslations } from "next-intl";
 import { authFetch } from "@/app/auth/api";
 import { endpoints } from "@/lib/api/endpoints";
 
-// Link do email de confirmação de conta (AccountVerificationService na API).
+// Links de conta enviados por email (AccountVerificationService na API).
+// Esta página serve /confirmar-conta e /repor-palavra-passe:
 //  - VERIFY (registo no site): confirma logo ao abrir.
 //  - SETUP (cliente criado pela equipa): pede a palavra-passe e confirma.
+//  - RESET (pedido pela equipa): pede a palavra-passe nova e a confirmação.
+type Purpose = "VERIFY" | "SETUP" | "RESET";
 type State =
 	| { kind: "loading" }
-	| { kind: "setup"; email: string }
-	| { kind: "done"; setup: boolean }
+	| { kind: "password"; email: string; reset: boolean }
+	| { kind: "done"; purpose: Purpose }
 	| { kind: "error"; message: string };
 
 async function readMessage(res: Response, fallback: string) {
@@ -51,13 +54,13 @@ export default function ConfirmAccountPage() {
 			try {
 				const res = await authFetch(endpoints.auth.verifyEmailInfo(tk), { auth: false });
 				if (!res.ok) throw new Error(await readMessage(res, t("error")));
-				const info = (await res.json()) as { purpose: string; email: string };
-				if (info.purpose === "SETUP") {
-					setState({ kind: "setup", email: info.email });
+				const info = (await res.json()) as { purpose: Purpose; email: string };
+				if (info.purpose === "SETUP" || info.purpose === "RESET") {
+					setState({ kind: "password", email: info.email, reset: info.purpose === "RESET" });
 					return;
 				}
 				await confirm(tk);
-				setState({ kind: "done", setup: false });
+				setState({ kind: "done", purpose: "VERIFY" });
 			} catch (e: any) {
 				setState({ kind: "error", message: e?.message || t("error") });
 			}
@@ -70,10 +73,11 @@ export default function ConfirmAccountPage() {
 		setFormError(null);
 		if (password.length < 8) return setFormError(t("passwordTooShort"));
 		if (password !== password2) return setFormError(t("passwordsDontMatch"));
+		const reset = state.kind === "password" && state.reset;
 		setSaving(true);
 		try {
 			await confirm(token, password);
-			setState({ kind: "done", setup: true });
+			setState({ kind: "done", purpose: reset ? "RESET" : "SETUP" });
 		} catch (err: any) {
 			setFormError(err?.message || t("error"));
 		} finally {
@@ -98,7 +102,8 @@ export default function ConfirmAccountPage() {
 					<div className="text-center">
 						<XCircle className="h-12 w-12 text-red-500 mx-auto mb-3" aria-hidden="true" />
 						<h1 className="text-xl font-bold text-slate-800 mb-2">{t("errorTitle")}</h1>
-						<p role="alert" className="text-slate-600 text-sm mb-6">{state.message}</p>
+						<p role="alert" className="text-slate-600 text-sm mb-2">{state.message}</p>
+						<p className="text-slate-500 text-xs mb-6">{t("errorHelp")}</p>
 						<Link href="/profile" className="btn-racv inline-block">{t("goProfile")}</Link>
 					</div>
 				)}
@@ -106,21 +111,25 @@ export default function ConfirmAccountPage() {
 				{state.kind === "done" && (
 					<div className="text-center">
 						<CheckCircle2 className="h-12 w-12 text-green-600 mx-auto mb-3" aria-hidden="true" />
-						<h1 className="text-xl font-bold text-slate-800 mb-2">{t("doneTitle")}</h1>
-						<p className="text-slate-600 text-sm mb-6">{state.setup ? t("doneSetup") : t("doneVerify")}</p>
-						<Link href={state.setup ? "/login" : "/cars"} className="btn-racv inline-block">
-							{state.setup ? t("goLogin") : t("goCars")}
+						<h1 className="text-xl font-bold text-slate-800 mb-2">{state.purpose === "RESET" ? t("resetDoneTitle") : t("doneTitle")}</h1>
+						<p className="text-slate-600 text-sm mb-6">
+							{state.purpose === "RESET" ? t("resetDone") : state.purpose === "SETUP" ? t("doneSetup") : t("doneVerify")}
+						</p>
+						<Link href={state.purpose === "VERIFY" ? "/cars" : "/login"} className="btn-racv inline-block">
+							{state.purpose === "VERIFY" ? t("goCars") : t("goLogin")}
 						</Link>
 					</div>
 				)}
 
-				{state.kind === "setup" && (
+				{state.kind === "password" && (
 					<>
-						<h1 className="text-2xl font-bold text-slate-800 mb-2 text-center">{t("setupTitle")}</h1>
-						<p className="text-slate-500 text-center mb-6 text-sm">{t("setupSubtitle", { email: state.email })}</p>
+						<h1 className="text-2xl font-bold text-slate-800 mb-2 text-center">{state.reset ? t("resetTitle") : t("setupTitle")}</h1>
+						<p className="text-slate-500 text-center mb-6 text-sm">
+							{state.reset ? t("resetSubtitle", { email: state.email }) : t("setupSubtitle", { email: state.email })}
+						</p>
 						<form onSubmit={onSubmit} className="space-y-4">
 							<div>
-								<label htmlFor="cc-password" className="block text-sm font-medium text-slate-700 mb-1">{t("password")}</label>
+								<label htmlFor="cc-password" className="block text-sm font-medium text-slate-700 mb-1">{state.reset ? t("newPassword") : t("password")}</label>
 								<div className="relative">
 									<input
 										id="cc-password"
@@ -158,7 +167,7 @@ export default function ConfirmAccountPage() {
 								<div role="alert" className="bg-red-50 text-red-600 text-sm p-3 rounded-md border border-red-100">{formError}</div>
 							)}
 							<button type="submit" disabled={saving} className="w-full btn-racv mt-2">
-								{saving ? t("saving") : t("submit")}
+								{saving ? t("saving") : state.reset ? t("resetSubmit") : t("submit")}
 							</button>
 						</form>
 					</>

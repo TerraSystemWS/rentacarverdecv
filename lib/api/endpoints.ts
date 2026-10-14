@@ -41,6 +41,7 @@ export const endpoints = {
 		anonymize: (id: string) => `/dashboard/users/${id}/anonymize`,
 		createClient: "/dashboard/users/clients",
 		resendConfirmation: (id: string) => `/dashboard/users/${id}/resend-confirmation`,
+		passwordReset: (id: string) => `/dashboard/users/${id}/password-reset`,
 	},
 	vehicles: {
 		list: (limit = 100) => `/public/vehicles?limit=${limit}`,

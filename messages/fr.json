@@ -717,6 +717,13 @@
 		"bannerText": "Nous vous avons envoyé un email avec un lien de confirmation. Vous ne le trouvez pas ? Regardez dans les spams ou demandez-en un autre.",
 		"resend": "Renvoyer l’email",
 		"sending": "Envoi…",
-		"resent": "Nous avons envoyé un nouvel email de confirmation."
+		"resent": "Nous avons envoyé un nouvel email de confirmation.",
+		"errorHelp": "Si le lien a expiré, demandez-en un nouveau à l’équipe Rent-A-Car Verde (ou, si vous êtes client, dans votre espace client).",
+		"resetTitle": "Nouveau mot de passe",
+		"resetSubtitle": "Choisissez un nouveau mot de passe pour le compte {email}.",
+		"newPassword": "Nouveau mot de passe",
+		"resetSubmit": "Enregistrer le nouveau mot de passe",
+		"resetDoneTitle": "Mot de passe modifié",
+		"resetDone": "Votre nouveau mot de passe a été enregistré. Par sécurité, les sessions ouvertes sur d’autres appareils ont été fermées. Connectez-vous avec votre nouveau mot de passe."
 	}
 }

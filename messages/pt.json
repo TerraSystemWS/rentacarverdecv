@@ -717,6 +717,13 @@
 		"bannerText": "Enviámos-lhe um email com um link de confirmação. Não encontra? Veja na pasta de spam ou peça outro.",
 		"resend": "Reenviar o email",
 		"sending": "A enviar…",
-		"resent": "Enviámos um novo email de confirmação."
+		"resent": "Enviámos um novo email de confirmação.",
+		"errorHelp": "Se o link expirou, peça um novo à equipa da Rent-A-Car Verde (ou, se for cliente, na sua área de cliente).",
+		"resetTitle": "Nova palavra-passe",
+		"resetSubtitle": "Escolha uma palavra-passe nova para a conta {email}.",
+		"newPassword": "Nova palavra-passe",
+		"resetSubmit": "Guardar a nova palavra-passe",
+		"resetDoneTitle": "Palavra-passe alterada",
+		"resetDone": "A nova palavra-passe ficou guardada. Por segurança, as sessões abertas noutros dispositivos foram terminadas. Inicie sessão com a nova palavra-passe."
 	}
 }
