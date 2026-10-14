@@ -25,6 +25,10 @@ export const endpoints = {
 		logout: "/auth/logout",
 		profile: "/auth/profile",
 		licensePhoto: "/auth/profile/license-photo",
+		// Confirmação de conta (link do email → /confirmar-conta).
+		verifyEmail: "/auth/verify-email",
+		verifyEmailInfo: (token: string) => `/auth/verify-email?token=${encodeURIComponent(token)}`,
+		verifyEmailResend: "/auth/verify-email/resend",
 	},
 	dashboard: {
 		summary: "/dashboard/summary",
@@ -35,6 +39,8 @@ export const endpoints = {
 		create: "/dashboard/users",
 		setActive: (id: string) => `/dashboard/users/${id}/active`,
 		anonymize: (id: string) => `/dashboard/users/${id}/anonymize`,
+		createClient: "/dashboard/users/clients",
+		resendConfirmation: (id: string) => `/dashboard/users/${id}/resend-confirmation`,
 	},
 	vehicles: {
 		list: (limit = 100) => `/public/vehicles?limit=${limit}`,

@@ -239,7 +239,8 @@
 			"alreadyBooked": "Ce véhicule est déjà réservé pour cette période. Veuillez choisir d'autres dates.",
 			"profileIncomplete": "{message} <link>Compléter mes informations maintenant</link>",
 			"generic": "Une erreur s'est produite lors du traitement de la réservation.",
-			"connection": "Impossible de joindre le serveur. Veuillez réessayer."
+			"connection": "Impossible de joindre le serveur. Veuillez réessayer.",
+			"emailNotVerified": "{message} <link>Aller à mon espace (renvoyer l’email)</link>"
 		},
 		"success": "Réservation effectuée ! Redirection vers le paiement...",
 		"voucher": {
@@ -422,7 +423,7 @@
 		"signingIn": "Connexion...",
 		"noAccount": "Pas encore de compte ?",
 		"createAccount": "Créer un compte",
-		"registered": "Compte créé ! Connectez-vous pour continuer.",
+		"registered": "Compte créé ! Nous vous avons envoyé un email pour confirmer votre compte. Vous pouvez vous connecter dès maintenant, mais vous ne pourrez réserver qu’après confirmation.",
 		"fillAll": "Veuillez remplir tous les champs.",
 		"captcha": "Veuillez valider le contrôle de sécurité (captcha).",
 		"invalidLogin": "E-mail ou mot de passe incorrect.",
@@ -689,5 +690,33 @@
 		"hoursMinutes": "{h} h {m} min",
 		"minutes": "{m} min",
 		"lessThanMinute": "moins d'1 min"
+	},
+	"accountConfirm": {
+		"checking": "Confirmation de votre compte…",
+		"missing": "Le code de confirmation manque dans le lien. Ouvrez le lien complet reçu par email.",
+		"error": "Impossible de confirmer le compte. Réessayez.",
+		"errorTitle": "Confirmation impossible",
+		"goProfile": "Aller à mon espace",
+		"doneTitle": "Compte confirmé",
+		"doneVerify": "Merci ! Votre compte est confirmé et vous pouvez désormais réserver.",
+		"doneSetup": "Votre compte est confirmé et votre mot de passe a été enregistré. Connectez-vous pour réserver et suivre vos réservations.",
+		"goLogin": "Se connecter",
+		"goCars": "Voir les véhicules",
+		"setupTitle": "Confirmez votre compte",
+		"setupSubtitle": "Choisissez le mot de passe du compte {email}.",
+		"password": "Mot de passe",
+		"confirmPassword": "Confirmer le mot de passe",
+		"passwordHint": "Au moins 8 caractères.",
+		"passwordTooShort": "Le mot de passe doit comporter au moins 8 caractères.",
+		"passwordsDontMatch": "Les mots de passe ne correspondent pas.",
+		"showPassword": "Afficher le mot de passe",
+		"hidePassword": "Masquer le mot de passe",
+		"saving": "Enregistrement…",
+		"submit": "Confirmer le compte",
+		"bannerTitle": "Confirmez votre compte pour pouvoir réserver",
+		"bannerText": "Nous vous avons envoyé un email avec un lien de confirmation. Vous ne le trouvez pas ? Regardez dans les spams ou demandez-en un autre.",
+		"resend": "Renvoyer l’email",
+		"sending": "Envoi…",
+		"resent": "Nous avons envoyé un nouvel email de confirmation."
 	}
 }

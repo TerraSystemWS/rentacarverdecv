@@ -6,6 +6,8 @@ import { useEffect } from "react";
 interface UserDialogProps {
     isOpen: boolean;
     title: string;
+    /** Formulários compridos (ex.: novo cliente): mais largo e com scroll. */
+    wide?: boolean;
     onClose: () => void;
     children: React.ReactNode;
 }
@@ -13,6 +15,7 @@ interface UserDialogProps {
 export default function UserDialog({
     isOpen,
     title,
+    wide = false,
     onClose,
     children,
 }: UserDialogProps) {
@@ -32,7 +35,7 @@ export default function UserDialog({
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
             <div
-                className="relative w-full max-w-lg rounded-xl bg-white shadow-2xl animate-in fade-in zoom-in-95 duration-200"
+                className={`relative w-full ${wide ? "max-w-3xl max-h-[90vh] overflow-y-auto" : "max-w-lg"} rounded-xl bg-white shadow-2xl animate-in fade-in zoom-in-95 duration-200`}
             >
                 <div className="sticky top-0 z-10 flex items-center justify-between border-b bg-white px-6 py-4">
                     <h2 className="text-xl font-bold text-gray-800">{title}</h2>

@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Car, User, Calendar, Clock, MapPin } from "lucide-react";
+import { Car, User, Calendar, Clock, MapPin, UserPlus } from "lucide-react";
 import { apiFetch } from "@/lib/api/client";
 import { endpoints } from "@/lib/api/endpoints";
 import type { Vehicle, UserRow } from "@/lib/api/types";
 import { cvToIso, isoToCv } from "@/lib/utils/cvTime";
 import { useRentalLocations } from "@/lib/api/useRentalLocations";
+import CreateClientDialog from "@/app/dashboard/users/_components/create-client-dialog";
 
 interface BookingFormProps {
     onSubmit: (data: any) => Promise<void>;
@@ -20,6 +21,8 @@ export default function BookingForm({ onSubmit, onCancel, isSubmitting, initialD
     const [customers, setCustomers] = useState<UserRow[]>([]);
     const [loadingData, setLoadingData] = useState(true);
     const [bookedIntervals, setBookedIntervals] = useState<{ start: Date; end: Date }[]>([]);
+    const [isClientDialogOpen, setIsClientDialogOpen] = useState(false);
+    const [createdClientNote, setCreatedClientNote] = useState<string | null>(null);
 
     const [formData, setFormData] = useState({
         userId: initialData?.userId || "",
@@ -134,6 +137,7 @@ export default function BookingForm({ onSubmit, onCancel, isSubmitting, initialD
     }
 
     return (
+        <>
         <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
                 <div className="p-3 bg-red-50 border border-red-100 text-red-600 text-sm rounded-lg font-medium">
@@ -155,10 +159,26 @@ export default function BookingForm({ onSubmit, onCancel, isSubmitting, initialD
                         >
                             <option value="">Selecionar Cliente...</option>
                             {customers.map(c => (
-                                <option key={c.id} value={c.id}>{c.full_name} ({c.email})</option>
+                                // Conta por confirmar: a API recusa a reserva até o cliente abrir o link do email.
+                                <option key={c.id} value={c.id} disabled={c.email_verified === false && c.id !== initialData?.userId}>
+                                    {c.full_name} ({c.email}){c.email_verified === false ? " — por confirmar" : ""}
+                                </option>
                             ))}
                         </select>
                     </div>
+                    {!initialData && (
+                        <button
+                            type="button"
+                            onClick={() => setIsClientDialogOpen(true)}
+                            className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline"
+                        >
+                            <UserPlus size={14} />
+                            Cliente não está na lista? Criar cliente
+                        </button>
+                    )}
+                    {createdClientNote && (
+                        <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg p-2 m-0">{createdClientNote}</p>
+                    )}
                 </div>
 
                 {/* Vehicle Selection */}
@@ -323,5 +343,14 @@ export default function BookingForm({ onSubmit, onCancel, isSubmitting, initialD
                 </button>
             </div>
         </form>
+        <CreateClientDialog
+            isOpen={isClientDialogOpen}
+            onClose={() => setIsClientDialogOpen(false)}
+            onCreated={(created) => {
+                setCustomers(prev => [created, ...prev]);
+                setCreatedClientNote(`${created.full_name} foi criado e recebeu um email para confirmar a conta. A reserva em nome dele fica possível depois de confirmar (volte a abrir este formulário).`);
+            }}
+        />
+        </>
     );
 }

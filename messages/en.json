@@ -239,7 +239,8 @@
 			"alreadyBooked": "This vehicle is already booked for those dates. Please choose other dates.",
 			"profileIncomplete": "{message} <link>Complete my details now</link>",
 			"generic": "Something went wrong while processing your booking.",
-			"connection": "Couldn't reach the server. Please try again."
+			"connection": "Couldn't reach the server. Please try again.",
+			"emailNotVerified": "{message} <link>Go to my account (resend the email)</link>"
 		},
 		"success": "Booking confirmed! Redirecting to payment...",
 		"voucher": {
@@ -422,7 +423,7 @@
 		"signingIn": "Signing in...",
 		"noAccount": "Don't have an account?",
 		"createAccount": "Create account",
-		"registered": "Account created! Sign in to continue.",
+		"registered": "Account created! We sent you an email to confirm your account. You can sign in now, but you can only book after confirming.",
 		"fillAll": "Please fill in all fields.",
 		"captcha": "Please complete the security check (captcha).",
 		"invalidLogin": "Invalid email or password.",
@@ -689,5 +690,33 @@
 		"hoursMinutes": "{h} h {m} min",
 		"minutes": "{m} min",
 		"lessThanMinute": "less than 1 min"
+	},
+	"accountConfirm": {
+		"checking": "Confirming your account…",
+		"missing": "The confirmation code is missing from the link. Open the full link you received by email.",
+		"error": "Could not confirm the account. Please try again.",
+		"errorTitle": "Could not confirm",
+		"goProfile": "Go to my account",
+		"doneTitle": "Account confirmed",
+		"doneVerify": "Thank you! Your account is confirmed and you can now book.",
+		"doneSetup": "Your account is confirmed and your password has been saved. Sign in to book and follow your bookings.",
+		"goLogin": "Sign in",
+		"goCars": "See the vehicles",
+		"setupTitle": "Confirm your account",
+		"setupSubtitle": "Choose the password for the account {email}.",
+		"password": "Password",
+		"confirmPassword": "Confirm password",
+		"passwordHint": "At least 8 characters.",
+		"passwordTooShort": "The password must have at least 8 characters.",
+		"passwordsDontMatch": "The passwords do not match.",
+		"showPassword": "Show password",
+		"hidePassword": "Hide password",
+		"saving": "Saving…",
+		"submit": "Confirm account",
+		"bannerTitle": "Confirm your account to be able to book",
+		"bannerText": "We sent you an email with a confirmation link. Can’t find it? Check your spam folder or request another one.",
+		"resend": "Resend the email",
+		"sending": "Sending…",
+		"resent": "We have sent a new confirmation email."
 	}
 }

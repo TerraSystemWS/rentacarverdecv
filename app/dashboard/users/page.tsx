@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { Users, Plus, Shield, User as UserIcon, Ban, CheckCircle2, UserX } from "lucide-react";
+import { Users, Plus, Shield, User as UserIcon, Ban, CheckCircle2, UserX, MailCheck, UserPlus } from "lucide-react";
 import Swal from "sweetalert2";
 import TopNav from "@/app/ui/dash/topNav";
 import PageShell from "@/app/ui/dash/PageShell";
 import DataTable from "@/app/ui/dash/DataTable";
 import UserDialog from "./_components/user-dialog";
 import UserForm from "./_components/user-form";
+import CreateClientDialog from "./_components/create-client-dialog";
 import { apiFetch } from "@/lib/api/client";
 import { endpoints } from "@/lib/api/endpoints";
 import type { UserRow } from "@/lib/api/types";
@@ -30,6 +31,7 @@ export default function UsersPage() {
 	// Dialog State
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [isClientDialogOpen, setIsClientDialogOpen] = useState(false);
 
 	async function fetchUsers() {
 		setLoading(true);
@@ -121,6 +123,26 @@ export default function UsersPage() {
 		}
 	}
 
+	async function handleResendConfirmation(u: UserRow) {
+		try {
+			const res = await apiFetch<{ message: string }>(endpoints.users.resendConfirmation(u.id), { method: "POST" });
+			Swal.fire({ icon: "success", title: "Email reenviado", text: res?.message, confirmButtonColor: "#3baa4e" });
+		} catch (e: any) {
+			Swal.fire({ icon: "error", title: "Erro", text: e?.message || "Não foi possível reenviar o email.", confirmButtonColor: "#3085d6" });
+		}
+	}
+
+	const handleClientCreated = (created: UserRow) => {
+		setRows(prev => [{ ...created, created_at: fmtDateTime(created.created_at) }, ...prev]);
+		setActiveTab("customers");
+		Swal.fire({
+			icon: "success",
+			title: "Cliente criado",
+			text: `Enviámos um email para ${created.email} confirmar a conta e escolher a palavra-passe. A reserva em nome do cliente fica possível depois de ele confirmar.`,
+			confirmButtonColor: "#3baa4e",
+		});
+	};
+
 	const handleCreateAdmin = async (userData: any) => {
 		setIsSubmitting(true);
 		try {
@@ -180,13 +202,22 @@ export default function UsersPage() {
 				title="Utilizadores"
 				subtitle="Gestão de acesso"
 				right={
-					<button
-						onClick={() => setIsDialogOpen(true)}
-						className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-xs font-extrabold uppercase tracking-tight text-white hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 active:scale-95"
-					>
-						<Plus size={16} />
-						<span>Novo Administrador</span>
-					</button>
+					<div className="flex flex-wrap gap-2">
+						<button
+							onClick={() => setIsClientDialogOpen(true)}
+							className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-xs font-extrabold uppercase tracking-tight text-white hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 active:scale-95"
+						>
+							<UserPlus size={16} />
+							<span>Novo Cliente</span>
+						</button>
+						<button
+							onClick={() => setIsDialogOpen(true)}
+							className="flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2.5 text-xs font-extrabold uppercase tracking-tight text-zinc-700 hover:bg-zinc-50 transition-all active:scale-95"
+						>
+							<Plus size={16} />
+							<span>Novo Administrador</span>
+						</button>
+					</div>
 				}
 			/>
 
@@ -229,7 +260,9 @@ export default function UsersPage() {
 								render: (u: UserRow) => {
 									const [label, cls] = u.anonymized_at
 										? ["Removido", "bg-zinc-100 text-zinc-500"]
-										: u.is_active ? ["Ativo", "bg-emerald-50 text-emerald-600"] : ["Desativado", "bg-red-50 text-red-600"];
+										: !u.is_active ? ["Desativado", "bg-red-50 text-red-600"]
+										: u.email_verified === false ? ["Por confirmar", "bg-amber-50 text-amber-700"]
+										: ["Ativo", "bg-emerald-50 text-emerald-600"];
 									return <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider ${cls}`}>{label}</span>;
 								},
 							},
@@ -242,6 +275,15 @@ export default function UsersPage() {
 									const isAdmin = u.roles?.some(r => r === "ROLE_ADMIN" || r === "ROLE_STAFF");
 									return (
 										<div className="flex justify-end gap-2">
+											{u.email_verified === false && u.is_active && (
+												<button
+													onClick={() => handleResendConfirmation(u)}
+													className="p-2 rounded-lg text-zinc-500 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+													title="Reenviar o email de confirmação da conta"
+												>
+													<MailCheck size={18} />
+												</button>
+											)}
 											<button
 												onClick={() => handleToggleActive(u)}
 												className={`p-2 rounded-lg transition-colors ${u.is_active ? "text-zinc-500 hover:bg-amber-50 hover:text-amber-600" : "text-zinc-500 hover:bg-emerald-50 hover:text-emerald-600"}`}
@@ -279,6 +321,12 @@ export default function UsersPage() {
 					isSubmitting={isSubmitting}
 				/>
 			</UserDialog>
+
+			<CreateClientDialog
+				isOpen={isClientDialogOpen}
+				onClose={() => setIsClientDialogOpen(false)}
+				onCreated={handleClientCreated}
+			/>
 		</div>
 	);
 }

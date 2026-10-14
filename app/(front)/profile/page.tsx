@@ -14,6 +14,7 @@ import MyDataForm from "@/app/ui/front/profile/MyDataForm";
 import ReviewDialog from "@/app/ui/front/reviews/ReviewDialog";
 import { StarsView } from "@/app/ui/front/reviews/Stars";
 import UnpaidExpiryNotice from "@/app/ui/front/payment/UnpaidExpiryNotice";
+import EmailVerifyBanner from "@/app/ui/front/profile/EmailVerifyBanner";
 import { useLocale, useTranslations } from "next-intl";
 import { localeTags, isLocale } from "@/i18n/config";
 
@@ -333,6 +334,8 @@ export default function ProfilePage() {
                         {t("signOut")}
                     </button>
                 </div>
+
+                <EmailVerifyBanner />
 
                 <div className="profile-tabs flex gap-2 mb-8">
                     <button

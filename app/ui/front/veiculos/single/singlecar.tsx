@@ -247,6 +247,14 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 							link: (chunks) => <a href="/profile?tab=dados" className="font-bold underline">{chunks}</a>,
 						}),
 					});
+				} else if (errorData.code === "EMAIL_NOT_VERIFIED") {
+					setMessage({
+						type: 'error',
+						text: t.rich("errors.emailNotVerified", {
+							message: errorData.message,
+							link: (chunks) => <a href="/profile" className="font-bold underline">{chunks}</a>,
+						}),
+					});
 				} else {
 					setMessage({ type: 'error', text: errorData.message || t("errors.generic") });
 				}

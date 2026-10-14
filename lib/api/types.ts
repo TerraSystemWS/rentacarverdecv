@@ -134,6 +134,9 @@ export type UserRow = {
 	roles?: string[];
 	// Cliente "apagado" no painel: dados pessoais anonimizados, reservas mantidas.
 	anonymized_at?: string | null;
+	// false = ainda não abriu o link do email de confirmação (não pode reservar).
+	email_verified?: boolean;
+	profile_complete?: boolean;
 };
 
 export type VehicleRow = {

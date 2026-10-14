@@ -239,7 +239,8 @@
 			"alreadyBooked": "Este veículo já está reservado nesse período. Escolha outras datas.",
 			"profileIncomplete": "{message} <link>Completar os meus dados agora</link>",
 			"generic": "Ocorreu um erro ao processar a reserva.",
-			"connection": "Não foi possível ligar ao servidor. Tente de novo."
+			"connection": "Não foi possível ligar ao servidor. Tente de novo.",
+			"emailNotVerified": "{message} <link>Ir para a minha área (reenviar o email)</link>"
 		},
 		"success": "Reserva feita! A redirecionar para o pagamento...",
 		"voucher": {
@@ -422,7 +423,7 @@
 		"signingIn": "A entrar...",
 		"noAccount": "Ainda não tem conta?",
 		"createAccount": "Criar conta",
-		"registered": "Conta criada com sucesso! Inicie sessão para continuar.",
+		"registered": "Conta criada! Enviámos um email para confirmar a conta. Pode iniciar sessão já, mas só pode reservar depois de confirmar.",
 		"fillAll": "Preencha todos os campos.",
 		"captcha": "Resolva o desafio de segurança (captcha).",
 		"invalidLogin": "Email ou palavra-passe inválidos.",
@@ -689,5 +690,33 @@
 		"hoursMinutes": "{h} h {m} min",
 		"minutes": "{m} min",
 		"lessThanMinute": "menos de 1 min"
+	},
+	"accountConfirm": {
+		"checking": "A confirmar a sua conta…",
+		"missing": "Falta o código de confirmação no link. Abra o link completo que recebeu por email.",
+		"error": "Não foi possível confirmar a conta. Tente de novo.",
+		"errorTitle": "Não foi possível confirmar",
+		"goProfile": "Ir para a minha área",
+		"doneTitle": "Conta confirmada",
+		"doneVerify": "Obrigado! A sua conta está confirmada e já pode reservar.",
+		"doneSetup": "A sua conta está confirmada e a palavra-passe ficou guardada. Inicie sessão para reservar e acompanhar as suas reservas.",
+		"goLogin": "Iniciar sessão",
+		"goCars": "Ver as viaturas",
+		"setupTitle": "Confirme a sua conta",
+		"setupSubtitle": "Escolha a palavra-passe da conta {email}.",
+		"password": "Palavra-passe",
+		"confirmPassword": "Confirmar a palavra-passe",
+		"passwordHint": "Pelo menos 8 caracteres.",
+		"passwordTooShort": "A palavra-passe tem de ter pelo menos 8 caracteres.",
+		"passwordsDontMatch": "As palavras-passe não coincidem.",
+		"showPassword": "Mostrar a palavra-passe",
+		"hidePassword": "Esconder a palavra-passe",
+		"saving": "A guardar…",
+		"submit": "Confirmar a conta",
+		"bannerTitle": "Confirme a sua conta para poder reservar",
+		"bannerText": "Enviámos-lhe um email com um link de confirmação. Não encontra? Veja na pasta de spam ou peça outro.",
+		"resend": "Reenviar o email",
+		"sending": "A enviar…",
+		"resent": "Enviámos um novo email de confirmação."
 	}
 }
