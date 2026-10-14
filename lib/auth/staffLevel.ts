@@ -17,7 +17,11 @@ export const isStaff = (me: Me | any) => can(me, "dashboard.access");
 
 export const rankOf = (me: Me | any): number => me?.rank ?? 0;
 
-/** Que permissão abre cada página do painel (a primeira que bate, por prefixo). */
+/**
+ * Que permissão abre cada página do painel (a primeira que bate, por prefixo).
+ * Uma página que não esteja aqui é recusada (volta ao Painel): ao criar uma
+ * página nova no painel, acrescentá-la a esta lista.
+ */
 const PAGE_PERMISSIONS: [string, string[]][] = [
 	["/dashboard/bookings", ["bookings.view"]],
 	["/dashboard/calendar", ["bookings.view"]],
@@ -39,6 +43,8 @@ const PAGE_PERMISSIONS: [string, string[]][] = [
 	["/dashboard/messages", ["messages.manage"]],
 	["/dashboard/archived", ["archive.view"]],
 	["/dashboard/roles", ["roles.manage"]],
+	["/dashboard/content", ["content.manage"]],
+	["/dashboard/settings/appearance", ["content.manage"]],
 	["/dashboard/settings", ["content.manage", "company.manage", "backup.manage"]],
 ];
 
