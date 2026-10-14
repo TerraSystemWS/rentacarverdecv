@@ -179,17 +179,17 @@ export default function SideNav() {
 				isOpen ? "translate-x-0" : "-translate-x-full"
 			].join(" ")}>
 				<div className="px-6 py-10 flex items-center justify-between">
-					<Link href="/dashboard" className="flex items-center gap-3.5 group" onClick={close}>
-						<div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center shadow-xl shadow-primary/30 group-hover:scale-105 transition-transform duration-300">
-							<Car className="text-primary-foreground w-7 h-7" />
-						</div>
-						<div>
-							<div className="text-xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-sidebar-foreground to-sidebar-foreground/70">
-								Verde CV
-							</div>
-							<div className="text-[10px] uppercase tracking-[0.3em] text-sidebar-foreground/40 font-bold">
-								Premium Admin
-							</div>
+					{/* Logótipo da empresa (a mesma versão do rodapé do site, feita para fundo escuro). */}
+					<Link href="/dashboard" className="flex flex-col gap-2 group" onClick={close} aria-label="Rent-A-Car Verde, painel de gestão">
+						<img
+							src="/logo_b.svg"
+							alt="Rent-A-Car Verde"
+							width={181}
+							height={73}
+							className="h-14 w-auto group-hover:scale-[1.02] transition-transform duration-300"
+						/>
+						<div className="text-[10px] uppercase tracking-[0.3em] text-sidebar-foreground/40 font-bold">
+							Painel de gestão
 						</div>
 					</Link>
 

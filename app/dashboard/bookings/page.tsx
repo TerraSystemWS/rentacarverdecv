@@ -29,6 +29,14 @@ export default function BookingsPage() {
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
+	// Atalho "Nova Reserva" da página inicial do painel: /dashboard/bookings?novo=1 abre logo o formulário.
+	useEffect(() => {
+		if (new URLSearchParams(window.location.search).get("novo") === "1") {
+			setIsDialogOpen(true);
+			window.history.replaceState(null, "", window.location.pathname);
+		}
+	}, []);
+
 	const viewRows = useMemo(
 		() =>
 			rows.map((b) => ({

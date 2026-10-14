@@ -82,6 +82,15 @@ export default function VehiclesPage() {
         fetchVehicles();
     }, []);
 
+    // Atalho "Adicionar Veículo" da página inicial do painel: /dashboard/vehicles?novo=1 abre logo o formulário.
+    useEffect(() => {
+        if (new URLSearchParams(window.location.search).get("novo") === "1") {
+            setEditingVehicle(null);
+            setIsDialogOpen(true);
+            window.history.replaceState(null, "", window.location.pathname);
+        }
+    }, []);
+
     const handleOpenCreate = () => {
         setEditingVehicle(null);
         setIsDialogOpen(true);

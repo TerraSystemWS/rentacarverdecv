@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import TopNav from "@/app/ui/dash/topNav";
 import PageShell from "@/app/ui/dash/PageShell";
@@ -173,12 +174,12 @@ export default function DashboardHome() {
 										<h3 className="text-2xl font-extrabold mb-3 tracking-tight text-zinc-900 dark:text-zinc-50">Atalhos Rápidos</h3>
 										<p className="text-sm font-medium text-zinc-500 mb-8 max-w-sm">Gira a sua frota e reservas com ferramentas de alta performance.</p>
 										<div className="flex flex-wrap gap-4">
-											<button className="btn-primary h-12">
+											<Link href="/dashboard/bookings?novo=1" className="btn-primary h-12 inline-flex items-center">
 												Nova Reserva
-											</button>
-											<button className="btn-secondary h-12">
+											</Link>
+											<Link href="/dashboard/vehicles?novo=1" className="btn-secondary h-12 inline-flex items-center">
 												Adicionar Veículo
-											</button>
+											</Link>
 										</div>
 									</div>
 								</div>
