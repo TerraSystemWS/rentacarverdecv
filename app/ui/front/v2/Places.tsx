@@ -15,8 +15,9 @@ import { shuffle } from "@/lib/utils/shuffle";
 // carro desde a agência. As imagens vêm da galeria (categoria "Destinos",
 // com local e tempo — geridas no dashboard); em cada visita mostra até 4 ao
 // acaso, de locais diferentes sempre que possível. Cada cartão abre a
-// galeria já filtrada por esse local. Sem imagens de Destinos na galeria,
-// ficam os 4 destinos fixos abaixo.
+// galeria já filtrada por esse local. A disposição do mosaico também muda
+// em cada visita (grande à esquerda, à direita, ou em faixas desencontradas).
+// Sem imagens de Destinos na galeria, ficam os 4 destinos fixos abaixo.
 const DESTINATIONS = "Destinos";
 const MAX_CARDS = 4;
 const FALLBACK: CvPhotoKey[] = ["tarrafal", "cidadeVelha", "serraMalagueta", "assomada"];
@@ -38,6 +39,27 @@ function pickDestinations(items: GalleryItem[], max: number): GalleryItem[] {
 	return [...firstPerPlace, ...rest].slice(0, max);
 }
 
+// Disposições do mosaico (ver v2.css, data-layout): uma ao acaso em cada
+// visita, diferente da anterior (guardada no browser, só por conveniência).
+const LAYOUTS = 4;
+const LAYOUT_KEY = "rcv.places.layout";
+function pickLayout(): number {
+	let last = 0;
+	try {
+		last = Number(localStorage.getItem(LAYOUT_KEY)) || 0;
+	} catch {
+		// sem armazenamento (janela privada): escolhe só ao acaso
+	}
+	const options = Array.from({ length: LAYOUTS }, (_, i) => i + 1).filter((n) => n !== last);
+	const next = options[Math.floor(Math.random() * options.length)];
+	try {
+		localStorage.setItem(LAYOUT_KEY, String(next));
+	} catch {
+		// sem armazenamento (janela privada): escolhe só ao acaso
+	}
+	return next;
+}
+
 const galleryHref = (placeId?: number | null) =>
 	`/gallery?category=${encodeURIComponent(DESTINATIONS)}${placeId ? `&place=${placeId}` : ""}`;
 
@@ -50,12 +72,15 @@ export default function Places() {
 	const locale = useLocale();
 	// null = ainda a carregar (mostra os destinos fixos, sem saltos na página).
 	const [cards, setCards] = useState<GalleryItem[] | null>(null);
+	// Escolhida só no browser (depois de montar) para não haver diferenças com o HTML do servidor.
+	const [layout, setLayout] = useState<number | null>(null);
 
 	useEffect(() => {
 		let cancelled = false;
 		fetch(`${API_BASE_URL}${endpoints.gallery.list}?category=${encodeURIComponent(DESTINATIONS)}`)
 			.then((res) => (res.ok ? res.json() : []))
 			.then((data: GalleryItem[]) => {
+				if (!cancelled) setLayout(pickLayout());
 				if (!cancelled) setCards(pickDestinations(Array.isArray(data) ? data.filter((i) => i.placeId) : [], MAX_CARDS));
 			})
 			.catch(() => {
@@ -83,7 +108,7 @@ export default function Places() {
 						</Link>
 					)}
 				</div>
-				<div className={`v2-places v2-places--${count}`}>
+				<div className={`v2-places v2-places--${count}`} data-layout={fromGallery && layout ? layout : undefined}>
 					{fromGallery
 						? fromGallery.map((item) => {
 								const text = tr(item, "description", locale) || tr(item, "title", locale);

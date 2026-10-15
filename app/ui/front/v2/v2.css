@@ -243,6 +243,29 @@
 .site-v2 .v2-places--2 { grid-template-columns: 1.35fr 1fr; grid-template-rows: 420px; }
 .site-v2 .v2-places--1 .v2-place:first-child, .site-v2 .v2-places--2 .v2-place:first-child { grid-row: auto; }
 .site-v2 .v2-places--3 { grid-template-columns: 1.35fr 1fr; }
+/* Mosaico alternado: em cada visita o Places.tsx escolhe ao acaso uma de 4
+   disposições (data-layout 1–4, nunca a mesma da visita anterior), além de as
+   imagens também virem ao acaso. Só no computador; tablet e telemóvel mantêm a grelha simples. */
+@media (min-width: 992px) {
+  .site-v2 .v2-places[data-layout] .v2-place { grid-row: auto; grid-column: auto; }
+  .site-v2 .v2-places[data-layout] .v2-place:nth-child(1) { grid-area: a; }
+  .site-v2 .v2-places[data-layout] .v2-place:nth-child(2) { grid-area: b; }
+  .site-v2 .v2-places[data-layout] .v2-place:nth-child(3) { grid-area: c; }
+  .site-v2 .v2-places[data-layout] .v2-place:nth-child(4) { grid-area: d; }
+  /* 4 destinos */
+  .site-v2 .v2-places--4[data-layout="1"] { grid-template-columns: 1.35fr 1fr 1fr; grid-template-areas: "a b c" "a d d"; }
+  .site-v2 .v2-places--4[data-layout="2"] { grid-template-columns: 1fr 1fr 1.35fr; grid-template-areas: "b c a" "d d a"; }
+  .site-v2 .v2-places--4[data-layout="3"] { grid-template-columns: 1fr 1fr 1fr; grid-template-areas: "a a b" "c d d"; }
+  .site-v2 .v2-places--4[data-layout="4"] { grid-template-columns: 1fr 1fr 1fr; grid-template-areas: "a b b" "c c d"; }
+  /* 3 destinos */
+  .site-v2 .v2-places--3[data-layout="1"] { grid-template-columns: 1.35fr 1fr; grid-template-areas: "a b" "a c"; }
+  .site-v2 .v2-places--3[data-layout="2"] { grid-template-columns: 1fr 1.35fr; grid-template-areas: "b a" "c a"; }
+  .site-v2 .v2-places--3[data-layout="3"] { grid-template-columns: 1fr 1fr; grid-template-areas: "a a" "b c"; }
+  .site-v2 .v2-places--3[data-layout="4"] { grid-template-columns: 1fr 1fr; grid-template-areas: "b c" "a a"; }
+  /* 2 destinos: o grande alterna entre a esquerda e a direita */
+  .site-v2 .v2-places--2[data-layout="1"], .site-v2 .v2-places--2[data-layout="3"] { grid-template-columns: 1.35fr 1fr; grid-template-areas: "a b"; }
+  .site-v2 .v2-places--2[data-layout="2"], .site-v2 .v2-places--2[data-layout="4"] { grid-template-columns: 1fr 1.35fr; grid-template-areas: "b a"; }
+}
 /* Cartões que abrem a galeria */
 .site-v2 a.v2-place { display: block; text-decoration: none; }
 .site-v2 a.v2-place .v2-photo img { transition: transform 0.6s ease; }
