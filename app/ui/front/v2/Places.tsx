@@ -9,6 +9,7 @@ import type { GalleryItem } from "@/lib/api/types";
 import { tr } from "@/lib/i18n/translate";
 import CvPhoto from "./CvPhoto";
 import type { CvPhotoKey } from "./photos";
+import { shuffle } from "@/lib/utils/shuffle";
 
 // "Para onde ir a partir da Praia": destinos de Santiago com o tempo de
 // carro desde a agência. As imagens vêm da galeria (categoria "Destinos",
@@ -19,15 +20,6 @@ import type { CvPhotoKey } from "./photos";
 const DESTINATIONS = "Destinos";
 const MAX_CARDS = 4;
 const FALLBACK: CvPhotoKey[] = ["tarrafal", "cidadeVelha", "serraMalagueta", "assomada"];
-
-function shuffle<T>(list: T[]): T[] {
-	const a = [...list];
-	for (let i = a.length - 1; i > 0; i--) {
-		const j = Math.floor(Math.random() * (i + 1));
-		[a[i], a[j]] = [a[j], a[i]];
-	}
-	return a;
-}
 
 /** Até `max` imagens ao acaso: primeiro uma por local, depois completa com as restantes. */
 function pickDestinations(items: GalleryItem[], max: number): GalleryItem[] {
