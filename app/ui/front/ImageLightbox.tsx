@@ -6,7 +6,7 @@ import { ChevronLeft, ChevronRight, X, ZoomIn, ZoomOut } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { withWidth } from "@/lib/utils/media";
 
-export type LightboxImage = { src: string; alt?: string; caption?: string };
+export type LightboxImage = { src: string; alt?: string; caption?: string; description?: string; meta?: string };
 
 /**
  * Imagem em grande com lupa (galeria e viaturas):
@@ -84,6 +84,9 @@ export default function ImageLightbox({
 	if (!img || typeof document === "undefined") return null;
 
 	const btn = "flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/25 transition-colors backdrop-blur";
+	// O CSS do template põe "padding: 12px 30px" em todos os <button>: sem isto os
+	// ícones e as miniaturas ficam com 0 px (pareciam não existir).
+	const reset: React.CSSProperties = { padding: 0, margin: 0, minWidth: 0, lineHeight: 1, textTransform: "none", letterSpacing: "normal" };
 
 	return createPortal(
 		<div
@@ -99,14 +102,14 @@ export default function ImageLightbox({
 					{total > 1 ? t("counter", { current: index + 1, total }) : ""}
 				</span>
 				<div className="flex items-center gap-2">
-					<button type="button" className={`${btn} h-10 w-10`} onClick={() => setZoom((z) => Math.max(1, z - 0.5))} disabled={zoom <= 1} aria-label={t("zoomOut")}>
-						<ZoomOut size={20} />
+					<button type="button" style={reset} className={`${btn} h-10 w-10`} onClick={() => setZoom((z) => Math.max(1, z - 0.5))} disabled={zoom <= 1} aria-label={t("zoomOut")}>
+						<ZoomOut size={20} className="shrink-0" />
 					</button>
-					<button type="button" className={`${btn} h-10 w-10`} onClick={() => setZoom((z) => Math.min(4, z + 0.5))} disabled={zoom >= 4} aria-label={t("zoomIn")}>
-						<ZoomIn size={20} />
+					<button type="button" style={reset} className={`${btn} h-10 w-10`} onClick={() => setZoom((z) => Math.min(4, z + 0.5))} disabled={zoom >= 4} aria-label={t("zoomIn")}>
+						<ZoomIn size={20} className="shrink-0" />
 					</button>
-					<button type="button" className={`${btn} h-10 w-10`} onClick={onClose} aria-label={t("close")}>
-						<X size={22} />
+					<button type="button" style={reset} className={`${btn} h-10 w-10`} onClick={onClose} aria-label={t("close")}>
+						<X size={22} className="shrink-0" />
 					</button>
 				</div>
 			</div>
@@ -149,11 +152,11 @@ export default function ImageLightbox({
 
 				{total > 1 && (
 					<>
-						<button type="button" className={`${btn} absolute left-2 sm:left-4 top-1/2 h-12 w-12 -translate-y-1/2`} onClick={() => go(-1)} aria-label={t("previous")}>
-							<ChevronLeft size={28} />
+						<button type="button" style={reset} className={`${btn} absolute left-2 sm:left-4 top-1/2 h-12 w-12 -translate-y-1/2`} onClick={() => go(-1)} aria-label={t("previous")}>
+							<ChevronLeft size={28} className="shrink-0" />
 						</button>
-						<button type="button" className={`${btn} absolute right-2 sm:right-4 top-1/2 h-12 w-12 -translate-y-1/2`} onClick={() => go(1)} aria-label={t("next")}>
-							<ChevronRight size={28} />
+						<button type="button" style={reset} className={`${btn} absolute right-2 sm:right-4 top-1/2 h-12 w-12 -translate-y-1/2`} onClick={() => go(1)} aria-label={t("next")}>
+							<ChevronRight size={28} className="shrink-0" />
 						</button>
 					</>
 				)}
@@ -161,7 +164,14 @@ export default function ImageLightbox({
 
 			{/* Legenda e miniaturas */}
 			<div className="px-4 pb-4 pt-2 text-center text-white">
-				{img.caption && <p className="m-0 mb-2 text-sm font-semibold">{img.caption}</p>}
+				{img.caption && <p className="m-0 mb-1 text-sm font-semibold">{img.caption}</p>}
+				{img.meta && <p className="m-0 mb-1 text-xs text-white/70">{img.meta}</p>}
+				{/* Descrição completa (no cartão da página inicial só aparece o início). */}
+				{img.description && (
+					<div className="mx-auto mb-2 max-h-28 max-w-2xl overflow-y-auto text-left text-sm leading-relaxed text-white/85 whitespace-pre-line">
+						{img.description}
+					</div>
+				)}
 				{zoom === 1 && <p className="m-0 mb-2 text-xs text-white/60">{t("zoomHint")}</p>}
 				{total > 1 && (
 					<div className="mx-auto flex max-w-full justify-center gap-2 overflow-x-auto pb-1">
@@ -169,6 +179,7 @@ export default function ImageLightbox({
 							<button
 								key={im.src + i}
 								type="button"
+								style={reset}
 								onClick={() => { setZoom(1); onIndexChange(i); }}
 								aria-label={im.alt || t("counter", { current: i + 1, total })}
 								aria-current={i === index}

@@ -195,6 +195,14 @@ function GalleryContent() {
                                     src: `${API_BASE_URL}${item.imageUrl}`,
                                     alt: tr(item, "title", locale) || t("imageAlt"),
                                     caption: tr(item, "title", locale),
+                                    // Destinos: local e tempo de carro, e a descrição completa.
+                                    meta: [
+                                        item.category === DESTINATIONS && item.place
+                                            ? (locale !== "pt" && item.placeTranslations?.[locale as "en" | "fr"]?.name?.trim()) || item.place
+                                            : "",
+                                        item.category === DESTINATIONS && item.travelTime ? t("travelTime", { time: item.travelTime }) : "",
+                                    ].filter(Boolean).join(" · "),
+                                    description: tr(item, "description", locale),
                                 }))}
                                 index={open}
                                 onClose={() => setOpen(null)}
