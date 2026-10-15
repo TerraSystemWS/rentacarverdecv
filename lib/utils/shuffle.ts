@@ -1,4 +1,4 @@
-/** Cópia da lista em ordem aleatória (Fisher–Yates). Usada para os destinos mudarem a cada visita. */
+/** Cópia da lista em ordem aleatória (Fisher–Yates). Usada no bloco de destinos da página inicial (a galeria mantém a ordem da API). */
 export function shuffle<T>(list: T[]): T[] {
 	const a = [...list];
 	for (let i = a.length - 1; i > 0; i--) {

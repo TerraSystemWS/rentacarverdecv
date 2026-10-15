@@ -8,7 +8,6 @@ import { DestinationPlace, GalleryItem } from "@/lib/api/types";
 import { useLocale, useTranslations } from "next-intl";
 import { tr } from "@/lib/i18n/translate";
 import ImageLightbox from "@/app/ui/front/ImageLightbox";
-import { shuffle } from "@/lib/utils/shuffle";
 
 // Valores em PT (como na BD / API); o rótulo segue a língua.
 const CATEGORIES = ["Tudo", "Frota", "Eventos", "Cabo Verde", "Destinos"];
@@ -55,9 +54,8 @@ function GalleryContent() {
                 );
                 if (res.ok) {
                     const data = await res.json();
-                    // Destinos: ordem aleatória a cada visita (baralhada só ao carregar,
-                    // por isso não muda enquanto se filtra por local ou se abre a lupa).
-                    setItems(activeCategory === DESTINATIONS && Array.isArray(data) ? shuffle(data) : data);
+                    // Ordem da API (a ordem aleatória é só no bloco de destinos da página inicial).
+                    setItems(data);
                 }
             } catch (error) {
                 console.error("Error fetching gallery:", error);
