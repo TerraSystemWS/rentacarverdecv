@@ -65,6 +65,8 @@ export const endpoints = {
 		bookedDates: (id: number) => `/public/vehicles/${id}/booked-dates`,
 	},
 	bookings: {
+		// "Verificar pagamento na SISP" (API Consultar Estado Transação).
+		paymentStatus: (id: number) => `/dashboard/bookings/${id}/payment-status`,
 		list: (limit = 100) => `/dashboard/bookings?limit=${limit}`,
 		completed: "/dashboard/bookings/completed",
 		cancelled: "/dashboard/bookings/cancelled",

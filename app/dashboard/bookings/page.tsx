@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import TopNav from "@/app/ui/dash/topNav";
 import PageShell from "@/app/ui/dash/PageShell";
 import DataTable from "@/app/ui/dash/DataTable";
-import { CalendarCheck, Loader2, Plus, Trash2, Lock, Ban, KeyRound, CheckCircle2, Paperclip } from "lucide-react";
+import { CalendarCheck, Loader2, Plus, Trash2, Lock, Ban, KeyRound, CheckCircle2, Paperclip, SearchCheck } from "lucide-react";
 import Swal from "sweetalert2";
 import { apiFetch } from "@/lib/api/client";
 import { authFetch } from "@/app/auth/api";
@@ -160,6 +160,15 @@ export default function BookingsPage() {
 					<option value="APROVADA">Aprovada</option>
 					<option value="PAGA">Paga</option>
 				</select>
+				{b.payment_status !== "SUCCESS" && (
+					<button
+						onClick={() => handleCheckPayment(b.id)}
+						className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+						title="Verificar pagamento na SISP"
+					>
+						<SearchCheck size={16} />
+					</button>
+				)}
 				<button
 					onClick={() => handleCancel(b.id)}
 					className="p-2 text-gray-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all"
@@ -250,6 +259,24 @@ export default function BookingsPage() {
 			}
 		} catch (e: any) {
 			Swal.fire({ icon: "error", title: "Erro", text: "Falha ao atualizar estado: " + e.message, confirmButtonColor: "#3085d6" });
+		}
+	}
+
+	// Pergunta à SISP pelo último pagamento online da reserva (ex.: página da SISP
+	// parada no telemóvel e a resposta nunca chegou). Se a SISP confirmar, a
+	// reserva fica paga e o recibo é enviado, como numa resposta normal.
+	async function handleCheckPayment(id: number) {
+		try {
+			const r = await apiFetch<{ outcome: string; message: string }>(endpoints.bookings.paymentStatus(id), { method: "POST" });
+			Swal.fire({
+				icon: r.outcome === "PAID" ? "success" : r.outcome === "FAILED" || r.outcome === "ERROR" ? "error" : "info",
+				title: "Pagamento na SISP",
+				text: r.message,
+				confirmButtonColor: "#3baa4e",
+			});
+			if (r.outcome === "PAID" || r.outcome === "FAILED") fetchBookings();
+		} catch (e: any) {
+			Swal.fire({ icon: "error", title: "Erro", text: e?.message || "Não foi possível consultar a SISP.", confirmButtonColor: "#3085d6" });
 		}
 	}
 
