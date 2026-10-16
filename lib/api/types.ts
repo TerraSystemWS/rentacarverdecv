@@ -240,6 +240,24 @@ export type BookingRow = {
 	can_pick_up?: boolean;
 	/** "Devolveu" disponível agora: em curso e levantada. */
 	can_return?: boolean;
+	/** Extensão de aluguer: id da reserva original que esta prolonga. */
+	extends_booking_id?: number | null;
+	/** Na reserva original: fim efetivo do aluguer, com as extensões não canceladas. */
+	rental_end_at?: string | null;
+	/** Na reserva original: as suas extensões. */
+	extension_ids?: number[];
+	/** O cliente pode pedir uma extensão agora (paga/em curso, sem extensão por pagar). */
+	can_extend?: boolean;
+};
+
+/** Orçamento de uma extensão (GET /dashboard/bookings/me/{id}/extension-quote). */
+export type ExtensionQuote = {
+	start: string;
+	end: string;
+	days: number;
+	total: number;
+	available: boolean;
+	message?: string | null;
 };
 
 export type PagedBookings = {

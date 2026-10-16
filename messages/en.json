@@ -367,7 +367,22 @@
 		"cancelConfirm": "Cancel this booking? The dates will be released for other customers.",
 		"cancelYes": "Yes, cancel",
 		"cancelNo": "Keep it",
-		"cancelError": "The booking could not be cancelled."
+		"cancelError": "The booking could not be cancelled.",
+		"bookingNumber": "Booking #{id}",
+		"extensionOf": "Extension of booking #{id}",
+		"extendedUntil": "Extended until {date}",
+		"extendButton": "Extend rental",
+		"extendTitle": "Extend your rental",
+		"extendIntro": "Choose the new return date. If the car is free on those days you keep it longer; the extra days are paid separately.",
+		"extendCurrentEnd": "Current return:",
+		"extendNewEnd": "New return date",
+		"extendSameTime": "At the same time as the current return ({time}, Cape Verde time).",
+		"extendChecking": "Checking availability…",
+		"extendDays": "{days, plural, one {# extra day} other {# extra days}}",
+		"extendTotal": "Total to pay:",
+		"extendConfirm": "Confirm and pay",
+		"extendBack": "Back",
+		"extendError": "The rental could not be extended. Please try again."
 	},
 	"myData": {
 		"complete": "Your details are complete — you can now book vehicles.",

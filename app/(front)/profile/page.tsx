@@ -15,6 +15,7 @@ import ReviewDialog from "@/app/ui/front/reviews/ReviewDialog";
 import { StarsView } from "@/app/ui/front/reviews/Stars";
 import UnpaidExpiryNotice from "@/app/ui/front/payment/UnpaidExpiryNotice";
 import EmailVerifyBanner from "@/app/ui/front/profile/EmailVerifyBanner";
+import ExtendBookingDialog from "@/app/ui/front/profile/ExtendBookingDialog";
 import { useLocale, useTranslations } from "next-intl";
 import { localeTags, isLocale } from "@/i18n/config";
 
@@ -35,6 +36,8 @@ export default function ProfilePage() {
     const [fetchLoading, setFetchLoading] = useState(true);
     const [err, setErr] = useState<string | null>(null);
     const [tab, setTab] = useState<"bookings" | "data">("bookings");
+    // "Estender aluguer" (reserva paga ou em curso): diálogo com a nova data.
+    const [extendTarget, setExtendTarget] = useState<BookingRow | null>(null);
 
     // /profile?tab=dados abre logo "Os Meus Dados" (link do erro "complete os
     // seus dados" ao reservar e do resumo do pagamento).
@@ -201,13 +204,21 @@ export default function ProfilePage() {
                     <div key={b.id} className="v2-card v2-card--booking text-left flex flex-col justify-between">
                         <div>
                             <div className="flex justify-between items-start mb-4">
-                                <h3 className="v2-card__name">{b.vehicle_title || t("vehicleUnknown")}</h3>
+                                <div>
+                                    <h3 className="v2-card__name">{b.vehicle_title || t("vehicleUnknown")}</h3>
+                                    <p className="text-xs font-semibold text-slate-500">
+                                        {b.extends_booking_id ? t("extensionOf", { id: b.extends_booking_id }) : t("bookingNumber", { id: b.id })}
+                                    </p>
+                                </div>
                                 {getStatusBadge(b.status)}
                             </div>
 
                             <div className="space-y-2 text-sm text-slate-700 mb-6">
                                 <p><span className="font-semibold text-slate-800">{t("start")}</span> {fmtDateTime(b.start_at)}</p>
                                 <p><span className="font-semibold text-slate-800">{t("end")}</span> {fmtDateTime(b.end_at)}</p>
+                                {b.rental_end_at && b.rental_end_at !== b.end_at && (
+                                    <p className="font-semibold text-green-700">{t("extendedUntil", { date: fmtDateTime(b.rental_end_at) })}</p>
+                                )}
                                 <p><span className="font-semibold text-slate-800">{t("createdAt")}</span> {fmtDateTime(b.created_at)}</p>
                             </div>
                             {b.expires_at && (
@@ -223,6 +234,15 @@ export default function ProfilePage() {
                         </div>
                         {/* gap no contentor: o CSS legado zera as margens dos botões */}
                         <div className="mt-3 flex flex-col gap-3 empty:hidden">
+                            {b.can_extend && !b.extends_booking_id && (
+                                <button
+                                    type="button"
+                                    onClick={() => setExtendTarget(b)}
+                                    className="btn-racv w-full text-center text-sm"
+                                >
+                                    {t("extendButton")}
+                                </button>
+                            )}
                             {(b.status === "PENDENTE" || b.status === "APROVADA") && b.payment_status !== "SUCCESS" && (
                                 <Link
                                     href={`/payment/${b.id}`}
@@ -275,7 +295,8 @@ export default function ProfilePage() {
                                     {t("downloadInvoice")}
                                 </button>
                             )}
-                            {b.status === "CONCLUÍDA" && (() => {
+                            {/* Avalia-se o aluguer na reserva original, não nas extensões. */}
+                            {b.status === "CONCLUÍDA" && !b.extends_booking_id && (() => {
                                 const rv = reviewFor(b.id);
                                 if (rv?.status === "APPROVED") {
                                     return (
@@ -436,6 +457,8 @@ export default function ProfilePage() {
                     onSaved={(saved) => setMyReviews((prev) => [saved, ...prev.filter((r) => r.bookingId !== saved.bookingId)])}
                 />
             )}
+
+            {extendTarget && <ExtendBookingDialog booking={extendTarget} onClose={() => setExtendTarget(null)} />}
         </div>
     );
 }

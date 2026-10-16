@@ -73,6 +73,9 @@ export const endpoints = {
 		me: "/dashboard/bookings/me",
 		meHistory: (page = 0, size = 6) => `/dashboard/bookings/me/history?page=${page}&size=${size}`,
 		cancelMine: (id: number) => `/dashboard/bookings/me/${id}/cancel`,
+		// Estender um aluguer (V51): orçamento e criação da extensão por pagar.
+		extensionQuote: (id: number) => `/dashboard/bookings/me/${id}/extension-quote`,
+		extendMine: (id: number) => `/dashboard/bookings/me/${id}/extend`,
 		create: "/dashboard/bookings",
 		update: (id: number) => `/dashboard/bookings/${id}`,
 		updateStatus: (id: number) => `/dashboard/bookings/${id}/status`,

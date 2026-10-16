@@ -367,7 +367,22 @@
 		"cancelConfirm": "Annuler cette réservation ? Les dates seront libérées pour d’autres clients.",
 		"cancelYes": "Oui, annuler",
 		"cancelNo": "La garder",
-		"cancelError": "Impossible d’annuler la réservation."
+		"cancelError": "Impossible d’annuler la réservation.",
+		"bookingNumber": "Réservation n° {id}",
+		"extensionOf": "Prolongation de la réservation n° {id}",
+		"extendedUntil": "Prolongée jusqu'au {date}",
+		"extendButton": "Prolonger la location",
+		"extendTitle": "Prolonger la location",
+		"extendIntro": "Choisissez la nouvelle date de retour. Si la voiture est libre ces jours-là, vous la gardez plus longtemps ; les jours supplémentaires sont payés à part.",
+		"extendCurrentEnd": "Retour actuel :",
+		"extendNewEnd": "Nouvelle date de retour",
+		"extendSameTime": "À la même heure que le retour actuel ({time}, heure du Cap-Vert).",
+		"extendChecking": "Vérification de la disponibilité…",
+		"extendDays": "{days, plural, one {# jour supplémentaire} other {# jours supplémentaires}}",
+		"extendTotal": "Total à payer :",
+		"extendConfirm": "Confirmer et payer",
+		"extendBack": "Retour",
+		"extendError": "Impossible de prolonger la location. Réessayez."
 	},
 	"myData": {
 		"complete": "Vos informations sont complètes — vous pouvez maintenant réserver un véhicule.",

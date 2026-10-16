@@ -367,7 +367,22 @@
 		"cancelConfirm": "Cancelar esta reserva? As datas ficam livres para outros clientes.",
 		"cancelYes": "Sim, cancelar",
 		"cancelNo": "Manter",
-		"cancelError": "Não foi possível cancelar a reserva."
+		"cancelError": "Não foi possível cancelar a reserva.",
+		"bookingNumber": "Reserva #{id}",
+		"extensionOf": "Extensão da reserva #{id}",
+		"extendedUntil": "Estendida até {date}",
+		"extendButton": "Estender aluguer",
+		"extendTitle": "Estender o aluguer",
+		"extendIntro": "Escolha a nova data de devolução. Se o carro estiver livre nesses dias, fica consigo mais tempo; os dias extra pagam-se à parte.",
+		"extendCurrentEnd": "Devolução atual:",
+		"extendNewEnd": "Nova data de devolução",
+		"extendSameTime": "À mesma hora da devolução atual ({time}, hora de Cabo Verde).",
+		"extendChecking": "A verificar a disponibilidade…",
+		"extendDays": "{days, plural, one {# dia} other {# dias}} a mais",
+		"extendTotal": "Total a pagar:",
+		"extendConfirm": "Confirmar e pagar",
+		"extendBack": "Voltar",
+		"extendError": "Não foi possível estender o aluguer. Tente de novo."
 	},
 	"myData": {
 		"complete": "Os seus dados estão completos — já pode reservar viaturas.",

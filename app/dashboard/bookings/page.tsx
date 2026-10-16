@@ -55,6 +55,11 @@ export default function BookingsPage() {
 				customer_name: (
 					<div className="flex items-center gap-2">
 						<span>{b.customer_name}</span>
+						{b.extends_booking_id && (
+							<span className="bg-amber-100 text-amber-800 text-[10px] px-2 py-0.5 rounded-full font-bold uppercase whitespace-nowrap" title="Extensão de aluguer: dias extra pagos à parte">
+								Extensão de #{b.extends_booking_id}
+							</span>
+						)}
 						{b.has_extra_driver && (
 							<span className="bg-green-100 text-green-800 text-[10px] px-2 py-0.5 rounded-full font-bold uppercase whitespace-nowrap" title="Com Condutor Extra">
 								+ Condutor
@@ -63,7 +68,16 @@ export default function BookingsPage() {
 					</div>
 				),
 				start_at: fmtDateTime(b.start_at),
-				end_at: fmtDateTime(b.end_at),
+				end_at: b.rental_end_at && b.rental_end_at !== b.end_at ? (
+					<div className="flex flex-col">
+						<span className="line-through text-zinc-400">{fmtDateTime(b.end_at)}</span>
+						<span className="font-bold text-green-700" title="Fim do aluguer com as extensões">
+							{fmtDateTime(b.rental_end_at)} <span className="text-[9px] uppercase">estendida</span>
+						</span>
+					</div>
+				) : (
+					fmtDateTime(b.end_at)
+				),
 				picked_up_at: b.picked_up_at ? fmtDateTime(b.picked_up_at) : <span className="text-zinc-300">—</span>,
 				returned_at: b.returned_at ? fmtDateTime(b.returned_at) : <span className="text-zinc-300">—</span>,
 				grand_total: (
@@ -124,6 +138,15 @@ export default function BookingsPage() {
 				<div className="flex justify-end items-center gap-1.5 text-zinc-400" title="Reserva cancelada">
 					<Ban size={14} />
 					<span className="text-[10px] font-bold uppercase tracking-tight">Cancelada</span>
+				</div>
+			);
+		}
+		if (b.extends_booking_id && (b.status === "PAGA" || b.status === "EM_CURSO")) {
+			// Extensão de aluguer: levanta e devolve com a reserva original.
+			return (
+				<div className="flex justify-end items-center gap-1.5 text-zinc-400" title="Pegou/Devolveu marcam-se na reserva original">
+					<KeyRound size={13} />
+					<span className="text-[10px] font-bold uppercase tracking-tight">Segue a #{b.extends_booking_id}</span>
 				</div>
 			);
 		}
