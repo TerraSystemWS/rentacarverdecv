@@ -15,6 +15,8 @@ interface GalleryItem {
 	id: number;
 	imageUrl: string;
 	title: string;
+	category?: string;
+	createdAt?: string;
 	translations?: Translations;
 }
 
@@ -47,10 +49,15 @@ const Footer = () => {
 	useEffect(() => {
 		const fetchGallery = async () => {
 			try {
-				const res = await fetch(`${API_BASE_URL}${endpoints.gallery.list}`);
+				// Só fotos da Frota, da mais recente para a mais antiga (a API já ordena
+				// por data; ordena-se aqui também por segurança). Até 9.
+				const res = await fetch(`${API_BASE_URL}${endpoints.gallery.list}?category=Frota`);
 				if (res.ok) {
-					const data = await res.json();
-					setGallery(data.slice(0, 9)); // Get latest 9
+					const data: GalleryItem[] = await res.json();
+					const fleet = data
+						.filter((i) => i.category === "Frota")
+						.sort((a, b) => (b.createdAt ?? "").localeCompare(a.createdAt ?? ""));
+					setGallery(fleet.slice(0, 9));
 				}
 			} catch (error) {
 				console.error("Error fetching gallery:", error);
