@@ -234,6 +234,12 @@ export type BookingRow = {
 	has_license_photo?: boolean;
 	/** Reserva por pagar: hora a que o servidor a cancela automaticamente. */
 	expires_at?: string | null;
+	/** A partir de quando se pode marcar "Pegou" (início do dia reservado, hora de Cabo Verde). */
+	pickup_from?: string | null;
+	/** "Pegou" disponível agora: paga e já no dia do levantamento (a API confirma). */
+	can_pick_up?: boolean;
+	/** "Devolveu" disponível agora: em curso e levantada. */
+	can_return?: boolean;
 };
 
 export type PagedBookings = {

@@ -16,6 +16,13 @@ import { fmtDateTime, fmtMoney } from "@/lib/utils/format";
 import BookingDialog from "./_components/booking-dialog";
 import BookingForm from "./_components/booking-form";
 
+const escapeHtml = (v?: string | null) =>
+	(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
+
+// Dia (dd/mm/aaaa) em hora de Cabo Verde, como a regra da API.
+const fmtDay = (iso?: string | null) =>
+	iso ? new Date(iso).toLocaleDateString("pt-PT", { timeZone: "Atlantic/Cape_Verde" }) : "—";
+
 export default function BookingsPage() {
 	// Apagar reservas: só com "bookings.delete" (a API recusa; o botão nem aparece).
 	const isAgent = !can(useAuth().user, "bookings.delete");
@@ -121,10 +128,21 @@ export default function BookingsPage() {
 			);
 		}
 		if (b.status === "PAGA") {
+			// "Pegou" só aparece a partir do dia reservado (can_pick_up vem da API).
+			if (!b.can_pick_up) {
+				return (
+					<div className="flex justify-end items-center gap-1.5 text-zinc-400" title="A viatura só pode ser levantada a partir do dia reservado">
+						<KeyRound size={13} />
+						<span className="text-[10px] font-bold uppercase tracking-tight">
+							Levanta a {fmtDay(b.pickup_from || b.start_at)}
+						</span>
+					</div>
+				);
+			}
 			return (
 				<div className="flex justify-end">
 					<button
-						onClick={() => handleStatusChange(b.id, "EM_CURSO")}
+						onClick={() => handlePickupReturn(b, "EM_CURSO")}
 						className="flex items-center gap-1.5 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 px-3 py-1.5 text-[10px] font-black uppercase tracking-wider transition-colors"
 						title="Marcar como levantada pelo cliente"
 					>
@@ -135,10 +153,19 @@ export default function BookingsPage() {
 			);
 		}
 		if (b.status === "EM_CURSO") {
+			// "Devolveu" só depois de levantada (can_return vem da API).
+			if (!b.can_return) {
+				return (
+					<div className="flex justify-end items-center gap-1.5 text-zinc-400" title="Só pode ser devolvida depois de levantada">
+						<Lock size={14} />
+						<span className="text-[10px] font-bold uppercase tracking-tight">Sem levantamento</span>
+					</div>
+				);
+			}
 			return (
 				<div className="flex justify-end">
 					<button
-						onClick={() => handleStatusChange(b.id, "CONCLUÍDA")}
+						onClick={() => handlePickupReturn(b, "CONCLUÍDA")}
 						className="flex items-center gap-1.5 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 px-3 py-1.5 text-[10px] font-black uppercase tracking-wider transition-colors"
 						title="Marcar como devolvida pelo cliente — conclui a reserva"
 					>
@@ -278,6 +305,30 @@ export default function BookingsPage() {
 		} catch (e: any) {
 			Swal.fire({ icon: "error", title: "Erro", text: e?.message || "Não foi possível consultar a SISP.", confirmButtonColor: "#3085d6" });
 		}
+	}
+
+	// "Pegou"/"Devolveu" não se podem desfazer no painel: pede sempre confirmação
+	// (a 16/10 uma reserva paga de dezembro foi dada como levantada e devolvida por engano).
+	async function handlePickupReturn(b: BookingRow, newStatus: "EM_CURSO" | "CONCLUÍDA") {
+		const pickup = newStatus === "EM_CURSO";
+		const result = await Swal.fire({
+			title: pickup ? "O cliente levantou a viatura?" : "O cliente devolveu a viatura?",
+			html:
+				`<p><b>Reserva #${b.id}</b> — ${escapeHtml(b.vehicle_title)}<br/>${escapeHtml(b.customer_name)}</p>` +
+				`<p style="margin-top:8px">${pickup ? "Levantamento previsto" : "Devolução prevista"}: <b>${fmtDateTime(pickup ? b.start_at : b.end_at)}</b></p>` +
+				`<p style="margin-top:8px;font-size:13px;color:#71717a">${pickup
+					? "A reserva passa a Em curso. Não se pode desfazer."
+					: "A reserva fica Concluída, sai da lista e o cliente recebe o pedido de avaliação. Não se pode desfazer."}</p>`,
+			icon: "question",
+			showCancelButton: true,
+			confirmButtonColor: pickup ? "#4f46e5" : "#059669",
+			cancelButtonColor: "#71717a",
+			confirmButtonText: pickup ? "Sim, levantou" : "Sim, devolveu",
+			cancelButtonText: "Voltar",
+			focusCancel: true,
+		});
+		if (!result.isConfirmed) return;
+		handleStatusChange(b.id, newStatus);
 	}
 
 	async function handleCancel(id: number) {
