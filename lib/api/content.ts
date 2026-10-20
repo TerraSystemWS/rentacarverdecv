@@ -8,7 +8,7 @@ import { hasLegalTranslation } from "@/lib/i18n/contentFields";
 // Em EN/FR usa a tradução gravada no dashboard; sem tradução, devolve o PT
 // com translated=false (a página mostra um aviso).
 export async function getLegalPage(
-	key: "conditions" | "cancellation",
+	key: "conditions" | "cancellation" | "privacy",
 	locale = "pt",
 ): Promise<{ html: string; translated: boolean } | null> {
 	try {

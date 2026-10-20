@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Save, Loader2, Layout, Info, Phone, Home, ScrollText, Undo2, ImagePlus, X, ArrowLeft, ArrowRight } from "lucide-react";
+import { Save, Loader2, Layout, Info, Phone, Home, ScrollText, Undo2, ShieldCheck, ImagePlus, X, ArrowLeft, ArrowRight } from "lucide-react";
 import Swal from "sweetalert2";
 import { useAuth } from "@/app/auth/AuthContext";
 import { endpoints, API_BASE_URL } from "@/lib/api/endpoints";
@@ -102,6 +102,7 @@ export default function ContentPage() {
         { id: "home", label: "Início", icon: Home },
         { id: "conditions", label: "Condições Gerais", icon: ScrollText },
         { id: "cancellation", label: "Cancelamento", icon: Undo2 },
+        { id: "privacy", label: "Privacidade", icon: ShieldCheck },
     ];
 
     // Páginas legais (texto rico). O backend preenche estes campos com o
@@ -109,6 +110,7 @@ export default function ContentPage() {
     const legalPages = [
         { id: "conditions", title: "Condições Gerais de Aluguer", url: "/condicoes-gerais", hint: "Deve corresponder ao documento em papel entregue com o contrato de aluguer." },
         { id: "cancellation", title: "Política de Cancelamento e Reembolso", url: "/politica-cancelamento", hint: "Exigida pela SISP para aceitar pagamentos online (checklist, ponto 6)." },
+        { id: "privacy", title: "Política de Privacidade", url: "/politica-privacidade", hint: "Exigida pela Google Play para a app RCV Gestão. Deve dizer que dados o site e a app recolhem e para quê." },
     ];
 
     return (

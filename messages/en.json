@@ -50,7 +50,8 @@
 		"subscribeError": "We couldn't subscribe you. Please try again.",
 		"noImages": "No images available.",
 		"copyright": "Copyright © {year} TerraSystem - All rights reserved",
-		"followUs": "Follow us:"
+		"followUs": "Follow us:",
+		"privacy": "Privacy Policy"
 	},
 	"funFacts": {
 		"vehicles": "Cars in our fleet",
@@ -510,7 +511,11 @@
 		"cancellationDesc": "Online payment, cancellation, pick-up and return",
 		"cancellationMeta": "Online payment, cancellation, refund, pick-up and return conditions for Rent a Car Verde vehicles.",
 		"unavailable": "We couldn't load this document right now. Please try again shortly or contact us at <email>reservas@rentacarverde.cv</email> or on (+238) 581 09 45.",
-		"translationNotice": "This document is shown in Portuguese, the language of the rental agreement."
+		"translationNotice": "This document is shown in Portuguese, the language of the rental agreement.",
+		"privacyTitle": "Privacy",
+		"privacyMetaTitle": "Privacy Policy",
+		"privacyDesc": "What data we collect and how we protect it",
+		"privacyMeta": "What personal data Rent a Car Verde collects on its website and the RCV Gestão app, what it is used for and your rights."
 	},
 	"driversPage": {
 		"title": "Drivers",

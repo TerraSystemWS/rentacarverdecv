@@ -130,6 +130,9 @@ const Footer = () => {
 										<li>
 											<Link href="/politica-cancelamento">{t("cancellation")}</Link>
 										</li>
+										<li>
+											<Link href="/politica-privacidade">{t("privacy")}</Link>
+										</li>
 									</ul>
 								</div>
 							</div>

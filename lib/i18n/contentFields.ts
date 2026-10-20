@@ -8,7 +8,7 @@ export const TRANSLATABLE_CONTENT_FIELDS = [
 	"contact.mapTitle", "contact.mapSubtitle", "contact.mapDesc",
 	"home.app.topSubtitle", "home.app.title", "home.app.subtitle",
 	"home.funFacts.f1", "home.funFacts.f2", "home.funFacts.f3", "home.funFacts.f4",
-	"legal.conditions", "legal.cancellation",
+	"legal.conditions", "legal.cancellation", "legal.privacy",
 ] as const;
 
 export const CONTENT_TRANSLATION_LOCALES = ["en", "fr"] as const;
@@ -58,6 +58,6 @@ export function localizeContent<T extends Json>(content: T, locale: string): T {
 }
 
 /** A página legal tem tradução gravada para esta língua? */
-export function hasLegalTranslation(content: unknown, key: "conditions" | "cancellation", locale: string): boolean {
+export function hasLegalTranslation(content: unknown, key: "conditions" | "cancellation" | "privacy", locale: string): boolean {
 	return locale === "pt" || isFilled(getPath(content, `i18n.${locale}.legal.${key}`));
 }

@@ -50,7 +50,8 @@
 		"subscribeError": "Não foi possível subscrever. Tente de novo.",
 		"noImages": "Sem imagens disponíveis.",
 		"copyright": "Copyright © {year} TerraSystem - Todos os direitos reservados",
-		"followUs": "Siga-nos:"
+		"followUs": "Siga-nos:",
+		"privacy": "Política de Privacidade"
 	},
 	"funFacts": {
 		"vehicles": "Carros na frota",
@@ -510,7 +511,11 @@
 		"cancellationDesc": "Pagamento online, cancelamento, entrega e devolução",
 		"cancellationMeta": "Condições de pagamento online, cancelamento, reembolso, entrega e devolução das viaturas da Rent a Car Verde.",
 		"unavailable": "Não foi possível carregar este documento neste momento. Tente de novo dentro de instantes ou contacte-nos por <email>reservas@rentacarverde.cv</email> ou pelo telefone (+238) 581 09 45.",
-		"translationNotice": ""
+		"translationNotice": "",
+		"privacyTitle": "Política de Privacidade",
+		"privacyMetaTitle": "Política de Privacidade",
+		"privacyDesc": "Que dados recolhemos e como os protegemos",
+		"privacyMeta": "Que dados pessoais a Rent a Car Verde recolhe no site e na app RCV Gestão, para que os usa e os seus direitos."
 	},
 	"driversPage": {
 		"title": "Motoristas",

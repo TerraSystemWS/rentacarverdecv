@@ -54,6 +54,7 @@ interface SiteContent {
     legal?: {
         conditions: string;
         cancellation: string;
+        privacy?: string;
     };
 }
 

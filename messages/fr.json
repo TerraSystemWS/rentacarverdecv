@@ -50,7 +50,8 @@
 		"subscribeError": "Impossible de vous abonner. Veuillez réessayer.",
 		"noImages": "Aucune image disponible.",
 		"copyright": "Copyright © {year} TerraSystem - Tous droits réservés",
-		"followUs": "Suivez-nous :"
+		"followUs": "Suivez-nous :",
+		"privacy": "Politique de confidentialité"
 	},
 	"funFacts": {
 		"vehicles": "Véhicules dans la flotte",
@@ -510,7 +511,11 @@
 		"cancellationDesc": "Paiement en ligne, annulation, prise en charge et restitution",
 		"cancellationMeta": "Conditions de paiement en ligne, d'annulation, de remboursement, de prise en charge et de restitution des véhicules Rent a Car Verde.",
 		"unavailable": "Impossible de charger ce document pour le moment. Réessayez dans quelques instants ou contactez-nous à <email>reservas@rentacarverde.cv</email> ou au (+238) 581 09 45.",
-		"translationNotice": "Ce document est affiché en portugais, la langue du contrat de location."
+		"translationNotice": "Ce document est affiché en portugais, la langue du contrat de location.",
+		"privacyTitle": "Confidentialité",
+		"privacyMetaTitle": "Politique de confidentialité",
+		"privacyDesc": "Les données que nous collectons et comment nous les protégeons",
+		"privacyMeta": "Les données personnelles que Rent a Car Verde collecte sur son site et dans l'application RCV Gestão, leurs finalités et vos droits."
 	},
 	"driversPage": {
 		"title": "Chauffeurs",
