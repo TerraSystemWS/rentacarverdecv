@@ -51,7 +51,8 @@
 		"noImages": "Sem imagens disponíveis.",
 		"copyright": "Copyright © {year} TerraSystem - Todos os direitos reservados",
 		"followUs": "Siga-nos:",
-		"privacy": "Política de Privacidade"
+		"privacy": "Política de Privacidade",
+		"deleteAccount": "Eliminar conta"
 	},
 	"funFacts": {
 		"vehicles": "Carros na frota",
@@ -755,5 +756,26 @@
 		"zoomHint": "Clique na imagem para ampliar",
 		"counter": "{current} de {total}",
 		"open": "Ver imagem em grande"
+	},
+	"deleteAccount": {
+		"metaTitle": "Eliminar conta e dados",
+		"meta": "Como pedir a eliminação da sua conta Rent a Car Verde (site e app RCV Gestão) e dos dados associados.",
+		"title": "Eliminar conta e dados",
+		"desc": "Site rentacarverde.cv e app RCV Gestão",
+		"intro": "Esta página explica como pedir à Rent a Car Verde a eliminação da sua conta e dos dados associados, quer use o site rentacarverde.cv, quer a app RCV Gestão (equipa).",
+		"howTitle": "Como pedir",
+		"step1": "Envie um email para <email>reservas@rentacarverde.cv</email> a partir do email da sua conta, com o assunto \"Eliminar conta\".",
+		"step2": "Indique o seu nome e, se tiver, o número de uma reserva. Se escrever de outro email, podemos pedir-lhe que confirme a identidade.",
+		"step3": "Tratamos o pedido no prazo máximo de 30 dias e respondemos por email quando estiver concluído.",
+		"staff": "Membros da equipa (app RCV Gestão): peçam ao administrador ou escrevam para o mesmo email. A conta da equipa é desativada e deixa de conseguir entrar na app.",
+		"deletedTitle": "O que é apagado",
+		"deleted1": "Nome, email, telefone, morada, data e local de nascimento, nacionalidade e dados do documento de identificação e da carta de condução.",
+		"deleted2": "Fotografia da carta de condução e documentos carregados nas reservas.",
+		"deleted3": "Subscrição da newsletter; o nome nas avaliações passa a anónimo.",
+		"deleted4": "A palavra-passe é invalidada e todas as sessões terminam: a conta deixa de poder ser usada.",
+		"keptTitle": "O que é guardado e durante quanto tempo",
+		"kept1": "Faturas e o registo das reservas e pagamentos (datas, viatura, valores), sem os seus dados de contacto, durante o prazo exigido pela lei fiscal cabo-verdiana.",
+		"kept2": "Registos técnicos do servidor, apagados ao fim de alguns meses.",
+		"more": "Mais informação na <link>Política de Privacidade</link>."
 	}
 }

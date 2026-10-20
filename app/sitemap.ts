@@ -35,7 +35,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         })) : [];
 
         // Static routes
-        const routes = ['', '/cars', '/about', '/contact', '/posts', '/gallery', '/condicoes-gerais', '/politica-cancelamento', '/politica-privacidade'].map((route) => ({
+        const routes = ['', '/cars', '/about', '/contact', '/posts', '/gallery', '/condicoes-gerais', '/politica-cancelamento', '/politica-privacidade', '/eliminar-conta'].map((route) => ({
             url: `${baseUrl}${route}`,
             lastModified: new Date(),
             changeFrequency: 'daily' as const,
@@ -47,7 +47,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         console.error("Error generating sitemap:", e);
         // Fallback to static routes
         return [
-            '', '/cars', '/about', '/contact', '/posts', '/gallery', '/condicoes-gerais', '/politica-cancelamento', '/politica-privacidade'
+            '', '/cars', '/about', '/contact', '/posts', '/gallery', '/condicoes-gerais', '/politica-cancelamento', '/politica-privacidade', '/eliminar-conta'
         ].map((route) => ({
             url: `${baseUrl}${route}`,
             lastModified: new Date(),

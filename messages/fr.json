@@ -51,7 +51,8 @@
 		"noImages": "Aucune image disponible.",
 		"copyright": "Copyright © {year} TerraSystem - Tous droits réservés",
 		"followUs": "Suivez-nous :",
-		"privacy": "Politique de confidentialité"
+		"privacy": "Politique de confidentialité",
+		"deleteAccount": "Supprimer le compte"
 	},
 	"funFacts": {
 		"vehicles": "Véhicules dans la flotte",
@@ -755,5 +756,26 @@
 		"zoomHint": "Cliquez sur l’image pour l’agrandir",
 		"counter": "{current} sur {total}",
 		"open": "Voir l’image en grand"
+	},
+	"deleteAccount": {
+		"metaTitle": "Supprimer le compte et les données",
+		"meta": "Comment demander la suppression de votre compte Rent a Car Verde (site et application RCV Gestão) et des données associées.",
+		"title": "Supprimer le compte et les données",
+		"desc": "Site rentacarverde.cv et application RCV Gestão",
+		"intro": "Cette page explique comment demander à Rent a Car Verde la suppression de votre compte et des données associées, que vous utilisiez le site rentacarverde.cv ou l'application RCV Gestão (équipe).",
+		"howTitle": "Comment faire la demande",
+		"step1": "Envoyez un email à <email>reservas@rentacarverde.cv</email> depuis l'email de votre compte, avec l'objet « Supprimer le compte ».",
+		"step2": "Indiquez votre nom et, si vous en avez un, un numéro de réservation. Si vous écrivez depuis un autre email, nous pourrons vous demander de confirmer votre identité.",
+		"step3": "Nous traitons la demande dans un délai maximum de 30 jours et répondons par email une fois terminée.",
+		"staff": "Membres de l'équipe (application RCV Gestão) : demandez à l'administrateur ou écrivez au même email. Le compte de l'équipe est désactivé et ne peut plus se connecter à l'application.",
+		"deletedTitle": "Ce qui est supprimé",
+		"deleted1": "Nom, email, téléphone, adresse, date et lieu de naissance, nationalité et données de la pièce d'identité et du permis de conduire.",
+		"deleted2": "Photo du permis de conduire et documents téléchargés dans les réservations.",
+		"deleted3": "Abonnement à la newsletter ; le nom sur vos avis devient anonyme.",
+		"deleted4": "Le mot de passe est invalidé et toutes les sessions sont fermées : le compte ne peut plus être utilisé.",
+		"keptTitle": "Ce qui est conservé et pendant combien de temps",
+		"kept1": "Les factures et l'historique des réservations et paiements (dates, véhicule, montants), sans vos coordonnées, pendant la durée exigée par la loi fiscale cap-verdienne.",
+		"kept2": "Les journaux techniques du serveur, supprimés au bout de quelques mois.",
+		"more": "Plus d'informations dans la <link>Politique de confidentialité</link>."
 	}
 }

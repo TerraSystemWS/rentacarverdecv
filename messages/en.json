@@ -51,7 +51,8 @@
 		"noImages": "No images available.",
 		"copyright": "Copyright © {year} TerraSystem - All rights reserved",
 		"followUs": "Follow us:",
-		"privacy": "Privacy Policy"
+		"privacy": "Privacy Policy",
+		"deleteAccount": "Delete account"
 	},
 	"funFacts": {
 		"vehicles": "Cars in our fleet",
@@ -755,5 +756,26 @@
 		"zoomHint": "Click the image to zoom",
 		"counter": "{current} of {total}",
 		"open": "View larger image"
+	},
+	"deleteAccount": {
+		"metaTitle": "Delete account and data",
+		"meta": "How to request deletion of your Rent a Car Verde account (website and RCV Gestão app) and associated data.",
+		"title": "Delete account and data",
+		"desc": "rentacarverde.cv website and RCV Gestão app",
+		"intro": "This page explains how to ask Rent a Car Verde to delete your account and associated data, whether you use the rentacarverde.cv website or the RCV Gestão app (staff).",
+		"howTitle": "How to request",
+		"step1": "Send an email to <email>reservas@rentacarverde.cv</email> from your account email, with the subject \"Delete account\".",
+		"step2": "Include your name and, if you have one, a booking number. If you write from another email, we may ask you to confirm your identity.",
+		"step3": "We handle the request within 30 days at most and reply by email when it is done.",
+		"staff": "Staff members (RCV Gestão app): ask the administrator or write to the same email. The staff account is deactivated and can no longer sign in to the app.",
+		"deletedTitle": "What is deleted",
+		"deleted1": "Name, email, phone, address, date and place of birth, nationality and identity document and driving licence details.",
+		"deleted2": "Driving licence photo and documents uploaded to bookings.",
+		"deleted3": "Newsletter subscription; the name on your reviews becomes anonymous.",
+		"deleted4": "The password is invalidated and all sessions end: the account can no longer be used.",
+		"keptTitle": "What is kept and for how long",
+		"kept1": "Invoices and the record of bookings and payments (dates, vehicle, amounts), without your contact details, for the period required by Cape Verdean tax law.",
+		"kept2": "Technical server logs, deleted after a few months.",
+		"more": "More information in the <link>Privacy Policy</link>."
 	}
 }
