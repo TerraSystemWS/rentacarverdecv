@@ -500,8 +500,60 @@ function AttachmentChip({ a }: { a: MessageAttachment }) {
 	);
 }
 
+// Anexos de um email enviado: os mesmos limites da API (ContactMessageController):
+// até 10 ficheiros, 10 MB cada, 20 MB no total.
+const MAX_FILES = 10;
+const MAX_FILE_BYTES = 10 * 1024 * 1024;
+const MAX_TOTAL_BYTES = 20 * 1024 * 1024;
+
+/** Envia com JSON sem anexos; com anexos, multipart (campos + files). */
+function postMail<T>(path: string, fields: Record<string, string>, files: File[]) {
+	if (files.length === 0) return apiFetch<T>(path, { method: "POST", body: JSON.stringify(fields) });
+	const form = new FormData();
+	Object.entries(fields).forEach(([k, v]) => form.append(k, v));
+	files.forEach((f) => form.append("files", f, f.name));
+	return apiFetch<T>(path, { method: "POST", body: form });
+}
+
+function AttachmentPicker({ files, onChange, id }: { files: File[]; onChange: (f: File[]) => void; id: string }) {
+	function add(list: FileList | null) {
+		if (!list) return;
+		const next = [...files, ...Array.from(list)];
+		const big = next.find((f) => f.size > MAX_FILE_BYTES);
+		const total = next.reduce((n, f) => n + f.size, 0);
+		const problem = next.length > MAX_FILES ? `No máximo ${MAX_FILES} anexos por email.`
+			: big ? `"${big.name}" tem mais de 10 MB.`
+			: total > MAX_TOTAL_BYTES ? "Os anexos juntos têm mais de 20 MB." : null;
+		if (problem) {
+			Swal.fire({ icon: "warning", title: "Anexo não adicionado", text: problem, confirmButtonColor: "#3085d6" });
+			return;
+		}
+		onChange(next);
+	}
+	return (
+		<div className="flex flex-wrap items-center gap-2">
+			<label htmlFor={id} className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-zinc-200 dark:border-zinc-700 px-3 py-2 text-xs font-bold text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800">
+				<Paperclip size={14} />
+				Anexar ficheiro
+			</label>
+			<input id={id} type="file" multiple className="sr-only" onChange={(e) => { add(e.target.files); e.target.value = ""; }} />
+			{files.map((f, i) => (
+				<span key={`${f.name}-${i}`} className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1.5 text-xs text-zinc-700 dark:text-zinc-200">
+					<Paperclip size={12} />
+					<span className="max-w-[180px] truncate" title={f.name}>{f.name}</span>
+					<span className="text-zinc-400">{fmtSize(f.size)}</span>
+					<button type="button" onClick={() => onChange(files.filter((_, j) => j !== i))} className="text-zinc-400 hover:text-red-600" title={`Tirar ${f.name}`} aria-label={`Tirar ${f.name}`}>
+						<X size={12} />
+					</button>
+				</span>
+			))}
+		</div>
+	);
+}
+
 function ReplyBox({ thread, onSent }: { thread: MessageThread; onSent: () => void }) {
 	const [html, setHtml] = useState("");
+	const [files, setFiles] = useState<File[]>([]);
 	const [sending, setSending] = useState(false);
 	const [editorKey, setEditorKey] = useState(0);
 
@@ -523,8 +575,9 @@ function ReplyBox({ thread, onSent }: { thread: MessageThread; onSent: () => voi
 		if (isBlankHtml(html)) return;
 		setSending(true);
 		try {
-			await apiFetch(endpoints.messages.reply(thread.id), { method: "POST", body: JSON.stringify({ html }) });
+			await postMail(endpoints.messages.reply(thread.id), { html }, files);
 			setHtml("");
+			setFiles([]);
 			setEditorKey((k) => k + 1);
 		} catch (e) {
 			Swal.fire({ icon: "error", title: "Não foi possível enviar", text: e instanceof Error ? e.message : "", confirmButtonColor: "#3085d6" });
@@ -540,7 +593,8 @@ function ReplyBox({ thread, onSent }: { thread: MessageThread; onSent: () => voi
 				Responder a <span className="font-bold text-zinc-700 dark:text-zinc-300">{thread.name}</span> ({thread.email}) — sai do email reservas@
 			</p>
 			<RichTextEditor key={editorKey} value={html} onChange={setHtml} minHeight={110} />
-			<div className="flex justify-end">
+			<div className="flex flex-wrap items-start justify-between gap-3">
+				<AttachmentPicker id="reply-files" files={files} onChange={setFiles} />
 				<button
 					onClick={send}
 					disabled={sending || isBlankHtml(html)}
@@ -558,15 +612,13 @@ function ComposePanel({ onClose, onSent }: { onClose: () => void; onSent: (rootI
 	const [to, setTo] = useState("");
 	const [subject, setSubject] = useState("");
 	const [html, setHtml] = useState("");
+	const [files, setFiles] = useState<File[]>([]);
 	const [sending, setSending] = useState(false);
 
 	async function send() {
 		setSending(true);
 		try {
-			const sent = await apiFetch<MessageItem>(endpoints.messages.compose, {
-				method: "POST",
-				body: JSON.stringify({ to, subject, html }),
-			});
+			const sent = await postMail<MessageItem>(endpoints.messages.compose, { to, subject, html }, files);
 			onSent(sent.id);
 		} catch (e) {
 			Swal.fire({ icon: "error", title: "Não foi possível enviar", text: e instanceof Error ? e.message : "", confirmButtonColor: "#3085d6" });
@@ -592,7 +644,8 @@ function ComposePanel({ onClose, onSent }: { onClose: () => void; onSent: (rootI
 					<input type="text" value={subject} onChange={(e) => setSubject(e.target.value)} className={inputCls} />
 				</div>
 				<RichTextEditor value={html} onChange={setHtml} minHeight={220} />
-				<div className="flex justify-end">
+				<div className="flex flex-wrap items-start justify-between gap-3">
+					<AttachmentPicker id="compose-files" files={files} onChange={setFiles} />
 					<button
 						onClick={send}
 						disabled={sending || !to.trim() || !subject.trim() || isBlankHtml(html)}
