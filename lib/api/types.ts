@@ -248,6 +248,14 @@ export type BookingRow = {
 	extension_ids?: number[];
 	/** O cliente pode pedir uma extensão agora (paga/em curso, sem extensão por pagar). */
 	can_extend?: boolean;
+	/** "LATE_FEE" = cobrança de um atraso na devolução da reserva extends_booking_id; null = reserva/extensão. */
+	charge_type?: string | null;
+	/** Na reserva original: minutos de atraso na devolução (até agora, se ainda em curso). */
+	late_minutes?: number;
+	/** Valor a cobrar por esse atraso (períodos de 24 h, 2 h de tolerância, sem mínimo). */
+	late_fee?: number;
+	/** Cobrança do atraso já registada no "Devolveu". */
+	late_fee_booking_id?: number | null;
 };
 
 /** Orçamento de uma extensão (GET /dashboard/bookings/me/{id}/extension-quote). */

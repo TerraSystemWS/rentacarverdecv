@@ -251,7 +251,8 @@
 			"apply": "Apply",
 			"applied": "Code {code} applied: -{percent}%",
 			"invalid": "Invalid voucher code.",
-			"estimate": "Estimated total ({days, plural, one {# day} other {# days}})"
+			"estimate": "Estimated total ({days, plural, one {# day} other {# days}})",
+			"periodNote": "Rentals are charged in 24-hour periods from the pick-up time, with a 2-hour grace period. Up to 12 extra hours count as half a day; more than that, a full day."
 		}
 	},
 	"about": {
@@ -372,6 +373,7 @@
 		"cancelError": "The booking could not be cancelled.",
 		"bookingNumber": "Booking #{id}",
 		"extensionOf": "Extension of booking #{id}",
+		"lateFeeOf": "Late return of booking #{id}",
 		"extendedUntil": "Extended until {date}",
 		"extendButton": "Extend rental",
 		"extendTitle": "Extend your rental",

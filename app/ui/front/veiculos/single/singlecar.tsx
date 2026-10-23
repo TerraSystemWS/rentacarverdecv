@@ -30,6 +30,7 @@ import { Vehicle } from "@/lib/api/types";
 import { useAuth } from "@/app/auth/AuthContext";
 import { API_BASE_URL } from "@/lib/api/endpoints";
 import { cvToIso, localDateString, parseLocalDate } from "@/lib/utils/cvTime";
+import { rentalDays, rentalPrice } from "@/lib/utils/rentalPricing";
 import { useRentalLocations } from "@/lib/api/useRentalLocations";
 import { tr, trList } from "@/lib/i18n/translate";
 import { rememberedVoucher } from "@/lib/voucherParam";
@@ -106,15 +107,16 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [vehicle.id]);
 
-	// Total estimado, com as mesmas contas da API (dias inteiros, mínimo 1;
-	// condutor extra 3300 CVE/dia; desconto do voucher sobre o total).
+	// Total estimado, com as mesmas contas da API (períodos de 24 h com 2 h de
+	// tolerância e meias diárias, mínimo 1; condutor extra 3300 CVE/dia; desconto
+	// do voucher sobre o total).
 	const estimate = (() => {
 		if (!formData.startDate || !formData.endDate || !vehicle.pricePerDay) return null;
 		const start = new Date(cvToIso(formData.startDate, formData.startTime));
 		const end = new Date(cvToIso(formData.endDate, formData.endTime));
 		if (!(end > start)) return null;
-		const days = Math.max(1, Math.floor((end.getTime() - start.getTime()) / 86_400_000));
-		const base = Number(vehicle.pricePerDay) * days + (formData.hasExtraDriver ? 3300 * days : 0);
+		const days = rentalDays(start, end);
+		const base = rentalPrice(Number(vehicle.pricePerDay), !!formData.hasExtraDriver, days);
 		const total = voucher ? base * (100 - voucher.percent) / 100 : base;
 		return { days, base, total };
 	})();
@@ -549,6 +551,7 @@ const VehicleSingle: React.FC<VehicleSingleProps> = ({ vehicle }) => {
 												</span>
 											</div>
 										)}
+										<p className="mt-2 mb-0 text-xs text-gray-500">{t("voucher.periodNote")}</p>
 
 										{/* O servidor cancela as reservas por pagar ao fim de 2 h (BookingExpiryService). */}
 										<p className="mt-4 mb-0 flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">

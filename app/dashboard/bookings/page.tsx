@@ -23,6 +23,13 @@ const escapeHtml = (v?: string | null) =>
 const fmtDay = (iso?: string | null) =>
 	iso ? new Date(iso).toLocaleDateString("pt-PT", { timeZone: "Atlantic/Cape_Verde" }) : "—";
 
+/** Atraso em horas e minutos: "5h20", "1d 3h05". */
+function fmtLate(minutes: number): string {
+	const d = Math.floor(minutes / 1440), h = Math.floor((minutes % 1440) / 60), m = minutes % 60;
+	const hm = `${h}h${String(m).padStart(2, "0")}`;
+	return d > 0 ? `${d}d ${hm}` : hm;
+}
+
 export default function BookingsPage() {
 	// Apagar reservas: só com "bookings.delete" (a API recusa; o botão nem aparece).
 	const isAgent = !can(useAuth().user, "bookings.delete");
@@ -55,7 +62,11 @@ export default function BookingsPage() {
 				customer_name: (
 					<div className="flex items-center gap-2">
 						<span>{b.customer_name}</span>
-						{b.extends_booking_id && (
+						{b.extends_booking_id && b.charge_type === "LATE_FEE" ? (
+							<span className="bg-red-100 text-red-800 text-[10px] px-2 py-0.5 rounded-full font-bold uppercase whitespace-nowrap" title="Cobrança do atraso na devolução, recebida no balcão">
+								Atraso de #{b.extends_booking_id}
+							</span>
+						) : b.extends_booking_id && (
 							<span className="bg-amber-100 text-amber-800 text-[10px] px-2 py-0.5 rounded-full font-bold uppercase whitespace-nowrap" title="Extensão de aluguer: dias extra pagos à parte">
 								Extensão de #{b.extends_booking_id}
 							</span>
@@ -68,7 +79,14 @@ export default function BookingsPage() {
 					</div>
 				),
 				start_at: fmtDateTime(b.start_at),
-				end_at: b.rental_end_at && b.rental_end_at !== b.end_at ? (
+				end_at: b.status === "EM_CURSO" && (b.late_minutes ?? 0) > 0 ? (
+					<div className="flex flex-col">
+						<span>{fmtDateTime(b.rental_end_at || b.end_at)}</span>
+						<span className="font-bold text-red-700" title="Atraso na devolução: períodos de 24 h, 2 h de tolerância">
+							Atraso {fmtLate(b.late_minutes ?? 0)}{(b.late_fee ?? 0) > 0 ? ` · cobrar ${fmtMoney(b.late_fee ?? 0, "CVE")}` : ""}
+						</span>
+					</div>
+				) : b.rental_end_at && b.rental_end_at !== b.end_at ? (
 					<div className="flex flex-col">
 						<span className="line-through text-zinc-400">{fmtDateTime(b.end_at)}</span>
 						<span className="font-bold text-green-700" title="Fim do aluguer com as extensões">
@@ -292,11 +310,11 @@ export default function BookingsPage() {
 		}
 	}
 
-	async function handleStatusChange(id: number, newStatus: string) {
+	async function handleStatusChange(id: number, newStatus: string, lateFeeCollected = false) {
 		try {
 			const updated = await apiFetch<BookingRow>(endpoints.bookings.updateStatus(id), {
 				method: "PUT",
-				body: JSON.stringify({ status: newStatus }),
+				body: JSON.stringify({ status: newStatus, lateFeeCollected }),
 			});
 			if (newStatus === "CONCLUÍDA" || newStatus === "CANCELADA") {
 				// Sai da lista ativa assim que é concluída/cancelada — passa a
@@ -334,11 +352,17 @@ export default function BookingsPage() {
 	// (a 16/10 uma reserva paga de dezembro foi dada como levantada e devolvida por engano).
 	async function handlePickupReturn(b: BookingRow, newStatus: "EM_CURSO" | "CONCLUÍDA") {
 		const pickup = newStatus === "EM_CURSO";
+		// Atraso na devolução (regra das 24 h): mostra o valor e deixa registar a cobrança no balcão.
+		const lateFee = !pickup && (b.late_minutes ?? 0) > 0 ? Number(b.late_fee ?? 0) : 0;
+		const lateHtml = pickup || !(b.late_minutes ?? 0) ? "" :
+			`<p style="margin-top:8px;color:#b91c1c"><b>Atraso de ${fmtLate(b.late_minutes ?? 0)}` +
+			(lateFee > 0 ? ` → cobrar ${fmtMoney(lateFee, "CVE")}` : " (dentro da tolerância de 2 h, nada a cobrar)") + `</b></p>`;
 		const result = await Swal.fire({
 			title: pickup ? "O cliente levantou a viatura?" : "O cliente devolveu a viatura?",
 			html:
 				`<p><b>Reserva #${b.id}</b> — ${escapeHtml(b.vehicle_title)}<br/>${escapeHtml(b.customer_name)}</p>` +
-				`<p style="margin-top:8px">${pickup ? "Levantamento previsto" : "Devolução prevista"}: <b>${fmtDateTime(pickup ? b.start_at : b.end_at)}</b></p>` +
+				`<p style="margin-top:8px">${pickup ? "Levantamento previsto" : "Devolução prevista"}: <b>${fmtDateTime(pickup ? b.start_at : (b.rental_end_at || b.end_at))}</b></p>` +
+				lateHtml +
 				`<p style="margin-top:8px;font-size:13px;color:#71717a">${pickup
 					? "A reserva passa a Em curso. Não se pode desfazer."
 					: "A reserva fica Concluída, sai da lista e o cliente recebe o pedido de avaliação. Não se pode desfazer."}</p>`,
@@ -349,9 +373,14 @@ export default function BookingsPage() {
 			confirmButtonText: pickup ? "Sim, levantou" : "Sim, devolveu",
 			cancelButtonText: "Voltar",
 			focusCancel: true,
+			...(lateFee > 0 ? {
+				input: "checkbox" as const,
+				inputValue: 0,
+				inputPlaceholder: `Cobrança do atraso (${fmtMoney(lateFee, "CVE")}) recebida no balcão: registar com recibo`,
+			} : {}),
 		});
 		if (!result.isConfirmed) return;
-		handleStatusChange(b.id, newStatus);
+		handleStatusChange(b.id, newStatus, lateFee > 0 && Number(result.value) === 1);
 	}
 
 	async function handleCancel(id: number) {

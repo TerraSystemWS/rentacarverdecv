@@ -251,7 +251,8 @@
 			"apply": "Aplicar",
 			"applied": "Código {code} aplicado: -{percent}%",
 			"invalid": "Código de voucher inválido.",
-			"estimate": "Total estimado ({days, plural, one {# dia} other {# dias}})"
+			"estimate": "Total estimado ({days, plural, one {# dia} other {# dias}})",
+			"periodNote": "O aluguer conta por períodos de 24 h a partir da hora de levantamento, com 2 h de tolerância. Até 12 h a mais conta meia diária; acima disso, uma diária."
 		}
 	},
 	"about": {
@@ -372,6 +373,7 @@
 		"cancelError": "Não foi possível cancelar a reserva.",
 		"bookingNumber": "Reserva #{id}",
 		"extensionOf": "Extensão da reserva #{id}",
+		"lateFeeOf": "Atraso na devolução da reserva #{id}",
 		"extendedUntil": "Estendida até {date}",
 		"extendButton": "Estender aluguer",
 		"extendTitle": "Estender o aluguer",

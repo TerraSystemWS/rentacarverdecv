@@ -207,7 +207,7 @@ export default function ProfilePage() {
                                 <div>
                                     <h3 className="v2-card__name">{b.vehicle_title || t("vehicleUnknown")}</h3>
                                     <p className="text-xs font-semibold text-slate-500">
-                                        {b.extends_booking_id ? t("extensionOf", { id: b.extends_booking_id }) : t("bookingNumber", { id: b.id })}
+                                        {b.extends_booking_id ? t(b.charge_type === "LATE_FEE" ? "lateFeeOf" : "extensionOf", { id: b.extends_booking_id }) : t("bookingNumber", { id: b.id })}
                                     </p>
                                 </div>
                                 {getStatusBadge(b.status)}

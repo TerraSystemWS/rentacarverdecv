@@ -251,7 +251,8 @@
 			"apply": "Appliquer",
 			"applied": "Code {code} appliqué : -{percent} %",
 			"invalid": "Code promo invalide.",
-			"estimate": "Total estimé ({days, plural, one {# jour} other {# jours}})"
+			"estimate": "Total estimé ({days, plural, one {# jour} other {# jours}})",
+			"periodNote": "La location est comptée par périodes de 24 h à partir de l'heure de prise en charge, avec 2 h de tolérance. Jusqu'à 12 h de plus, une demi-journée ; au-delà, une journée."
 		}
 	},
 	"about": {
@@ -372,6 +373,7 @@
 		"cancelError": "Impossible d’annuler la réservation.",
 		"bookingNumber": "Réservation n° {id}",
 		"extensionOf": "Prolongation de la réservation n° {id}",
+		"lateFeeOf": "Retard de restitution de la réservation n° {id}",
 		"extendedUntil": "Prolongée jusqu'au {date}",
 		"extendButton": "Prolonger la location",
 		"extendTitle": "Prolonger la location",
